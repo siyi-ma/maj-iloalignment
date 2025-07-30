@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module-Course Learning Outcomes Alignment Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .matrix-table { border-collapse: collapse; margin: 20px 0; font-size: 0.9em; width: 100%; box-shadow: 0 0 20px rgba(0,0,0,0.15); overflow-x: auto; display: block; }
+        .matrix-table th, .matrix-table td { padding: 12px 15px; text-align: center; border: 1px solid #ddd; min-width: 50px; }
+        .matrix-table th:first-child { min-width: 150px; text-align: left; }
+        .score-0 { background-color: #f5f5f5; color: #999; }
+        .score-1 { background-color: #ffcdd2; }
+        .score-2 { background-color: #ffecb3; }
+        .score-3 { background-color: #fff9c4; }
+        .score-4 { background-color: #c8e6c9; }
+        .score-5 { background-color: #a5d6a7; }
+        .outcome-item { border-left: 3px solid #342b60; padding: 10px; margin-bottom: 10px; background-color: #f9f9f9; }
+        .module-section { margin-bottom: 30px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .module-header { padding: 10px 15px; background-color: #342b60; color: white; margin: 0; }
+        .module-content { padding: 15px; }
+        .alignment-item { margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .alignment-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: #f5f5f5; border-bottom: 1px solid #ddd; }
+        .alignment-title { font-weight: bold; font-size: 1.1em; }
+        .alignment-details { padding: 15px; background-color: #fff; }
+        .alignment-reason { padding: 10px; background-color: #f9f9f9; border-radius: 5px; margin-bottom: 15px; }
+        .alignment-suggestion { padding: 10px; background-color: #fff9c4; border-radius: 5px; border-left: 3px solid #ffd600; }
+        .legend { margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-radius: 5px; }
+        .legend-items { display: flex; flex-wrap: wrap; gap: 10px; }
+        .legend-item { display: flex; align-items: center; margin-right: 15px; }
+        .legend-color { width: 20px; height: 20px; margin-right: 5px; border: 1px solid #ddd; }
+        .export-btn { background-color: #AA1352; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: background-color 0.3s; }
+        .export-btn:hover { background-color: #950f47; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> Module-Course Learning Outcomes Alignment</h1>
+                <p>Analyze how Course Learning Outcomes (CLOs) align with Module Learning Outcomes (MLOs)</p>
+            </div>
+            <div class="header-buttons">
+                <a href="index.html" class="home-btn"><i class="fas fa-home"></i> Home</a>
+            </div>
+        </header>
+
+        <!-- Add this where you want the programme names to appear, e.g. in your header -->
+        <div id="programme-names"></div>
+
+        <main>
+            <section id="clo-section">
+                <h2><i class="fas fa-list-check"></i> Course Learning Outcomes (CLOs)</h2>
+                <div id="clo-container">
+                    <!-- CLOs will be displayed here by the JavaScript -->
+                </div>
+            </section>
+
+            <section id="mlo-section">
+                <h2><i class="fas fa-list-check"></i> Module Learning Outcomes (MLOs)</h2>
+                <div id="mlo-container">
+                    <!-- MLOs will be displayed here by the JavaScript -->
+                </div>
+            </section>
+            
+            <section id="matrix-section">
+                <h2><i class="fas fa-table"></i> Alignment Matrix</h2>
+                <div id="matrix-container">
+                    <!-- Alignment matrix will be generated here by JavaScript -->
+                </div>
+            </section>
+            
+            <section id="detailed-analysis">
+                <h2><i class="fas fa-chart-bar"></i> Detailed Analysis</h2>
+                <div id="detailed-container">
+                    <!-- Detailed analysis will be generated here by JavaScript -->
+                </div>
+            </section>
+        </main>
+        
+        <div class="report-footer-actions">
+            <button id="export-mlo-clo-btn" class="export-btn"><i class="fas fa-file-export"></i> Export Report</button>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 TVTB ILO Alignment | TalTech Majandusteaduskonna Siyi Ma</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // Example: Fetch MLOs and CLOs dynamically and display alignment
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Fetch MLOs from programmes.json (example: tvtb > mlos)
+            let mlos = [];
+            try {
+                const response = await fetch('programmes.json');
+                const data = await response.json();
+                mlos = (data.tvtb.mlos || []).map((m, i) => ({
+                    text: m.mlosisuik || m.mlosisuek || m.mlosisuen || m.mlosisuer || "",
+                    index: i + 1
+                }));
+            } catch (e) {
+                mlos = [];
+            }
+
+            // Example: Fetch CLOs from user input or another source
+            // For demo, use static CLOs
+            const clos = [
+                { text: "Apply marketing concepts to real-world business problems.", index: 1 },
+                { text: "Analyze financial statements and make recommendations.", index: 2 },
+                { text: "Demonstrate effective teamwork and communication.", index: 3 }
+            ];
+
+            // Display CLOs
+            const cloContainer = document.getElementById('clo-container');
+            cloContainer.innerHTML = '';
+            clos.forEach(clo => {
+                cloContainer.innerHTML += `<div class="outcome-item"><h3>CLO ${clo.index}</h3><p>${clo.text}</p></div>`;
+            });
+
+            // Display MLOs
+            const mloContainer = document.getElementById('mlo-container');
+            mloContainer.innerHTML = '';
+            mlos.forEach(mlo => {
+                mloContainer.innerHTML += `<div class="outcome-item"><h4>MLO ${mlo.index}</h4><p>${mlo.text}</p></div>`;
+            });
+
+            // Alignment matrix (simple keyword overlap)
+            const matrixContainer = document.getElementById('matrix-container');
+            let matrixHTML = '<table class="matrix-table"><tr><th>CLO \\ MLO</th>';
+            mlos.forEach(mlo => matrixHTML += `<th>MLO ${mlo.index}</th>`);
+            matrixHTML += '</tr>';
+            clos.forEach(clo => {
+                matrixHTML += `<tr><th>CLO ${clo.index}</th>`;
+                mlos.forEach(mlo => {
+                    const score = calculateAlignmentScore(clo.text, mlo.text);
+                    matrixHTML += `<td class="score-${score}">${score}</td>`;
+                });
+                matrixHTML += '</tr>';
+            });
+            matrixHTML += '</table>';
+            matrixContainer.innerHTML = matrixHTML;
+
+            // Detailed analysis
+            const detailedContainer = document.getElementById('detailed-container');
+            detailedContainer.innerHTML = '';
+            clos.forEach(clo => {
+                detailedContainer.innerHTML += `<div class="alignment-item"><div class="alignment-header"><div class="alignment-title">CLO ${clo.index}</div></div><div class="alignment-details">`;
+                mlos.forEach(mlo => {
+                    const score = calculateAlignmentScore(clo.text, mlo.text);
+                    detailedContainer.innerHTML += `<div class="alignment-mlo"><strong>MLO ${mlo.index}:</strong> <span class="score-${score}">Score: ${score}</span><br>${mlo.text}</div>`;
+                });
+                detailedContainer.innerHTML += '</div></div>';
+            });
+
+            // Export functionality
+            document.getElementById('export-mlo-clo-btn').addEventListener('click', function() {
+                const currentDate = new Date().toISOString().split('T')[0];
+                let exportContent = `
+                    <html>
+                    <head>
+                        <title>MLO-CLO Alignment Report - ${currentDate}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 40px; max-width: 1000px; margin: 0 auto; line-height: 1.6; }
+                            h1, h2, h3 { color: #342b60; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+                            .outcome-item { margin-bottom: 15px; padding: 10px; border-left: 3px solid #342b60; background-color: #f8f9fa; }
+                            .score-0 { background-color: #f5f5f5; color: #999; }
+                            .score-1 { background-color: #ffcdd2; }
+                            .score-2 { background-color: #ffecb3; }
+                            .score-3 { background-color: #fff9c4; }
+                            .score-4 { background-color: #c8e6c9; }
+                            .score-5 { background-color: #a5d6a7; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Module-Course Learning Outcomes Alignment Report</h1>
+                        <p><strong>Generated:</strong> ${currentDate}</p>
+                        <h2>Course Learning Outcomes (CLOs)</h2>
+                        ${cloContainer.innerHTML}
+                        <h2>Module Learning Outcomes (MLOs)</h2>
+                        ${mloContainer.innerHTML}
+                        <h2>Alignment Matrix</h2>
+                        ${matrixContainer.innerHTML}
+                        <h2>Detailed Analysis</h2>
+                        ${detailedContainer.innerHTML}
+                    </body>
+                    </html>
+                `;
+                const previewWindow = window.open('', '_blank');
+                previewWindow.document.write(exportContent);
+                previewWindow.document.close();
+            });
+
+            // Simple alignment score: count keyword overlap (for demo)
+            function calculateAlignmentScore(clo, mlo) {
+                const cloWords = clo.toLowerCase().split(/\W+/).filter(w => w.length > 3);
+                const mloWords = mlo.toLowerCase().split(/\W+/).filter(w => w.length > 3);
+                const overlap = cloWords.filter(word => mloWords.includes(word));
+                let score = Math.min(5, Math.max(0, overlap.length));
+                return score;
+            }
+        });
+    </script>
+</body>
+</html>

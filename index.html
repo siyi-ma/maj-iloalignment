@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAJ Learning Outcome Alignment Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
+                <p>Course and Module Learning Outcomes Alignment Tool</p>
+            </div>
+            <button id="home-btn" class="home-btn"><i class="fas fa-home"></i> Home</button>
+        </header>
+
+        <div id="programme-names"></div>
+
+        <main>
+            <section id="programme-select-section" class="active-section">
+                <h2><i class="fas fa-university"></i> Choose Study Programme</h2>
+                <div class="input-container">
+                    <label for="programme-select"><strong>Programme:</strong></label>
+                    <select id="programme-select">
+                        <option value="tvtb">Rahvusvaheline ärikorraldus (TVTB)</option>
+                        <option value="majb">Jätkusuutlik ettevõtlus ja ringmajandus (MAJB)</option>
+                        <option value="makm">Kestlikkuse juhtimine (MAKM)</option>
+                    </select>
+                </div>
+            </section>
+            <section id="plo-mlo-link" class="active-section">
+                <h2><i class="fas fa-project-diagram"></i> Programme-Module Alignment Analysis</h2>
+                <p>View the comprehensive alignment between Programme Learning Outcomes and Module Learning Outcomes</p>
+                <div class="feature-container">
+                    <div class="feature-description">
+                        <i class="fas fa-chart-bar feature-icon"></i>
+                        <p>Analyze how well different module learning outcomes align with overall programme learning outcomes</p>
+                    </div>
+                    <a href="plo-mlo-alignment.html" class="primary-btn">
+                        <i class="fas fa-external-link-alt"></i> Access PLO-MLO Analysis
+                    </a>
+                </div>
+            </section>
+            
+            <section id="course-input" class="active-section">
+                <h2><i class="fas fa-search"></i> Course Code Input</h2>
+                <p>Search for a business school course</p>
+                <div class="input-container">
+                    <input type="text" id="course-code" placeholder="Enter course code or name" list="course-code-list">
+                    <datalist id="course-code-list"></datalist>
+                    <button id="search-btn" disabled>Search</button>
+                </div>
+                <div id="validation-message"></div>
+            </section>
+
+            <section id="course-info" class="hidden-section">
+                <h2><i class="fas fa-info-circle"></i> Course Information</h2>
+                <div class="info-container">
+                    <div class="info-item">
+                        <span class="label">Course Code:</span>
+                        <span id="display-course-code" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Course Name (EN):</span>
+                        <span id="course-name-en" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Course Name (ET):</span>
+                        <span id="course-name-et" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Credit Points (EAP):</span>
+                        <span id="course-credits" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Module Code:</span>
+                        <span id="module-code" class="value"></span>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="mlo-display" class="hidden-section">
+                <h2><i class="fas fa-list-check"></i> Module Learning Outcomes</h2>
+                <div id="mlo-container"></div>
+            </section>
+
+            <section id="options-panel" class="hidden-section">
+                <h2><i class="fas fa-cogs"></i> Options</h2>
+                <div class="options-container">
+                    <button id="new-course-btn" class="option-btn">
+                        <i class="fas fa-plus-circle"></i> New Course
+                    </button>
+                    <button id="suggest-clo-btn" class="option-btn">
+                        <i class="fas fa-robot"></i> AI Generate CLOs
+                    </button>
+                    <button id="input-clo-btn" class="option-btn">
+                        <i class="fas fa-edit"></i> Input Existing CLOs
+                    </button>
+                </div>
+            </section>
+
+            <section id="clo-input" class="hidden-section">
+                <h2><i class="fas fa-edit"></i> Course Learning Outcomes</h2>
+
+                <div id="clo-container">
+                    <div class="clo-input-container">
+                        <textarea 
+                            id="clo-textarea" 
+                            spellcheck="true"
+                            lang="en"
+                            placeholder="Enter each Course Learning Outcome on a new line..."
+                        ></textarea>
+                        <button id="add-clo-btn">Add CLO</button>
+                    </div>
+                    <div id="clo-list"></div>
+                    <button id="analyze-btn" class="primary-btn">Analyze Alignment</button>
+                </div>
+            </section>
+
+            <section id="clo-suggestions" class="hidden-section">
+                <h2><i class="fas fa-lightbulb"></i> AI-Generated Course Learning Outcomes</h2>
+                <p class="ai-description">Our AI has analyzed the course content and module learning outcomes to generate these suggestions:</p>
+                <div id="suggestions-container"></div>
+                <div class="action-buttons">
+                    <button id="use-suggestions-btn" class="standard-btn primary-btn">Use These Suggestions</button>
+                    <button id="modify-suggestions-btn" class="standard-btn">Modify Suggestions</button>
+                    <button id="regenerate-btn" class="standard-btn"><i class="fas fa-sync-alt"></i> Regenerate</button>
+                </div>
+            </section>
+
+            <section id="alignment-analysis" class="hidden-section">
+                <h2><i class="fas fa-chart-bar"></i> Alignment Analysis</h2>
+                <div id="analysis-container"></div>
+            </section>
+
+            <section id="report-section" class="hidden-section">
+                <h2><i class="fas fa-file-alt"></i> Alignment Report</h2>
+                <div id="report-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 ILO Alignment | TalTech Majandusteaduskonna Siyi Ma</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // Initialize back to top button for all pages
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add back to top button
+            const backToTopButton = document.createElement('div');
+            backToTopButton.className = 'back-to-top';
+            backToTopButton.innerHTML = '<i class="fas fa-arrow-up"></i>';
+            document.body.appendChild(backToTopButton);
+            
+            // Handle scroll event
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.style.opacity = '1';
+                } else {
+                    backToTopButton.style.opacity = '0';
+                }
+            });
+            
+            // Handle click event
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Programme dropdown event: reload data in main.js
+            const programmeSelect = document.getElementById('programme-select');
+            if (programmeSelect && typeof loadProgrammeData === 'function') {
+                programmeSelect.addEventListener('change', function() {
+                    loadProgrammeData(this.value); // main.js should accept programme code
+                });
+            }
+        });
+    </script>
+</body>
+</html>
