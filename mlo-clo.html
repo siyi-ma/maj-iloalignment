@@ -84,7 +84,7 @@
         </div>
         
         <footer>
-            <p>&copy; 2025 TVTB ILO Alignment | TalTech Majandusteaduskonna Siyi Ma</p>
+            <p>&copy; 2025 MAJ ILO Alignment | TalTech Majandusteaduskonna Siyi Ma</p>
         </footer>
     </div>
 
@@ -97,7 +97,8 @@
             try {
                 const response = await fetch('programmes.json');
                 const data = await response.json();
-                mlos = (data.tvtb.mlos || []).map((m, i) => ({
+                const selectedProgramme = document.getElementById('programme-select').value;
+                mlos = (data[selectedProgramme].mlos || []).map((m, i) => ({
                     text: m.mlosisuik || m.mlosisuek || m.mlosisuen || m.mlosisuer || "",
                     index: i + 1
                 }));
