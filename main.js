@@ -39,6 +39,8 @@ async function loadProgrammeData(programmeCode = 'tvtb') {
         courseData = (programme.courses || []);
         mloData = (programme.mlos || []);
         window.currentPLOs = (programme.plos || []);
+        window.currentCourseData = courseData; // Make course data globally available
+        window.currentProgrammeCode = programmeCode; // Store current programme code
 
         // Update course dropdown
         populateCourseCodeAutocomplete();
@@ -94,11 +96,31 @@ function displayPloMloMatrix(programme) {
 
     let html = `<h3>Programme Learning Outcomes (PLOs)</h3>`;
     if (plos.length > 0) {
-        html += '<div class="outcomes-list">';
+        // Create bilingual table for PLOs
+        html += `<table class="mlo-table">`;
+        html += `<thead>`;
+        html += `<tr>`;
+        html += `<th class="mlo-code-col">PLO Code</th>`;
+        html += `<th class="estonian-col">plosisuek</th>`;
+        html += `<th class="english-col">plosisuik</th>`;
+        html += `</tr>`;
+        html += `</thead>`;
+        html += `<tbody>`;
+        
         plos.forEach((plo, i) => {
-            html += `<div class="outcome-item"><strong>PLO ${i+1}:</strong> ${plo.plosisuik || plo.plosisuek || ''}</div>`;
+            html += `<tr>`;
+            html += `<td class="mlo-code"><strong>PLO ${i+1}</strong></td>`;
+            html += `<td class="estonian-content">`;
+            html += `<div class="mlo-description">${plo.plosisuek || 'N/A'}</div>`;
+            html += `</td>`;
+            html += `<td class="english-content">`;
+            html += `<div class="mlo-description">${plo.plosisuik || 'N/A'}</div>`;
+            html += `</td>`;
+            html += `</tr>`;
         });
-        html += '</div>';
+        
+        html += `</tbody>`;
+        html += `</table>`;
     } else {
         html += '<p>No PLOs available for this programme.</p>';
     }
@@ -133,16 +155,22 @@ function displayPloMloMatrix(programme) {
         Object.keys(groupedMLOs).sort().forEach(moduleCode => {
             const moduleName = moduleNames[moduleCode.toLowerCase()] || moduleCode.toUpperCase();
             
+            // Get the first MLO to extract module names
+            const firstMLO = groupedMLOs[moduleCode][0];
+            const moduleHeaderText = firstMLO && firstMLO.mlonimetusek && firstMLO.mlonimetusik 
+                ? `${moduleName} - ${firstMLO.mlonimetusek} / ${firstMLO.mlonimetusik}`
+                : moduleName;
+            
             html += `<div class="module-group">`;
-            html += `<h4 class="module-header">${moduleName}</h4>`;
+            html += `<h4 class="module-header">${moduleHeaderText}</h4>`;
             
             // Create bilingual table
             html += `<table class="mlo-table">`;
             html += `<thead>`;
             html += `<tr>`;
             html += `<th class="mlo-code-col">MLO Code</th>`;
-            html += `<th class="estonian-col">Estonian / Eesti keel</th>`;
-            html += `<th class="english-col">English / Inglise keel</th>`;
+            html += `<th class="estonian-col">mlonimetusek</th>`;
+            html += `<th class="english-col">mlonimetusik</th>`;
             html += `</tr>`;
             html += `</thead>`;
             html += `<tbody>`;
@@ -152,11 +180,9 @@ function displayPloMloMatrix(programme) {
                 html += `<tr>`;
                 html += `<td class="mlo-code"><strong>${moduleCode.toUpperCase()}_${mloNumber}</strong></td>`;
                 html += `<td class="estonian-content">`;
-                html += `<div class="mlo-title"><strong>${mlo.mlonimetusek || 'N/A'}</strong></div>`;
                 html += `<div class="mlo-description">${mlo.mlosisuek || 'N/A'}</div>`;
                 html += `</td>`;
                 html += `<td class="english-content">`;
-                html += `<div class="mlo-title"><strong>${mlo.mlonimetusik || 'N/A'}</strong></div>`;
                 html += `<div class="mlo-description">${mlo.mlosisuik || 'N/A'}</div>`;
                 html += `</td>`;
                 html += `</tr>`;
