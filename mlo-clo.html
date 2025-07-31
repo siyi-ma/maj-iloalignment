@@ -90,29 +90,74 @@
 
     <script src="main.js"></script>
     <script>
+        // Get course parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseCode = urlParams.get('course');
+        
         // Example: Fetch MLOs and CLOs dynamically and display alignment
         document.addEventListener('DOMContentLoaded', async function() {
-            // Fetch MLOs from programmes.json (example: tvtb > mlos)
+            // Update header with course information
+            if (courseCode) {
+                document.querySelector('header h1').innerHTML = 
+                    `<i class="fas fa-graduation-cap"></i> Course Learning Outcomes Analysis: ${courseCode}`;
+            }
+            
+            // Fetch MLOs from programmes.json
             let mlos = [];
+            let courseInfo = null;
             try {
-                const response = await fetch('programmes.json');
+                const response = await fetch('data/programmes.json');
                 const data = await response.json();
-                const selectedProgramme = document.getElementById('programme-select').value;
-                mlos = (data[selectedProgramme].mlos || []).map((m, i) => ({
-                    text: m.mlosisuik || m.mlosisuek || m.mlosisuen || m.mlosisuer || "",
-                    index: i + 1
-                }));
+                
+                // Try to find the course in all programmes
+                for (const [progCode, programme] of Object.entries(data)) {
+                    if (programme.courses) {
+                        courseInfo = programme.courses.find(course => course.ainekood === courseCode);
+                        if (courseInfo) {
+                            mlos = (programme.mlos || []).map((m, i) => ({
+                                text: m.mlosisuik || m.mlosisuek || "",
+                                code: m.mlokood || `mlo_${i+1}`,
+                                index: i + 1
+                            }));
+                            break;
+                        }
+                    }
+                }
             } catch (e) {
+                console.error('Error loading programme data:', e);
                 mlos = [];
             }
 
-            // Example: Fetch CLOs from user input or another source
-            // For demo, use static CLOs
-            const clos = [
-                { text: "Apply marketing concepts to real-world business problems.", index: 1 },
-                { text: "Analyze financial statements and make recommendations.", index: 2 },
-                { text: "Demonstrate effective teamwork and communication.", index: 3 }
-            ];
+            // Display course information if found
+            if (courseInfo) {
+                const courseSection = document.createElement('section');
+                courseSection.innerHTML = `
+                    <h2><i class="fas fa-book"></i> Course Information</h2>
+                    <div class="outcome-item">
+                        <h3>${courseInfo.ainekood}</h3>
+                        <p><strong>English:</strong> ${courseInfo.ainenimetusik || 'N/A'}</p>
+                        <p><strong>Estonian:</strong> ${courseInfo.ainenimetusek || 'N/A'}</p>
+                        <p><strong>Credits:</strong> ${courseInfo.ead || 'N/A'}</p>
+                    </div>
+                `;
+                document.querySelector('main').insertBefore(courseSection, document.getElementById('clo-section'));
+            }
+
+            // Example: Use CLOs from course data or create sample ones
+            let clos = [];
+            if (courseInfo && courseInfo.clos) {
+                clos = courseInfo.clos.map((clo, i) => ({
+                    text: clo.closisuik || clo.closisuek || clo,
+                    index: i + 1
+                }));
+            } else {
+                // Sample CLOs for demonstration
+                clos = [
+                    { text: "Apply core concepts and principles to solve practical problems.", index: 1 },
+                    { text: "Analyze and evaluate information using appropriate methodologies.", index: 2 },
+                    { text: "Demonstrate effective communication and collaboration skills.", index: 3 }
+                ];
+            }
 
             // Display CLOs
             const cloContainer = document.getElementById('clo-container');
