@@ -4,39 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAJ Learning Outcome Alignment Tool</title>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="style.css"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* It is recommended to move this CSS to your style.css file */
-        body {
-            font-family: sans-serif;
-            background-color: #f4f4f9;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .home-btn {
-            padding: 10px 15px;
-            border: none;
-            background-color: #AA1352;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-=======
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
         .programme-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -72,7 +42,155 @@
         .hidden {
             display: none;
         }
-<<<<<<< HEAD
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1 id="hero-title"><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
+                <p>Course and Module Learning Outcomes Alignment Tool</p>
+            </div>
+            <button id="home-btn" class="home-btn"><i class="fas fa-home"></i> Home</button>
+        </header>
+
+        <div id="programme-names"></div>
+
+        <main>
+            <!-- Programme Selection Section -->
+            <section id="programme-select-section" class="active-section">
+                <h2><i class="fas fa-university"></i> Choose Study Programme</h2>
+                <div class="programme-grid">
+                    <div class="programme-box" data-programme="tvtb">
+                        <div class="programme-name">Rahvusvaheline ärikorraldus</div>
+                        <div class="programme-code">TVTB</div>
+                    </div>
+                    <div class="programme-box" data-programme="majb">
+                        <div class="programme-name">Jätkusuutlik ettevõtlus ja ringmajandus</div>
+                        <div class="programme-code">MAJB</div>
+                    </div>
+                    <div class="programme-box" data-programme="makm">
+                        <div class="programme-name">Kestlikkuse juhtimine</div>
+                        <div class="programme-code">MAKM</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PLO-MLO Alignment Section (initially hidden) -->
+            <section id="plo-mlo-section" class="hidden-section">
+                <h2><i class="fas fa-link"></i> Programme-Module Learning Outcomes Alignment</h2>
+                <div id="plo-mlo-matrix"></div>
+            </section>
+
+            <!-- Course Selection Section (initially hidden) -->
+            <section id="course-select-section" class="hidden-section">
+                <h2><i class="fas fa-book"></i> Select Course</h2>
+                <div class="input-container">
+                    <input type="text" id="course-code" list="course-code-list" placeholder="Enter course code or name">
+                    <datalist id="course-code-list"></datalist>
+                    <button id="search-btn" disabled>Search</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const programmeBoxes = document.querySelectorAll('.programme-box');
+            
+            programmeBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    const programmeCode = this.dataset.programme;
+                    const programmeName = this.querySelector('.programme-name').textContent;
+                    
+                    // Update hero title
+                    document.getElementById('hero-title').innerHTML = 
+                        `<i class="fas fa-graduation-cap"></i> ${programmeName}`;
+                    
+                    // Hide programme selection
+                    document.getElementById('programme-select-section').classList.add('hidden');
+                    
+                    // Show PLO-MLO alignment and course selection
+                    document.getElementById('plo-mlo-section').classList.remove('hidden');
+                    document.getElementById('course-select-section').classList.remove('hidden');
+                    
+                    // Load programme data
+                    loadProgrammeData(programmeCode);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAJ Learning Outcome Alignment Tool</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* It is recommended to move this CSS to your style.css file */
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .home-btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #AA1352;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .programme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .programme-box {
+            background: white;
+            border: 2px solid #AA1352;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .programme-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #AA1352;
+            color: white;
+        }
+        .programme-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .programme-code {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .programme-box:hover .programme-code {
+            color: #eee;
+        }
+        .hidden {
+            display: none;
+        }
         .mlo-groups {
             margin: 20px 0;
         }
@@ -158,8 +276,6 @@
             background-color: #f8f9fa;
             border-left: 3px solid #342b60;
         }
-=======
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
     </style>
 </head>
 <body>
@@ -167,26 +283,14 @@
         <header>
             <div class="header-content">
                 <h1 id="hero-title"><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
-<<<<<<< HEAD
                 <p id="hero-subtitle">Course and Module Learning Outcomes Alignment Tool</p>
-=======
-                <p>Course and Module Learning Outcomes Alignment Tool</p>
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
             </div>
             <button id="home-btn" class="home-btn"><i class="fas fa-home"></i> Home</button>
         </header>
 
-<<<<<<< HEAD
         <main>
             <!-- Programme Selection Section -->
             <section id="programme-select-section">
-=======
-        <div id="programme-names"></div>
-
-        <main>
-            <!-- Programme Selection Section -->
-            <section id="programme-select-section" class="active-section">
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
                 <h2><i class="fas fa-university"></i> Choose Study Programme</h2>
                 <div class="programme-grid">
                     <div class="programme-box" data-programme="tvtb">
@@ -205,7 +309,6 @@
             </section>
 
             <!-- PLO-MLO Alignment Section (initially hidden) -->
-<<<<<<< HEAD
             <section id="plo-mlo-section" class="hidden">
                 <h2><i class="fas fa-link"></i> Programme-Module Learning Outcomes Alignment</h2>
                 <div id="plo-mlo-matrix">
@@ -215,15 +318,6 @@
 
             <!-- Course Selection Section (initially hidden) -->
             <section id="course-select-section" class="hidden">
-=======
-            <section id="plo-mlo-section" class="hidden-section">
-                <h2><i class="fas fa-link"></i> Programme-Module Learning Outcomes Alignment</h2>
-                <div id="plo-mlo-matrix"></div>
-            </section>
-
-            <!-- Course Selection Section (initially hidden) -->
-            <section id="course-select-section" class="hidden-section">
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
                 <h2><i class="fas fa-book"></i> Select Course</h2>
                 <div class="input-container">
                     <input type="text" id="course-code" list="course-code-list" placeholder="Enter course code or name">
@@ -237,7 +331,6 @@
     <script src="main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-<<<<<<< HEAD
             // --- DICTIONARY FOR ENGLISH NAMES ---
             const programmeEnglishNames = {
                 tvtb: 'International Business Administration',
@@ -277,31 +370,11 @@
                     // SHOW the data and course selection sections
                     ploMloSection.classList.remove('hidden');
                     courseSelectSection.classList.remove('hidden');
-=======
-            const programmeBoxes = document.querySelectorAll('.programme-box');
-            
-            programmeBoxes.forEach(box => {
-                box.addEventListener('click', function() {
-                    const programmeCode = this.dataset.programme;
-                    const programmeName = this.querySelector('.programme-name').textContent;
-                    
-                    // Update hero title
-                    document.getElementById('hero-title').innerHTML = 
-                        `<i class="fas fa-graduation-cap"></i> ${programmeName}`;
-                    
-                    // Hide programme selection
-                    document.getElementById('programme-select-section').classList.add('hidden');
-                    
-                    // Show PLO-MLO alignment and course selection
-                    document.getElementById('plo-mlo-section').classList.remove('hidden');
-                    document.getElementById('course-select-section').classList.remove('hidden');
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
                     
                     // Load programme data
                     loadProgrammeData(programmeCode);
                 });
             });
-<<<<<<< HEAD
 
             // Home button functionality to "start over"
             homeBtn.addEventListener('click', function() {
@@ -329,8 +402,6 @@
 
             // --- FUNCTIONS ---
             // Note: loadProgrammeData function is defined in main.js
-=======
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
         });
     </script>
 </body>
