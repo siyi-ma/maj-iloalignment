@@ -25,23 +25,17 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // Load Programme data from JSON and remap fields
 async function loadProgrammeData(programmeCode = 'tvtb') {
-<<<<<<< HEAD
     console.log('Loading programme data for:', programmeCode);
-=======
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
     try {
         const response = await fetch('data/programmes.json');
         const json = await response.json();
         const programme = json[programmeCode];
 
-<<<<<<< HEAD
         console.log('Programme data loaded:', programme);
         console.log('Number of courses:', programme.courses ? programme.courses.length : 0);
         console.log('Number of MLOs:', programme.mlos ? programme.mlos.length : 0);
         console.log('Number of PLOs:', programme.plos ? programme.plos.length : 0);
 
-=======
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
         courseData = (programme.courses || []);
         mloData = (programme.mlos || []);
         window.currentPLOs = (programme.plos || []);
@@ -49,12 +43,8 @@ async function loadProgrammeData(programmeCode = 'tvtb') {
         // Update course dropdown
         populateCourseCodeAutocomplete();
 
-<<<<<<< HEAD
         // Update PLO-MLO matrix display
         displayPloMloMatrix(programme);
-
-=======
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
         // --- Add this block to update the page title and a visible heading ---
         if (programme.kavanimetusek && programme.kavanimetusik) {
             document.title = `${programme.kavanimetusek} / ${programme.kavanimetusik} - MAJ Learning Outcome Alignment Tool`;
@@ -89,7 +79,6 @@ function populateCourseCodeAutocomplete() {
     });
 }
 
-<<<<<<< HEAD
 // Display PLO-MLO alignment matrix
 function displayPloMloMatrix(programme) {
     const matrixContainer = document.getElementById('plo-mlo-matrix');
@@ -185,8 +174,6 @@ function displayPloMloMatrix(programme) {
     matrixContainer.innerHTML = html;
 }
 
-=======
->>>>>>> d3b8d87668050c1b5ddb0def8ceef41b7ada645d
 // --- UI logic and event handlers imported from 6scyxiy6c1.js ---
 
 function setupEventListeners() {
