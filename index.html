@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAJ Learning Outcome Alignment Tool</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* It is recommended to move this CSS to your style.css file */
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .home-btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #AA1352;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .programme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .programme-box {
+            background: white;
+            border: 2px solid #AA1352;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .programme-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #AA1352;
+            color: white;
+        }
+        .programme-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .programme-code {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .programme-box:hover .programme-code {
+            color: #eee;
+        }
+        .hidden {
+            display: none;
+        }
+        .mlo-groups {
+            margin: 20px 0;
+        }
+        .module-group {
+            margin: 30px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .module-header {
+            background-color: #342b60;
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .mlo-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        .mlo-table th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: bold;
+        }
+        .mlo-table td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+        .mlo-table tr:last-child td {
+            border-bottom: none;
+        }
+        .mlo-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .mlo-code-col {
+            width: 15%;
+            background-color: #e9ecef !important;
+        }
+        .estonian-col {
+            width: 42.5%;
+            background-color: #fff3cd !important;
+        }
+        .english-col {
+            width: 42.5%;
+            background-color: #d1ecf1 !important;
+        }
+        .mlo-code {
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+        .mlo-title {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #212529;
+        }
+        .mlo-description {
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: #495057;
+        }
+        .estonian-content, .english-content {
+            padding: 0;
+        }
+        .outcome-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+        .outcome-item:last-child {
+            border-bottom: none;
+        }
+        .outcomes-list .outcome-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 3px solid #342b60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1 id="hero-title"><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
+                <p id="hero-subtitle">Course and Module Learning Outcomes Alignment Tool</p>
+            </div>
+            <button id="home-btn" class="home-btn"><i class="fas fa-home"></i> Home</button>
+        </header>
+
+        <main>
+            <!-- Programme Selection Section -->
+            <section id="programme-select-section">
+                <h2><i class="fas fa-university"></i> Choose Study Programme</h2>
+                <div class="programme-grid">
+                    <div class="programme-box" data-programme="tvtb">
+                        <div class="programme-name">Rahvusvaheline ärikorraldus</div>
+                        <div class="programme-code">TVTB</div>
+                    </div>
+                    <div class="programme-box" data-programme="majb">
+                        <div class="programme-name">Jätkusuutlik ettevõtlus ja ringmajandus</div>
+                        <div class="programme-code">MAJB</div>
+                    </div>
+                    <div class="programme-box" data-programme="makm">
+                        <div class="programme-name">Kestlikkuse juhtimine</div>
+                        <div class="programme-code">MAKM</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PLO-MLO Alignment Section (initially hidden) -->
+            <section id="plo-mlo-section" class="hidden">
+                <h2><i class="fas fa-link"></i> Programme-Module Learning Outcomes Alignment</h2>
+                <div id="plo-mlo-matrix">
+                    <p>Programme data loading...</p>
+                </div>
+            </section>
+
+            <!-- Course Selection Section (initially hidden) -->
+            <section id="course-select-section" class="hidden">
+                <h2><i class="fas fa-book"></i> Select Course</h2>
+                <div class="input-container">
+                    <input type="text" id="course-code" list="course-code-list" placeholder="Enter course code or name">
+                    <datalist id="course-code-list"></datalist>
+                    <button id="search-btn" disabled>Search</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DICTIONARY FOR ENGLISH NAMES ---
+            const programmeEnglishNames = {
+                tvtb: 'International Business Administration',
+                majb: 'Sustainable Entrepreneurship and Circular Economy',
+                makm: 'Sustainability Management'
+            };
+
+            // --- ELEMENT SELECTIONS ---
+            const programmeSelectSection = document.getElementById('programme-select-section');
+            const ploMloSection = document.getElementById('plo-mlo-section');
+            const courseSelectSection = document.getElementById('course-select-section');
+            const heroTitle = document.getElementById('hero-title');
+            const heroSubtitle = document.getElementById('hero-subtitle');
+            const homeBtn = document.getElementById('home-btn');
+            const courseInput = document.getElementById('course-code');
+            const searchBtn = document.getElementById('search-btn');
+            
+            const originalTitleHTML = heroTitle.innerHTML;
+            const originalSubtitleHTML = heroSubtitle.innerHTML;
+
+            // --- EVENT LISTENERS ---
+
+            // Listen for clicks on any programme box
+            document.querySelectorAll('.programme-box').forEach(box => {
+                box.addEventListener('click', function() {
+                    const programmeCode = this.dataset.programme;
+                    // NEW: Look up the English name from the dictionary
+                    const programmeNameInEnglish = programmeEnglishNames[programmeCode] || "Selected Programme";
+                    
+                    // UPDATE: Set the header title to the English name
+                    heroTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeNameInEnglish}`;
+                    heroSubtitle.textContent = `Programme Code: ${programmeCode.toUpperCase()}`;
+                    
+                    // HIDE the programme selection grid
+                    programmeSelectSection.classList.add('hidden');
+                    
+                    // SHOW the data and course selection sections
+                    ploMloSection.classList.remove('hidden');
+                    courseSelectSection.classList.remove('hidden');
+                    
+                    // Load programme data
+                    loadProgrammeData(programmeCode);
+                });
+            });
+
+            // Home button functionality to "start over"
+            homeBtn.addEventListener('click', function() {
+                // Restore original header content
+                heroTitle.innerHTML = originalTitleHTML;
+                heroSubtitle.innerHTML = originalSubtitleHTML;
+
+                // SHOW the programme selection grid again
+                programmeSelectSection.classList.remove('hidden');
+                
+                // HIDE the data sections
+                ploMloSection.classList.add('hidden');
+                courseSelectSection.classList.add('hidden');
+
+                // Clear any data from the previous choice
+                document.getElementById('plo-mlo-matrix').innerHTML = '<p>Programme data loading...</p>';
+                courseInput.value = '';
+                searchBtn.disabled = true;
+            });
+            
+            // Logic to enable search button on input
+            courseInput.addEventListener('input', function() {
+                searchBtn.disabled = this.value.trim() === '';
+            });
+
+            // --- FUNCTIONS ---
+            // Note: loadProgrammeData function is defined in main.js
+        });
+    </script>
+</body>
+</html>
