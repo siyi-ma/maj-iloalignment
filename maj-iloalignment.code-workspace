@@ -1,0 +1,102 @@
+{
+  "folders": [
+    {
+      "name": "MAJ ILO Alignment Tool",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "git.defaultBranchName": "main",
+    "git.autoRepositoryDetection": true,
+    "copilot.enable": {
+      "*": true,
+      "plaintext": false,
+      "markdown": true,
+      "scminput": false
+    },
+    "files.exclude": {
+      "**/.git": false,
+      "**/.DS_Store": true,
+      "**/.vscode": false,
+      "**/node_modules": true,
+      "**/*.log": true
+    },
+    "explorer.confirmDelete": true,
+    "explorer.confirmDragAndDrop": true,
+    "workbench.startupEditor": "welcomePage",
+    "git.openRepositoryInParentFolders": "always"
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.vscode-json",
+      "esbenp.prettier-vscode",
+      "ms-vscode.live-server",
+      "github.copilot",
+      "github.copilot-chat",
+      "ms-vscode.git-extension-pack"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch MAJ ILO Alignment Tool",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/index.html",
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Open in Live Server",
+        "type": "shell",
+        "command": "code",
+        "args": ["--install-extension", "ms-vscode.live-server"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Switch to main branch",
+        "type": "shell",
+        "command": "git",
+        "args": ["checkout", "main"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Ensure Main Branch (Auto)",
+        "type": "shell",
+        "command": "powershell",
+        "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/ensure-main-branch.ps1"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "silent",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": [],
+        "runOptions": {
+          "runOn": "folderOpen"
+        }
+      }
+    ]
+  }
+}
