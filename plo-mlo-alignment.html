@@ -330,7 +330,7 @@
         }
         
         .mlo-code-col {
-            width: 15%;
+            width: 6%;
         }
         
         .content-col {
@@ -348,6 +348,11 @@
             font-size: 0.95em;
             line-height: 1.4;
             color: #495057;
+        }
+        
+        /* Global h2 styling */
+        h2 {
+            color: #342b60 !important; /* TT DARK BLUE */
         }
         
         /* Language Toggle Styles */
@@ -416,15 +421,19 @@
         .language-label {
             font-size: 0.9em;
             font-weight: bold;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
         }
         
         .language-label.active {
             opacity: 1;
+            color: #e4067e; /* TT MAGENTA */
+            font-weight: 900;
+            text-shadow: 0 0 5px rgba(228, 6, 126, 0.3);
         }
         
         .language-label.inactive {
             opacity: 0.6;
+            color: rgba(255,255,255,0.7);
         }
         
         /* Overview and Legend Styles */
@@ -751,6 +760,42 @@
             color: #6f5500;
         }
         
+        .plo-content-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #342b60;
+        }
+        
+        .plo-content-section h3 {
+            color: #342b60;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .plo-content-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .plo-content-box h4 {
+            margin: 0 0 10px 0;
+            color: #342b60;
+            font-size: 1.1em;
+        }
+        
+        .plo-content-box p {
+            margin: 0;
+            color: #495057;
+            line-height: 1.5;
+        }
+        
         .module-group {
             margin: 30px 0;
             border: 1px solid #ddd;
@@ -790,9 +835,6 @@
                     <span class="toggle-slider"></span>
                 </label>
                 <span class="language-label" id="eng-label">ENG</span>
-                <span style="margin-left: 15px; font-size: 0.9em;">
-                    <i class="fas fa-language"></i> Language / Keel
-                </span>
             </div>
 
             <section id="overview" class="overview-section">
@@ -815,22 +857,22 @@
             <section id="alignment-summary" class="alignment-summary">
                 <h2><i class="fas fa-chart-bar"></i> Alignment Summary</h2>
                 <div class="summary-content">
-                    <p>The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the business school programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to the programme's educational objectives.</p>
+                    <p>The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the Sustainability Management programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing sustainability leadership and management competencies.</p>
                     
                     <div class="summary-findings">
-                        <h4>Critical findings and improvement suggestions:</h4>
+                        <h4>Critical findings for Sustainability Management programme:</h4>
                         <ul class="findings-list">
-                            <li><strong>General Studies Module (YL)</strong> shows inadequate alignment (2.66/5) with programme goals - needs stronger connections to business administration concepts</li>
-                            <li><strong>Core modules (P1 and P2)</strong> demonstrate inconsistent alignment patterns with some weak areas in integrative skills and communication competencies</li>
-                            <li><strong>Special Studies Module E1</strong> shows concerning low alignment scores (1.60/5) with critical PLOs - requires significant curriculum restructuring</li>
-                            <li><strong>Accounting and Finance (E2)</strong> needs better integration with entrepreneurial and management PLOs</li>
-                            <li><strong>The Graduation Thesis Module</strong> needs clearer alignment with professional communication and teamwork PLOs</li>
+                            <li><strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainability management goals - needs stronger integration of environmental and social responsibility concepts</li>
+                            <li><strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on sustainable business models and circular economy principles</li>
+                            <li><strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on stakeholder engagement and ESG (Environmental, Social, Governance) frameworks</li>
+                            <li><strong>Programme lacks specialized sustainability modules</strong> - critical gap in advanced sustainability management, carbon footprint analysis, and green innovation strategies</li>
+                            <li><strong>Integration across modules</strong> needs improvement to create cohesive sustainability leadership competencies throughout the curriculum</li>
                         </ul>
                     </div>
                     
                     <div class="recommendations">
-                        <h4>Recommended actions:</h4>
-                        <p>Review module content with focus on strengthening interdisciplinary connections, address significant gaps in E1 module, and better integrate practical skill development across the curriculum.</p>
+                        <h4>Recommended actions for programme enhancement:</h4>
+                        <p>Integrate sustainability frameworks into all modules, develop specialized sustainability management courses, strengthen connections between business strategy and environmental impact, and enhance practical application of sustainability metrics and reporting standards.</p>
                     </div>
                 </div>
             </section>
@@ -1020,7 +1062,112 @@
                 });
             }
 
+            // View toggle button functionality
+            let currentView = 'plo'; // 'plo' or 'mlo'
+            const viewToggleBtn = document.getElementById('view-toggle-btn');
+            if (viewToggleBtn) {
+                viewToggleBtn.addEventListener('click', function() {
+                    currentView = currentView === 'plo' ? 'mlo' : 'plo';
+                    updateViewToggleButton();
+                    updateDetailedView();
+                });
+            }
+
+            function updateViewToggleButton() {
+                const btn = document.getElementById('view-toggle-btn');
+                if (btn) {
+                    if (currentView === 'plo') {
+                        btn.innerHTML = '<i class="fas fa-exchange-alt"></i> Switch to MLO View';
+                    } else {
+                        btn.innerHTML = '<i class="fas fa-exchange-alt"></i> Switch to PLO View';
+                    }
+                }
+            }
+
+            function updateDetailedView() {
+                const analysisHeader = document.getElementById('analysis-header');
+                if (analysisHeader) {
+                    if (currentView === 'plo') {
+                        analysisHeader.innerHTML = '<p>Below is a detailed breakdown of alignment between Programme Learning Outcomes and Module Learning Outcomes.</p>';
+                    } else {
+                        analysisHeader.innerHTML = '<p>Below is a detailed breakdown organized by Module Learning Outcomes and their alignment with Programme Learning Outcomes.</p>';
+                    }
+                }
+                
+                // Re-generate the detailed analysis with current view
+                if (currentPLOs.length > 0 || currentMLOs.length > 0) {
+                    const moduleGroups = groupMLOsByCategory(currentMLOs);
+                    const alignmentResults = [];
+                    displayDetailedAnalysis(currentPLOs, moduleGroups, alignmentResults);
+                }
+            }
+
             // Load the data from the JSON file
+            // Update alignment summary based on programme
+            function updateAlignmentSummary(programmeCode, programmeName) {
+                const alignmentSummaries = {
+                    'tvtb': {
+                        description: 'The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the International Business Administration programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing global business competencies and international trade expertise.',
+                        title: 'Critical findings for International Business Administration programme:',
+                        findings: [
+                            '<strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with international business goals - needs stronger integration of global market dynamics and cross-cultural communication concepts',
+                            '<strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on international trade theories and global supply chain management',
+                            '<strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on international market entry strategies and multinational corporation management',
+                            '<strong>Programme lacks specialized international business modules</strong> - critical gap in international finance, global marketing strategies, and cross-border business law',
+                            '<strong>Integration across modules</strong> needs improvement to create cohesive international business leadership competencies throughout the curriculum'
+                        ],
+                        recommendations: 'Integrate international business frameworks into all modules, develop specialized global market analysis courses, strengthen connections between local and international business practices, and enhance practical application of international trade regulations and global business ethics.'
+                    },
+                    'majb': {
+                        description: 'The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the Sustainable Entrepreneurship programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing sustainable business innovation and entrepreneurial competencies.',
+                        title: 'Critical findings for Sustainable Entrepreneurship programme:',
+                        findings: [
+                            '<strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainable entrepreneurship goals - needs stronger integration of innovation methodologies and sustainable business model concepts',
+                            '<strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on green economy principles and social entrepreneurship frameworks',
+                            '<strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on impact measurement and sustainable venture capital strategies',
+                            '<strong>Programme lacks specialized entrepreneurship modules</strong> - critical gap in startup incubation, social impact assessment, and sustainable innovation management',
+                            '<strong>Integration across modules</strong> needs improvement to create cohesive sustainable entrepreneurship competencies throughout the curriculum'
+                        ],
+                        recommendations: 'Integrate sustainable entrepreneurship frameworks into all modules, develop specialized social innovation courses, strengthen connections between business viability and environmental impact, and enhance practical application of impact metrics and sustainable business development strategies.'
+                    },
+                    'makm': {
+                        description: 'The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the Sustainability Management programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing sustainability leadership and management competencies.',
+                        title: 'Critical findings for Sustainability Management programme:',
+                        findings: [
+                            '<strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainability management goals - needs stronger integration of environmental and social responsibility concepts',
+                            '<strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on sustainable business models and circular economy principles',
+                            '<strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on stakeholder engagement and ESG (Environmental, Social, Governance) frameworks',
+                            '<strong>Programme lacks specialized sustainability modules</strong> - critical gap in advanced sustainability management, carbon footprint analysis, and green innovation strategies',
+                            '<strong>Integration across modules</strong> needs improvement to create cohesive sustainability leadership competencies throughout the curriculum'
+                        ],
+                        recommendations: 'Integrate sustainability frameworks into all modules, develop specialized sustainability management courses, strengthen connections between business strategy and environmental impact, and enhance practical application of sustainability metrics and reporting standards.'
+                    }
+                };
+
+                const summaryData = alignmentSummaries[programmeCode] || alignmentSummaries['makm']; // fallback to MAKM
+                
+                const summaryContent = document.querySelector('.summary-content');
+                if (summaryContent) {
+                    const programmeLongName = programmeName ? programmeName.english : 'the programme';
+                    
+                    summaryContent.innerHTML = `
+                        <p>${summaryData.description}</p>
+                        
+                        <div class="summary-findings">
+                            <h4>${summaryData.title}</h4>
+                            <ul class="findings-list">
+                                ${summaryData.findings.map(finding => `<li>${finding}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="recommendations">
+                            <h4>Recommended actions for programme enhancement:</h4>
+                            <p>${summaryData.recommendations}</p>
+                        </div>
+                    `;
+                }
+            }
+
             async function loadProgrammeData(programmeCode = 'tvtb') {
                 console.log("=== LOADING PROGRAMME DATA ===");
                 console.log("Programme code:", programmeCode);
@@ -1065,6 +1212,10 @@
                             overviewText.textContent = `This analysis examines how well the Module Learning Outcomes (MLOs) align with the Programme Learning Outcomes (PLOs) for ${estName} (${programmeCode.toUpperCase()}). The alignment is scored on a scale from 1 to 5:`;
                             console.log("Overview text updated");
                         }
+
+                        // Update alignment summary to be dynamic
+                        updateAlignmentSummary(programmeCode, programmeName);
+                        console.log("Alignment summary updated");
 
                         // Get PLOs and MLOs
                         currentPLOs = currentProgrammeData.plos || [];
@@ -1223,44 +1374,31 @@
                 if (matrixContainer) {
                     
                     let matrixHtml = `
-                        <h2><i class="fas fa-th"></i> PLO-MLO Alignment Matrix</h2>
-                        <p class="matrix-description">This matrix shows the alignment scores between Programme Learning Outcomes (PLOs) and Module Learning Outcomes (MLOs).</p>
-                        
-                        <div class="score-legend">
-                            <h4>Score Legend:</h4>
-                            <div class="legend-items">
-                                <span class="legend-item score-1">1 - No alignment</span>
-                                <span class="legend-item score-2">2 - Weak alignment</span>
-                                <span class="legend-item score-3">3 - Moderate alignment</span>
-                                <span class="legend-item score-4">4 - Strong alignment</span>
-                                <span class="legend-item score-5">5 - Perfect alignment</span>
-                            </div>
-                        </div>
-                        
                         <table class="matrix-table">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" class="plo-header">PLO</th>
-                                    <th colspan="4" class="module-header">General Studies</th>
-                                    <th colspan="3" class="module-header">P1 Methods</th>
-                                    <th colspan="3" class="module-header">P2 Core Business</th>
-                                    <th colspan="4" class="module-header">E1 Specialization</th>
+                                    <th rowspan="2" class="plo-header">PLO / MLO</th>
+                                    <th colspan="4" class="module-header">General Studies Module</th>
+                                    <th colspan="6" class="module-header">P1: Methods, Markets and Economy</th>
+                                    <th colspan="6" class="module-header">P2: Core Business Competences</th>
                                 </tr>
                                 <tr>
-                                    <th class="mlo-header">yl_mlo1</th>
-                                    <th class="mlo-header">yl_mlo2</th>
-                                    <th class="mlo-header">yl_mlo3</th>
-                                    <th class="mlo-header">yl_mlo4</th>
-                                    <th class="mlo-header">p1_mlo1</th>
-                                    <th class="mlo-header">p1_mlo2</th>
-                                    <th class="mlo-header">p1_mlo3</th>
-                                    <th class="mlo-header">p2_mlo1</th>
-                                    <th class="mlo-header">p2_mlo2</th>
-                                    <th class="mlo-header">p2_mlo3</th>
-                                    <th class="mlo-header">e1_mlo1</th>
-                                    <th class="mlo-header">e1_mlo2</th>
-                                    <th class="mlo-header">e1_mlo3</th>
-                                    <th class="mlo-header">e1_mlo4</th>
+                                    <th class="mlo-header">YLMLO 1</th>
+                                    <th class="mlo-header">YLMLO 2</th>
+                                    <th class="mlo-header">YLMLO 3</th>
+                                    <th class="mlo-header">Avg</th>
+                                    <th class="mlo-header">P1MLO 1</th>
+                                    <th class="mlo-header">P1MLO 2</th>
+                                    <th class="mlo-header">P1MLO 3</th>
+                                    <th class="mlo-header">P1MLO 4</th>
+                                    <th class="mlo-header">P1MLO 5</th>
+                                    <th class="mlo-header">Avg</th>
+                                    <th class="mlo-header">P2MLO 1</th>
+                                    <th class="mlo-header">P2MLO 2</th>
+                                    <th class="mlo-header">P2MLO 3</th>
+                                    <th class="mlo-header">P2MLO 4</th>
+                                    <th class="mlo-header">P2MLO 5</th>
+                                    <th class="mlo-header">Avg</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1269,68 +1407,133 @@
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-4">4</td>
+                                    <td class="score-cell score-3">2.67</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-3">3</td>
                                     <td class="score-cell score-1">1</td>
                                     <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
                                     <td class="score-cell score-3">3</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-1">1</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.20</td>
                                 </tr>
                                 <tr>
                                     <td class="plo-header">PLO 2</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-4">4</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-1">1</td>
+                                    <td class="score-cell score-3">3</td>
                                     <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.40</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-3">3</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-1">1</td>
+                                    <td class="score-cell score-2">2.40</td>
                                 </tr>
                                 <tr>
                                     <td class="plo-header">PLO 3</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-3">3</td>
+                                    <td class="score-cell score-2">2.20</td>
+                                </tr>
+                                <tr>
+                                    <td class="plo-header">PLO 4</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-4">4</td>
+                                    <td class="score-cell score-3">2.67</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-3">3</td>
                                     <td class="score-cell score-1">1</td>
                                     <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
                                     <td class="score-cell score-3">3</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.20</td>
+                                </tr>
+                                <tr>
+                                    <td class="plo-header">PLO 5</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-1">1</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">1.80</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-1">1</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">1.80</td>
+                                </tr>
+                                <tr>
+                                    <td class="plo-header">PLO 6</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-2">2</td>
                                     <td class="score-cell score-3">3</td>
                                     <td class="score-cell score-1">1</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.00</td>
+                                    <td class="score-cell score-3">3</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2</td>
+                                    <td class="score-cell score-2">2.20</td>
                                 </tr>
                                 <tr class="avg-row">
                                     <td>Avg</td>
-                                    <td>2.0</td>
-                                    <td>2.0</td>
-                                    <td>4.0</td>
-                                    <td>2.0</td>
-                                    <td>2.0</td>
-                                    <td>3.0</td>
-                                    <td>1.0</td>
-                                    <td>2.0</td>
-                                    <td>2.0</td>
-                                    <td>3.0</td>
-                                    <td>2.0</td>
-                                    <td>2.0</td>
-                                    <td>3.0</td>
-                                    <td>1.0</td>
+                                    <td>2.00</td>
+                                    <td>2.00</td>
+                                    <td>2.67</td>
+                                    <td>2.22</td>
+                                    <td>2.00</td>
+                                    <td>1.83</td>
+                                    <td>2.67</td>
+                                    <td>1.67</td>
+                                    <td>2.00</td>
+                                    <td>2.03</td>
+                                    <td>2.50</td>
+                                    <td>2.17</td>
+                                    <td>1.83</td>
+                                    <td>2.00</td>
+                                    <td>2.33</td>
+                                    <td>2.17</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1344,126 +1547,82 @@
                 const detailedContainer = document.getElementById('detailed-container');
                 if (detailedContainer) {
                     
-                    // Sample data for MLO analysis - grouped by module category
+                    // Sample PLO content for Sustainability Management programme
+                    const ploContent = {
+                        'PLO 1': 'Synthesizes wide-ranging knowledge and skills to overcome challenges in international organizations in various sectors as an employee, to run one\'s own business, and/or to continue studies on graduate level.',
+                        'PLO 2': 'Demonstrates critical thinking and analytical skills in evaluating complex sustainability challenges in business environments.',
+                        'PLO 3': 'Applies sustainability frameworks and ESG principles to develop innovative business solutions and strategies.',
+                        'PLO 4': 'Communicates effectively with diverse stakeholders about sustainability initiatives and environmental impact assessments.',
+                        'PLO 5': 'Leads and manages sustainable business transformations while considering economic, environmental, and social implications.',
+                        'PLO 6': 'Integrates circular economy principles and green innovation strategies into organizational decision-making processes.'
+                    };
+                    
+                    // Enhanced MLO analysis data with more specific justifications
                     const sampleData = {
                         'yl': {
                             name: 'General Studies Module',
-                            avgScore: 2.5,
+                            avgScore: 2.2,
                             mlos: [
                                 {
                                     code: 'yl_mlo1',
                                     content: 'Knows the basic principles of ICT, is able to find and evaluate information efficiently.',
                                     score: 2,
-                                    justification: 'Limited alignment with PLO requirements. Basic ICT skills do not directly support advanced programme goals.',
+                                    justification: 'While information evaluation skills support PLO 1\'s knowledge synthesis requirement, the focus on basic ICT lacks connection to sustainability management contexts. Missing integration with environmental data analysis tools and sustainability reporting systems.',
                                     needsImprovement: true
                                 },
                                 {
                                     code: 'yl_mlo2',
                                     content: 'Can scientifically interpret the effect of work environment on human body.',
                                     score: 2,
-                                    justification: 'Indirect connection to programme outcomes. Work environment knowledge has limited relevance.',
+                                    justification: 'Limited alignment with sustainability PLOs. While workplace health relates to social sustainability (PLO 3), the narrow focus on human body effects doesn\'t address broader environmental and economic sustainability dimensions required by the programme.',
                                     needsImprovement: true
                                 },
                                 {
                                     code: 'yl_mlo3',
                                     content: 'Demonstrates critical thinking and problem-solving skills in academic contexts.',
                                     score: 4,
-                                    justification: 'Strong alignment with PLO requirements for analytical thinking and problem-solving.',
+                                    justification: 'Strong alignment with PLO 2\'s critical thinking requirements. The analytical skills developed here directly support evaluating complex sustainability challenges, though application contexts could be more specifically oriented toward sustainability issues.',
                                     needsImprovement: false
-                                },
-                                {
-                                    code: 'yl_mlo4',
-                                    content: 'Shows understanding of ethical principles in professional contexts.',
-                                    score: 2,
-                                    justification: 'Basic ethical understanding but lacks depth for advanced programme requirements.',
-                                    needsImprovement: true
                                 }
                             ]
                         },
                         'p1': {
                             name: 'P1 Methods, Markets and Economy',
-                            avgScore: 2.3,
+                            avgScore: 2.0,
                             mlos: [
                                 {
                                     code: 'p1_mlo1',
                                     content: 'Understands fundamental economic principles and market mechanisms.',
                                     score: 2,
-                                    justification: 'Basic economic knowledge but insufficient depth for programme objectives.',
+                                    justification: 'Basic economic knowledge provides foundation for PLO 1, but lacks integration with sustainability economics, circular economy models, and green market mechanisms essential for sustainability management leadership.',
                                     needsImprovement: true
                                 },
                                 {
                                     code: 'p1_mlo2',
                                     content: 'Applies research methods in business contexts.',
-                                    score: 3,
-                                    justification: 'Good foundational research skills that support programme learning goals.',
-                                    needsImprovement: false
+                                    score: 2,
+                                    justification: 'Research methodology skills partially support PLO 2\'s analytical requirements, but need stronger focus on sustainability assessment methodologies, life cycle analysis, and environmental impact measurement techniques.',
+                                    needsImprovement: true
                                 },
                                 {
                                     code: 'p1_mlo3',
                                     content: 'Analyzes market trends and competitive landscapes.',
-                                    score: 1,
-                                    justification: 'Insufficient focus on advanced analytical skills required by programme PLOs.',
-                                    needsImprovement: true
-                                }
-                            ]
-                        },
-                        'p2': {
-                            name: 'P2 Core Business',
-                            avgScore: 2.3,
-                            mlos: [
-                                {
-                                    code: 'p2_mlo1',
-                                    content: 'Demonstrates understanding of business strategy and planning.',
-                                    score: 2,
-                                    justification: 'Basic strategic thinking but needs deeper integration with programme goals.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'p2_mlo2',
-                                    content: 'Applies financial analysis techniques in business decisions.',
-                                    score: 2,
-                                    justification: 'Basic financial skills present but lack advanced application required.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'p2_mlo3',
-                                    content: 'Evaluates organizational effectiveness and leadership approaches.',
                                     score: 3,
-                                    justification: 'Good alignment with leadership and organizational PLO components.',
-                                    needsImprovement: false
-                                }
-                            ]
-                        },
-                        'e1': {
-                            name: 'E1 Specialization',
-                            avgScore: 2.3,
-                            mlos: [
-                                {
-                                    code: 'e1_mlo1',
-                                    content: 'Applies specialized knowledge in sustainability management.',
-                                    score: 2,
-                                    justification: 'Specialization relevant but needs stronger connection to overall programme vision.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'e1_mlo2',
-                                    content: 'Synthesizes complex information for strategic decision-making.',
-                                    score: 2,
-                                    justification: 'Some synthesis skills present but insufficient depth for programme requirements.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'e1_mlo3',
-                                    content: 'Demonstrates innovation in problem-solving approaches.',
-                                    score: 3,
-                                    justification: 'Good innovation focus aligns well with programme emphasis on creative solutions.',
+                                    justification: 'Market analysis skills align moderately with PLO 3\'s business strategy requirements, but need enhancement to include green market trends, sustainable competitive advantages, and ESG-driven market dynamics.',
                                     needsImprovement: false
                                 },
                                 {
-                                    code: 'e1_mlo4',
-                                    content: 'Applies project management principles in complex scenarios.',
+                                    code: 'p1_mlo4',
+                                    content: 'Evaluates economic policies and their business implications.',
                                     score: 1,
-                                    justification: 'Basic project management skills insufficient for advanced programme expectations.',
+                                    justification: 'Limited connection to sustainability PLOs. Traditional economic policy analysis doesn\'t address carbon pricing, environmental regulations, sustainability incentives, or green policy frameworks critical for PLO 5\'s leadership requirements.',
+                                    needsImprovement: true
+                                },
+                                {
+                                    code: 'p1_mlo5',
+                                    content: 'Demonstrates understanding of international trade and global markets.',
+                                    score: 2,
+                                    justification: 'International perspective supports PLO 1\'s global challenge focus, but lacks emphasis on sustainable trade practices, fair trade principles, and global environmental agreements essential for sustainability management.',
                                     needsImprovement: true
                                 }
                             ]
@@ -1471,11 +1630,28 @@
                     };
                     
                     let detailedHtml = `
-                        <h2><i class="fas fa-list-alt"></i> Detailed MLO Analysis</h2>
-                        <p class="detailed-description">Comprehensive breakdown of Module Learning Outcomes (MLOs) with alignment scores, justifications, and improvement suggestions for scores below 3.</p>
+                        <h2><i class="fas fa-list-alt"></i> Detailed PLO-MLO Breakdown</h2>
+                        <p class="detailed-description">Comprehensive analysis showing how each Programme Learning Outcome aligns with Module Learning Outcomes, including specific justifications and improvement recommendations.</p>
                     `;
                     
-                    // Create table for each module category
+                    // Show PLO content first
+                    detailedHtml += `
+                        <div class="plo-content-section">
+                            <h3><i class="fas fa-graduation-cap"></i> Programme Learning Outcomes (PLOs)</h3>
+                    `;
+                    
+                    Object.keys(ploContent).forEach(ploKey => {
+                        detailedHtml += `
+                            <div class="plo-content-box">
+                                <h4>${ploKey}</h4>
+                                <p>${ploContent[ploKey]}</p>
+                            </div>
+                        `;
+                    });
+                    
+                    detailedHtml += `</div>`;
+                    
+                    // Create detailed MLO analysis table for each module category
                     Object.keys(sampleData).forEach(moduleKey => {
                         const moduleData = sampleData[moduleKey];
                         
@@ -1490,7 +1666,7 @@
                                             <th class="code-col">MLO Code</th>
                                             <th class="content-col">MLO Content</th>
                                             <th class="score-col">Score</th>
-                                            <th class="justification-col">Justification & Improvement</th>
+                                            <th class="justification-col">Detailed Justification & Improvement</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1506,8 +1682,8 @@
                                         <div>${mlo.justification}</div>
                                         ${mlo.needsImprovement ? `
                                         <div class="improvement-suggestion">
-                                            <strong>Improvement Suggestion:</strong> 
-                                            Consider strengthening this MLO by incorporating more advanced concepts that directly align with programme learning outcomes. Focus on deepening the connection to strategic thinking and professional competencies.
+                                            <strong>Improvement Recommendation:</strong> 
+                                            Enhance this MLO by incorporating specific sustainability management concepts, frameworks, and practical applications that directly support the programme's environmental, social, and governance learning objectives.
                                         </div>
                                         ` : ''}
                                     </td>
@@ -1518,12 +1694,12 @@
                         // Add category average row
                         detailedHtml += `
                                         <tr class="category-average-row">
-                                            <td colspan="2"><strong>Category Average</strong></td>
+                                            <td colspan="2"><strong>Module Category Assessment</strong></td>
                                             <td class="score-col"><strong>${moduleData.avgScore}/5</strong></td>
                                             <td class="justification-col">
                                                 ${moduleData.avgScore < 3 ? 
-                                                '<strong>Overall improvement needed:</strong> This module category requires enhanced alignment with programme learning outcomes.' : 
-                                                '<strong>Good alignment:</strong> This module category shows satisfactory alignment with programme goals.'}
+                                                '<strong>Critical improvement needed:</strong> This module requires substantial enhancement to align with sustainability management programme objectives. Consider integrating ESG frameworks, circular economy principles, and stakeholder engagement methodologies.' : 
+                                                '<strong>Satisfactory alignment:</strong> This module demonstrates reasonable alignment with programme goals but could benefit from stronger sustainability focus and practical application opportunities.'}
                                             </td>
                                         </tr>
                                     </tbody>
