@@ -6,6 +6,171 @@
     <title>PLO-MLO Alignment Analysis</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- AI Enhancement Styles -->
+    <style id="ai-enhancement-styles">
+        .ai-enhanced-cell {
+            position: relative;
+            border: 2px solid #3498db !important;
+        }
+        
+        .ai-enhancement-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .ai-analysis-popup {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 400px;
+            z-index: 1000;
+            display: none;
+            font-size: 13px;
+        }
+        
+        .ai-analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .ai-analysis-header h4 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .confidence-badge {
+            background: #27ae60;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .score-comparison {
+            display: flex;
+            gap: 15px;
+            margin: 8px 0;
+        }
+        
+        .score-item {
+            text-align: center;
+        }
+        
+        .score-item label {
+            display: block;
+            font-size: 11px;
+            color: #7f8c8d;
+            margin-bottom: 2px;
+        }
+        
+        .score-value {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+        
+        .score-original {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .score-enhanced {
+            background: #3498db;
+            color: white;
+        }
+        
+        .keywords-section, .reasoning-section {
+            margin: 8px 0;
+        }
+        
+        .keywords-section label, .reasoning-section label {
+            display: block;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+        
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .keyword-tag {
+            background: #3498db;
+            color: white;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+        
+        .reasoning {
+            background: #f8f9fa;
+            padding: 6px;
+            border-radius: 4px;
+            font-style: italic;
+            color: #2c3e50;
+            font-size: 11px;
+        }
+        
+        .ai-status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2ecc71;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: none;
+        }
+        
+        .ai-status-indicator.offline {
+            background: #e74c3c;
+        }
+        
+        .ai-loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 5px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
     <style>
         /* Additional styles specific to PLO-MLO analysis */
         .matrix-table {
@@ -300,14 +465,14 @@
         }
         
         /* Bilingual Table Styles */
-        .mlo-table {
+        .mlo-table, .plo-table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
-        .mlo-table th {
+        .mlo-table th, .plo-table th {
             background-color: #342b60;
             color: white;
             padding: 15px;
@@ -315,36 +480,42 @@
             font-weight: bold;
         }
         
-        .mlo-table td {
+        .mlo-table td, .plo-table td {
             padding: 15px;
             border-bottom: 1px solid #dee2e6;
             vertical-align: top;
         }
         
-        .mlo-table tr:last-child td {
+        .mlo-table tr:last-child td, .plo-table tr:last-child td {
             border-bottom: none;
         }
         
-        .mlo-table tr:nth-child(even) {
+        .mlo-table tr:nth-child(even), .plo-table tr:nth-child(even) {
             background-color: #f8f9fa;
         }
         
-        .mlo-code-col {
-            width: 6%;
+        .mlo-code-col, .code-col {
+            width: 80px !important;
+            max-width: 80px !important;
+            min-width: 80px !important;
+            height: 55.58px;
+            font-family: 'Courier New', monospace;
+            color: #495057;
+            font-weight: bold;
         }
         
         .content-col {
-            width: 85%;
+            width: 35%;
         }
         
-        .mlo-code {
+        .mlo-code, .plo-code {
             font-family: inherit;
             font-size: 0.95em;
             color: #495057;
             font-weight: normal;
         }
         
-        .mlo-description {
+        .mlo-description, .plo-description {
             font-size: 0.95em;
             line-height: 1.4;
             color: #495057;
@@ -513,50 +684,69 @@
             border-left: 4px solid #6c757d;
         }
         
-        .summary-findings {
-            margin-bottom: 20px;
-        }
-        
-        .summary-findings h4 {
-            color: #495057;
-            margin-bottom: 15px;
-        }
-        
-        .findings-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .findings-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #e9ecef;
-            color: #6c757d;
-        }
-        
-        .findings-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .findings-list strong {
-            color: #495057;
-        }
-        
-        .recommendations {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
+        .executive-summary {
+            background: linear-gradient(135deg, #342b60, #495057);
+            color: white;
+            padding: 20px;
             border-radius: 6px;
-            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            line-height: 1.5;
         }
         
-        .recommendations h4 {
-            color: #856404;
-            margin-bottom: 10px;
+        .priority-actions {
+            margin-bottom: 25px;
         }
         
-        .recommendations p {
-            color: #856404;
-            margin: 0;
-            font-size: 0.95em;
+        .action-item {
+            background: white;
+            border-left: 4px solid #342b60;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        
+        .action-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .action-item strong {
+            color: #342b60;
+            font-size: 1.05rem;
+        }
+        
+        .action-item em {
+            color: #6c757d;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        
+        .action-item br {
+            margin: 8px 0;
+        }
+        
+        /* Special formatting for detailed analysis */
+        .action-item ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .action-item li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .next-steps .action-item {
+            border-left-color: #342b60;
+            background: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .next-steps .action-item strong {
+            color: #342b60;
         }
         
         /* Alignment Matrix Styles */
@@ -565,105 +755,283 @@
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-            border-left: 4px solid #28a745;
+            border-left: 4px solid #e4067e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .matrix-section h2 {
-            color: #28a745;
-            margin-bottom: 15px;
+            color: #e4067e;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.5em;
         }
         
         .matrix-description {
             color: #6c757d;
             margin-bottom: 15px;
             font-size: 0.95em;
+            line-height: 1.5;
         }
         
         .matrix-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85em;
-            margin-top: 15px;
+            font-size: 0.8em;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            table-layout: auto;
+            min-width: 800px; /* Ensure minimum width for horizontal scrolling */
+            display: table; /* Force table display */
+        }
+        
+        .matrix-table thead {
+            display: table-header-group;
+        }
+        
+        .matrix-table tbody {
+            display: table-row-group;
+        }
+        
+        .matrix-table tr {
+            display: table-row;
         }
         
         .matrix-table th,
         .matrix-table td {
-            border: 1px solid #dee2e6;
-            padding: 8px 4px;
+            display: table-cell;
+            border: 1px solid #e9ecef;
+            padding: 8px 6px;
             text-align: center;
             vertical-align: middle;
+            white-space: nowrap;
         }
         
         .matrix-table th {
             background-color: #f8f9fa;
-            font-weight: bold;
+            font-weight: 600;
             color: #495057;
             font-size: 0.8em;
+            border-bottom: 2px solid #dee2e6;
+            line-height: 1.2;
+            position: sticky;
+            top: 0;
+            z-index: 5;
         }
         
         .matrix-table .plo-header {
-            background-color: #342b60;
+            background-color: #6c757d;
             color: white;
             width: 60px;
-            font-size: 0.9em;
-        }
-        
-        .matrix-table .module-header {
-            background-color: #AA1352;
-            color: white;
-            font-size: 0.75em;
-            padding: 4px 2px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+            padding: 8px 6px;
+            position: sticky;
+            left: 0;
+            z-index: 10;
         }
         
         .matrix-table .mlo-header {
-            background-color: #6c757d;
+            background-color: #d1d5db;
+            color: #374151;
+            font-size: 0.7em;
+            width: 70px;
+            font-weight: 600;
+            text-align: center;
+            padding: 6px 4px;
+            height: 50px;
+            line-height: 1.1;
+        }
+        
+        .matrix-table .module-avg-header {
+            background-color: #9ca3af;
             color: white;
             font-size: 0.7em;
-            width: 45px;
-            transform: rotate(-45deg);
-            transform-origin: center;
-            white-space: nowrap;
+            width: 70px;
+            font-weight: 600;
+            text-align: center;
+            padding: 6px 4px;
+            height: 50px;
+            line-height: 1.1;
+        }
+        
+        /* Responsive matrix table */
+        .matrix-container {
+            overflow-x: auto;
+            overflow-y: visible;
+            margin-top: 15px;
+            width: 100%;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Scrollbar styling for matrix container */
+        .matrix-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .matrix-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .matrix-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        .matrix-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        @media (max-width: 768px) {
+            .matrix-table {
+                font-size: 0.7em;
+                min-width: 600px;
+            }
+            
+            .matrix-table .plo-header {
+                width: 50px;
+                font-size: 0.75em;
+            }
+            
+            .matrix-table .mlo-header,
+            .matrix-table .module-avg-header {
+                width: 60px;
+                font-size: 0.65em;
+                padding: 4px 2px;
+            }
+            
+            .score-cell {
+                width: 60px;
+                padding: 4px 2px;
+            }
         }
         
         .score-cell {
-            font-weight: bold;
-            width: 45px;
-            color: #495057;
+            font-weight: 600;
+            width: 70px;
+            color: #374151;
+            background-color: white;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-align: center;
+            padding: 8px 6px;
+            height: 40px;
+            position: relative;
         }
         
-        .score-cell.score-1 { background-color: #ffebee; }
-        .score-cell.score-2 { background-color: #fff3e0; }
-        .score-cell.score-3 { background-color: #fff9c4; }
-        .score-cell.score-4 { background-color: #e8f5e8; }
-        .score-cell.score-5 { background-color: #e3f2fd; }
+        .score-cell:hover {
+            box-shadow: inset 0 0 0 2px #e4067e;
+            transform: scale(1.05);
+        }
+        
+        /* PLO labels in first column should also be sticky */
+        .matrix-table .plo-row-header {
+            background-color: #6c757d;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            border-right: 2px solid #495057;
+            padding: 8px 6px;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .score-cell.score-1 { 
+            background-color: #ffebee; 
+            color: #374151;
+        }
+        
+        .score-cell.score-2 { 
+            background-color: #fff3e0; 
+            color: #374151;
+        }
+        
+        .score-cell.score-3 { 
+            background-color: #fffbeb; 
+            color: #374151;
+        }
+        
+        .score-cell.score-4 { 
+            background-color: #f0fdf4; 
+            color: #374151;
+        }
+        
+        .score-cell.score-5 { 
+            background-color: #eff6ff; 
+            color: #374151;
+        }
         
         .avg-row {
-            background-color: #AA1352 !important;
-            color: white !important;
-            font-weight: bold;
+            font-weight: 600;
         }
         
-        .avg-row td {
-            background-color: #AA1352 !important;
+        .avg-row .plo-row-header {
+            background-color: #e4067e !important;
             color: white !important;
+        }
+        
+        /* Score-based colors for average row cells should override the row color */
+        .avg-row td.score-cell.score-1 { 
+            background-color: #ffebee !important; 
+            color: #374151 !important;
+        }
+        
+        .avg-row td.score-cell.score-2 { 
+            background-color: #fff3e0 !important; 
+            color: #374151 !important;
+        }
+        
+        .avg-row td.score-cell.score-3 { 
+            background-color: #fffbeb !important; 
+            color: #374151 !important;
+        }
+        
+        .avg-row td.score-cell.score-4 { 
+            background-color: #f0fdf4 !important; 
+            color: #374151 !important;
+        }
+        
+        .avg-row td.score-cell.score-5 { 
+            background-color: #eff6ff !important; 
+            color: #374151 !important;
+        }
+        
+        .avg-row .plo-header {
+            background-color: #e4067e !important;
         }
         
         .export-btn {
-            background-color: #AA1352;
+            background-color: #e4067e;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 0.9em;
             margin-bottom: 15px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(228, 6, 126, 0.2);
         }
         
         .export-btn:hover {
-            background-color: #8a0f3e;
+            background-color: #c2055a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(228, 6, 126, 0.3);
         }
         
         /* Detailed Analysis Styles */
@@ -697,6 +1065,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            margin-bottom: 30px;
         }
         
         .detailed-table th,
@@ -711,6 +1080,9 @@
             background-color: #f8f9fa;
             font-weight: bold;
             color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         
         .module-category-header {
@@ -726,38 +1098,130 @@
             color: #495057;
         }
         
-        .score-col {
-            width: 80px;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .code-col {
-            width: 100px;
-            font-family: 'Courier New', monospace;
-            color: #495057;
-        }
-        
         .content-col {
             width: 35%;
         }
         
+        .score-col {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
         .justification-col {
-            width: 40%;
+            width: 50%;
+            line-height: 1.4;
         }
         
         .improvement-suggestion {
             background-color: #fff3cd;
             border: 1px solid #ffeaa7;
             border-radius: 4px;
-            padding: 8px;
-            margin-top: 8px;
+            padding: 10px;
+            margin-top: 10px;
             font-size: 0.9em;
             color: #856404;
         }
         
+        /* MLO Analysis Section Styling */
+        .mlo-analysis-section {
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .mlo-header-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .mlo-header-section h4 {
+            margin: 0 0 10px 0;
+            color: #342b60;
+            font-weight: bold;
+        }
+        
+        .mlo-text {
+            color: #495057;
+            line-height: 1.4;
+            font-size: 0.95em;
+        }
+        
         .improvement-suggestion strong {
             color: #6f5500;
+        }
+        
+        /* Methodology Info Box */
+        .methodology-container {
+            position: relative;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .methodology-trigger {
+            background: #e4067e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .methodology-trigger:hover {
+            background: #c2055a;
+        }
+        
+        .methodology-popup {
+            display: none;
+            position: absolute;
+            top: 25px;
+            left: -250px;
+            width: 500px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .methodology-popup.show {
+            display: block;
+        }
+        
+        .methodology-popup h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .methodology-popup .formula {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 8px 0;
+            border-left: 3px solid #007bff;
+        }
+        
+        .methodology-popup .criteria {
+            margin: 8px 0;
+        }
+        
+        .methodology-popup .criteria div {
+            margin: 2px 0;
+            font-size: 12px;
         }
         
         .plo-content-section {
@@ -811,6 +1275,84 @@
             margin: 0;
             font-size: 1.2em;
             font-weight: bold;
+        }
+        
+        /* Additional styles for detailed analysis views */
+        .view-header {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #6c757d;
+        }
+        
+        .view-header h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .view-header p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 0.95em;
+        }
+        
+        .plo-alignment-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .plo-alignment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .plo-code {
+            font-weight: bold;
+            color: #342b60;
+            min-width: 80px;
+        }
+        
+        .alignment-text {
+            color: #6c757d;
+            font-size: 0.9em;
+            flex: 1;
+        }
+        
+        .plo-alignments {
+            margin-top: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .plo-alignments h5 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+        
+        .view-toggle {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .view-toggle:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -895,8 +1437,7 @@
 
             <section id="matrix-section" class="matrix-section">
                 <h2><i class="fas fa-table"></i> Alignment Matrix</h2>
-                <p class="matrix-description">This matrix shows the alignment scores between all PLOs and MLO categories. Hover over a cell to see the alignment justification. Click any cell to navigate to the detailed analysis.</p>
-                <button class="export-btn" id="export-excel-btn"><i class="fas fa-download"></i> Export Matrix to Excel</button>
+                <button class="export-btn" id="export-excel-btn"><i class="fas fa-file-excel"></i> Export Matrix to Excel</button>
                 <div id="matrix-container">
                     <!-- Alignment matrix will be generated here by JavaScript -->
                     <p>Loading alignment matrix...</p>
@@ -905,10 +1446,8 @@
             
             <section id="detailed-analysis" class="detailed-section">
                 <h2><i class="fas fa-list-alt"></i> Detailed Breakdown</h2>
-                <p>Below is a detailed breakdown of alignment between Programme Learning Outcomes and Module Learning Outcomes.</p>
                 <button class="view-toggle" id="view-toggle-btn"><i class="fas fa-exchange-alt"></i> Switch to MLO View</button>
                 <div id="analysis-header" class="analysis-header">
-                    <p>Below is a detailed breakdown of alignment between Programme Learning Outcomes and Module Learning Outcomes.</p>
                 </div>
                 <div id="detailed-container">
                     <!-- Detailed breakdown will be generated here by JavaScript -->
@@ -1003,6 +1542,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("=== DOM CONTENT LOADED ===");
 
+            // Initialize section headers
+            updateSectionHeaders();
+
             // Language toggle functionality
             const languageToggle = document.getElementById('language-toggle');
             const estLabel = document.getElementById('est-label');
@@ -1016,9 +1558,42 @@
                 console.log("Language changed to:", currentLanguage);
                 updateLanguageLabels();
                 
+                // Update section headers
+                updateSectionHeaders();
+                
+                // Update overview and alignment summary
+                if (currentProgrammeData) {
+                    const programmeName = programmeNames[selectedProgramme];
+                    
+                    // Update overview text
+                    const overviewText = document.querySelector('#overview > p');
+                    if (overviewText) {
+                        const estName = programmeName ? programmeName.estonian : (currentProgrammeData.kavanimetusik || currentProgrammeData.kavanimetusek);
+                        const engName = programmeName ? programmeName.english : (currentProgrammeData.kavanimetusek || currentProgrammeData.kavanimetusik);
+                        
+                        if (currentLanguage === 'english') {
+                            overviewText.textContent = `This analysis examines how well the Module Learning Outcomes (MLOs) align with the Programme Learning Outcomes (PLOs) for ${engName} (${selectedProgramme.toUpperCase()}). The alignment is scored on a scale from 1 to 5:`;
+                        } else {
+                            overviewText.textContent = `See analüüs uurib, kui hästi vastavad moodulite õpiväljundid (MLO) õppekava õpiväljunditele (PLO) ${estName} (${selectedProgramme.toUpperCase()}) programmis. Vastavust hinnatakse skaalal 1 kuni 5:`;
+                        }
+                    }
+                    
+                    // Update alignment summary - calculate real module averages if data is available
+                    if (currentPLOs.length > 0 && currentMLOs.length > 0) {
+                        const moduleGroups = groupMLOsByCategory(currentMLOs);
+                        const moduleAverages = calculateModuleAverages(currentPLOs, moduleGroups);
+                        updateAlignmentSummary(selectedProgramme, programmeName, moduleAverages);
+                    }
+                }
+                
                 // Re-render content if data is available
-                if (currentPLOs.length > 0 || currentMLOs.length > 0) {
+                if (currentPLOs.length > 0 && currentMLOs.length > 0) {
                     displaySingleLanguageTables(currentPLOs, currentMLOs);
+                    
+                    // Also update the detailed analysis
+                    const moduleGroups = groupMLOsByCategory(currentMLOs);
+                    const alignmentResults = [];
+                    displayDetailedAnalysis(currentPLOs, moduleGroups, alignmentResults);
                 }
             });
 
@@ -1095,7 +1670,7 @@
                 }
                 
                 // Re-generate the detailed analysis with current view
-                if (currentPLOs.length > 0 || currentMLOs.length > 0) {
+                if (currentPLOs.length > 0 && currentMLOs.length > 0) {
                     const moduleGroups = groupMLOsByCategory(currentMLOs);
                     const alignmentResults = [];
                     displayDetailedAnalysis(currentPLOs, moduleGroups, alignmentResults);
@@ -1104,65 +1679,413 @@
 
             // Load the data from the JSON file
             // Update alignment summary based on programme
-            function updateAlignmentSummary(programmeCode, programmeName) {
-                const alignmentSummaries = {
-                    'tvtb': {
-                        description: 'The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the International Business Administration programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing global business competencies and international trade expertise.',
-                        title: 'Critical findings for International Business Administration programme:',
-                        findings: [
-                            '<strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with international business goals - needs stronger integration of global market dynamics and cross-cultural communication concepts',
-                            '<strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on international trade theories and global supply chain management',
-                            '<strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on international market entry strategies and multinational corporation management',
-                            '<strong>Programme lacks specialized international business modules</strong> - critical gap in international finance, global marketing strategies, and cross-border business law',
-                            '<strong>Integration across modules</strong> needs improvement to create cohesive international business leadership competencies throughout the curriculum'
-                        ],
-                        recommendations: 'Integrate international business frameworks into all modules, develop specialized global market analysis courses, strengthen connections between local and international business practices, and enhance practical application of international trade regulations and global business ethics.'
+            // Centralized scoring system - consistent across matrix and detailed breakdown
+            function getAlignmentScore(ploCode, mloCode, mlo) {
+                // Try to get real score from JSON data first
+                if (mlo.alignments && Array.isArray(mlo.alignments)) {
+                    const alignment = mlo.alignments.find(align => align.plo === ploCode);
+                    if (alignment && alignment.tase) {
+                        return alignment.tase;
+                    }
+                }
+                
+                // Demo scores: Calculate based on content analysis when no real data
+                const ploContent = currentPLOs.find(p => p.plokood === ploCode);
+                const mloContent = mlo;
+                
+                if (ploContent && mloContent) {
+                    return calculateContentBasedScore(ploContent, mloContent);
+                }
+                
+                // Final fallback to deterministic scores for consistency
+                const hash = hashString(ploCode + mloCode);
+                return (hash % 5) + 1;
+            }
+            
+            // Calculate alignment score based on actual content analysis
+            function calculateContentBasedScore(plo, mlo) {
+                const ploText = (currentLanguage === 'english' ? 
+                    (plo.plosisuik || plo.ilosisu || '') : 
+                    (plo.plosisuek || plo.ilosisu || '')).toLowerCase();
+                const mloText = (currentLanguage === 'english' ? 
+                    (mlo.mlosisuik || mlo.ilosisu || '') : 
+                    (mlo.mlosisuek || mlo.ilosisu || '')).toLowerCase();
+                
+                if (!ploText || !mloText) return 1; // No content to analyze
+                
+                // Calculate keyword overlap
+                const ploWords = ploText.split(/\s+/).filter(word => word.length > 3);
+                const mloWords = mloText.split(/\s+/).filter(word => word.length > 3);
+                const overlapWords = ploWords.filter(word => mloWords.includes(word));
+                const overlapPercentage = ploWords.length > 0 ? (overlapWords.length / ploWords.length) * 100 : 0;
+                
+                // Calculate competency matches
+                const competencyKeywords = {
+                    analytical: ['analyz', 'evaluat', 'assess', 'critic', 'examin', 'investigat', 'interpret', 'review'],
+                    application: ['apply', 'implement', 'use', 'utiliz', 'practic', 'execut', 'demonstrat', 'perform'],
+                    creative: ['creat', 'design', 'develop', 'innovat', 'generat', 'construct', 'build', 'formul'],
+                    management: ['manag', 'lead', 'coordin', 'organiz', 'plan', 'direct', 'supervis', 'control'],
+                    communication: ['communicat', 'present', 'explain', 'discuss', 'report', 'express', 'articul', 'convey'],
+                    collaboration: ['collaborat', 'teamwork', 'cooperat', 'work together', 'group work', 'partnership'],
+                    research: ['research', 'investigat', 'study', 'explor', 'inquir', 'gather', 'collect data'],
+                    technical: ['technical', 'programming', 'software', 'data', 'technology', 'digital', 'computer'],
+                    business: ['business', 'commercial', 'enterprise', 'market', 'economic', 'financial', 'strategy'],
+                    international: ['international', 'global', 'cross-cultural', 'multicultural', 'worldwide', 'transnational']
+                };
+                
+                let totalMatches = 0;
+                Object.values(competencyKeywords).forEach(keywords => {
+                    const ploMatches = keywords.filter(keyword => ploText.includes(keyword)).length;
+                    const mloMatches = keywords.filter(keyword => mloText.includes(keyword)).length;
+                    totalMatches += Math.min(ploMatches, mloMatches);
+                });
+                
+                // Scoring algorithm based on both metrics
+                // Score 1-5 based on combination of overlap percentage and competency matches
+                if (overlapPercentage >= 15 && totalMatches >= 3) return 5; // Excellent
+                if (overlapPercentage >= 10 && totalMatches >= 2) return 4; // Strong
+                if (overlapPercentage >= 5 && totalMatches >= 1) return 3;  // Good
+                if (overlapPercentage >= 2 || totalMatches >= 1) return 2;  // Moderate
+                return 1; // Minimal
+            }
+            
+            // Simple hash function for consistent fake scores
+            function hashString(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32-bit integer
+                }
+                return Math.abs(hash);
+            }
+            
+            // Methodology popup toggle function
+            function toggleMethodology() {
+                const popup = document.getElementById('methodology-popup');
+                if (popup) {
+                    popup.classList.toggle('show');
+                }
+            }
+            
+            // Close methodology popup when clicking outside
+            document.addEventListener('click', function(event) {
+                const popup = document.getElementById('methodology-popup');
+                const trigger = document.querySelector('.methodology-trigger');
+                if (popup && !popup.contains(event.target) && !trigger.contains(event.target)) {
+                    popup.classList.remove('show');
+                }
+            });
+
+            // Function to update section headers based on language
+            function updateSectionHeaders() {
+                const headers = {
+                    english: {
+                        overview: 'Overview',
+                        alignmentSummary: 'Alignment Summary',
+                        plosTitle: 'Programme Learning Outcomes (PLOs)',
+                        mlosTitle: 'Module Learning Outcomes (MLOs)',
+                        matrixTitle: 'Alignment Matrix',
+                        detailedTitle: 'Detailed Breakdown'
                     },
-                    'majb': {
-                        description: 'The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the Sustainable Entrepreneurship programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing sustainable business innovation and entrepreneurial competencies.',
-                        title: 'Critical findings for Sustainable Entrepreneurship programme:',
-                        findings: [
-                            '<strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainable entrepreneurship goals - needs stronger integration of innovation methodologies and sustainable business model concepts',
-                            '<strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on green economy principles and social entrepreneurship frameworks',
-                            '<strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on impact measurement and sustainable venture capital strategies',
-                            '<strong>Programme lacks specialized entrepreneurship modules</strong> - critical gap in startup incubation, social impact assessment, and sustainable innovation management',
-                            '<strong>Integration across modules</strong> needs improvement to create cohesive sustainable entrepreneurship competencies throughout the curriculum'
-                        ],
-                        recommendations: 'Integrate sustainable entrepreneurship frameworks into all modules, develop specialized social innovation courses, strengthen connections between business viability and environmental impact, and enhance practical application of impact metrics and sustainable business development strategies.'
-                    },
-                    'makm': {
-                        description: 'The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the Sustainability Management programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing sustainability leadership and management competencies.',
-                        title: 'Critical findings for Sustainability Management programme:',
-                        findings: [
-                            '<strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainability management goals - needs stronger integration of environmental and social responsibility concepts',
-                            '<strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on sustainable business models and circular economy principles',
-                            '<strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on stakeholder engagement and ESG (Environmental, Social, Governance) frameworks',
-                            '<strong>Programme lacks specialized sustainability modules</strong> - critical gap in advanced sustainability management, carbon footprint analysis, and green innovation strategies',
-                            '<strong>Integration across modules</strong> needs improvement to create cohesive sustainability leadership competencies throughout the curriculum'
-                        ],
-                        recommendations: 'Integrate sustainability frameworks into all modules, develop specialized sustainability management courses, strengthen connections between business strategy and environmental impact, and enhance practical application of sustainability metrics and reporting standards.'
+                    estonian: {
+                        overview: 'Ülevaade',
+                        alignmentSummary: 'Vastavuse kokkuvõte',
+                        plosTitle: 'Õppekava õpiväljundid (PLO)',
+                        mlosTitle: 'Mooduli õpiväljundid (MLO)',
+                        matrixTitle: 'Vastavuse maatriks',
+                        detailedTitle: 'Üksikasjalik jaotus'
                     }
                 };
 
-                const summaryData = alignmentSummaries[programmeCode] || alignmentSummaries['makm']; // fallback to MAKM
+                const headerTexts = headers[currentLanguage];
+                
+                // Update overview section header
+                const overviewH2 = document.querySelector('#overview h2');
+                if (overviewH2) {
+                    overviewH2.innerHTML = `<i class="fas fa-info-circle"></i> ${headerTexts.overview}`;
+                }
+                
+                // Update alignment summary header
+                const alignmentSummaryH2 = document.querySelector('#alignment-summary h2');
+                if (alignmentSummaryH2) {
+                    alignmentSummaryH2.innerHTML = `<i class="fas fa-chart-bar"></i> ${headerTexts.alignmentSummary}`;
+                }
+                
+                // Update PLO section header
+                const ploH2 = document.querySelector('#plo-section h2');
+                if (ploH2) {
+                    ploH2.innerHTML = `<i class="fas fa-graduation-cap"></i> ${headerTexts.plosTitle}`;
+                }
+                
+                // Update MLO section header  
+                const mloH2 = document.querySelector('#mlo-section h2');
+                if (mloH2) {
+                    mloH2.innerHTML = `<i class="fas fa-book"></i> ${headerTexts.mlosTitle}`;
+                }
+                
+                // Update matrix section header
+                const matrixH2 = document.querySelector('#matrix-section h2');
+                if (matrixH2) {
+                    matrixH2.innerHTML = `<i class="fas fa-table"></i> ${headerTexts.matrixTitle}`;
+                }
+                
+                // Update detailed analysis header
+                const detailedH2 = document.querySelector('#detailed-analysis h2');
+                if (detailedH2) {
+                    detailedH2.innerHTML = `<i class="fas fa-list-alt"></i> ${headerTexts.detailedTitle}`;
+                }
+            }
+
+            // Function to calculate module averages dynamically using consistent scoring
+            function calculateModuleAverages(plos, moduleGroups) {
+                const moduleAverages = {};
+                
+                Object.keys(moduleGroups).forEach(moduleKey => {
+                    const mlos = moduleGroups[moduleKey];
+                    let totalScore = 0;
+                    let scoreCount = 0;
+                    
+                    plos.forEach(plo => {
+                        mlos.forEach(mlo => {
+                            // Use the same scoring system as matrix and detailed breakdown
+                            const ploCode = plo.plokood || plo.kood || `plo_${plos.indexOf(plo) + 1}`;
+                            const mloCode = mlo.mlokood || mlo.kood || `mlo_${mlos.indexOf(mlo) + 1}`;
+                            const score = getAlignmentScore(ploCode, mloCode, mlo);
+                            totalScore += score;
+                            scoreCount++;
+                        });
+                    });
+                    
+                    moduleAverages[moduleKey] = scoreCount > 0 ? (totalScore / scoreCount) : 0;
+                });
+                
+                return moduleAverages;
+            }
+
+            function updateAlignmentSummary(programmeCode, programmeName, moduleAverages = {}) {
+                // Calculate module averages if not provided
+                if (Object.keys(moduleAverages).length === 0 && currentPLOs.length > 0 && currentMLOs.length > 0) {
+                    const moduleGroups = groupMLOsByCategory(currentMLOs);
+                    moduleAverages = calculateModuleAverages(currentPLOs, moduleGroups);
+                }
+
+                // Create dynamic findings based on actual scores
+                function createDynamicFindings(moduleAverages, programmeCode, language) {
+                    const findings = [];
+                    const moduleNames = {
+                        yl: language === 'english' ? 'General Studies (YL)' : 'Üldõpe (YL)',
+                        p1: language === 'english' ? 'P1 Methods & Markets' : 'P1 Meetodid ja turud',
+                        p2: language === 'english' ? 'P2 Core Business' : 'P2 Äripõhioskused',
+                        e1: language === 'english' ? 'E1 Specialization' : 'E1 Erialane',
+                        e2: language === 'english' ? 'E2 Advanced' : 'E2 Süvendatud',
+                        gd: language === 'english' ? 'Thesis (GD)' : 'Lõputöö (GD)',
+                        mn: language === 'english' ? 'Minor (MN)' : 'Kõrvalala (MN)',
+                        vb: language === 'english' ? 'Electives (VB)' : 'Vabaained (VB)'
+                    };
+
+                    // Sort modules by score to identify priorities
+                    const sortedModules = Object.entries(moduleAverages)
+                        .filter(([key, value]) => value > 0)
+                        .sort(([,a], [,b]) => a - b);
+
+                    if (sortedModules.length === 0) {
+                        // Calculate individual module averages even when no data
+                        const moduleList = Object.keys(moduleNames);
+                        findings.push(language === 'english' ? 
+                            '📊 <strong>MODULE ALIGNMENT STATUS:</strong> No scoring data available - manual assessment needed.' : 
+                            '📊 <strong>MOODULITE VASTAVUSE STAATUS:</strong> Punktiandmed puuduvad - käsitsi hindamine vajalik.');
+                            
+                        moduleList.forEach(moduleKey => {
+                            const moduleName = moduleNames[moduleKey];
+                            if (language === 'english') {
+                                findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong>: Not assessed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Action needed:</em> Conduct comprehensive PLO-MLO mapping workshop to establish baseline alignment scores`);
+                            } else {
+                                findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong>: Hindamata<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Vajalik tegevus:</em> Korraldada põhjalik PLO-MLO vastendamise töötuba, et luua lähtesituatsiooni vastavuse skoorid`);
+                            }
+                        });
+                        return findings;
+                    }
+
+                    // Calculate overall programme metrics
+                    const averageScore = sortedModules.reduce((sum, [,score]) => sum + score, 0) / sortedModules.length;
+                    const criticalModules = sortedModules.filter(([,score]) => score <= 3.0);
+                    const goodModules = sortedModules.filter(([,score]) => score >= 4.0);
+                    const weakestModule = sortedModules[0];
+                    const strongestModule = sortedModules[sortedModules.length - 1];
+                    
+                    if (language === 'english') {
+                        // DETAILED MODULE ANALYSIS (ordered as requested: yl, p1, p2, e1, e2, gd, mn, vb)
+                        findings.push(`<strong>📈 MODULE ANALYSIS:</strong>`);
+                        
+                        const orderedModules = ['yl', 'p1', 'p2', 'e1', 'e2', 'gd', 'mn', 'vb'];
+                        orderedModules.forEach(moduleKey => {
+                            const moduleData = sortedModules.find(([key, score]) => key === moduleKey);
+                            if (moduleData) {
+                                const [, score] = moduleData;
+                                const moduleName = moduleNames[moduleKey];
+                                let analysis, justification, suggestions = '';
+                                
+                                if (score <= 2.0) {
+                                    analysis = 'CRITICAL - Immediate action required';
+                                    justification = 'Module learning outcomes show minimal connection to programme goals';
+                                    suggestions = 'Complete redesign of learning outcomes; map each MLO to specific PLOs; add bridging assessments';
+                                } else if (score <= 3.0) {
+                                    analysis = 'NEEDS IMPROVEMENT - Structured enhancement required';
+                                    justification = 'Moderate alignment exists but lacks depth and clear progression pathways';
+                                    suggestions = 'Strengthen outcome connections; add progressive skill-building; align assessment methods with PLO expectations';
+                                } else if (score <= 3.5) {
+                                    analysis = 'ACCEPTABLE - Minor adjustments beneficial';
+                                    justification = 'Good foundational alignment with opportunities for optimization';
+                                    suggestions = 'Fine-tune learning activities; enhance assessment rubrics; create clearer PLO progression indicators';
+                                } else if (score <= 4.0) {
+                                    analysis = 'GOOD - Well aligned';
+                                    justification = 'Strong alignment with effective learning progression';
+                                    suggestions = '';
+                                } else {
+                                    analysis = 'EXCELLENT - Exemplary alignment';
+                                    justification = 'Comprehensive alignment with integrated competency development';
+                                    suggestions = '';
+                                }
+                                
+                                if (score <= 3.0 && suggestions) {
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Why:</em> ${justification}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Action:</em> ${suggestions}`);
+                                } else {
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis:</em> ${justification}`);
+                                }
+                            }
+                        });
+                        
+                        // Don't add the first action plan here - we'll use the detailed one in recommendations instead
+                        
+                    } else {
+                        // Estonian version with same structure
+                        findings.push(`<strong>📈 MOODULITE ANALÜÜS:</strong>`);
+                        
+                        const orderedModules = ['yl', 'p1', 'p2', 'e1', 'e2', 'gd', 'mn', 'vb'];
+                        orderedModules.forEach(moduleKey => {
+                            const moduleData = sortedModules.find(([key, score]) => key === moduleKey);
+                            if (moduleData) {
+                                const [, score] = moduleData;
+                                const moduleName = moduleNames[moduleKey];
+                                let analysis, justification, suggestions = '';
+                                
+                                if (score <= 2.0) {
+                                    analysis = 'KRIITILINE - Kohene sekkumine vajalik';
+                                    justification = 'Mooduli õpiväljundid näitavad minimaalset seost programmi eesmärkidega';
+                                    suggestions = 'Õpiväljundite täielik ümberkujundamine; iga MLO vastendamine konkreetsetele PLO-dele; üleminekuhindamiste lisamine';
+                                } else if (score <= 3.0) {
+                                    analysis = 'VAJAB PARANDAMIST - Struktureeritud täiustamine vajalik';
+                                    justification = 'Mõõdukas vastavus on olemas, kuid puudub sügavus ja selged progressioonirajad';
+                                    suggestions = 'Tugevdada väljundite seoseid; lisada progressiivset oskuste ehitamist; kohandada hindamismeetodeid PLO ootustega';
+                                } else if (score <= 3.5) {
+                                    analysis = 'VASTUVÕETAV - Väiksed kohandused kasulikud';
+                                    justification = 'Hea põhivastavus optimeerimise võimalustega';
+                                    suggestions = 'Täiendada õppetegevusi; parandada hindamisrubriiike; luua selgemad PLO progressiooninäitajad';
+                                } else if (score <= 4.0) {
+                                    analysis = 'HEA - Hästi vastavuses';
+                                    justification = 'Tugev vastavus tõhusa õppimise progressiooniga';
+                                    suggestions = '';
+                                } else {
+                                    analysis = 'SUUREPÄRANE - Eeskujulik vastavus';
+                                    justification = 'Terviklik vastavus integreeritud kompetentside arendamisega';
+                                    suggestions = '';
+                                }
+                                
+                                if (score <= 3.0 && suggestions) {
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Miks:</em> ${justification}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Tegevus:</em> ${suggestions}`);
+                                } else {
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Analüüs:</em> ${justification}`);
+                                }
+                            }
+                        });
+                        
+                        // Don't add the first action plan here - we'll use the detailed one in recommendations instead
+                    }
+
+                    return findings;
+                }
+
+                const programmeDescriptions = {
+                    'tvtb': {
+                        english: 'Quick analysis of International Business programme alignment - focus on gaps that impact graduate employability.',
+                        estonian: 'Rahvusvahelise äri programmi vastavuse kiiranalüüs - keskendutakse lõpetajate tööturul konkurentsivõime mõjutavatele lünkadele.'
+                    },
+                    'majb': {
+                        english: 'Quick analysis of Sustainable Entrepreneurship programme alignment - focus on innovation gaps.',
+                        estonian: 'Jätkusuutliku ettevõtluse programmi vastavuse kiiranalüüs - keskendutakse innovatsioonilünkadele.'
+                    },
+                    'makm': {
+                        english: 'Quick analysis of Sustainability Management programme alignment - focus on leadership competency gaps.',
+                        estonian: 'Jätkusuutlikkuse juhtimise programmi vastavuse kiiranalüüs - keskendutakse juhtimiskompetentside lünkadele.'
+                    }
+                };
+
+                const programmeRecommendations = {
+                    'tvtb': {
+                        english: '💡 <strong>ACTION PLAN:</strong><br><strong>Phase 1 (Immediate):</strong> Conduct PLO-MLO alignment audit for identified weak modules using AACSB international business competency frameworks. Priority modules requiring intervention: {WEAK_MODULES_LIST}.<br><strong>Phase 2 (Development):</strong> Implement case-based learning with authentic multinational trade scenarios. Partner with companies like Bolt, Pipedrive, or Skype for real-world project assessments.<br><strong>Phase 3 (Integration):</strong> Create digital portfolio demonstrating international competency progression. Establish cross-cultural assessment rubrics with measurable global business outcomes.',
+                        estonian: '💡 <strong>TEGEVUSKAVA:</strong><br><strong>Faas 1 (Kohene):</strong> Teosta PLO-MLO vastavuse audit tuvastatud nõrkade moodulite jaoks kasutades AACSB rahvusvahelise äri kompetentsiraamistikke. Prioriteetsed sekkumist vajavad moodulid: {WEAK_MODULES_LIST}.<br><strong>Faas 2 (Arendamine):</strong> Rakenda juhtumipõhist õppimist autentsete rahvusvahelise kaubanduse stsenaariumitega. Tee koostööd ettevõtetega nagu Bolt, Pipedrive või Skype tõeliste projektihindamiste jaoks.<br><strong>Faas 3 (Integratsioon):</strong> Loo digitaalne portfoolio, mis demonstreerib rahvusvahelist kompetentsuse progressiooni. Loo kultuuridevahelised hindamisrubriigid mõõdetavate globaalse äri tulemustega.'
+                    },
+                    'majb': {
+                        english: '💡 <strong>ACTION PLAN:</strong><br><strong>Phase 1 (Assessment):</strong> Map current MLOs in weak modules ({WEAK_MODULES_LIST}) against UN SDG frameworks and B-Corp certification criteria to identify specific innovation gaps.<br><strong>Phase 2 (Enhancement):</strong> Integrate design thinking workshops and lean startup canvas exercises into underperforming modules. Create real social venture incubation with Estonian startups like Pipedrive Foundation or Garage48.<br><strong>Phase 3 (Validation):</strong> Establish impact measurement dashboard using Theory of Change methodology. Partner with Impact Hub Tallinn for authentic social innovation assessment.',
+                        estonian: '💡 <strong>TEGEVUSKAVA:</strong><br><strong>Faas 1 (Hindamine):</strong> Vastenda praegused MLO-d nõrkades moodulites ({WEAK_MODULES_LIST}) ÜRO SDG raamistike ja B-Corp sertifitseerimise kriteeriumitega, et tuvastada konkreetsed innovatsioonilüngad.<br><strong>Faas 2 (Täiustamine):</strong> Integreeri disainimõtlemise töötoad ja lean startup canvas harjutused alla keskmise sooritusega moodulitesse. Loo tõeline sotsiaalse ettevõtte inkubatsioon Eesti idufirmadega nagu Pipedrive Foundation või Garage48.<br><strong>Faas 3 (Valideerimine):</strong> Loo mõju mõõtmise juhtpaneel kasutades Theory of Change metodoloogiat. Tee koostööd Impact Hub Tallinnaga autentse sotsiaalse innovatsiooni hindamiseks.'
+                    },
+                    'makm': {
+                        english: '💡 <strong>ACTION PLAN:</strong><br><strong>Phase 1 (Framework Alignment):</strong> Benchmark weak modules ({WEAK_MODULES_LIST}) against GRI Standards, SASB frameworks, and TCFD recommendations. Conduct skills gap analysis with Estonian sustainability leaders like Enefit Green or Skeleton Technologies.<br><strong>Phase 2 (Skill Integration):</strong> Develop sustainability reporting simulations using real corporate ESG data from Estonian companies. Create stakeholder engagement scenarios with authentic environmental and social challenges.<br><strong>Phase 3 (Leadership Development):</strong> Establish sustainability transformation portfolio with measurable organizational change projects. Partner with Estonian Green Movement and certified B-Corps for practical sustainability leadership experience.',
+                        estonian: '💡 <strong>TEGEVUSKAVA:</strong><br><strong>Faas 1 (Raamistiku vastavus):</strong> Võrdle nõrku mooduleid ({WEAK_MODULES_LIST}) GRI standardite, SASB raamistike ja TCFD soovitustega. Teosta oskuslünkade analüüs Eesti jätkusuutlikkuse liidritega nagu Enefit Green või Skeleton Technologies.<br><strong>Faas 2 (Oskuste integratsioon):</strong> Arenda jätkusuutlikkuse aruandluse simulatsioonid kasutades tõelisi Eesti ettevõtete ESG andmeid. Loo sidusrühmade kaasamise stsenaariumid autentsete keskkonna- ja sotsiaalväljakutsetega.<br><strong>Faas 3 (Juhtimise arendamine):</strong> Loo jätkusuutlikkuse transformatsiooni portfoolio mõõdetavate organisatsioonimuutuste projektidega. Tee koostööd Eesti Rohelise Liikumise ja sertifitseeritud B-korpidega praktilise jätkusuutlikkuse juhtimiskogemuse saamiseks.'
+                    }
+                };
+
+                const langData = {
+                    description: programmeDescriptions[programmeCode] ? programmeDescriptions[programmeCode][currentLanguage] : programmeDescriptions['makm'][currentLanguage],
+                    title: currentLanguage === 'english' ? `Critical findings for ${programmeName ? programmeName[currentLanguage] : 'the'} programme:` : `Kriitilised leiud ${programmeName ? programmeName[currentLanguage] : ''} õppekava kohta:`,
+                    findings: createDynamicFindings(moduleAverages, programmeCode, currentLanguage),
+                    recommendations: getRecommendationsWithWeakModules(programmeCode, currentLanguage, moduleAverages)
+                };
+                
+                // Function to replace weak modules placeholder with actual weak module names
+                function getRecommendationsWithWeakModules(programmeCode, language, moduleAverages) {
+                    let recommendations = programmeRecommendations[programmeCode] ? 
+                        programmeRecommendations[programmeCode][language] : 
+                        programmeRecommendations['makm'][language];
+                    
+                    // Identify weak modules (score <= 3.0)
+                    const weakModules = Object.entries(moduleAverages)
+                        .filter(([key, score]) => score <= 3.0 && score > 0)
+                        .map(([key, score]) => {
+                            const moduleNames = {
+                                yl: language === 'english' ? 'General Studies (YL)' : 'Üldõpe (YL)',
+                                p1: language === 'english' ? 'P1 Methods & Markets' : 'P1 Meetodid ja turud',
+                                p2: language === 'english' ? 'P2 Core Business' : 'P2 Äripõhioskused',
+                                e1: language === 'english' ? 'E1 Specialization' : 'E1 Erialane',
+                                e2: language === 'english' ? 'E2 Advanced' : 'E2 Süvendatud',
+                                gd: language === 'english' ? 'Thesis (GD)' : 'Lõputöö (GD)',
+                                mn: language === 'english' ? 'Minor (MN)' : 'Kõrvalala (MN)',
+                                vb: language === 'english' ? 'Electives (VB)' : 'Vabaained (VB)'
+                            };
+                            return `${moduleNames[key]} (${score.toFixed(1)}/5)`;
+                        });
+                    
+                    const weakModulesList = weakModules.length > 0 ? 
+                        weakModules.join(', ') : 
+                        (language === 'english' ? 'None identified - all modules performing adequately' : 'Pole tuvastatud - kõik moodulid toimivad adekvaatselt');
+                    
+                    return recommendations.replace('{WEAK_MODULES_LIST}', weakModulesList);
+                }
                 
                 const summaryContent = document.querySelector('.summary-content');
                 if (summaryContent) {
-                    const programmeLongName = programmeName ? programmeName.english : 'the programme';
-                    
                     summaryContent.innerHTML = `
-                        <p>${summaryData.description}</p>
-                        
-                        <div class="summary-findings">
-                            <h4>${summaryData.title}</h4>
-                            <ul class="findings-list">
-                                ${summaryData.findings.map(finding => `<li>${finding}</li>`).join('')}
-                            </ul>
+                        <div class="executive-summary">
+                            <p><strong>${langData.description}</strong></p>
                         </div>
                         
-                        <div class="recommendations">
-                            <h4>Recommended actions for programme enhancement:</h4>
-                            <p>${summaryData.recommendations}</p>
+                        <div class="priority-actions">
+                            ${langData.findings.map(finding => `<div class="action-item">${finding}</div>`).join('')}
+                        </div>
+                        
+                        <div class="next-steps">
+                            <div class="action-item">${langData.recommendations}</div>
                         </div>
                     `;
                 }
@@ -1209,15 +2132,17 @@
                         const overviewText = document.querySelector('#overview > p');
                         if (overviewText) {
                             const estName = programmeName ? programmeName.estonian : (currentProgrammeData.kavanimetusik || currentProgrammeData.kavanimetusek);
-                            overviewText.textContent = `This analysis examines how well the Module Learning Outcomes (MLOs) align with the Programme Learning Outcomes (PLOs) for ${estName} (${programmeCode.toUpperCase()}). The alignment is scored on a scale from 1 to 5:`;
+                            const engName = programmeName ? programmeName.english : (currentProgrammeData.kavanimetusek || currentProgrammeData.kavanimetusik);
+                            
+                            if (currentLanguage === 'english') {
+                                overviewText.textContent = `This analysis examines how well the Module Learning Outcomes (MLOs) align with the Programme Learning Outcomes (PLOs) for ${engName} (${programmeCode.toUpperCase()}). The alignment is scored on a scale from 1 to 5:`;
+                            } else {
+                                overviewText.textContent = `See analüüs uurib, kui hästi vastavad moodulite õpiväljundid (MLO) õppekava õpiväljunditele (PLO) ${estName} (${programmeCode.toUpperCase()}) programmis. Vastavust hinnatakse skaalal 1 kuni 5:`;
+                            }
                             console.log("Overview text updated");
                         }
 
-                        // Update alignment summary to be dynamic
-                        updateAlignmentSummary(programmeCode, programmeName);
-                        console.log("Alignment summary updated");
-
-                        // Get PLOs and MLOs
+                        // Get PLOs and MLOs first
                         currentPLOs = currentProgrammeData.plos || [];
                         currentMLOs = currentProgrammeData.mlos || [];
                         
@@ -1230,6 +2155,13 @@
                             
                             // Group MLOs by category for analysis
                             const moduleGroups = groupMLOsByCategory(currentMLOs);
+                            
+                            // Calculate module averages for dynamic alignment summary
+                            const moduleAverages = calculateModuleAverages(currentPLOs, moduleGroups);
+                            
+                            // Update alignment summary with actual calculated scores
+                            updateAlignmentSummary(programmeCode, programmeName, moduleAverages);
+                            console.log("Alignment summary updated with dynamic data");
                             
                             // Generate and display alignment analysis
                             const alignmentResults = []; // Placeholder for actual analysis
@@ -1257,6 +2189,9 @@
 
             // Function to group MLOs by category
             function groupMLOsByCategory(mlos) {
+                console.log("=== GROUPING MLOs BY CATEGORY ===");
+                console.log("Input MLOs:", mlos);
+                
                 const groups = {};
                 moduleOrder.forEach(category => {
                     groups[category] = [];
@@ -1264,8 +2199,22 @@
                 
                 mlos.forEach(mlo => {
                     const category = getModuleCategory(mlo.mlokood || '');
+                    console.log(`MLO ${mlo.mlokood} -> category: ${category}`);
                     if (groups[category]) {
                         groups[category].push(mlo);
+                    } else {
+                        console.warn(`Unknown category: ${category} for MLO: ${mlo.mlokood}`);
+                    }
+                });
+                
+                console.log("Grouped MLOs:", groups);
+                
+                // Log which categories have data
+                moduleOrder.forEach(category => {
+                    if (groups[category] && groups[category].length > 0) {
+                        console.log(`${category}: ${groups[category].length} MLOs`);
+                    } else {
+                        console.log(`${category}: NO MLOs`);
                     }
                 });
                 
@@ -1277,10 +2226,10 @@
                 // Display PLOs
                 const ploContainer = document.getElementById('plo-container');
                 if (ploContainer && plos.length > 0) {
-                    let ploHtml = `<table class="mlo-table">`;
+                    let ploHtml = `<table class="plo-table">`;
                     ploHtml += `<thead>`;
                     ploHtml += `<tr>`;
-                    ploHtml += `<th class="mlo-code-col">PLO Code</th>`;
+                    ploHtml += `<th class="code-col">PLO Code</th>`;
                     ploHtml += `<th class="content-col">${currentLanguage === 'english' ? 'English' : 'Estonian'}</th>`;
                     ploHtml += `</tr>`;
                     ploHtml += `</thead>`;
@@ -1292,9 +2241,9 @@
                             : (plo.plosisuek || plo.ilosisu || 'N/A');
                             
                         ploHtml += `<tr>`;
-                        ploHtml += `<td class="mlo-code">${plo.plokood || `plo${i+1}`}</td>`;
+                        ploHtml += `<td class="plo-code">${plo.plokood || `plo${i+1}`}</td>`;
                         ploHtml += `<td class="content-cell">`;
-                        ploHtml += `<div class="mlo-description">${content}</div>`;
+                        ploHtml += `<div class="plo-description">${content}</div>`;
                         ploHtml += `</td>`;
                         ploHtml += `</tr>`;
                     });
@@ -1336,7 +2285,7 @@
                             mloHtml += `<table class="mlo-table">`;
                             mloHtml += `<thead>`;
                             mloHtml += `<tr>`;
-                            mloHtml += `<th class="mlo-code-col">MLO Code</th>`;
+                            mloHtml += `<th class="code-col">MLO Code</th>`;
                             mloHtml += `<th class="content-col">${moduleTitle}</th>`;
                             mloHtml += `</tr>`;
                             mloHtml += `</thead>`;
@@ -1368,348 +2317,534 @@
                 }
             }
 
-            // Simplified alignment analysis functions (placeholders for future implementation)
+            // Dynamic alignment analysis functions
             function displayAlignmentMatrix(plos, moduleGroups, alignmentResults) {
+                console.log("=== DISPLAYING ALIGNMENT MATRIX ===");
+                console.log("PLOs:", plos);
+                console.log("Module Groups:", moduleGroups);
+                
                 const matrixContainer = document.getElementById('matrix-container');
-                if (matrixContainer) {
-                    
-                    let matrixHtml = `
-                        <table class="matrix-table">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2" class="plo-header">PLO / MLO</th>
-                                    <th colspan="4" class="module-header">General Studies Module</th>
-                                    <th colspan="6" class="module-header">P1: Methods, Markets and Economy</th>
-                                    <th colspan="6" class="module-header">P2: Core Business Competences</th>
-                                </tr>
-                                <tr>
-                                    <th class="mlo-header">YLMLO 1</th>
-                                    <th class="mlo-header">YLMLO 2</th>
-                                    <th class="mlo-header">YLMLO 3</th>
-                                    <th class="mlo-header">Avg</th>
-                                    <th class="mlo-header">P1MLO 1</th>
-                                    <th class="mlo-header">P1MLO 2</th>
-                                    <th class="mlo-header">P1MLO 3</th>
-                                    <th class="mlo-header">P1MLO 4</th>
-                                    <th class="mlo-header">P1MLO 5</th>
-                                    <th class="mlo-header">Avg</th>
-                                    <th class="mlo-header">P2MLO 1</th>
-                                    <th class="mlo-header">P2MLO 2</th>
-                                    <th class="mlo-header">P2MLO 3</th>
-                                    <th class="mlo-header">P2MLO 4</th>
-                                    <th class="mlo-header">P2MLO 5</th>
-                                    <th class="mlo-header">Avg</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="plo-header">PLO 1</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-4">4</td>
-                                    <td class="score-cell score-3">2.67</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-1">1</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.20</td>
-                                </tr>
-                                <tr>
-                                    <td class="plo-header">PLO 2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.40</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-2">2.40</td>
-                                </tr>
-                                <tr>
-                                    <td class="plo-header">PLO 3</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-2">2.20</td>
-                                </tr>
-                                <tr>
-                                    <td class="plo-header">PLO 4</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-4">4</td>
-                                    <td class="score-cell score-3">2.67</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-1">1</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.20</td>
-                                </tr>
-                                <tr>
-                                    <td class="plo-header">PLO 5</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-1">1</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">1.80</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-1">1</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">1.80</td>
-                                </tr>
-                                <tr>
-                                    <td class="plo-header">PLO 6</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-1">1</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.00</td>
-                                    <td class="score-cell score-3">3</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2</td>
-                                    <td class="score-cell score-2">2.20</td>
-                                </tr>
-                                <tr class="avg-row">
-                                    <td>Avg</td>
-                                    <td>2.00</td>
-                                    <td>2.00</td>
-                                    <td>2.67</td>
-                                    <td>2.22</td>
-                                    <td>2.00</td>
-                                    <td>1.83</td>
-                                    <td>2.67</td>
-                                    <td>1.67</td>
-                                    <td>2.00</td>
-                                    <td>2.03</td>
-                                    <td>2.50</td>
-                                    <td>2.17</td>
-                                    <td>1.83</td>
-                                    <td>2.00</td>
-                                    <td>2.33</td>
-                                    <td>2.17</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    `;
-                    
-                    matrixContainer.innerHTML = matrixHtml;
+                if (!matrixContainer || !plos || plos.length === 0) {
+                    if (matrixContainer) {
+                        matrixContainer.innerHTML = '<p>No matrix data available for this programme.</p>';
+                    }
+                    return;
                 }
+
+                // Get available modules that have MLOs
+                const availableModules = moduleOrder.filter(moduleKey => 
+                    moduleGroups[moduleKey] && moduleGroups[moduleKey].length > 0
+                );
+                
+                console.log("Available modules with MLOs:", availableModules);
+
+                if (availableModules.length === 0) {
+                    matrixContainer.innerHTML = '<p>No module data available for matrix generation.</p>';
+                    return;
+                }
+
+                function getScoreClass(score) {
+                    return `score-cell score-${Math.round(score)}`;
+                }
+
+                // Create table structure step by step
+                let html = '<div class="matrix-container">';
+                html += '<table class="matrix-table">';
+                
+                // Header row - build as simple single row
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th class="plo-header">PLO</th>';
+                
+                // Add all MLO columns
+                availableModules.forEach(moduleKey => {
+                    const moduleMLOs = moduleGroups[moduleKey];
+                    const moduleTitle = moduleNames[moduleKey]?.[currentLanguage] || moduleKey.toUpperCase();
+                    const modulePrefix = moduleKey.toUpperCase();
+                    
+                    moduleMLOs.forEach((mlo, index) => {
+                        const mloCode = mlo.mlokood || `${modulePrefix}${index + 1}`;
+                        html += `<th class="mlo-header" title="${moduleTitle}">${mloCode}</th>`;
+                    });
+                    
+                    // Only show average column if there's more than one MLO in the module
+                    if (moduleMLOs.length > 1) {
+                        html += `<th class="module-avg-header" title="${moduleTitle} Average">${modulePrefix}-Avg</th>`;
+                    }
+                });
+                
+                html += '</tr>';
+                html += '</thead>';
+                
+                // Body
+                html += '<tbody>';
+                
+                // PLO data rows
+                plos.forEach((plo, ploIndex) => {
+                    const ploCode = plo.plokood || `PLO${ploIndex + 1}`;
+                    html += '<tr>';
+                    html += `<td class="plo-row-header">${ploCode}</td>`;
+                    
+                    availableModules.forEach(moduleKey => {
+                        const moduleMLOs = moduleGroups[moduleKey];
+                        let moduleScores = [];
+                        
+                        moduleMLOs.forEach((mlo, index) => {
+                            const mloCode = mlo.mlokood || `${moduleKey.toUpperCase()}${index + 1}`;
+                            // Use consistent scoring system
+                            const score = getAlignmentScore(ploCode, mloCode, mlo);
+                            moduleScores.push(score);
+                            // Add data attributes for AI enhancement
+                            const ploText = plo.nimetus_et || plo.nimetus_en || `PLO ${ploIndex + 1}`;
+                            const mloText = mlo.nimetus_et || mlo.nimetus_en || `MLO ${index + 1}`;
+                            html += `<td class="${getScoreClass(score)}" data-plo-code="${ploCode}" data-mlo-code="${mloCode}" data-plo-text="${ploText.replace(/"/g, '&quot;')}" data-mlo-text="${mloText.replace(/"/g, '&quot;')}">${score}</td>`;
+                        });
+                        
+                        // Module average - only if more than one MLO
+                        if (moduleMLOs.length > 1) {
+                            const moduleAvg = moduleScores.length > 0 ? 
+                                (moduleScores.reduce((a, b) => a + b, 0) / moduleScores.length).toFixed(2) : '0.00';
+                            html += `<td class="${getScoreClass(parseFloat(moduleAvg))}">${moduleAvg}</td>`;
+                        }
+                    });
+                    
+                    html += '</tr>';
+                });
+                
+                // Average row
+                html += '<tr class="avg-row">';
+                html += '<td class="plo-row-header">Avg</td>';
+                
+                availableModules.forEach(moduleKey => {
+                    const moduleMLOs = moduleGroups[moduleKey];
+                    let columnScores = [];
+                    
+                    moduleMLOs.forEach((mlo, index) => {
+                        const mloCode = mlo.mlokood || `${moduleKey.toUpperCase()}${index + 1}`;
+                        let mloScores = [];
+                        
+                        // Calculate average for this MLO across all PLOs
+                        plos.forEach((plo, ploIndex) => {
+                            const ploCode = plo.plokood || `PLO${ploIndex + 1}`;
+                            const score = getAlignmentScore(ploCode, mloCode, mlo);
+                            mloScores.push(score);
+                        });
+                        
+                        const avgScore = mloScores.length > 0 ? 
+                            (mloScores.reduce((a, b) => a + b, 0) / mloScores.length).toFixed(2) : '0.00';
+                        columnScores.push(parseFloat(avgScore));
+                        html += `<td class="${getScoreClass(parseFloat(avgScore))}">${avgScore}</td>`;
+                    });
+                    
+                    // Module overall average - only if more than one MLO
+                    if (moduleMLOs.length > 1) {
+                        const moduleOverallAvg = columnScores.length > 0 ? 
+                            (columnScores.reduce((a, b) => a + b, 0) / columnScores.length).toFixed(2) : '0.00';
+                        html += `<td class="${getScoreClass(parseFloat(moduleOverallAvg))}">${moduleOverallAvg}</td>`;
+                    }
+                });
+                
+                html += '</tr>';
+                html += '</tbody>';
+                html += '</table>';
+                html += '</div>';
+                
+                console.log("Generated matrix HTML:", html.substring(0, 500) + "...");
+                matrixContainer.innerHTML = html;
+            }
+
+            // Function to highlight overlapping keywords in MLO content
+            function highlightKeywords(text, ploText) {
+                // Extract keywords from PLO text (words > 3 characters)
+                const ploWords = ploText.toLowerCase().split(/\s+/).filter(word => word.length > 3);
+                const keywords = [...new Set(ploWords)]; // Remove duplicates
+                
+                let highlightedText = text;
+                
+                // Highlight each keyword found in both PLO and MLO
+                keywords.forEach(keyword => {
+                    if (text.toLowerCase().includes(keyword)) {
+                        // Create case-insensitive regex to find the keyword
+                        const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+                        highlightedText = highlightedText.replace(regex, `<span style="background-color: #fff3cd; padding: 1px 2px; border-radius: 2px;">$&</span>`);
+                    }
+                });
+                
+                return highlightedText;
             }
 
             function displayDetailedAnalysis(plos, moduleGroups, alignmentResults) {
                 const detailedContainer = document.getElementById('detailed-container');
-                if (detailedContainer) {
-                    
-                    // Sample PLO content for Sustainability Management programme
-                    const ploContent = {
-                        'PLO 1': 'Synthesizes wide-ranging knowledge and skills to overcome challenges in international organizations in various sectors as an employee, to run one\'s own business, and/or to continue studies on graduate level.',
-                        'PLO 2': 'Demonstrates critical thinking and analytical skills in evaluating complex sustainability challenges in business environments.',
-                        'PLO 3': 'Applies sustainability frameworks and ESG principles to develop innovative business solutions and strategies.',
-                        'PLO 4': 'Communicates effectively with diverse stakeholders about sustainability initiatives and environmental impact assessments.',
-                        'PLO 5': 'Leads and manages sustainable business transformations while considering economic, environmental, and social implications.',
-                        'PLO 6': 'Integrates circular economy principles and green innovation strategies into organizational decision-making processes.'
-                    };
-                    
-                    // Enhanced MLO analysis data with more specific justifications
-                    const sampleData = {
-                        'yl': {
-                            name: 'General Studies Module',
-                            avgScore: 2.2,
-                            mlos: [
-                                {
-                                    code: 'yl_mlo1',
-                                    content: 'Knows the basic principles of ICT, is able to find and evaluate information efficiently.',
-                                    score: 2,
-                                    justification: 'While information evaluation skills support PLO 1\'s knowledge synthesis requirement, the focus on basic ICT lacks connection to sustainability management contexts. Missing integration with environmental data analysis tools and sustainability reporting systems.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'yl_mlo2',
-                                    content: 'Can scientifically interpret the effect of work environment on human body.',
-                                    score: 2,
-                                    justification: 'Limited alignment with sustainability PLOs. While workplace health relates to social sustainability (PLO 3), the narrow focus on human body effects doesn\'t address broader environmental and economic sustainability dimensions required by the programme.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'yl_mlo3',
-                                    content: 'Demonstrates critical thinking and problem-solving skills in academic contexts.',
-                                    score: 4,
-                                    justification: 'Strong alignment with PLO 2\'s critical thinking requirements. The analytical skills developed here directly support evaluating complex sustainability challenges, though application contexts could be more specifically oriented toward sustainability issues.',
-                                    needsImprovement: false
-                                }
-                            ]
-                        },
-                        'p1': {
-                            name: 'P1 Methods, Markets and Economy',
-                            avgScore: 2.0,
-                            mlos: [
-                                {
-                                    code: 'p1_mlo1',
-                                    content: 'Understands fundamental economic principles and market mechanisms.',
-                                    score: 2,
-                                    justification: 'Basic economic knowledge provides foundation for PLO 1, but lacks integration with sustainability economics, circular economy models, and green market mechanisms essential for sustainability management leadership.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'p1_mlo2',
-                                    content: 'Applies research methods in business contexts.',
-                                    score: 2,
-                                    justification: 'Research methodology skills partially support PLO 2\'s analytical requirements, but need stronger focus on sustainability assessment methodologies, life cycle analysis, and environmental impact measurement techniques.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'p1_mlo3',
-                                    content: 'Analyzes market trends and competitive landscapes.',
-                                    score: 3,
-                                    justification: 'Market analysis skills align moderately with PLO 3\'s business strategy requirements, but need enhancement to include green market trends, sustainable competitive advantages, and ESG-driven market dynamics.',
-                                    needsImprovement: false
-                                },
-                                {
-                                    code: 'p1_mlo4',
-                                    content: 'Evaluates economic policies and their business implications.',
-                                    score: 1,
-                                    justification: 'Limited connection to sustainability PLOs. Traditional economic policy analysis doesn\'t address carbon pricing, environmental regulations, sustainability incentives, or green policy frameworks critical for PLO 5\'s leadership requirements.',
-                                    needsImprovement: true
-                                },
-                                {
-                                    code: 'p1_mlo5',
-                                    content: 'Demonstrates understanding of international trade and global markets.',
-                                    score: 2,
-                                    justification: 'International perspective supports PLO 1\'s global challenge focus, but lacks emphasis on sustainable trade practices, fair trade principles, and global environmental agreements essential for sustainability management.',
-                                    needsImprovement: true
-                                }
-                            ]
-                        }
-                    };
-                    
-                    let detailedHtml = `
-                        <h2><i class="fas fa-list-alt"></i> Detailed PLO-MLO Breakdown</h2>
-                        <p class="detailed-description">Comprehensive analysis showing how each Programme Learning Outcome aligns with Module Learning Outcomes, including specific justifications and improvement recommendations.</p>
-                    `;
-                    
-                    // Show PLO content first
+                if (!detailedContainer || !plos || plos.length === 0) {
+                    if (detailedContainer) {
+                        detailedContainer.innerHTML = '<p>No detailed analysis data available for this programme.</p>';
+                    }
+                    return;
+                }
+
+                // Get available modules that have MLOs
+                const availableModules = moduleOrder.filter(moduleKey => 
+                    moduleGroups[moduleKey] && moduleGroups[moduleKey].length > 0
+                );
+
+                if (availableModules.length === 0) {
+                    detailedContainer.innerHTML = '<p>No module data available for detailed analysis.</p>';
+                    return;
+                }
+
+                let detailedHtml = '';
+
+                if (currentView === 'plo') {
+                    // PLO-centric view: showing how each PLO aligns with MLOs
                     detailedHtml += `
-                        <div class="plo-content-section">
-                            <h3><i class="fas fa-graduation-cap"></i> Programme Learning Outcomes (PLOs)</h3>
+                        <div class="view-header">
+                            <h3>
+                                ${currentLanguage === 'english' ? 'PLO-MLO Analysis' : 'PLO-MLO Analüüs'}
+                                <span class="methodology-container">
+                                    <button class="methodology-trigger" onclick="toggleMethodology()" title="${currentLanguage === 'english' ? 'Show Scoring Methodology' : 'Näita punktimise metoodikat'}"><i class="fas fa-info"></i></button>
+                                    <div class="methodology-popup" id="methodology-popup">
+                                        <h4>${currentLanguage === 'english' ? 'Alignment Scoring Methodology' : 'Vastavuse punktimise metodoloogia'}</h4>
+                                        <div class="formula">
+                                            <strong>${currentLanguage === 'english' ? 'Formula' : 'Valem'}:</strong><br>
+                                            Score = f(keyword_overlap_%, competency_matches)
+                                        </div>
+                                        <div class="criteria">
+                                            <div><strong>${currentLanguage === 'english' ? 'Scoring Criteria' : 'Punktimise kriteeriumid'}:</strong></div>
+                                            <div>• Score 5: ≥15% keyword overlap + ≥3 competency matches</div>
+                                            <div>• Score 4: ≥10% keyword overlap + ≥2 competency matches</div>
+                                            <div>• Score 3: ≥5% keyword overlap + ≥1 competency match</div>
+                                            <div>• Score 2: ≥2% keyword overlap OR ≥1 competency match</div>
+                                            <div>• Score 1: <2% keyword overlap + 0 competency matches</div>
+                                        </div>
+                                        <div style="margin-top: 10px; font-size: 11px; color: #666;">
+                                            ${currentLanguage === 'english' ? 'Competency categories include: analytical, application, creative, management, communication, collaboration, research, technical, business, international skills.' : 'Kompetentside kategooriad hõlmavad: analüütilisi, rakenduslikke, loovaid, juhtimis-, kommunikatsiooni-, koostöö-, uurimis-, tehnilisi, äri- ja rahvusvahelisi oskusi.'}
+                                        </div>
+                                    </div>
+                                </span>
+                            </h3>
+                            <p>${currentLanguage === 'english' ? 'This view shows how each Programme Learning Outcome (PLO) aligns with Module Learning Outcomes (MLOs) across different modules.' : 'See vaade näitab, kuidas iga õppekava õpiväljund (PLO) vastab moodulite õpiväljunditele (MLO) erinevates moodulites.'}</p>
+                        </div>
                     `;
-                    
-                    Object.keys(ploContent).forEach(ploKey => {
+
+                    plos.forEach((plo, ploIndex) => {
+                        const ploCode = plo.plokood || `PLO ${ploIndex + 1}`;
+                        const ploContent = currentLanguage === 'english' 
+                            ? (plo.plosisuik || plo.ilosisu || 'PLO content not available')
+                            : (plo.plosisuek || plo.ilosisu || 'PLO content not available');
+
                         detailedHtml += `
-                            <div class="plo-content-box">
-                                <h4>${ploKey}</h4>
-                                <p>${ploContent[ploKey]}</p>
-                            </div>
-                        `;
-                    });
-                    
-                    detailedHtml += `</div>`;
-                    
-                    // Create detailed MLO analysis table for each module category
-                    Object.keys(sampleData).forEach(moduleKey => {
-                        const moduleData = sampleData[moduleKey];
-                        
-                        detailedHtml += `
-                            <div class="module-category-section">
+                            <div class="plo-analysis-section">
+                                <div class="plo-header-section">
+                                    <h3>${ploCode}</h3>
+                                    <div class="plo-text">${ploContent}</div>
+                                </div>
+                                
                                 <table class="detailed-table">
                                     <thead>
-                                        <tr class="module-category-header">
-                                            <th colspan="4">${moduleData.name} (Average Score: ${moduleData.avgScore}/5)</th>
-                                        </tr>
                                         <tr>
-                                            <th class="code-col">MLO Code</th>
-                                            <th class="content-col">MLO Content</th>
-                                            <th class="score-col">Score</th>
-                                            <th class="justification-col">Detailed Justification & Improvement</th>
+                                            <th class="code-col">${currentLanguage === 'english' ? 'MLO Code' : 'MLO Kood'}</th>
+                                            <th class="content-col">${currentLanguage === 'english' ? 'MLO Content' : 'MLO Sisu'}</th>
+                                            <th class="score-col">${currentLanguage === 'english' ? 'Score' : 'Skoor'}</th>
+                                            <th class="justification-col">${currentLanguage === 'english' ? 'Justification & Improvement Suggestions' : 'Põhjendus ja parandusettepanekud'}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                         `;
-                        
-                        moduleData.mlos.forEach(mlo => {
-                            detailedHtml += `
-                                <tr>
-                                    <td class="code-col">${mlo.code}</td>
-                                    <td class="content-col">${mlo.content}</td>
-                                    <td class="score-col">${mlo.score}/5</td>
-                                    <td class="justification-col">
-                                        <div>${mlo.justification}</div>
-                                        ${mlo.needsImprovement ? `
-                                        <div class="improvement-suggestion">
-                                            <strong>Improvement Recommendation:</strong> 
-                                            Enhance this MLO by incorporating specific sustainability management concepts, frameworks, and practical applications that directly support the programme's environmental, social, and governance learning objectives.
-                                        </div>
-                                        ` : ''}
-                                    </td>
-                                </tr>
-                            `;
+
+                        // Show alignment with each module's MLOs
+                        availableModules.forEach(moduleKey => {
+                            const moduleMLOs = moduleGroups[moduleKey];
+                            
+                            moduleMLOs.forEach((mlo, mloIndex) => {
+                                const mloCode = mlo.mlokood || `${moduleKey}_mlo${mloIndex + 1}`;
+                                const mloContent = currentLanguage === 'english' 
+                                    ? (mlo.mlosisuik || mlo.ilosisu || 'MLO content not available')
+                                    : (mlo.mlosisuek || mlo.ilosisu || 'MLO content not available');
+                                
+                                const alignmentScore = getAlignmentScore(ploCode, mloCode, mlo); // Use consistent scoring
+                                
+                                // Generate specific, actionable justifications based on content analysis
+                                let justification = '';
+                                let improvement = '';
+                                
+                                // Get content alignment metrics (reusing the same logic as scoring)
+                                const ploText = ploContent.toLowerCase();
+                                const mloText = mloContent.toLowerCase();
+                                
+                                // Calculate metrics using same method as scoring function
+                                const ploWords = ploText.split(/\s+/).filter(word => word.length > 3);
+                                const mloWords = mloText.split(/\s+/).filter(word => word.length > 3);
+                                const overlapWords = ploWords.filter(word => mloWords.includes(word));
+                                const overlapPercentage = ploWords.length > 0 ? (overlapWords.length / ploWords.length) * 100 : 0;
+                                
+                                // Key competency categories (same as scoring function)
+                                const competencyKeywords = {
+                                    analytical: ['analyz', 'evaluat', 'assess', 'critic', 'examin', 'investigat', 'interpret', 'review'],
+                                    application: ['apply', 'implement', 'use', 'utiliz', 'practic', 'execut', 'demonstrat', 'perform'],
+                                    creative: ['creat', 'design', 'develop', 'innovat', 'generat', 'construct', 'build', 'formul'],
+                                    management: ['manag', 'lead', 'coordin', 'organiz', 'plan', 'direct', 'supervis', 'control'],
+                                    communication: ['communicat', 'present', 'explain', 'discuss', 'report', 'express', 'articul', 'convey'],
+                                    collaboration: ['collaborat', 'teamwork', 'cooperat', 'work together', 'group work', 'partnership'],
+                                    research: ['research', 'investigat', 'study', 'explor', 'inquir', 'gather', 'collect data'],
+                                    technical: ['technical', 'programming', 'software', 'data', 'technology', 'digital', 'computer'],
+                                    business: ['business', 'commercial', 'enterprise', 'market', 'economic', 'financial', 'strategy'],
+                                    international: ['international', 'global', 'cross-cultural', 'multicultural', 'worldwide', 'transnational']
+                                };
+                                
+                                // Count keyword matches in each category (same as scoring function)
+                                let totalMatches = 0;
+                                let matchingCategories = [];
+                                
+                                Object.entries(competencyKeywords).forEach(([category, keywords]) => {
+                                    const ploMatches = keywords.filter(keyword => ploText.includes(keyword)).length;
+                                    const mloMatches = keywords.filter(keyword => mloText.includes(keyword)).length;
+                                    const categoryMatches = Math.min(ploMatches, mloMatches); // Only count if both have the keyword
+                                    
+                                    if (categoryMatches > 0) {
+                                        totalMatches += categoryMatches;
+                                        matchingCategories.push(category);
+                                    }
+                                });
+                                
+                                // Generate justifications that match the scoring logic
+                                if (currentLanguage === 'english') {
+                                    switch(alignmentScore) {
+                                        case 1:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories. Content analysis shows insufficient connection between learning outcomes.`;
+                                            improvement = `Apply Bloom's Taxonomy: 1) Remember - Add foundational terminology 2) Understand - Include conceptual explanations 3) Apply - Create practical exercises 4) Analyze - Develop case study analysis 5) Evaluate - Add critical assessment tasks 6) Create - Include synthesis projects`;
+                                            break;
+                                        case 2:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Some foundational connections exist but need strengthening.`;
+                                            improvement = `Enhance via Bloom's Taxonomy: 1) Strengthen Understanding level - clarify concepts 2) Improve Application - add practical scenarios 3) Develop Analysis skills - include comparative studies 4) Target competencies: ${matchingCategories.length > 0 ? matchingCategories.slice(0,2).join(', ') : 'critical thinking, problem-solving'}`;
+                                            break;
+                                        case 3:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Solid foundation with adequate skill development pathways.`;
+                                            improvement = `Optimize using Bloom's higher levels: 1) Analysis - add complex problem decomposition 2) Evaluation - include criteria-based assessment 3) Creation - develop innovative solution tasks 4) Cross-competency integration exercises`;
+                                            break;
+                                        case 4:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Effective competency development through structured learning progression.`;
+                                            improvement = `Fine-tune with Bloom's advanced levels: 1) Evaluation - add peer review processes 2) Creation - include original research/design projects 3) Metacognitive reflection activities 4) Cross-disciplinary synthesis tasks`;
+                                            break;
+                                        case 5:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Comprehensive integration with integrated competency development.`;
+                                            improvement = '';
+                                            break;
+                                            break;
+                                        case 5:
+                                            justification = `Excellent alignment: ${overlapPercentage.toFixed(0)}% keyword overlap, ${totalMatches} competency alignments${matchingCategories.length > 0 ? ` in ${matchingCategories.join(', ')}` : ''}. Comprehensive integration of PLO competencies through well-designed learning outcomes.`;
+                                            improvement = '';
+                                            break;
+                                    }
+                                } else {
+                                    switch(alignmentScore) {
+                                        case 1:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat. Sisu analüüs näitab ebapiisavat seost õpiväljundite vahel.`;
+                                            improvement = `Bloomi taksonoomia rakendamine: 1) Teadmine - lisa alusterminoloogiat 2) Mõistmine - kaasa kontseptuaalseid selgitusi 3) Rakendamine - loo praktilisi harjutusi 4) Analüüs - arenda juhtumite analüüsi 5) Hindamine - lisa kriitilist hindamist 6) Loomine - kaasa sünteesiprojektid`;
+                                            break;
+                                        case 2:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Mõned alussidemed on olemas, kuid vajavad tugevdamist.`;
+                                            improvement = `Täiusta Bloomi taksonoomia abil: 1) Tugevda mõistmise taset - selgita kontseptsioone 2) Paranda rakendamist - lisa praktilisi stsenaariume 3) Arenda analüüsioskusi - kaasa võrdlevaid uuringuid 4) Sihtkompetenentsid: ${matchingCategories.length > 0 ? matchingCategories.slice(0,2).join(', ') : 'kriitiline mõtlemine, probleemilahendus'}`;
+                                            break;
+                                        case 3:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Hea alus adekvaatsete oskuste arengu radadega.`;
+                                            improvement = `Optimeeri Bloomi kõrgemate tasemete abil: 1) Analüüs - lisa keerukate probleemide lahutamist 2) Hindamine - kaasa kriteeriumipõhist hindamist 3) Loomine - arenda innovatiivseid lahendusülesandeid 4) Kompetentside-ülest integratsiooni`;
+                                            break;
+                                        case 4:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Tõhus kompetentside arendamine struktureeritud õppimise progressiooni kaudu.`;
+                                            improvement = `Tugevda spetsiifiliste Bloomi tasemete kaudu: 1) Rakendamine - lisa praktilisi ülesandeid 2) Analüüs - sisulda süsteemse mõtlemise komponente 3) Sünteesi - arenda tervikliku lähenemise oskused 4) Täpsusta hindamiskriteeriumeid`;
+                                            break;
+                                        case 5:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Terviklik PLO kompetentside integratsioon hästi kujundatud õpiväljundite kaudu.`;
+                                            improvement = `Optimeeri täiustatud Bloomi kõrgemate tasemete läbi: 1) Metakognitsioon - arenda õppimise eneserefleksiooni 2) Ülekanne - looda kompetentside-vahelisi seoseid 3) Innovatsiooni - kaasa uudsete lahenduste loomist 4) Eetilise arutluse integratsioon`;
+                                            break;
+                                    }
+                                }
+
+                                // Apply keyword highlighting to MLO content
+                                const highlightedMloContent = highlightKeywords(mloContent, ploContent);
+
+                                detailedHtml += `
+                                    <tr>
+                                        <td class="code-col">${mloCode}</td>
+                                        <td class="content-col">${highlightedMloContent}</td>
+                                        <td class="score-col score-${alignmentScore}">${alignmentScore}</td>
+                                        <td class="justification-col">
+                                            <div>${justification}</div>
+                                            ${alignmentScore < 3 && improvement ? `<div class="improvement-suggestion"><strong>${currentLanguage === 'english' ? 'Improvement:' : 'Parandus:'}</strong> ${improvement}</div>` : ''}
+                                        </td>
+                                    </tr>
+                                `;
+                            });
                         });
-                        
-                        // Add category average row
+
                         detailedHtml += `
-                                        <tr class="category-average-row">
-                                            <td colspan="2"><strong>Module Category Assessment</strong></td>
-                                            <td class="score-col"><strong>${moduleData.avgScore}/5</strong></td>
-                                            <td class="justification-col">
-                                                ${moduleData.avgScore < 3 ? 
-                                                '<strong>Critical improvement needed:</strong> This module requires substantial enhancement to align with sustainability management programme objectives. Consider integrating ESG frameworks, circular economy principles, and stakeholder engagement methodologies.' : 
-                                                '<strong>Satisfactory alignment:</strong> This module demonstrates reasonable alignment with programme goals but could benefit from stronger sustainability focus and practical application opportunities.'}
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         `;
                     });
-                    
-                    detailedContainer.innerHTML = detailedHtml;
+
+                } else {
+                    // MLO-centric view: showing how each MLO aligns with PLOs
+                    detailedHtml += `
+                        <div class="view-header">
+                            <h3><i class="fas fa-book"></i> ${currentLanguage === 'english' ? 'MLO-PLO Analysis' : 'MLO-PLO Analüüs'}</h3>
+                            <p>${currentLanguage === 'english' ? 'This view shows how each Module Learning Outcome (MLO) aligns with Programme Learning Outcomes (PLOs).' : 'See vaade näitab, kuidas iga mooduli õpiväljund (MLO) vastab õppekava õpiväljunditele (PLO).'}</p>
+                        </div>
+                    `;
+
+                    availableModules.forEach(moduleKey => {
+                        const moduleMLOs = moduleGroups[moduleKey];
+                        const moduleTitle = moduleNames[moduleKey]?.[currentLanguage] || moduleKey.toUpperCase();
+
+                        detailedHtml += `
+                            <div class="module-section">
+                                <h3>${moduleTitle}</h3>
+                        `;
+
+                        moduleMLOs.forEach((mlo, mloIndex) => {
+                            const mloCode = mlo.mlokood || `${moduleKey}_mlo${mloIndex + 1}`;
+                            const mloContent = currentLanguage === 'english' 
+                                ? (mlo.mlosisuik || mlo.ilosisu || 'MLO content not available')
+                                : (mlo.mlosisuek || mlo.ilosisu || 'MLO content not available');
+
+                            // Highlight keywords from all PLOs for MLO-centric view
+                            const allPloText = plos.map(plo => {
+                                return currentLanguage === 'english' 
+                                    ? (plo.plosisuik || plo.ilosisu || '')
+                                    : (plo.plosisuek || plo.ilosisu || '');
+                            }).join(' ');
+                            const highlightedMloContent = highlightKeywords(mloContent, allPloText);
+
+                            detailedHtml += `
+                                <div class="mlo-analysis-section">
+                                    <div class="mlo-header-section">
+                                        <h4>${mloCode}</h4>
+                                        <div class="mlo-text">${highlightedMloContent}</div>
+                                    </div>
+                                    
+                                    <table class="detailed-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="code-col">${currentLanguage === 'english' ? 'PLO Code' : 'PLO Kood'}</th>
+                                                <th class="content-col">${currentLanguage === 'english' ? 'PLO Content' : 'PLO Sisu'}</th>
+                                                <th class="score-col">${currentLanguage === 'english' ? 'Score' : 'Skoor'}</th>
+                                                <th class="justification-col">${currentLanguage === 'english' ? 'Justification & Improvement Suggestions' : 'Põhjendus ja parandusettepanekud'}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+
+                            plos.forEach((plo, ploIndex) => {
+                                const ploCode = plo.plokood || `PLO ${ploIndex + 1}`;
+                                const ploContent = currentLanguage === 'english' 
+                                    ? (plo.plosisuik || plo.ilosisu || 'PLO content not available')
+                                    : (plo.plosisuek || plo.ilosisu || 'PLO content not available');
+                                
+                                const alignmentScore = getAlignmentScore(ploCode, mloCode, mlo); // Use consistent scoring
+                                
+                                // Generate specific, actionable justifications based on content analysis
+                                let justification = '';
+                                let improvement = '';
+                                
+                                // Get content alignment metrics (reusing the same logic as scoring)
+                                const ploText = ploContent.toLowerCase();
+                                const mloText = mloContent.toLowerCase();
+                                
+                                // Calculate metrics using same method as scoring function
+                                const ploWords = ploText.split(/\s+/).filter(word => word.length > 3);
+                                const mloWords = mloText.split(/\s+/).filter(word => word.length > 3);
+                                
+                                // Calculate keyword overlap
+                                const keywords = [...new Set(ploWords)]; // Remove duplicates
+                                const overlapCount = keywords.filter(keyword => mloText.includes(keyword)).length;
+                                const overlapPercentage = (overlapCount / keywords.length) * 100;
+                                
+                                // Calculate competency matches
+                                const competencyCategories = ['leadership', 'sustainability', 'innovation', 'communication', 'ethics', 'collaboration', 'critical thinking', 'research', 'technology', 'management'];
+                                const matchingCategories = competencyCategories.filter(category => 
+                                    ploText.includes(category) && mloText.includes(category)
+                                );
+                                
+                                // Score-based justifications with accurate competency counting
+                                if (currentLanguage === 'english') {
+                                    switch(alignmentScore) {
+                                        case 1:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Limited foundational connection requiring substantial development.`;
+                                            improvement = `Enhance through Bloom's Taxonomy: 1) Remember - add key concept definitions 2) Understand - incorporate concept explanations 3) Apply - include practical scenarios 4) Target competencies: ${matchingCategories.length > 0 ? matchingCategories.slice(0,2).join(', ') : 'critical thinking, problem-solving'}`;
+                                            break;
+                                        case 2:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Basic alignment foundation requiring targeted enhancement.`;
+                                            improvement = `Strengthen via Bloom's levels: 1) Understand - clarify concepts 2) Apply - add practical scenarios 3) Analyze - include comparative studies 4) Target competencies: ${matchingCategories.length > 0 ? matchingCategories.slice(0,2).join(', ') : 'critical thinking, problem-solving'}`;
+                                            break;
+                                        case 3:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Good foundation for adequate skill development pathways.`;
+                                            improvement = `Optimize with higher Bloom's levels: 1) Analyze - add complex problem decomposition 2) Evaluate - include criterion-based assessment 3) Create - develop innovative solution tasks 4) Cross-competency integration`;
+                                            break;
+                                        case 4:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Effective competency development through structured learning progression.`;
+                                            improvement = `Strengthen through specific Bloom's levels: 1) Apply - add practical tasks 2) Analyze - include systematic thinking components 3) Synthesize - develop integrative approach skills 4) Refine assessment criteria`;
+                                            break;
+                                        case 5:
+                                            justification = `${overlapPercentage.toFixed(0)}% keyword overlap, ${matchingCategories.length} competency categories${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Comprehensive PLO competency integration through well-designed learning outcomes.`;
+                                            improvement = `Optimize through advanced Bloom's levels: 1) Metacognition - develop learning self-reflection 2) Transfer - create cross-competency connections 3) Innovation - include novel solution creation 4) Ethical reasoning integration`;
+                                            break;
+                                    }
+                                } else {
+                                    switch(alignmentScore) {
+                                        case 1:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Piiratud põhiseosed, mis vajavad märkimisväärset arendustööd.`;
+                                            improvement = `Täiusta Bloomi taksonoomia abil: 1) Tugevda mõistmise taset - selgita kontseptsioone 2) Paranda rakendamist - lisa praktilisi stsenaariume 3) Arenda analüüsioskusi - kaasa võrdlevaid uuringuid 4) Sihtkompetenentsid: ${matchingCategories.length > 0 ? matchingCategories.slice(0,2).join(', ') : 'kriitiline mõtlemine, probleemilahendus'}`;
+                                            break;
+                                        case 2:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Elementaarne vastavuse alus, mis vajab suunatud tugevdamist.`;
+                                            improvement = `Tugevda Bloomi taksonoomia abil: 1) Tugevda mõistmise taset - selgita kontseptsioone 2) Paranda rakendamist - lisa praktilisi stsenaariume 3) Arenda analüüsioskusi - kaasa võrdlevaid uuringuid 4) Sihtkompetenentsid: ${matchingCategories.length > 0 ? matchingCategories.slice(0,2).join(', ') : 'kriitiline mõtlemine, probleemilahendus'}`;
+                                            break;
+                                        case 3:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Hea alus adekvaatsete oskuste arengu radadega.`;
+                                            improvement = `Optimeeri Bloomi kõrgemate tasemete abil: 1) Analüüs - lisa keerukate probleemide lahutamist 2) Hindamine - kaasa kriteeriumipõhist hindamist 3) Loomine - arenda innovatiivseid lahendusülesandeid 4) Kompetentside-ülest integratsiooni`;
+                                            break;
+                                        case 4:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Tõhus kompetentside arendamine struktureeritud õppimise progressiooni kaudu.`;
+                                            improvement = `Tugevda spetsiifiliste Bloomi tasemete kaudu: 1) Rakendamine - lisa praktilisi ülesandeid 2) Analüüs - sisulda süsteemse mõtlemise komponente 3) Sünteesi - arenda tervikliku lähenemise oskused 4) Täpsusta hindamiskriteeriumeid`;
+                                            break;
+                                        case 5:
+                                            justification = `${overlapPercentage.toFixed(0)}% märksõnade kattuvus, ${matchingCategories.length} kompetentsikategooriat${matchingCategories.length > 0 ? ` (${matchingCategories.join(', ')})` : ''}. Terviklik PLO kompetentside integratsioon hästi kujundatud õpiväljundite kaudu.`;
+                                            improvement = `Optimeeri täiustatud Bloomi kõrgemate tasemete läbi: 1) Metakognitsioon - arenda õppimise eneserefleksiooni 2) Ülekanne - looda kompetentside-vahelisi seoseid 3) Innovatsiooni - kaasa uudsete lahenduste loomist 4) Eetilise arutluse integratsioon`;
+                                            break;
+                                    }
+                                }
+
+                                // Apply keyword highlighting to PLO content
+                                const highlightedPloContent = highlightKeywords(ploContent, mloContent);
+
+                                detailedHtml += `
+                                    <tr>
+                                        <td class="code-col">${ploCode}</td>
+                                        <td class="content-col">${highlightedPloContent}</td>
+                                        <td class="score-col score-${alignmentScore}">${alignmentScore}</td>
+                                        <td class="justification-col">
+                                            <div>${justification}</div>
+                                            ${alignmentScore < 3 && improvement ? `<div class="improvement-suggestion"><strong>${currentLanguage === 'english' ? 'Improvement:' : 'Parandus:'}</strong> ${improvement}</div>` : ''}
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+
+                            detailedHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        });
+
+                        detailedHtml += `
+                            </div>
+                        `;
+                    });
                 }
+
+                detailedContainer.innerHTML = detailedHtml;
             }
 
             // Add export functionality
@@ -1730,6 +2865,362 @@
             // Load programme data based on URL parameter
             console.log("Loading programme data for:", selectedProgramme);
             loadProgrammeData(selectedProgramme);
+
+            // ============================================
+            // AI ENHANCEMENT INTEGRATION
+            // ============================================
+            
+            // AI Configuration
+            const AI_CONFIG = {
+                baseUrl: 'http://localhost:5000',
+                timeout: 10000,
+                enabled: true,
+                cache: new Map(),
+                loadingCells: new Set()
+            };
+
+            // Test AI server availability
+            async function testAIServer() {
+                try {
+                    const response = await fetch(`${AI_CONFIG.baseUrl}/status`, {
+                        method: 'GET',
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    
+                    if (response.ok) {
+                        const status = await response.json();
+                        console.log('✅ AI Server Available:', status.version);
+                        showAIStatus(true);
+                        return status.capabilities;
+                    }
+                    return false;
+                } catch (error) {
+                    console.log('⚠️ AI Server not available:', error.message);
+                    showAIStatus(false);
+                    AI_CONFIG.enabled = false;
+                    return false;
+                }
+            }
+
+            // Show AI status indicator
+            function showAIStatus(online) {
+                let indicator = document.getElementById('ai-status-indicator');
+                if (!indicator) {
+                    indicator = document.createElement('div');
+                    indicator.id = 'ai-status-indicator';
+                    indicator.className = 'ai-status-indicator';
+                    document.body.appendChild(indicator);
+                }
+                
+                if (online) {
+                    indicator.textContent = '🤖 AI Enhanced';
+                    indicator.className = 'ai-status-indicator';
+                } else {
+                    indicator.textContent = '🤖 AI Offline';
+                    indicator.className = 'ai-status-indicator offline';
+                }
+                
+                indicator.style.display = 'block';
+                
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 3000);
+            }
+
+            // Enhanced analysis function
+            async function getEnhancedAlignment(ploCode, mloCode, mlo) {
+                if (!AI_CONFIG.enabled) {
+                    return null;
+                }
+
+                const cacheKey = `${ploCode}-${mloCode}`;
+                
+                // Return cached result
+                if (AI_CONFIG.cache.has(cacheKey)) {
+                    return AI_CONFIG.cache.get(cacheKey);
+                }
+
+                // Prevent duplicate requests
+                if (AI_CONFIG.loadingCells.has(cacheKey)) {
+                    return null;
+                }
+
+                AI_CONFIG.loadingCells.add(cacheKey);
+
+                try {
+                    // Get PLO and MLO text content
+                    const ploContent = currentPLOs.find(p => p.plokood === ploCode);
+                    const ploText = ploContent ? (currentLanguage === 'english' ? 
+                        (ploContent.plosisuik || ploContent.ilosisu || '') : 
+                        (ploContent.plosisuek || ploContent.ilosisu || '')) : '';
+                    
+                    const mloText = currentLanguage === 'english' ? 
+                        (mlo.mlosisuik || mlo.ilosisu || '') : 
+                        (mlo.mlosisuek || mlo.ilosisu || '');
+
+                    if (!ploText || !mloText) {
+                        return null;
+                    }
+
+                    // Get original score
+                    const originalScore = getAlignmentScore(ploCode, mloCode, mlo);
+
+                    // Call AI API
+                    const response = await fetch(`${AI_CONFIG.baseUrl}/analyze`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            plo_text: ploText,
+                            mlo_text: mloText,
+                            original_score: originalScore
+                        }),
+                        signal: AbortSignal.timeout(AI_CONFIG.timeout)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success) {
+                            AI_CONFIG.cache.set(cacheKey, result);
+                            return result;
+                        }
+                    }
+                    
+                    return null;
+
+                } catch (error) {
+                    console.error('AI analysis failed:', error);
+                    return null;
+                } finally {
+                    AI_CONFIG.loadingCells.delete(cacheKey);
+                }
+            }
+
+            // Enhanced version of getAlignmentScore
+            async function getAlignmentScoreEnhanced(ploCode, mloCode, mlo) {
+                // Get original score first
+                const originalScore = getAlignmentScore(ploCode, mloCode, mlo);
+                
+                // Try to get AI enhancement
+                if (AI_CONFIG.enabled) {
+                    try {
+                        const enhancement = await getEnhancedAlignment(ploCode, mloCode, mlo);
+                        if (enhancement && enhancement.enhanced_score) {
+                            return {
+                                score: Math.round(enhancement.enhanced_score),
+                                originalScore: originalScore,
+                                enhancement: enhancement,
+                                isEnhanced: true
+                            };
+                        }
+                    } catch (error) {
+                        console.error('Enhancement failed:', error);
+                    }
+                }
+                
+                return {
+                    score: originalScore,
+                    originalScore: originalScore,
+                    enhancement: null,
+                    isEnhanced: false
+                };
+            }
+
+            // Display AI analysis popup
+            function showAIAnalysisPopup(event, enhancement) {
+                // Remove existing popup
+                const existingPopup = document.querySelector('.ai-analysis-popup');
+                if (existingPopup) {
+                    existingPopup.remove();
+                }
+
+                if (!enhancement || !enhancement.success) {
+                    return;
+                }
+
+                const popup = document.createElement('div');
+                popup.className = 'ai-analysis-popup';
+                popup.innerHTML = `
+                    <div class="ai-analysis-header">
+                        <h4>🤖 AI Analysis</h4>
+                        <span class="confidence-badge">${(enhancement.confidence * 100).toFixed(0)}%</span>
+                    </div>
+                    
+                    <div class="score-comparison">
+                        <div class="score-item">
+                            <label>Original</label>
+                            <span class="score-value score-original">${enhancement.original_score.toFixed(1)}</span>
+                        </div>
+                        <div class="score-item">
+                            <label>Enhanced</label>
+                            <span class="score-value score-enhanced">${enhancement.enhanced_score.toFixed(1)}</span>
+                        </div>
+                    </div>
+                    
+                    ${enhancement.keywords.length > 0 ? `
+                    <div class="keywords-section">
+                        <label>Key Terms:</label>
+                        <div class="keywords">
+                            ${enhancement.keywords.slice(0, 5).map(keyword => `<span class="keyword-tag">${keyword}</span>`).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="reasoning-section">
+                        <label>Analysis:</label>
+                        <div class="reasoning">${enhancement.reasoning.length > 150 ? enhancement.reasoning.substring(0, 150) + '...' : enhancement.reasoning}</div>
+                    </div>
+                `;
+
+                // Position popup near the cell
+                document.body.appendChild(popup);
+                
+                const rect = event.target.getBoundingClientRect();
+                popup.style.position = 'fixed';
+                popup.style.left = Math.min(rect.right + 10, window.innerWidth - popup.offsetWidth - 10) + 'px';
+                popup.style.top = Math.max(rect.top, 10) + 'px';
+                popup.style.display = 'block';
+
+                // Close popup when clicking outside
+                setTimeout(() => {
+                    const closeHandler = (e) => {
+                        if (!popup.contains(e.target)) {
+                            popup.remove();
+                            document.removeEventListener('click', closeHandler);
+                        }
+                    };
+                    document.addEventListener('click', closeHandler);
+                }, 100);
+            }
+
+            // Override the original matrix generation to include AI enhancements
+            const originalUpdateDetailedView = updateDetailedView;
+            
+            updateDetailedView = async function() {
+                // Call original function first
+                await originalUpdateDetailedView();
+                
+                // Then enhance with AI if available
+                if (AI_CONFIG.enabled) {
+                    await enhanceExistingMatrix();
+                }
+            };
+
+            // Enhance existing matrix with AI analysis
+            async function enhanceExistingMatrix() {
+                const matrixCells = document.querySelectorAll('.matrix-table .score-cell');
+                const enhancementPromises = [];
+
+                matrixCells.forEach(cell => {
+                    const ploCode = cell.dataset.ploCode;
+                    const mloCode = cell.dataset.mloCode;
+                    
+                    if (ploCode && mloCode) {
+                        // Find the MLO data
+                        const mlo = findMLOByCode(mloCode);
+                        if (mlo) {
+                            enhancementPromises.push(enhanceMatrixCell(cell, ploCode, mloCode, mlo));
+                        }
+                    }
+                });
+
+                // Process enhancements in batches to avoid overwhelming the server
+                const batchSize = 5;
+                for (let i = 0; i < enhancementPromises.length; i += batchSize) {
+                    const batch = enhancementPromises.slice(i, i + batchSize);
+                    await Promise.all(batch);
+                    
+                    // Small delay between batches
+                    if (i + batchSize < enhancementPromises.length) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                }
+            }
+
+            // Enhance individual matrix cell
+            async function enhanceMatrixCell(cell, ploCode, mloCode, mlo) {
+                try {
+                    const enhancement = await getEnhancedAlignment(ploCode, mloCode, mlo);
+                    
+                    if (enhancement && enhancement.success) {
+                        // Update cell appearance
+                        cell.classList.add('ai-enhanced-cell');
+                        
+                        // Add AI badge
+                        const badge = document.createElement('div');
+                        badge.className = 'ai-enhancement-badge';
+                        badge.textContent = 'AI';
+                        cell.style.position = 'relative';
+                        cell.appendChild(badge);
+                        
+                        // Update score if significantly different
+                        const enhancedScore = Math.round(enhancement.enhanced_score);
+                        const originalScore = parseInt(cell.textContent);
+                        
+                        if (Math.abs(enhancedScore - originalScore) >= 0.5) {
+                            cell.textContent = enhancedScore;
+                            cell.className = cell.className.replace(/score-\d/, `score-${enhancedScore}`);
+                        }
+                        
+                        // Add click handler for popup
+                        cell.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            showAIAnalysisPopup(event, enhancement);
+                        });
+                        
+                        // Add hover effect
+                        cell.style.cursor = 'pointer';
+                        cell.title = `AI Enhanced: ${enhancement.enhanced_score.toFixed(1)} (Original: ${enhancement.original_score.toFixed(1)})`;
+                    }
+                } catch (error) {
+                    console.error('Cell enhancement failed:', error);
+                }
+            }
+
+            // Helper function to find MLO by code
+            function findMLOByCode(mloCode) {
+                for (const moduleKey in moduleGroups) {
+                    const moduleMLOs = moduleGroups[moduleKey];
+                    for (const mlo of moduleMLOs) {
+                        if (mlo.mlokood === mloCode) {
+                            return mlo;
+                        }
+                    }
+                }
+                return null;
+            }
+
+            // Initialize AI enhancement
+            async function initializeAIEnhancement() {
+                console.log('🤖 Initializing AI Enhancement...');
+                
+                const capabilities = await testAIServer();
+                
+                if (capabilities) {
+                    console.log('✅ AI Enhancement Ready!');
+                    
+                    // Add notification banner
+                    const banner = document.createElement('div');
+                    banner.innerHTML = `
+                        <div style="background: linear-gradient(45deg, #3498db, #2ecc71); color: white; padding: 8px 15px; border-radius: 4px; margin: 10px 0; text-align: center; font-size: 13px;">
+                            🤖 <strong>AI Enhancement Active:</strong> Click on enhanced cells (with AI badge) for detailed analysis
+                        </div>
+                    `;
+                    
+                    const container = document.querySelector('.container') || document.body;
+                    container.insertBefore(banner, container.firstChild);
+                    
+                    // Auto-remove banner after 5 seconds
+                    setTimeout(() => banner.remove(), 5000);
+                } else {
+                    console.log('⚠️ AI Enhancement not available - using standard analysis');
+                }
+            }
+
+            // Initialize AI when page loads
+            initializeAIEnhancement();
         });
     </script>
 </body>
