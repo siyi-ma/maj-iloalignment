@@ -33,9 +33,21 @@ def analyze():
     
     try:
         data = request.get_json()
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No JSON data provided'
+            }), 400
+            
         plo_text = data.get('plo_text', '')
         mlo_text = data.get('mlo_text', '')
-        original_score = data.get('original_score', 0)
+        original_score = float(data.get('original_score', 0))
+        
+        if not plo_text or not mlo_text:
+            return jsonify({
+                'success': False,
+                'error': 'PLO text and MLO text are required'
+            }), 400
         
         # Simple keyword matching
         plo_words = set(plo_text.lower().split())
@@ -43,7 +55,11 @@ def analyze():
         common_words = plo_words.intersection(mlo_words)
         
         # Calculate enhanced score
-        word_overlap = len(common_words) / max(len(plo_words), len(mlo_words), 1)
+        if len(plo_words) == 0 and len(mlo_words) == 0:
+            word_overlap = 0
+        else:
+            word_overlap = len(common_words) / max(len(plo_words), len(mlo_words), 1)
+        
         confidence = min(0.9, 0.5 + word_overlap * 0.4)
         enhanced_score = min(5, max(1, original_score + word_overlap * 2))
         
@@ -51,14 +67,16 @@ def analyze():
             'success': True,
             'enhanced_score': round(enhanced_score, 1),
             'confidence': round(confidence, 2),
-            'reasoning': f'Found {len(common_words)} common keywords. Enhanced alignment analysis.',
-            'keywords': list(common_words)[:5]  # Top 5 keywords
+            'reasoning': f'Found {len(common_words)} common keywords: {", ".join(list(common_words)[:3])}. Enhanced alignment analysis.',
+            'keywords': list(common_words)[:5],  # Top 5 keywords
+            'original_score': original_score,
+            'word_overlap': round(word_overlap, 2)
         })
         
     except Exception as e:
         return jsonify({
             'success': False,
-            'error': str(e)
+            'error': f'Analysis failed: {str(e)}'
         }), 500
 
 @app.route('/', methods=['GET'])
