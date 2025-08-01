@@ -81,20 +81,36 @@ class BasicSemanticAnalyzer:
             'analyze': 0.9, 'evaluate': 0.9, 'create': 0.9, 'synthesize': 0.9,
             'understand': 0.8, 'apply': 0.8, 'demonstrate': 0.8, 'implement': 0.8,
             'remember': 0.6, 'recall': 0.6, 'identify': 0.6, 'describe': 0.6,
+            'assess': 0.9, 'examine': 0.8, 'investigate': 0.8, 'study': 0.7,
             
             # Action verbs
             'develop': 0.8, 'design': 0.8, 'build': 0.8, 'construct': 0.8,
             'solve': 0.8, 'calculate': 0.7, 'compute': 0.7, 'measure': 0.7,
             'explain': 0.7, 'discuss': 0.7, 'compare': 0.7, 'contrast': 0.7,
+            'plan': 0.8, 'manage': 0.8, 'coordinate': 0.7, 'organize': 0.7,
             
             # Subject areas
             'engineering': 0.8, 'technology': 0.8, 'science': 0.8, 'mathematics': 0.8,
             'programming': 0.8, 'software': 0.8, 'system': 0.7, 'algorithm': 0.8,
+            'business': 0.8, 'management': 0.8, 'economic': 0.7, 'finance': 0.7,
+            
+            # Sustainability & Environment (highly relevant to the screenshot)
+            'sustainability': 0.9, 'sustainable': 0.9, 'environmental': 0.9,
+            'lifecycle': 0.9, 'green': 0.8, 'circular': 0.8, 'renewable': 0.8,
+            'carbon': 0.8, 'footprint': 0.8, 'assessment': 0.9, 'lca': 0.9,
+            'ecological': 0.8, 'biodiversity': 0.7, 'ecosystem': 0.7,
+            'recycling': 0.8, 'waste': 0.7, 'resource': 0.8, 'energy': 0.8,
+            
+            # Frameworks and Methods
+            'framework': 0.8, 'methodology': 0.8, 'approach': 0.7, 'model': 0.8,
+            'principle': 0.8, 'strategy': 0.8, 'practice': 0.7, 'technique': 0.7,
+            'tool': 0.7, 'method': 0.8, 'process': 0.7, 'procedure': 0.7,
             
             # Skills
             'communication': 0.7, 'teamwork': 0.7, 'leadership': 0.7, 'ethics': 0.7,
             'professional': 0.7, 'critical': 0.8, 'thinking': 0.8, 'problem': 0.9,
-            'solving': 0.9, 'learning': 0.8, 'research': 0.8
+            'solving': 0.9, 'learning': 0.8, 'research': 0.8, 'innovation': 0.8,
+            'collaboration': 0.7, 'project': 0.8, 'practical': 0.8
         }
         
         # Bloom's taxonomy keywords
@@ -236,7 +252,7 @@ class EnhancedPLOMLOAnalyzer:
         concepts = self._extract_concepts(plo_text, mlo_text)
         reasoning = self._generate_reasoning(
             original_score, semantic_score, bloom_alignment, 
-            plo_bloom, mlo_bloom
+            plo_bloom, mlo_bloom, plo_text, mlo_text
         )
         suggestions = self._generate_suggestions(
             enhanced_score, plo_text, mlo_text, plo_bloom, mlo_bloom
@@ -318,51 +334,214 @@ class EnhancedPLOMLOAnalyzer:
         return list(set(concepts))[:8]  # Limit and deduplicate
     
     def _generate_reasoning(self, original: float, semantic: float, bloom: float,
-                          plo_bloom: BloomLevel, mlo_bloom: BloomLevel) -> str:
-        """Generate human-readable reasoning for the score"""
+                          plo_bloom: BloomLevel, mlo_bloom: BloomLevel, plo_text: str, mlo_text: str) -> str:
+        """Generate context-specific reasoning for the score"""
         reasons = []
         
+        plo_lower = plo_text.lower()
+        mlo_lower = mlo_text.lower()
+        
+        # Semantic analysis with context
         if semantic > 0.7:
-            reasons.append("Strong semantic similarity between PLO and MLO")
+            # Find specific shared concepts
+            shared_concepts = []
+            key_terms = ['sustainability', 'technology', 'analysis', 'assessment', 'framework', 'lifecycle', 'business', 'environmental']
+            for term in key_terms:
+                if term in plo_lower and term in mlo_lower:
+                    shared_concepts.append(term)
+            
+            if shared_concepts:
+                reasons.append(f"Strong conceptual alignment: shared focus on {', '.join(shared_concepts[:3])}")
+            else:
+                reasons.append("Strong semantic similarity with good vocabulary overlap")
         elif semantic > 0.4:
-            reasons.append("Moderate semantic similarity detected")
+            reasons.append("Moderate semantic alignment - some conceptual overlap detected")
         else:
-            reasons.append("Limited semantic overlap")
+            # Identify specific gaps
+            plo_keywords = set(plo_text.lower().split())
+            mlo_keywords = set(mlo_text.lower().split())
+            common_words = len(plo_keywords.intersection(mlo_keywords))
+            
+            if common_words < 3:
+                reasons.append("Limited vocabulary overlap - concepts appear disconnected")
+            else:
+                reasons.append("Weak semantic alignment despite some shared terms")
         
-        if abs(plo_bloom.value - mlo_bloom.value) <= 1:
-            reasons.append(f"Good Bloom's taxonomy alignment ({plo_bloom.name} ↔ {mlo_bloom.name})")
+        # Bloom's taxonomy with specific implications
+        bloom_diff = abs(plo_bloom.value - mlo_bloom.value)
+        if bloom_diff <= 1:
+            if plo_bloom == mlo_bloom:
+                reasons.append(f"Perfect cognitive alignment: both at {plo_bloom.name} level")
+            else:
+                reasons.append(f"Compatible cognitive levels: {plo_bloom.name} ↔ {mlo_bloom.name}")
         else:
-            reasons.append(f"Bloom's taxonomy mismatch ({plo_bloom.name} vs {mlo_bloom.name})")
+            if plo_bloom.value > mlo_bloom.value:
+                reasons.append(f"Cognitive gap: PLO expects {plo_bloom.name} but MLO delivers {mlo_bloom.name}")
+            else:
+                reasons.append(f"MLO exceeds PLO cognitive level: {mlo_bloom.name} vs {plo_bloom.name}")
         
-        if original > 3.0:
-            reasons.append("Original manual alignment score is strong")
-        elif original < 2.0:
-            reasons.append("Original manual alignment score suggests weak connection")
+        # Context-specific insights
+        context_insights = []
         
-        return "; ".join(reasons)
+        # Sustainability context
+        if 'sustainab' in plo_lower or 'sustainab' in mlo_lower:
+            if 'lifecycle' in plo_lower and 'lifecycle' in mlo_lower:
+                context_insights.append("lifecycle assessment methodology well-aligned")
+            elif 'green' in plo_lower and 'green' in mlo_lower:
+                context_insights.append("green technology focus properly connected")
+        
+        # Technology context
+        if 'technolog' in plo_lower or 'technolog' in mlo_lower:
+            if 'practical' in mlo_lower and 'apply' in plo_lower:
+                context_insights.append("practical technology application well-matched")
+        
+        # Assessment context
+        if 'analy' in plo_lower and 'analy' in mlo_lower:
+            context_insights.append("analytical approach consistently emphasized")
+        
+        if context_insights:
+            reasons.append(f"Domain-specific alignment: {'; '.join(context_insights)}")
+        
+        # Overall coherence assessment
+        if original > 3.0 and semantic > 0.5:
+            reasons.append("Manual and AI analysis both indicate strong connection")
+        elif original < 2.0 and semantic < 0.3:
+            reasons.append("Both manual scoring and AI analysis suggest misalignment")
+        elif abs(original - semantic * 5) > 2.0:
+            reasons.append("Manual and AI scores diverge - may need curriculum review")
+        
+        return ". ".join(reasons)
     
     def _generate_suggestions(self, enhanced_score: float, plo_text: str, mlo_text: str,
                             plo_bloom: BloomLevel, mlo_bloom: BloomLevel) -> List[str]:
-        """Generate improvement suggestions"""
+        """Generate context-specific improvement suggestions"""
         suggestions = []
         
+        plo_lower = plo_text.lower()
+        mlo_lower = mlo_text.lower()
+        
+        # Extract key concepts for specific analysis
+        plo_keywords = set(self.semantic_analyzer._extract_keywords(plo_text))
+        mlo_keywords = set(self.semantic_analyzer._extract_keywords(mlo_text))
+        common_keywords = plo_keywords.intersection(mlo_keywords)
+        
+        # Domain-specific analysis
+        sustainability_terms = {'sustainable', 'sustainability', 'environmental', 'green', 'eco', 'carbon', 'lifecycle', 'lca', 'circular', 'renewable'}
+        tech_terms = {'technology', 'technologies', 'software', 'system', 'algorithm', 'data', 'digital', 'programming'}
+        business_terms = {'business', 'management', 'strategy', 'economic', 'market', 'industry', 'commercial'}
+        analysis_terms = {'analyze', 'analysis', 'evaluate', 'assessment', 'examine', 'investigate', 'study'}
+        
+        plo_domains = []
+        mlo_domains = []
+        
+        if any(term in plo_lower for term in sustainability_terms):
+            plo_domains.append('sustainability')
+        if any(term in plo_lower for term in tech_terms):
+            plo_domains.append('technology')
+        if any(term in plo_lower for term in business_terms):
+            plo_domains.append('business')
+        if any(term in plo_lower for term in analysis_terms):
+            plo_domains.append('analysis')
+            
+        if any(term in mlo_lower for term in sustainability_terms):
+            mlo_domains.append('sustainability')
+        if any(term in mlo_lower for term in tech_terms):
+            mlo_domains.append('technology')
+        if any(term in mlo_lower for term in business_terms):
+            mlo_domains.append('business')
+        if any(term in mlo_lower for term in analysis_terms):
+            mlo_domains.append('analysis')
+        
+        # Generate specific suggestions based on content analysis
+        if enhanced_score < 2.5:
+            suggestions.append("🔴 WEAK ALIGNMENT - Major revision needed")
+            
+            # Domain mismatch analysis
+            if not set(plo_domains).intersection(set(mlo_domains)):
+                suggestions.append(f"❌ Domain mismatch: PLO focuses on {', '.join(plo_domains)}, MLO on {', '.join(mlo_domains)}")
+            
+            # Specific missing elements
+            if 'sustainability' in plo_domains and 'sustainability' not in mlo_domains:
+                suggestions.append("🌱 Add sustainability focus: Include environmental assessment, ESG frameworks, or circular economy concepts")
+            
+            if 'analysis' in plo_domains and 'analysis' not in mlo_domains:
+                suggestions.append("📊 Add analytical methods: Include specific analysis techniques, evaluation criteria, or assessment frameworks")
+                
+            if 'technology' in plo_domains and 'technology' not in mlo_domains:
+                suggestions.append("💻 Add technology component: Include digital tools, software applications, or technological solutions")
+                
+            # Bloom's level suggestions
+            if plo_bloom.value > mlo_bloom.value + 1:
+                suggestions.append(f"🎯 Elevate cognitive level: MLO needs higher-order thinking ({plo_bloom.name}) - add synthesis, evaluation, or creation activities")
+                
+        elif enhanced_score < 3.5:
+            suggestions.append("🟡 MODERATE ALIGNMENT - Improvements recommended")
+            
+            # Specific enhancement suggestions
+            if len(common_keywords) < 3:
+                missing_concepts = []
+                if 'lifecycle' in plo_lower and 'lifecycle' not in mlo_lower:
+                    missing_concepts.append('life cycle assessment (LCA)')
+                if 'framework' in plo_lower and 'framework' not in mlo_lower:
+                    missing_concepts.append('analytical frameworks')
+                if 'model' in plo_lower and 'model' not in mlo_lower:
+                    missing_concepts.append('modeling approaches')
+                    
+                if missing_concepts:
+                    suggestions.append(f"🔗 Bridge conceptual gap: Explicitly mention {', '.join(missing_concepts)}")
+            
+            # Assessment method alignment
+            if 'project' in plo_lower and 'project' not in mlo_lower:
+                suggestions.append("📋 Add project-based assessment to demonstrate practical application")
+            if 'case study' in plo_lower and 'case study' not in mlo_lower:
+                suggestions.append("📖 Include case study analysis to bridge theory and practice")
+                
+        elif enhanced_score >= 4.0:
+            suggestions.append("🟢 STRONG ALIGNMENT - Well-connected PLO and MLO")
+            
+            # Optimization suggestions for strong alignments
+            if len(common_keywords) >= 4:
+                suggestions.append("✨ Excellent keyword overlap - consider adding specific learning outcomes or assessment criteria")
+            
+            if plo_bloom.value == mlo_bloom.value:
+                suggestions.append(f"🎯 Perfect cognitive level match ({plo_bloom.name}) - maintain this alignment in implementation")
+        
+        # Specific improvement recommendations based on content
+        specific_recommendations = []
+        
+        # Sustainability-specific recommendations
+        if 'sustainability' in plo_domains or 'sustainability' in mlo_domains:
+            if 'circular' not in plo_lower + mlo_lower:
+                specific_recommendations.append("Consider adding circular economy principles")
+            if 'carbon' not in plo_lower + mlo_lower:
+                specific_recommendations.append("Include carbon footprint analysis")
+            if 'stakeholder' not in plo_lower + mlo_lower:
+                specific_recommendations.append("Add stakeholder analysis component")
+        
+        # Technology-specific recommendations  
+        if 'technology' in plo_domains or 'technology' in mlo_domains:
+            if 'digital' not in plo_lower + mlo_lower:
+                specific_recommendations.append("Include digital transformation aspects")
+            if 'innovation' not in plo_lower + mlo_lower:
+                specific_recommendations.append("Add innovation and technology adoption")
+        
+        if specific_recommendations:
+            suggestions.append(f"💡 Enhancement opportunities: {', '.join(specific_recommendations[:2])}")
+        
+        # Practical implementation suggestions
         if enhanced_score < 3.0:
-            suggestions.append("Consider reviewing the alignment - scores suggest weak connection")
-            
-            if abs(plo_bloom.value - mlo_bloom.value) > 2:
-                suggestions.append(f"Bloom's taxonomy levels differ significantly ({plo_bloom.name} vs {mlo_bloom.name})")
-            
-            # Check for missing keywords
-            plo_keywords = set(self.semantic_analyzer._extract_keywords(plo_text))
-            mlo_keywords = set(self.semantic_analyzer._extract_keywords(mlo_text))
-            
-            if len(plo_keywords.intersection(mlo_keywords)) < 2:
-                suggestions.append("Consider adding more specific keywords to show clearer connection")
+            practical_suggestions = []
+            if 'practical' not in mlo_lower:
+                practical_suggestions.append("hands-on activities")
+            if 'real' not in mlo_lower and 'world' not in mlo_lower:
+                practical_suggestions.append("real-world applications")
+            if 'industry' not in mlo_lower:
+                practical_suggestions.append("industry connections")
+                
+            if practical_suggestions:
+                suggestions.append(f"🛠️ Add practical elements: {', '.join(practical_suggestions[:2])}")
         
-        elif enhanced_score > 4.0:
-            suggestions.append("Strong alignment detected - good connection between PLO and MLO")
-        
-        return suggestions
+        return suggestions[:5]  # Limit to top 5 most relevant suggestions
     
     def _calculate_confidence(self, semantic_score: float, plo_bloom_conf: float, mlo_bloom_conf: float) -> float:
         """Calculate confidence in the analysis"""
