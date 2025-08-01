@@ -55,11 +55,9 @@
         .score-5 { background-color: #a5d6a7; }
         
         .outcome-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            border-left: 3px solid #342b60;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: transparent;
         }
         
         .module-section {
@@ -299,6 +297,218 @@
             background-color: #2a1f4f;
             transform: scale(1.1);
         }
+        
+        /* Info Icon Tooltip Styles */
+        .info-icon {
+            position: relative;
+            display: inline-block;
+            margin-left: 15px;
+            color: #AA1352;
+            cursor: help;
+            font-size: 24px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            vertical-align: middle;
+        }
+        
+        .info-icon:hover {
+            opacity: 1;
+        }
+        
+        .info-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+            width: 400px;
+            max-width: 90vw;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .info-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #2c3e50;
+        }
+        
+        .info-icon:hover .info-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .methodology-section {
+            margin-bottom: 15px;
+        }
+        
+        .methodology-section h4 {
+            color: #3498db;
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+        
+        .methodology-section p {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+        }
+        
+        .score-range {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 8px;
+            border-radius: 4px;
+            margin: 8px 0;
+            border-left: 3px solid #3498db;
+        }
+        
+        /* Matrix Table Scroll Container */
+        .matrix-scroll-container {
+            overflow-x: auto;
+            overflow-y: visible;
+            max-width: 100%;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: white;
+            margin-top: 20px;
+        }
+        
+        /* Collapsible Methodology Section */
+        .methodology-toggle {
+            background: linear-gradient(135deg, #342b60, #AA1352);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .methodology-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .methodology-toggle h3 {
+            margin: 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .methodology-caret {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        
+        .methodology-toggle.expanded .methodology-caret {
+            transform: rotate(90deg);
+        }
+        
+        .methodology-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .methodology-content.expanded {
+            max-height: 1000px;
+        }
+        
+        .methodology-inner {
+            padding: 20px;
+        }
+        
+        .methodology-tier {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .methodology-tier h4 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .methodology-tier p {
+            margin: 0 0 8px 0;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .algorithm-details {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 3px solid #2196f3;
+        }
+        
+        .scoring-scale {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        
+        .scoring-scale h4 {
+            color: #495057;
+            margin: 0 0 10px 0;
+        }
+        
+        .score-item {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+            font-size: 0.85em;
+        }
+        
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.8em;
+        }
+        
+        .score-badge.score-5 { background: #28a745; }
+        .score-badge.score-4 { background: #20c997; }
+        .score-badge.score-3 { background: #ffc107; color: #000; }
+        .score-badge.score-2 { background: #fd7e14; }
+        .score-badge.score-1 { background: #dc3545; }
         
         /* Bilingual Table Styles */
         .mlo-table, .plo-table {
@@ -689,13 +899,11 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8em;
-            margin-top: 20px;
+            margin: 0;
             background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            border-radius: 0;
             table-layout: auto;
-            min-width: 800px; /* Ensure minimum width for horizontal scrolling */
+            min-width: 2400px; /* Doubled minimum width for better spacing */
             display: table; /* Force table display */
         }
         
@@ -715,10 +923,11 @@
         .matrix-table td {
             display: table-cell;
             border: 1px solid #e9ecef;
-            padding: 8px 6px;
+            padding: 8px 12px;
             text-align: center;
             vertical-align: middle;
             white-space: nowrap;
+            min-width: 80px; /* Ensure sufficient width for scores */
         }
         
         .matrix-table th {
@@ -736,11 +945,12 @@
         .matrix-table .plo-header {
             background-color: #6c757d;
             color: white;
-            width: 60px;
+            width: 80px;
+            min-width: 80px;
             font-size: 0.85em;
             font-weight: 600;
             text-align: center;
-            padding: 8px 6px;
+            padding: 8px 12px;
             position: sticky;
             left: 0;
             z-index: 10;
@@ -1318,19 +1528,15 @@
         }
         
         .outcome-item {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .outcome-header {
             display: flex;
             align-items: center;
-            cursor: pointer;
-            padding: 12px;
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            margin-bottom: 5px;
-            transition: background-color 0.2s ease;
+            padding: 5px;
+            background: transparent;
+            margin-bottom: 2px;
         }
         
         .outcome-header:hover {
@@ -1428,7 +1634,7 @@
             }
             
             .outcome-item {
-                padding: 12px;
+                padding: 5px;
             }
             
             .outcome-code {
@@ -1469,14 +1675,76 @@
                 <h2><i class="fas fa-info-circle"></i> Overview</h2>
                 <p>Loading programme analysis...</p>
                 
-                <div class="score-legend">
-                    <h3>Alignment Score Legend:</h3>
-                    <div class="legend-items">
-                        <div class="legend-item legend-score-1">1: Minimal alignment</div>
-                        <div class="legend-item legend-score-2">2: Partial alignment</div>
-                        <div class="legend-item legend-score-3">3: Moderate alignment</div>
-                        <div class="legend-item legend-score-4">4: Strong alignment</div>
-                        <div class="legend-item legend-score-5">5: Excellent alignment</div>
+                <!-- Methodology Section -->
+                <div class="methodology-toggle" onclick="toggleMethodology()">
+                    <h3><i class="fas fa-brain"></i> Scoring Methodology</h3>
+                    <span class="methodology-caret"><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="methodology-content" id="methodology-content">
+                    <div class="methodology-inner">
+                        <div class="methodology-tier">
+                            <h4><i class="fas fa-brain"></i> 1. Automated Content Analysis (Primary Method)</h4>
+                            <p><strong>Algorithm:</strong> Intelligent text analysis evaluating semantic similarity and competency alignment</p>
+                            <p><strong>Current Status:</strong> This is the main scoring method used in the application</p>
+                            
+                            <div class="algorithm-details">
+                                <strong>Algorithm Components:</strong><br>
+                                • <strong>Keyword Overlap:</strong> Calculates percentage of PLO words found in MLO text<br>
+                                • <strong>Competency Matching:</strong> Searches for competency keywords in 10 categories:<br>
+                                &nbsp;&nbsp;- Analytical, Application, Creative, Management, Communication<br>
+                                &nbsp;&nbsp;- Collaboration, Research, Technical, Business, International
+                            </div>
+                            
+                            <div class="scoring-scale">
+                                <h4>Content Analysis Scoring Criteria:</h4>
+                                <div class="score-item">
+                                    <span class="score-badge score-5">5</span>
+                                    <span><strong>Excellent:</strong> ≥15% keyword overlap + ≥3 competency matches</span>
+                                </div>
+                                <div class="score-item">
+                                    <span class="score-badge score-4">4</span>
+                                    <span><strong>Strong:</strong> ≥10% keyword overlap + ≥2 competency matches</span>
+                                </div>
+                                <div class="score-item">
+                                    <span class="score-badge score-3">3</span>
+                                    <span><strong>Good:</strong> ≥5% keyword overlap + ≥1 competency match</span>
+                                </div>
+                                <div class="score-item">
+                                    <span class="score-badge score-2">2</span>
+                                    <span><strong>Moderate:</strong> ≥2% keyword overlap OR ≥1 competency match</span>
+                                </div>
+                                <div class="score-item">
+                                    <span class="score-badge score-1">1</span>
+                                    <span><strong>Minimal:</strong> <2% keyword overlap + 0 competency matches</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="methodology-tier">
+                            <h4><i class="fas fa-shield-alt"></i> 2. Backup Scoring System (Fallback Method)</h4>
+                            <p><strong>Purpose:</strong> Ensures every PLO-MLO pair gets a score, even if text analysis fails</p>
+                            <p><strong>How it works:</strong> Uses a mathematical formula (hash-based algorithm) based on PLO and MLO codes to generate consistent scores</p>
+                            <p><strong>When used:</strong> Only when PLO or MLO text content is missing or unreadable</p>
+                            <p><strong>Benefit:</strong> Guarantees complete analysis results and prevents empty cells in the matrix</p>
+                            
+                            <div class="algorithm-details">
+                                <strong>Hash Algorithm Implementation:</strong><br>
+                                <code style="display: block; background: #f8f9fa; padding: 10px; border-radius: 4px; margin: 8px 0; font-family: monospace; font-size: 0.85em; border: 1px solid #dee2e6;">
+function hashString(str) {<br>
+&nbsp;&nbsp;let hash = 0;<br>
+&nbsp;&nbsp;for (let i = 0; i < str.length; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const char = str.charCodeAt(i);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hash = ((hash << 5) - hash) + char;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hash = hash & hash; // Convert to 32-bit integer<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;return Math.abs(hash);<br>
+}<br><br>
+// Final score calculation:<br>
+score = (hash(ploCode + mloCode) % 5) + 1
+                                </code>
+                                <strong>Example:</strong> PLO "plo1" + MLO "p1_mlo2" → hash("plo1p1_mlo2") → converts to score 1-5
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1489,9 +1757,9 @@
                 <div class="summary-findings">
                     <h4>Critical findings for Sustainability Management programme:</h4>
                     <ul class="findings-list">
-                        <li><strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainability management goals - needs stronger integration of environmental and social responsibility concepts</li>
-                        <li><strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on sustainable business models and circular economy principles</li>
-                        <li><strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on stakeholder engagement and ESG (Environmental, Social, Governance) frameworks</li>
+                        <li><strong>General Studies Module (YL)</strong> shows moderate alignment (2.22) with sustainability management goals - needs stronger integration of environmental and social responsibility concepts</li>
+                        <li><strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03) - requires enhanced focus on sustainable business models and circular economy principles</li>
+                        <li><strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17) but lacks sufficient emphasis on stakeholder engagement and ESG (Environmental, Social, Governance) frameworks</li>
                         <li><strong>Programme lacks specialized sustainability modules</strong> - critical gap in advanced sustainability management, carbon footprint analysis, and green innovation strategies</li>
                         <li><strong>Integration across modules</strong> needs improvement to create cohesive sustainability leadership competencies throughout the curriculum</li>
                     </ul>
@@ -1531,9 +1799,6 @@
             <section id="detailed-analysis" class="detailed-section">
                 <h2>
                     <i class="fas fa-list-alt"></i> Detailed Breakdown
-                    <button class="methodology-trigger" onclick="openMethodologyTab()" title="View detailed scoring methodology">
-                        <i class="fas fa-info"></i>
-                    </button>
                 </h2>
                 <button class="view-toggle" id="view-toggle-btn"><i class="fas fa-exchange-alt"></i> Switch to MLO View</button>
                 <div id="analysis-header" class="analysis-header">
@@ -1636,121 +1901,14 @@
             }
         }
 
-        // Global function to open methodology in a new tab
-        function openMethodologyTab() {
-            const methodologyContent = `
-                <!DOCTYPE html>
-                <html lang="${currentLanguage === 'english' ? 'en' : 'et'}">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>${currentLanguage === 'english' ? 'PLO-MLO Alignment Scoring Methodology' : 'PLO-MLO Vastavuse Punktimise Metodoloogia'}</title>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-                    <style>
-                        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; line-height: 1.6; }
-                        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-                        h2 { color: #34495e; margin-top: 30px; }
-                        .method-section { background: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #3498db; border-radius: 5px; }
-                        .example { background: #e8f5e8; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #27ae60; }
-                        .criteria { background: #fff3cd; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #ffc107; }
-                        .formula { background: #f0f8ff; padding: 12px; margin: 10px 0; border-radius: 5px; font-family: monospace; }
-                        code { background: #e9ecef; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
-                        .score-example { display: inline-block; padding: 4px 8px; border-radius: 3px; color: white; font-weight: bold; margin: 2px; }
-                        .score-1 { background: #dc3545; } .score-2 { background: #fd7e14; } .score-3 { background: #ffc107; color: #000; }
-                        .score-4 { background: #28a745; } .score-5 { background: #20c997; }
-                    </style>
-                </head>
-                <body>
-                    <h1><i class="fas fa-calculator"></i> ${currentLanguage === 'english' ? 'PLO-MLO Alignment Scoring Methodology' : 'PLO-MLO Vastavuse Punktimise Metodoloogia'}</h1>
-                    
-                    <div class="method-section">
-                        <h2>${currentLanguage === 'english' ? 'Three-Tier Scoring System Overview' : 'Kolmeastmelise punktisüsteemi ülevaade'}</h2>
-                        <p>${currentLanguage === 'english' ? 'Our alignment analysis uses a sophisticated three-tier approach to ensure accuracy and consistency:' : 'Meie vastavuse analüüs kasutab keerukat kolmeastmelist lähenemist täpsuse ja järjepidevuse tagamiseks:'}</p>
-                    </div>
-
-                    <div class="method-section">
-                        <h2><i class="fas fa-database"></i> ${currentLanguage === 'english' ? '1. Primary Method: Direct Alignment Data' : '1. Esmane meetod: otsene vastavuse andmestik'}</h2>
-                        <p>${currentLanguage === 'english' ? 'When available, the system uses manually curated alignment scores from the JSON data structure.' : 'Kui saadaval, kasutab süsteem käsitsi kureeritud vastavuse skoore JSON andmestruktuurist.'}</p>
-                        <div class="example">
-                            <strong>${currentLanguage === 'english' ? 'Data Source:' : 'Andmeallikas:'}</strong> <code>mlo.alignments[].tase</code><br>
-                            <strong>${currentLanguage === 'english' ? 'Advantage:' : 'Eelis:'}</strong> ${currentLanguage === 'english' ? 'Highest accuracy, expert-validated scores' : 'Suurim täpsus, ekspertide valideeritud skoorid'}
-                        </div>
-                    </div>
-
-                    <div class="method-section">
-                        <h2><i class="fas fa-brain"></i> ${currentLanguage === 'english' ? '2. Secondary Method: Automated Content Analysis' : '2. Teisene meetod: automaatne sisu analüüs'}</h2>
-                        <p>${currentLanguage === 'english' ? 'When manual data is unavailable, an intelligent content analysis algorithm evaluates text similarity and competency alignment.' : 'Kui käsitsi andmed pole saadaval, hindab intelligentne sisu analüüsi algoritm tekstide sarnasust ja kompetentside vastavust.'}</p>
-                        
-                        <h3>${currentLanguage === 'english' ? 'Algorithm Components:' : 'Algoritmi komponendid:'}</h3>
-                        
-                        <div class="example">
-                            <h4>${currentLanguage === 'english' ? 'Step 1: Keyword Overlap Analysis' : 'Samm 1: märksõnade kattuvuse analüüs'}</h4>
-                            <div class="formula">
-                                <strong>${currentLanguage === 'english' ? 'Formula:' : 'Valem:'}</strong> overlap_percentage = (shared_words / plo_total_words) × 100
-                            </div>
-                            <ul>
-                                <li>${currentLanguage === 'english' ? 'Extracts words longer than 3 characters' : 'Eraldab sõnad, mis on pikemad kui 3 tähemärki'}</li>
-                                <li>${currentLanguage === 'english' ? 'Calculates percentage of PLO words found in MLO text' : 'Arvutab PLO sõnade protsendi, mis leiduvad MLO tekstis'}</li>
-                                <li>${currentLanguage === 'english' ? 'Case-insensitive matching for broader coverage' : 'Mittetundlik suur- ja väiketähtede suhtes laiema katvuse jaoks'}</li>
-                            </ul>
-                        </div>
-
-                        <div class="example">
-                            <h4>${currentLanguage === 'english' ? 'Step 2: Competency Category Matching' : 'Samm 2: kompetentsi kategooria vastendamine'}</h4>
-                            <p>${currentLanguage === 'english' ? 'The system searches for competency-related keywords in 10 specialized categories:' : 'Süsteem otsib kompetentsiga seotud märksõnu 10 spetsialiseeritud kategoorias:'}</p>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
-                                <div><strong>${currentLanguage === 'english' ? 'Analytical:' : 'Analüütilised:'}</strong> analyze, evaluate, assess, critical, examine...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Application:' : 'Rakenduslikud:'}</strong> apply, implement, use, utilize, practice...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Creative:' : 'Loovad:'}</strong> create, design, develop, innovate, generate...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Management:' : 'Juhtimis-:'}</strong> manage, lead, coordinate, organize, plan...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Communication:' : 'Kommunikatsioon:'}</strong> communicate, present, explain, discuss...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Collaboration:' : 'Koostöö:'}</strong> collaborate, teamwork, cooperate...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Research:' : 'Uurimis-:'}</strong> research, investigate, study, explore...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Technical:' : 'Tehnilised:'}</strong> technical, programming, software, data...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'Business:' : 'Äri-:'}</strong> business, commercial, enterprise, market...</div>
-                                <div><strong>${currentLanguage === 'english' ? 'International:' : 'Rahvusvahelised:'}</strong> international, global, cross-cultural...</div>
-                            </div>
-                        </div>
-
-                        <div class="criteria">
-                            <h4>${currentLanguage === 'english' ? 'Scoring Criteria (Content Analysis):' : 'Punktimise kriteeriumid (sisu analüüs):'}</h4>
-                            <div><span class="score-example score-5">5 (Excellent)</span> ≥15% keyword overlap + ≥3 competency matches</div>
-                            <div><span class="score-example score-4">4 (Strong)</span> ≥10% keyword overlap + ≥2 competency matches</div>
-                            <div><span class="score-example score-3">3 (Good)</span> ≥5% keyword overlap + ≥1 competency match</div>
-                            <div><span class="score-example score-2">2 (Moderate)</span> ≥2% keyword overlap OR ≥1 competency match</div>
-                            <div><span class="score-example score-1">1 (Minimal)</span> <2% keyword overlap + 0 competency matches</div>
-                        </div>
-                    </div>
-
-                    <div class="method-section">
-                        <h2><i class="fas fa-random"></i> ${currentLanguage === 'english' ? '3. Fallback Method: Deterministic Hash Scoring' : '3. Tagavara meetod: deterministlik hash-punktimisüsteem'}</h2>
-                        <p>${currentLanguage === 'english' ? 'When neither manual data nor content analysis is possible, a hash-based algorithm provides consistent demo scores.' : 'Kui ei käsitsi andmed ega sisu analüüs pole võimalik, pakub hash-põhine algoritm järjepidevaid demo skoore.'}</p>
-                        <div class="example">
-                            <strong>${currentLanguage === 'english' ? 'Purpose:' : 'Eesmärk:'}</strong> ${currentLanguage === 'english' ? 'Ensures reproducible results for demonstration and testing' : 'Tagab reprodutseeritavad tulemused demonstratsiooniks ja testimiseks'}<br>
-                            <strong>${currentLanguage === 'english' ? 'Method:' : 'Meetod:'}</strong> <code>hash(ploCode + mloCode) % 5 + 1</code>
-                        </div>
-                    </div>
-
-                    <div class="method-section">
-                        <h2><i class="fas fa-lightbulb"></i> ${currentLanguage === 'english' ? 'Implementation Notes' : 'Rakendamise märkused'}</h2>
-                        <ul>
-                            <li>${currentLanguage === 'english' ? 'The algorithm prioritizes manual alignment data when available' : 'Algoritm eelistab käsitsi vastavuse andmeid, kui need on saadaval'}</li>
-                            <li>${currentLanguage === 'english' ? 'Content analysis provides intelligent fallback for comprehensive coverage' : 'Sisu analüüs pakub intelligentset tagavaravõimalust tervikliku katvuse jaoks'}</li>
-                            <li>${currentLanguage === 'english' ? 'Hash-based scoring ensures consistent demo behavior' : 'Hash-põhine punktimisüsteem tagab järjepideva demo käitumise'}</li>
-                            <li>${currentLanguage === 'english' ? 'All scoring methods use the same 1-5 scale for comparability' : 'Kõik punktimismeetodid kasutavad sama 1-5 skaalat võrreldavuse jaoks'}</li>
-                        </ul>
-                    </div>
-
-                    <p style="margin-top: 40px; padding: 20px; background: #e9ecef; border-radius: 5px; font-style: italic;">
-                        <strong>${currentLanguage === 'english' ? 'Note:' : 'Märkus:'}</strong> ${currentLanguage === 'english' ? 'This methodology ensures robust, accurate, and consistent PLO-MLO alignment analysis across different data availability scenarios while maintaining educational transparency about the scoring process.' : 'See metodoloogia tagab tugevat, täpset ja järjepidavat PLO-MLO vastavuse analüüsi erinevates andmete kättesaadavuse stsenaariumides, säilitades hariduslikku läbipaistvust punktimisprotsessi kohta.'}
-                    </p>
-                </body>
-                </html>
-            `;
+        // Global function for methodology toggle
+        function toggleMethodology() {
+            const content = document.getElementById('methodology-content');
+            const toggle = document.querySelector('.methodology-toggle');
+            const caret = document.querySelector('.methodology-caret');
             
-            const newWindow = window.open('', '_blank');
-            newWindow.document.write(methodologyContent);
-            newWindow.document.close();
+            content.classList.toggle('expanded');
+            toggle.classList.toggle('expanded');
         }
 
         // Global function for outcome toggle (needs to be accessible from onclick)
@@ -2183,14 +2341,46 @@
                     const strongestModule = sortedModules[sortedModules.length - 1];
                     
                     if (language === 'english') {
-                        // Module analysis - individual module breakdown
+                        // Module analysis with best/worst MLO for each category
                         const orderedModules = ['yl', 'p1', 'p2', 'e1', 'e2', 'gd', 'mn', 'vb'];
+                        
                         orderedModules.forEach(moduleKey => {
                             const moduleData = sortedModules.find(([key, score]) => key === moduleKey);
                             if (moduleData) {
                                 const [, score] = moduleData;
                                 const moduleName = moduleNames[moduleKey];
                                 let analysis, justification, suggestions = '';
+                                
+                                // Find best/worst MLO in this module category
+                                let moduleMLOScores = [];
+                                if (currentPLOs.length > 0 && currentMLOs.length > 0) {
+                                    const moduleMLOs = currentMLOs.filter(mlo => getModuleCategory(mlo.mlokood || '') === moduleKey);
+                                    moduleMLOs.forEach(mlo => {
+                                        let totalScore = 0;
+                                        let scoreCount = 0;
+                                        currentPLOs.forEach(plo => {
+                                            const ploCode = plo.plokood || plo.kood || `plo_${currentPLOs.indexOf(plo) + 1}`;
+                                            const mloCode = mlo.mlokood || mlo.kood || `mlo_${moduleMLOs.indexOf(mlo) + 1}`;
+                                            const alignmentScore = getAlignmentScore(ploCode, mloCode, mlo);
+                                            totalScore += alignmentScore;
+                                            scoreCount++;
+                                        });
+                                        const avgScore = scoreCount > 0 ? totalScore / scoreCount : 0;
+                                        const mloCode = mlo.mlokood || mlo.kood || `mlo_${moduleMLOs.indexOf(mlo) + 1}`;
+                                        const mloContent = mlo.mlosisuik || mlo.mlosisuek || 'Unknown content';
+                                        moduleMLOScores.push({
+                                            mlo: mlo,
+                                            score: avgScore,
+                                            mloCode: mloCode,
+                                            mloContent: mloContent,
+                                            mloDisplay: `${mloCode}: ${mloContent}`
+                                        });
+                                    });
+                                }
+                                
+                                moduleMLOScores.sort((a, b) => a.score - b.score);
+                                const worstMLO = moduleMLOScores.length > 0 ? moduleMLOScores[0] : null;
+                                const bestMLO = moduleMLOScores.length > 0 ? moduleMLOScores[moduleMLOScores.length - 1] : null;
                                 
                                 if (score <= 2.0) {
                                     analysis = 'CRITICAL - Immediate action required';
@@ -2214,25 +2404,62 @@
                                     suggestions = '';
                                 }
                                 
+                                let mloDetails = '';
+                                if (worstMLO && bestMLO && moduleMLOScores.length > 1) {
+                                    mloDetails = `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Best MLO:</em> ${bestMLO.mloDisplay} (${bestMLO.score.toFixed(2)})<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Worst MLO:</em> ${worstMLO.mloDisplay} (${worstMLO.score.toFixed(2)})`;
+                                } else if (moduleMLOScores.length === 1) {
+                                    mloDetails = `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Single MLO:</em> ${moduleMLOScores[0].mloDisplay} (${moduleMLOScores[0].score.toFixed(2)})`;
+                                }
+                                
                                 if (score <= 3.0 && suggestions) {
-                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Why:</em> ${justification}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Action:</em> ${suggestions}`);
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(2)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Why:</em> ${justification}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Action:</em> ${suggestions}${mloDetails}`);
                                 } else {
-                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis:</em> ${justification}`);
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(2)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis:</em> ${justification}${mloDetails}`);
                                 }
                             }
                         });
                         
-                        // Don't add the first action plan here - we'll use the detailed one in recommendations instead
-                        
                     } else {
-                        // Estonian version - individual module breakdown
+                        // Estonian version - module analysis with best/worst MLO for each category
                         const orderedModules = ['yl', 'p1', 'p2', 'e1', 'e2', 'gd', 'mn', 'vb'];
+                        
                         orderedModules.forEach(moduleKey => {
                             const moduleData = sortedModules.find(([key, score]) => key === moduleKey);
                             if (moduleData) {
                                 const [, score] = moduleData;
                                 const moduleName = moduleNames[moduleKey];
                                 let analysis, justification, suggestions = '';
+                                
+                                // Find best/worst MLO in this module category
+                                let moduleMLOScores = [];
+                                if (currentPLOs.length > 0 && currentMLOs.length > 0) {
+                                    const moduleMLOs = currentMLOs.filter(mlo => getModuleCategory(mlo.mlokood || '') === moduleKey);
+                                    moduleMLOs.forEach(mlo => {
+                                        let totalScore = 0;
+                                        let scoreCount = 0;
+                                        currentPLOs.forEach(plo => {
+                                            const ploCode = plo.plokood || plo.kood || `plo_${currentPLOs.indexOf(plo) + 1}`;
+                                            const mloCode = mlo.mlokood || mlo.kood || `mlo_${moduleMLOs.indexOf(mlo) + 1}`;
+                                            const alignmentScore = getAlignmentScore(ploCode, mloCode, mlo);
+                                            totalScore += alignmentScore;
+                                            scoreCount++;
+                                        });
+                                        const avgScore = scoreCount > 0 ? totalScore / scoreCount : 0;
+                                        const mloCode = mlo.mlokood || mlo.kood || `mlo_${moduleMLOs.indexOf(mlo) + 1}`;
+                                        const mloContent = mlo.mlosisuek || mlo.mlosisuik || 'Teadmata sisu';
+                                        moduleMLOScores.push({
+                                            mlo: mlo,
+                                            score: avgScore,
+                                            mloCode: mloCode,
+                                            mloContent: mloContent,
+                                            mloDisplay: `${mloCode}: ${mloContent}`
+                                        });
+                                    });
+                                }
+                                
+                                moduleMLOScores.sort((a, b) => a.score - b.score);
+                                const worstMLO = moduleMLOScores.length > 0 ? moduleMLOScores[0] : null;
+                                const bestMLO = moduleMLOScores.length > 0 ? moduleMLOScores[moduleMLOScores.length - 1] : null;
                                 
                                 if (score <= 2.0) {
                                     analysis = 'KRIITILINE - Kohene sekkumine vajalik';
@@ -2256,10 +2483,17 @@
                                     suggestions = '';
                                 }
                                 
+                                let mloDetails = '';
+                                if (worstMLO && bestMLO && moduleMLOScores.length > 1) {
+                                    mloDetails = `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Parim MLO:</em> ${bestMLO.mloDisplay} (${bestMLO.score.toFixed(2)})<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Nõrgim MLO:</em> ${worstMLO.mloDisplay} (${worstMLO.score.toFixed(2)})`;
+                                } else if (moduleMLOScores.length === 1) {
+                                    mloDetails = `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Ainus MLO:</em> ${moduleMLOScores[0].mloDisplay} (${moduleMLOScores[0].score.toFixed(2)})`;
+                                }
+                                
                                 if (score <= 3.0 && suggestions) {
-                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Miks:</em> ${justification}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Tegevus:</em> ${suggestions}`);
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(2)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Miks:</em> ${justification}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Tegevus:</em> ${suggestions}${mloDetails}`);
                                 } else {
-                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(1)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Analüüs:</em> ${justification}`);
+                                    findings.push(`&nbsp;&nbsp;&nbsp;&nbsp;• <strong>${moduleName}</strong> (${score.toFixed(2)}): ${analysis}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>Analüüs:</em> ${justification}${mloDetails}`);
                                 }
                             }
                         });
@@ -2327,7 +2561,7 @@
                                 mn: language === 'english' ? 'Minor (MN)' : 'Kõrvalala (MN)',
                                 vb: language === 'english' ? 'Electives (VB)' : 'Vabaained (VB)'
                             };
-                            return `${moduleNames[key]} (${score.toFixed(1)}/5)`;
+                            return `${moduleNames[key]} (${score.toFixed(2)})`;
                         });
                     
                     const weakModulesList = weakModules.length > 0 ? 
@@ -2504,12 +2738,9 @@
                         
                         ploHtml += `
                             <div class="outcome-item">
-                                <div class="outcome-header" onclick="toggleOutcome(this)">
+                                <div class="outcome-header">
                                     <span class="outcome-code">${ploCode}:</span>
-                                    <span class="outcome-preview">${content.substring(0, 100)}${content.length > 100 ? '...' : ''}</span>
-                                </div>
-                                <div class="outcome-content" style="display: none;">
-                                    ${content}
+                                    <span class="outcome-preview">${content}</span>
                                 </div>
                             </div>
                         `;
@@ -2568,12 +2799,9 @@
                                 
                                 mloHtml += `
                                     <div class="outcome-item">
-                                        <div class="outcome-header" onclick="toggleOutcome(this)">
+                                        <div class="outcome-header">
                                             <span class="outcome-code">${mloCode}:</span>
-                                            <span class="outcome-preview">${content.substring(0, 100)}${content.length > 100 ? '...' : ''}</span>
-                                        </div>
-                                        <div class="outcome-content" style="display: none;">
-                                            ${content}
+                                            <span class="outcome-preview">${content}</span>
                                         </div>
                                     </div>
                                 `;
@@ -2624,7 +2852,7 @@
                 }
 
                 // Create table structure step by step
-                let html = '<div class="matrix-container">';
+                let html = '<div class="matrix-scroll-container">';
                 html += '<table class="matrix-table">';
                 
                 // Header row - build with grouped module headers
