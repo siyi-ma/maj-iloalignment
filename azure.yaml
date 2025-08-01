@@ -1,8 +1,0 @@
-name: maj-iloalignment-ai
-infra:
-  provider: bicep
-services:
-  ai-server:
-    project: ai-server
-    host: appservice
-    language: python
