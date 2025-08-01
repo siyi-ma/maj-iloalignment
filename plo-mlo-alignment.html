@@ -774,6 +774,18 @@
             line-height: 1.1;
         }
         
+        .matrix-table .module-group-header {
+            background-color: #1f2937;
+            color: white;
+            font-size: 0.8em;
+            font-weight: 700;
+            text-align: center;
+            padding: 8px 4px;
+            height: 40px;
+            border-bottom: 2px solid #374151;
+            position: relative;
+        }
+        
         /* Responsive matrix table */
         .matrix-container {
             overflow-x: auto;
@@ -1079,21 +1091,26 @@
         }
         
         .methodology-trigger {
-            background: #e4067e;
+            background: #007bff;
             color: white;
             border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            margin-left: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,123,255,0.2);
         }
         
         .methodology-trigger:hover {
-            background: #c2055a;
+            background: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
         }
         
         .methodology-popup {
@@ -1301,41 +1318,87 @@
         }
         
         .outcome-item {
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 16px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.2s ease;
-        }
-        
-        .outcome-item:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            border-color: #adb5bd;
+            margin-bottom: 10px;
         }
         
         .outcome-header {
-            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .outcome-header:hover {
+            background: #e9ecef;
         }
         
         .outcome-code {
             background: #342b60;
             color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 4px;
             font-weight: 600;
+            font-size: 0.85em;
+            margin-right: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .outcome-preview {
+            flex: 1;
+            color: #495057;
             font-size: 0.9em;
-            display: inline-block;
+            line-height: 1.4;
+        }
+        
+        .outcome-caret {
+            margin-left: 10px;
+            color: #6c757d;
+            transition: transform 0.2s ease;
         }
         
         .outcome-content {
             color: #495057;
             line-height: 1.6;
             font-size: 0.95em;
+            padding: 15px;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            margin-bottom: 10px;
         }
         
         .module-group {
             margin-bottom: 30px;
+        }
+        
+        .section-toggle {
+            background: #6f42c1;
+            color: white;
+            padding: 12px 20px;
+            margin: 0 0 15px 0;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+        
+        .section-toggle:hover {
+            background: #5a2d91;
+        }
+        
+        .section-caret {
+            transition: transform 0.2s ease;
         }
         
         .module-title {
@@ -1346,6 +1409,15 @@
             border-radius: 6px;
             font-size: 1.1em;
             font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+        
+        .module-title:hover {
+            background: #495057;
         }
         
         /* Responsive design for smaller screens */
@@ -1412,24 +1484,22 @@
             <!-- Alignment Summary Section -->
             <section id="alignment-summary" class="alignment-summary">
                 <h2><i class="fas fa-chart-bar"></i> Alignment Summary</h2>
-                <div class="summary-content">
-                    <p>The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the Sustainability Management programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing sustainability leadership and management competencies.</p>
-                    
-                    <div class="summary-findings">
-                        <h4>Critical findings for Sustainability Management programme:</h4>
-                        <ul class="findings-list">
-                            <li><strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainability management goals - needs stronger integration of environmental and social responsibility concepts</li>
-                            <li><strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on sustainable business models and circular economy principles</li>
-                            <li><strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on stakeholder engagement and ESG (Environmental, Social, Governance) frameworks</li>
-                            <li><strong>Programme lacks specialized sustainability modules</strong> - critical gap in advanced sustainability management, carbon footprint analysis, and green innovation strategies</li>
-                            <li><strong>Integration across modules</strong> needs improvement to create cohesive sustainability leadership competencies throughout the curriculum</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="recommendations">
-                        <h4>Recommended actions for programme enhancement:</h4>
-                        <p>Integrate sustainability frameworks into all modules, develop specialized sustainability management courses, strengthen connections between business strategy and environmental impact, and enhance practical application of sustainability metrics and reporting standards.</p>
-                    </div>
+                <p>The analysis examines the relationships between the Programme Learning Outcomes (PLOs) that define the overall goals of the Sustainability Management programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to developing sustainability leadership and management competencies.</p>
+                
+                <div class="summary-findings">
+                    <h4>Critical findings for Sustainability Management programme:</h4>
+                    <ul class="findings-list">
+                        <li><strong>General Studies Module (YL)</strong> shows moderate alignment (2.22/5) with sustainability management goals - needs stronger integration of environmental and social responsibility concepts</li>
+                        <li><strong>P1 Methods, Markets and Economy</strong> demonstrates variable alignment (2.03/5) - requires enhanced focus on sustainable business models and circular economy principles</li>
+                        <li><strong>P2 Core Business Competences</strong> shows reasonable alignment (2.17/5) but lacks sufficient emphasis on stakeholder engagement and ESG (Environmental, Social, Governance) frameworks</li>
+                        <li><strong>Programme lacks specialized sustainability modules</strong> - critical gap in advanced sustainability management, carbon footprint analysis, and green innovation strategies</li>
+                        <li><strong>Integration across modules</strong> needs improvement to create cohesive sustainability leadership competencies throughout the curriculum</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendations">
+                    <h4>Recommended actions for programme enhancement:</h4>
+                    <p>Integrate sustainability frameworks into all modules, develop specialized sustainability management courses, strengthen connections between business strategy and environmental impact, and enhance practical application of sustainability metrics and reporting standards.</p>
                 </div>
             </section>
 
@@ -1459,7 +1529,12 @@
             </section>
             
             <section id="detailed-analysis" class="detailed-section">
-                <h2><i class="fas fa-list-alt"></i> Detailed Breakdown</h2>
+                <h2>
+                    <i class="fas fa-list-alt"></i> Detailed Breakdown
+                    <button class="methodology-trigger" onclick="openMethodologyTab()" title="View detailed scoring methodology">
+                        <i class="fas fa-info"></i>
+                    </button>
+                </h2>
                 <button class="view-toggle" id="view-toggle-btn"><i class="fas fa-exchange-alt"></i> Switch to MLO View</button>
                 <div id="analysis-header" class="analysis-header">
                 </div>
@@ -1552,6 +1627,162 @@
                 english: 'Elective Courses'
             }
         };
+
+        // Global function for methodology popup toggle (needs to be accessible from onclick)
+        function toggleMethodology() {
+            const popup = document.getElementById('methodology-popup');
+            if (popup) {
+                popup.classList.toggle('show');
+            }
+        }
+
+        // Global function to open methodology in a new tab
+        function openMethodologyTab() {
+            const methodologyContent = `
+                <!DOCTYPE html>
+                <html lang="${currentLanguage === 'english' ? 'en' : 'et'}">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>${currentLanguage === 'english' ? 'PLO-MLO Alignment Scoring Methodology' : 'PLO-MLO Vastavuse Punktimise Metodoloogia'}</title>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                    <style>
+                        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; line-height: 1.6; }
+                        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+                        h2 { color: #34495e; margin-top: 30px; }
+                        .method-section { background: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #3498db; border-radius: 5px; }
+                        .example { background: #e8f5e8; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #27ae60; }
+                        .criteria { background: #fff3cd; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #ffc107; }
+                        .formula { background: #f0f8ff; padding: 12px; margin: 10px 0; border-radius: 5px; font-family: monospace; }
+                        code { background: #e9ecef; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+                        .score-example { display: inline-block; padding: 4px 8px; border-radius: 3px; color: white; font-weight: bold; margin: 2px; }
+                        .score-1 { background: #dc3545; } .score-2 { background: #fd7e14; } .score-3 { background: #ffc107; color: #000; }
+                        .score-4 { background: #28a745; } .score-5 { background: #20c997; }
+                    </style>
+                </head>
+                <body>
+                    <h1><i class="fas fa-calculator"></i> ${currentLanguage === 'english' ? 'PLO-MLO Alignment Scoring Methodology' : 'PLO-MLO Vastavuse Punktimise Metodoloogia'}</h1>
+                    
+                    <div class="method-section">
+                        <h2>${currentLanguage === 'english' ? 'Three-Tier Scoring System Overview' : 'Kolmeastmelise punktisüsteemi ülevaade'}</h2>
+                        <p>${currentLanguage === 'english' ? 'Our alignment analysis uses a sophisticated three-tier approach to ensure accuracy and consistency:' : 'Meie vastavuse analüüs kasutab keerukat kolmeastmelist lähenemist täpsuse ja järjepidevuse tagamiseks:'}</p>
+                    </div>
+
+                    <div class="method-section">
+                        <h2><i class="fas fa-database"></i> ${currentLanguage === 'english' ? '1. Primary Method: Direct Alignment Data' : '1. Esmane meetod: otsene vastavuse andmestik'}</h2>
+                        <p>${currentLanguage === 'english' ? 'When available, the system uses manually curated alignment scores from the JSON data structure.' : 'Kui saadaval, kasutab süsteem käsitsi kureeritud vastavuse skoore JSON andmestruktuurist.'}</p>
+                        <div class="example">
+                            <strong>${currentLanguage === 'english' ? 'Data Source:' : 'Andmeallikas:'}</strong> <code>mlo.alignments[].tase</code><br>
+                            <strong>${currentLanguage === 'english' ? 'Advantage:' : 'Eelis:'}</strong> ${currentLanguage === 'english' ? 'Highest accuracy, expert-validated scores' : 'Suurim täpsus, ekspertide valideeritud skoorid'}
+                        </div>
+                    </div>
+
+                    <div class="method-section">
+                        <h2><i class="fas fa-brain"></i> ${currentLanguage === 'english' ? '2. Secondary Method: Automated Content Analysis' : '2. Teisene meetod: automaatne sisu analüüs'}</h2>
+                        <p>${currentLanguage === 'english' ? 'When manual data is unavailable, an intelligent content analysis algorithm evaluates text similarity and competency alignment.' : 'Kui käsitsi andmed pole saadaval, hindab intelligentne sisu analüüsi algoritm tekstide sarnasust ja kompetentside vastavust.'}</p>
+                        
+                        <h3>${currentLanguage === 'english' ? 'Algorithm Components:' : 'Algoritmi komponendid:'}</h3>
+                        
+                        <div class="example">
+                            <h4>${currentLanguage === 'english' ? 'Step 1: Keyword Overlap Analysis' : 'Samm 1: märksõnade kattuvuse analüüs'}</h4>
+                            <div class="formula">
+                                <strong>${currentLanguage === 'english' ? 'Formula:' : 'Valem:'}</strong> overlap_percentage = (shared_words / plo_total_words) × 100
+                            </div>
+                            <ul>
+                                <li>${currentLanguage === 'english' ? 'Extracts words longer than 3 characters' : 'Eraldab sõnad, mis on pikemad kui 3 tähemärki'}</li>
+                                <li>${currentLanguage === 'english' ? 'Calculates percentage of PLO words found in MLO text' : 'Arvutab PLO sõnade protsendi, mis leiduvad MLO tekstis'}</li>
+                                <li>${currentLanguage === 'english' ? 'Case-insensitive matching for broader coverage' : 'Mittetundlik suur- ja väiketähtede suhtes laiema katvuse jaoks'}</li>
+                            </ul>
+                        </div>
+
+                        <div class="example">
+                            <h4>${currentLanguage === 'english' ? 'Step 2: Competency Category Matching' : 'Samm 2: kompetentsi kategooria vastendamine'}</h4>
+                            <p>${currentLanguage === 'english' ? 'The system searches for competency-related keywords in 10 specialized categories:' : 'Süsteem otsib kompetentsiga seotud märksõnu 10 spetsialiseeritud kategoorias:'}</p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+                                <div><strong>${currentLanguage === 'english' ? 'Analytical:' : 'Analüütilised:'}</strong> analyze, evaluate, assess, critical, examine...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Application:' : 'Rakenduslikud:'}</strong> apply, implement, use, utilize, practice...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Creative:' : 'Loovad:'}</strong> create, design, develop, innovate, generate...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Management:' : 'Juhtimis-:'}</strong> manage, lead, coordinate, organize, plan...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Communication:' : 'Kommunikatsioon:'}</strong> communicate, present, explain, discuss...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Collaboration:' : 'Koostöö:'}</strong> collaborate, teamwork, cooperate...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Research:' : 'Uurimis-:'}</strong> research, investigate, study, explore...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Technical:' : 'Tehnilised:'}</strong> technical, programming, software, data...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'Business:' : 'Äri-:'}</strong> business, commercial, enterprise, market...</div>
+                                <div><strong>${currentLanguage === 'english' ? 'International:' : 'Rahvusvahelised:'}</strong> international, global, cross-cultural...</div>
+                            </div>
+                        </div>
+
+                        <div class="criteria">
+                            <h4>${currentLanguage === 'english' ? 'Scoring Criteria (Content Analysis):' : 'Punktimise kriteeriumid (sisu analüüs):'}</h4>
+                            <div><span class="score-example score-5">5 (Excellent)</span> ≥15% keyword overlap + ≥3 competency matches</div>
+                            <div><span class="score-example score-4">4 (Strong)</span> ≥10% keyword overlap + ≥2 competency matches</div>
+                            <div><span class="score-example score-3">3 (Good)</span> ≥5% keyword overlap + ≥1 competency match</div>
+                            <div><span class="score-example score-2">2 (Moderate)</span> ≥2% keyword overlap OR ≥1 competency match</div>
+                            <div><span class="score-example score-1">1 (Minimal)</span> <2% keyword overlap + 0 competency matches</div>
+                        </div>
+                    </div>
+
+                    <div class="method-section">
+                        <h2><i class="fas fa-random"></i> ${currentLanguage === 'english' ? '3. Fallback Method: Deterministic Hash Scoring' : '3. Tagavara meetod: deterministlik hash-punktimisüsteem'}</h2>
+                        <p>${currentLanguage === 'english' ? 'When neither manual data nor content analysis is possible, a hash-based algorithm provides consistent demo scores.' : 'Kui ei käsitsi andmed ega sisu analüüs pole võimalik, pakub hash-põhine algoritm järjepidevaid demo skoore.'}</p>
+                        <div class="example">
+                            <strong>${currentLanguage === 'english' ? 'Purpose:' : 'Eesmärk:'}</strong> ${currentLanguage === 'english' ? 'Ensures reproducible results for demonstration and testing' : 'Tagab reprodutseeritavad tulemused demonstratsiooniks ja testimiseks'}<br>
+                            <strong>${currentLanguage === 'english' ? 'Method:' : 'Meetod:'}</strong> <code>hash(ploCode + mloCode) % 5 + 1</code>
+                        </div>
+                    </div>
+
+                    <div class="method-section">
+                        <h2><i class="fas fa-lightbulb"></i> ${currentLanguage === 'english' ? 'Implementation Notes' : 'Rakendamise märkused'}</h2>
+                        <ul>
+                            <li>${currentLanguage === 'english' ? 'The algorithm prioritizes manual alignment data when available' : 'Algoritm eelistab käsitsi vastavuse andmeid, kui need on saadaval'}</li>
+                            <li>${currentLanguage === 'english' ? 'Content analysis provides intelligent fallback for comprehensive coverage' : 'Sisu analüüs pakub intelligentset tagavaravõimalust tervikliku katvuse jaoks'}</li>
+                            <li>${currentLanguage === 'english' ? 'Hash-based scoring ensures consistent demo behavior' : 'Hash-põhine punktimisüsteem tagab järjepideva demo käitumise'}</li>
+                            <li>${currentLanguage === 'english' ? 'All scoring methods use the same 1-5 scale for comparability' : 'Kõik punktimismeetodid kasutavad sama 1-5 skaalat võrreldavuse jaoks'}</li>
+                        </ul>
+                    </div>
+
+                    <p style="margin-top: 40px; padding: 20px; background: #e9ecef; border-radius: 5px; font-style: italic;">
+                        <strong>${currentLanguage === 'english' ? 'Note:' : 'Märkus:'}</strong> ${currentLanguage === 'english' ? 'This methodology ensures robust, accurate, and consistent PLO-MLO alignment analysis across different data availability scenarios while maintaining educational transparency about the scoring process.' : 'See metodoloogia tagab tugevat, täpset ja järjepidavat PLO-MLO vastavuse analüüsi erinevates andmete kättesaadavuse stsenaariumides, säilitades hariduslikku läbipaistvust punktimisprotsessi kohta.'}
+                    </p>
+                </body>
+                </html>
+            `;
+            
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write(methodologyContent);
+            newWindow.document.close();
+        }
+
+        // Global function for outcome toggle (needs to be accessible from onclick)
+        function toggleOutcome(header) {
+            const content = header.nextElementSibling;
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                header.style.backgroundColor = '#f8f9fa';
+            } else {
+                content.style.display = 'none';
+                header.style.backgroundColor = '';
+            }
+        }
+
+        // Global function for section toggle (PLO section and MLO module groups)
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const caret = event.target.querySelector('.section-caret');
+            
+            if (section && caret) {
+                if (section.style.display === 'none' || section.style.display === '') {
+                    section.style.display = 'block';
+                    caret.classList.remove('fa-caret-down');
+                    caret.classList.add('fa-caret-up');
+                } else {
+                    section.style.display = 'none';
+                    caret.classList.remove('fa-caret-up');
+                    caret.classList.add('fa-caret-down');
+                }
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log("=== DOM CONTENT LOADED ===");
@@ -1774,14 +2005,6 @@
                 return Math.abs(hash);
             }
             
-            // Methodology popup toggle function
-            function toggleMethodology() {
-                const popup = document.getElementById('methodology-popup');
-                if (popup) {
-                    popup.classList.toggle('show');
-                }
-            }
-            
             // Close methodology popup when clicking outside
             document.addEventListener('click', function(event) {
                 const popup = document.getElementById('methodology-popup');
@@ -1800,7 +2023,15 @@
                         plosTitle: 'Programme Learning Outcomes (PLOs)',
                         mlosTitle: 'Module Learning Outcomes (MLOs)',
                         matrixTitle: 'Alignment Matrix',
-                        detailedTitle: 'Detailed Breakdown'
+                        detailedTitle: 'Detailed Breakdown',
+                        legendTitle: 'Alignment Score Legend:',
+                        legendItems: [
+                            '1: Minimal alignment',
+                            '2: Partial alignment',
+                            '3: Moderate alignment',
+                            '4: Strong alignment',
+                            '5: Excellent alignment'
+                        ]
                     },
                     estonian: {
                         overview: 'Ülevaade',
@@ -1808,7 +2039,15 @@
                         plosTitle: 'Õppekava õpiväljundid (PLO)',
                         mlosTitle: 'Mooduli õpiväljundid (MLO)',
                         matrixTitle: 'Vastavuse maatriks',
-                        detailedTitle: 'Üksikasjalik jaotus'
+                        detailedTitle: 'Üksikasjalik jaotus',
+                        legendTitle: 'Sidususe hinnangu legend:',
+                        legendItems: [
+                            '1: Minimaalne sidusus',
+                            '2: Osaline sidusus',
+                            '3: Mõõdukas sidusus',
+                            '4: Tugev sidusus',
+                            '5: Suurepärane sidusus'
+                        ]
                     }
                 };
 
@@ -1848,6 +2087,21 @@
                 const detailedH2 = document.querySelector('#detailed-analysis h2');
                 if (detailedH2) {
                     detailedH2.innerHTML = `<i class="fas fa-list-alt"></i> ${headerTexts.detailedTitle}`;
+                }
+                
+                // Update legend
+                const legendTitle = document.querySelector('.score-legend h3');
+                if (legendTitle) {
+                    legendTitle.textContent = headerTexts.legendTitle;
+                }
+                
+                const legendItems = document.querySelectorAll('.legend-item');
+                if (legendItems.length === headerTexts.legendItems.length) {
+                    legendItems.forEach((item, index) => {
+                        item.textContent = headerTexts.legendItems[index];
+                        // Preserve the class for styling
+                        item.className = `legend-item legend-score-${index + 1}`;
+                    });
                 }
             }
 
@@ -1929,9 +2183,7 @@
                     const strongestModule = sortedModules[sortedModules.length - 1];
                     
                     if (language === 'english') {
-                        // DETAILED MODULE ANALYSIS (ordered as requested: yl, p1, p2, e1, e2, gd, mn, vb)
-                        findings.push(`<strong>📈 MODULE ANALYSIS:</strong>`);
-                        
+                        // Module analysis - individual module breakdown
                         const orderedModules = ['yl', 'p1', 'p2', 'e1', 'e2', 'gd', 'mn', 'vb'];
                         orderedModules.forEach(moduleKey => {
                             const moduleData = sortedModules.find(([key, score]) => key === moduleKey);
@@ -1973,9 +2225,7 @@
                         // Don't add the first action plan here - we'll use the detailed one in recommendations instead
                         
                     } else {
-                        // Estonian version with same structure
-                        findings.push(`<strong>📈 MOODULITE ANALÜÜS:</strong>`);
-                        
+                        // Estonian version - individual module breakdown
                         const orderedModules = ['yl', 'p1', 'p2', 'e1', 'e2', 'gd', 'mn', 'vb'];
                         orderedModules.forEach(moduleKey => {
                             const moduleData = sortedModules.find(([key, score]) => key === moduleKey);
@@ -2087,20 +2337,13 @@
                     return recommendations.replace('{WEAK_MODULES_LIST}', weakModulesList);
                 }
                 
-                const summaryContent = document.querySelector('.summary-content');
-                if (summaryContent) {
-                    summaryContent.innerHTML = `
-                        <div class="executive-summary">
-                            <p><strong>${langData.description}</strong></p>
-                        </div>
-                        
-                        <div class="priority-actions">
-                            ${langData.findings.map(finding => `<div class="action-item">${finding}</div>`).join('')}
-                        </div>
-                        
-                        <div class="next-steps">
-                            <div class="action-item">${langData.recommendations}</div>
-                        </div>
+                const summaryContainer = document.querySelector('#alignment-summary');
+                if (summaryContainer) {
+                    summaryContainer.innerHTML = `
+                        <h2><i class="fas fa-chart-bar"></i> ${currentLanguage === 'english' ? 'Alignment Summary' : 'Vastavuse kokkuvõte'}</h2>
+                        <div class="action-item"><strong>${langData.description}</strong></div>
+                        ${langData.findings.map(finding => `<div class="action-item">${finding}</div>`).join('')}
+                        <div class="action-item">${langData.recommendations}</div>
                     `;
                 }
             }
@@ -2245,10 +2488,11 @@
                     console.log("Creating PLO list");
                     let ploHtml = `
                         <div class="learning-outcomes-section">
-                            <h3 class="section-title">
-                                <span class="icon">📝</span> Programme Learning Outcomes (PLOs)
-                            </h3>
-                            <div class="outcomes-list">
+                            <div class="section-toggle" onclick="toggleSection('plo-outcomes-list')">
+                                <span>Programme Learning Outcomes (${plos.length})</span>
+                                <i class="fas fa-caret-down section-caret"></i>
+                            </div>
+                            <div class="outcomes-list" id="plo-outcomes-list" style="display: none;">
                     `;
                     
                     plos.forEach((plo, i) => {
@@ -2256,14 +2500,15 @@
                             ? (plo.plosisuik || plo.ilosisu || 'N/A')
                             : (plo.plosisuek || plo.ilosisu || 'N/A');
                             
-                        const ploCode = plo.plokood || `PLO ${i+1}`;
+                        const ploCode = (plo.plokood || `PLO ${i+1}`).toUpperCase();
                         
                         ploHtml += `
                             <div class="outcome-item">
-                                <div class="outcome-header">
-                                    <span class="outcome-code">${ploCode}</span>
+                                <div class="outcome-header" onclick="toggleOutcome(this)">
+                                    <span class="outcome-code">${ploCode}:</span>
+                                    <span class="outcome-preview">${content.substring(0, 100)}${content.length > 100 ? '...' : ''}</span>
                                 </div>
-                                <div class="outcome-content">
+                                <div class="outcome-content" style="display: none;">
                                     ${content}
                                 </div>
                             </div>
@@ -2294,9 +2539,6 @@
 
                     let mloHtml = `
                         <div class="learning-outcomes-section">
-                            <h3 class="section-title">
-                                <span class="icon">📚</span> Module Learning Outcomes (MLOs) by Category
-                            </h3>
                     `;
                     
                     // Display groups in the specified order
@@ -2310,8 +2552,11 @@
                             
                             mloHtml += `
                                 <div class="module-group">
-                                    <h4 class="module-title">${moduleTitle}</h4>
-                                    <div class="outcomes-list">
+                                    <h4 class="module-title" onclick="toggleSection('${category}-outcomes-list')">
+                                        ${moduleTitle} (${groupedMLOs[category].length})
+                                        <i class="fas fa-caret-down section-caret"></i>
+                                    </h4>
+                                    <div class="outcomes-list" id="${category}-outcomes-list" style="display: none;">
                             `;
                             
                             groupedMLOs[category].forEach((mlo, i) => {
@@ -2319,14 +2564,15 @@
                                     ? (mlo.mlosisuik || mlo.ilosisu || 'N/A')
                                     : (mlo.mlosisuek || mlo.ilosisu || 'N/A');
                                     
-                                const mloCode = mlo.mlokood || `${category}_mlo${i+1}`;
+                                const mloCode = (mlo.mlokood || `${category}_mlo${i+1}`).toUpperCase();
                                 
                                 mloHtml += `
                                     <div class="outcome-item">
-                                        <div class="outcome-header">
-                                            <span class="outcome-code">${mloCode}</span>
+                                        <div class="outcome-header" onclick="toggleOutcome(this)">
+                                            <span class="outcome-code">${mloCode}:</span>
+                                            <span class="outcome-preview">${content.substring(0, 100)}${content.length > 100 ? '...' : ''}</span>
                                         </div>
-                                        <div class="outcome-content">
+                                        <div class="outcome-content" style="display: none;">
                                             ${content}
                                         </div>
                                     </div>
@@ -2381,10 +2627,27 @@
                 let html = '<div class="matrix-container">';
                 html += '<table class="matrix-table">';
                 
-                // Header row - build as simple single row
+                // Header row - build with grouped module headers
                 html += '<thead>';
+                
+                // Top-level module header row
                 html += '<tr>';
-                html += '<th class="plo-header">PLO</th>';
+                html += '<th class="plo-header" rowspan="2">PLO</th>';
+                
+                availableModules.forEach(moduleKey => {
+                    const moduleMLOs = moduleGroups[moduleKey];
+                    const moduleTitle = moduleNames[moduleKey]?.[currentLanguage] || moduleKey.toUpperCase();
+                    const modulePrefix = moduleKey.toUpperCase();
+                    
+                    // Calculate colspan: number of MLOs + average column (if more than 1 MLO)
+                    const colspan = moduleMLOs.length + (moduleMLOs.length > 1 ? 1 : 0);
+                    html += `<th class="module-group-header" colspan="${colspan}">${modulePrefix}</th>`;
+                });
+                
+                html += '</tr>';
+                
+                // Second row with individual MLO columns
+                html += '<tr>';
                 
                 // Add all MLO columns
                 availableModules.forEach(moduleKey => {
@@ -2399,7 +2662,7 @@
                     
                     // Only show average column if there's more than one MLO in the module
                     if (moduleMLOs.length > 1) {
-                        html += `<th class="module-avg-header" title="${moduleTitle} Average">${modulePrefix}-Avg</th>`;
+                        html += `<th class="module-avg-header" title="${moduleTitle} Average">Avg</th>`;
                     }
                 });
                 
@@ -2528,30 +2791,7 @@
                     // PLO-centric view: showing how each PLO aligns with MLOs
                     detailedHtml += `
                         <div class="view-header">
-                            <h3>
-                                ${currentLanguage === 'english' ? 'PLO-MLO Analysis' : 'PLO-MLO Analüüs'}
-                                <span class="methodology-container">
-                                    <button class="methodology-trigger" onclick="toggleMethodology()" title="${currentLanguage === 'english' ? 'Show Scoring Methodology' : 'Näita punktimise metoodikat'}"><i class="fas fa-info"></i></button>
-                                    <div class="methodology-popup" id="methodology-popup">
-                                        <h4>${currentLanguage === 'english' ? 'Alignment Scoring Methodology' : 'Vastavuse punktimise metodoloogia'}</h4>
-                                        <div class="formula">
-                                            <strong>${currentLanguage === 'english' ? 'Formula' : 'Valem'}:</strong><br>
-                                            Score = f(keyword_overlap_%, competency_matches)
-                                        </div>
-                                        <div class="criteria">
-                                            <div><strong>${currentLanguage === 'english' ? 'Scoring Criteria' : 'Punktimise kriteeriumid'}:</strong></div>
-                                            <div>• Score 5: ≥15% keyword overlap + ≥3 competency matches</div>
-                                            <div>• Score 4: ≥10% keyword overlap + ≥2 competency matches</div>
-                                            <div>• Score 3: ≥5% keyword overlap + ≥1 competency match</div>
-                                            <div>• Score 2: ≥2% keyword overlap OR ≥1 competency match</div>
-                                            <div>• Score 1: <2% keyword overlap + 0 competency matches</div>
-                                        </div>
-                                        <div style="margin-top: 10px; font-size: 11px; color: #666;">
-                                            ${currentLanguage === 'english' ? 'Competency categories include: analytical, application, creative, management, communication, collaboration, research, technical, business, international skills.' : 'Kompetentside kategooriad hõlmavad: analüütilisi, rakenduslikke, loovaid, juhtimis-, kommunikatsiooni-, koostöö-, uurimis-, tehnilisi, äri- ja rahvusvahelisi oskusi.'}
-                                        </div>
-                                    </div>
-                                </span>
-                            </h3>
+                            <h3>${currentLanguage === 'english' ? 'PLO-MLO Analysis' : 'PLO-MLO Analüüs'}</h3>
                             <p>${currentLanguage === 'english' ? 'This view shows how each Programme Learning Outcome (PLO) aligns with Module Learning Outcomes (MLOs) across different modules.' : 'See vaade näitab, kuidas iga õppekava õpiväljund (PLO) vastab moodulite õpiväljunditele (MLO) erinevates moodulites.'}</p>
                         </div>
                     `;
