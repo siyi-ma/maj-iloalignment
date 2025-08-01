@@ -3071,7 +3071,7 @@
                 alternativeUrls: [
                     'https://maj-iloalignment-production.up.railway.app', // Railway backup (if fixed)
                 ],
-                timeout: 10000,
+                timeout: 60000, // 60 seconds to handle Render free tier cold start
                 enabled: true, // ENABLED - Remote AI server
                 cache: new Map(),
                 loadingCells: new Set(),
@@ -3131,6 +3131,24 @@
                 showAIStatus(false);
                 // Don't disable AI_CONFIG.enabled here - keep it for retries
                 return false;
+            }
+
+            // Keep Render server warm (free tier sleeps after inactivity)
+            function keepServerWarm() {
+                if (!AI_CONFIG.enabled) return;
+                
+                // Ping server every 10 minutes to prevent cold start
+                setInterval(async () => {
+                    try {
+                        console.log('🔥 Keeping server warm...');
+                        await fetch(`${AI_CONFIG.baseUrl}/status`, { 
+                            method: 'GET',
+                            signal: AbortSignal.timeout(5000) // Short timeout for pings
+                        });
+                    } catch (error) {
+                        console.log('⚠️ Warm-up ping failed (server may be sleeping)');
+                    }
+                }, 10 * 60 * 1000); // 10 minutes
             }
 
             // Show AI status indicator
@@ -3196,6 +3214,12 @@
 
                     // Get original score
                     const originalScore = getAlignmentScore(ploCode, mloCode, mlo);
+
+                    // Show warming message for first request
+                    const isFirstRequest = AI_CONFIG.cache.size === 0;
+                    if (isFirstRequest) {
+                        console.log('🔥 Warming up AI server (Render free tier) - this may take 50+ seconds on first request...');
+                    }
 
                     // Call AI API
                     const response = await fetch(`${AI_CONFIG.baseUrl}/analyze`, {
@@ -3431,6 +3455,9 @@
                 
                 if (capabilities) {
                     console.log('✅ AI Enhancement Ready!');
+                    
+                    // Start keep-warm function for free tier
+                    keepServerWarm();
                     
                     // Add notification banner
                     const banner = document.createElement('div');
