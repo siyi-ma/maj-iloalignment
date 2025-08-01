@@ -1,0 +1,17 @@
+# Advanced Semantic Analysis Requirements
+Flask==2.3.3
+gunicorn==21.2.0
+
+# Core NLP libraries for semantic analysis
+sentence-transformers==2.2.2
+scikit-learn==1.3.0
+numpy==1.24.3
+
+# Optional: for even more advanced NLP
+# spacy==3.7.2
+# transformers==4.35.0
+# torch==2.1.0
+
+# Fallback requirements (minimal)
+# If sentence-transformers fails to install, the system will use
+# the fallback keyword-based semantic analysis
