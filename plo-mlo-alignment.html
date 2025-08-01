@@ -3069,7 +3069,7 @@
                 // YOUR DEPLOYED RAILWAY SERVER URL (CORRECT URL):
                 baseUrl: 'https://maj-iloalignment-production.up.railway.app', // ✅ ACTUAL Railway URL
                 alternativeUrls: [
-                    'https://maj-iloalignment.up.railway.app',  // Alternative pattern
+                    // Removed incorrect fallback URL - using only the correct production URL
                 ],
                 timeout: 10000,
                 enabled: true, // ENABLED - Remote AI server
@@ -3104,11 +3104,13 @@
                         });
                         
                         console.log('📡 Response status:', response.status, response.statusText);
+                        console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
                         
                         if (response.ok) {
                             const status = await response.json();
                             console.log('✅ AI Server Found at:', url);
                             console.log('✅ AI Server Available:', status.version);
+                            console.log('📋 Server response:', status);
                             
                             // Update the working URL
                             AI_CONFIG.baseUrl = url;
@@ -3120,13 +3122,14 @@
                         }
                     } catch (error) {
                         console.log(`⚠️ URL ${i + 1} connection failed:`, error.message);
+                        console.log('🔍 Error details:', error);
                     }
                 }
                 
                 console.log('💡 All URLs failed. Check Railway dashboard for correct service URL');
                 console.log('🔧 Go to Railway → Your Service → Settings → Domains');
                 showAIStatus(false);
-                AI_CONFIG.enabled = false;
+                // Don't disable AI_CONFIG.enabled here - keep it for retries
                 return false;
             }
 
@@ -3443,7 +3446,8 @@
                     // Auto-remove banner after 5 seconds
                     setTimeout(() => banner.remove(), 5000);
                 } else {
-                    console.log('ℹ️ AI Enhancement available but disabled - set AI_CONFIG.enabled = true and start AI server to activate');
+                    console.log('⚠️ AI Enhancement connection failed - check Railway server status');
+                    console.log('🔧 Server URL:', AI_CONFIG.baseUrl);
                 }
             }
             
