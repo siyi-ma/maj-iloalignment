@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLO-MLO Alignment Analysis</title>
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/plo-mlo-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-top">
+                    <a href="index.html" class="back-home">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
+                    <h1><i class="fas fa-project-diagram"></i> PLO-MLO Alignment Analysis</h1>
+                </div>
+                <div class="programme-info">
+                    <span id="current-programme-name">Loading programme...</span>
+                    <span class="separator">|</span>
+                    <span>Programme-Module Learning Outcomes Analysis</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Controls Section -->
+            <section class="controls-section">
+                <div class="controls-container">
+                    <div class="control-group">
+                        <label for="mlo-category-filter">Filter by Module Category:</label>
+                        <select id="mlo-category-filter" class="form-select">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="alignment-threshold">Minimum Alignment Score:</label>
+                        <select id="alignment-threshold" class="form-select">
+                            <option value="0">All Scores (0+)</option>
+                            <option value="1">Poor (1+)</option>
+                            <option value="2" selected>Fair (2+)</option>
+                            <option value="3">Good (3+)</option>
+                            <option value="4">Very Good (4+)</option>
+                            <option value="5">Excellent (5)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="analyze-btn" class="primary-btn">
+                            <i class="fas fa-calculator"></i> Analyze Alignment
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="export-btn" class="secondary-btn" disabled>
+                            <i class="fas fa-download"></i> Export Results
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Summary -->
+            <section id="summary-section" class="summary-section hidden">
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-list-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="total-alignments">0</h3>
+                            <p>Total Alignments</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="avg-score">0.0</h3>
+                            <p>Average Score</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="strong-alignments">0</h3>
+                            <p>Strong Alignments (4+)</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="weak-alignments">0</h3>
+                            <p>Weak Alignments (1-2)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analysis Matrix -->
+            <section id="matrix-section" class="matrix-section hidden">
+                <div class="matrix-header">
+                    <h2><i class="fas fa-table"></i> Alignment Matrix</h2>
+                    <div class="matrix-controls">
+                        <button id="toggle-scores" class="control-btn active">
+                            <i class="fas fa-sort-numeric-down"></i> Show Scores
+                        </button>
+                        <button id="toggle-colors" class="control-btn active">
+                            <i class="fas fa-palette"></i> Color Coding
+                        </button>
+                        <button id="toggle-details" class="control-btn">
+                            <i class="fas fa-info-circle"></i> Show Details
+                        </button>
+                    </div>
+                </div>
+
+                <div class="matrix-container">
+                    <div class="matrix-wrapper">
+                        <table id="alignment-matrix" class="alignment-matrix">
+                            <thead>
+                                <tr>
+                                    <th class="corner-cell">
+                                        <div class="corner-content">
+                                            <span class="corner-top">MLO</span>
+                                            <span class="corner-bottom">PLO</span>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <h4><i class="fas fa-info-circle"></i> Scoring Legend</h4>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-color score-5"></span>
+                            <span>5 - Excellent Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-4"></span>
+                            <span>4 - Very Good Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-3"></span>
+                            <span>3 - Good Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-2"></span>
+                            <span>2 - Fair Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-1"></span>
+                            <span>1 - Poor Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-0"></span>
+                            <span>0 - No Alignment</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Results -->
+            <section id="details-section" class="details-section hidden">
+                <div class="details-header">
+                    <h2><i class="fas fa-list-alt"></i> Detailed Analysis</h2>
+                    <div class="details-controls">
+                        <select id="sort-details" class="form-select">
+                            <option value="score-desc">Sort by Score (High to Low)</option>
+                            <option value="score-asc">Sort by Score (Low to High)</option>
+                            <option value="plo">Sort by PLO</option>
+                            <option value="mlo">Sort by MLO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="details-container" class="details-container">
+                    <!-- Detailed alignment cards will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="loading-overlay hidden">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <h3>Analyzing Alignments</h3>
+                    <p>Computing sophisticated scoring algorithms...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Learning Outcomes Alignment Tool | PLO-MLO Analysis Module</p>
+        </footer>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Alignment Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alignment-detail">
+                    <div class="outcome-pair">
+                        <div class="outcome-box plo-box">
+                            <h4>Programme Learning Outcome</h4>
+                            <p id="modal-plo-text"></p>
+                        </div>
+                        <div class="outcome-box mlo-box">
+                            <h4>Module Learning Outcome</h4>
+                            <p id="modal-mlo-text"></p>
+                            <div class="mlo-meta">
+                                <span class="mlo-category"></span>
+                                <span class="mlo-code"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="scoring-breakdown">
+                        <h4>Scoring Breakdown</h4>
+                        <div class="score-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Overall Score:</span>
+                                <span class="metric-value" id="modal-overall-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Keyword Match:</span>
+                                <span class="metric-value" id="modal-keyword-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Semantic Similarity:</span>
+                                <span class="metric-value" id="modal-semantic-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Bloom's Level:</span>
+                                <span class="metric-value" id="modal-bloom-score"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="justification">
+                        <h4>Analysis Justification</h4>
+                        <p id="modal-justification"></p>
+                    </div>
+
+                    <div class="improvements">
+                        <h4>Improvement Suggestions</h4>
+                        <ul id="modal-improvements"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data-manager.js"></script>
+    <script src="js/alignment-engine.js"></script>
+    <script src="js/plo-mlo.js"></script>
+</body>
+</html>

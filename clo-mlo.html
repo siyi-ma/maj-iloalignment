@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLO-MLO Alignment Analysis</title>
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/plo-mlo-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-top">
+                    <a href="index.html" class="back-home">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
+                    <h1><i class="fas fa-clipboard-list"></i> CLO-MLO Alignment Analysis</h1>
+                </div>
+                <div class="programme-info">
+                    <span id="current-programme-name">Loading programme...</span>
+                    <span class="separator">|</span>
+                    <span>Course-Module Learning Outcomes Analysis</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Course Input Section -->
+            <section class="course-input-section">
+                <div class="input-container">
+                    <div class="input-header">
+                        <h2><i class="fas fa-edit"></i> Course Information</h2>
+                        <p>Enter course details to generate and analyze Course Learning Outcomes (CLOs)</p>
+                    </div>
+                    
+                    <div class="input-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="course-code">Course Code</label>
+                                <input type="text" id="course-code" class="form-input" placeholder="e.g., CS101" maxlength="20">
+                            </div>
+                            <div class="form-group">
+                                <label for="course-name">Course Name</label>
+                                <input type="text" id="course-name" class="form-input" placeholder="e.g., Introduction to Computer Science" maxlength="200">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="course-description">Course Description</label>
+                            <textarea id="course-description" class="form-textarea" rows="4" 
+                                placeholder="Provide a detailed description of the course content, objectives, and scope..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="clo-count">Number of CLOs to Generate</label>
+                                <select id="clo-count" class="form-select">
+                                    <option value="3">3 CLOs</option>
+                                    <option value="4" selected>4 CLOs</option>
+                                    <option value="5">5 CLOs</option>
+                                    <option value="6">6 CLOs</option>
+                                    <option value="7">7 CLOs</option>
+                                    <option value="8">8 CLOs</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="mlo-category-filter">Focus MLO Category (Optional)</label>
+                                <select id="mlo-category-filter" class="form-select">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button id="generate-clos-btn" class="primary-btn">
+                                <i class="fas fa-magic"></i> Generate CLOs
+                            </button>
+                            <button id="manual-clos-btn" class="secondary-btn">
+                                <i class="fas fa-edit"></i> Enter CLOs Manually
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manual CLO Input Section -->
+            <section id="manual-clo-section" class="manual-clo-section hidden">
+                <div class="manual-input-container">
+                    <div class="manual-header">
+                        <h3><i class="fas fa-keyboard"></i> Manual CLO Entry</h3>
+                        <p>Enter your Course Learning Outcomes directly</p>
+                    </div>
+                    
+                    <div id="manual-clo-inputs" class="manual-clo-inputs">
+                        <!-- Manual CLO inputs will be dynamically generated -->
+                    </div>
+
+                    <div class="manual-actions">
+                        <button id="add-clo-btn" class="outline-btn">
+                            <i class="fas fa-plus"></i> Add CLO
+                        </button>
+                        <button id="proceed-manual-btn" class="primary-btn">
+                            <i class="fas fa-arrow-right"></i> Proceed to Analysis
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Generated CLOs Section -->
+            <section id="generated-clos-section" class="generated-clos-section hidden">
+                <div class="clos-container">
+                    <div class="clos-header">
+                        <h3><i class="fas fa-lightbulb"></i> Generated Course Learning Outcomes</h3>
+                        <p>AI-generated CLOs based on your course description</p>
+                        <div class="clos-actions">
+                            <button id="regenerate-clos-btn" class="outline-btn">
+                                <i class="fas fa-redo"></i> Regenerate
+                            </button>
+                            <button id="proceed-analysis-btn" class="primary-btn">
+                                <i class="fas fa-chart-line"></i> Analyze Alignment
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="clos-list" class="clos-list">
+                        <!-- Generated CLOs will be displayed here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analysis Controls -->
+            <section id="analysis-controls-section" class="controls-section hidden">
+                <div class="controls-container">
+                    <div class="control-group">
+                        <label for="alignment-threshold-clo">Minimum Alignment Score:</label>
+                        <select id="alignment-threshold-clo" class="form-select">
+                            <option value="0">All Scores (0+)</option>
+                            <option value="1">Poor (1+)</option>
+                            <option value="2" selected>Fair (2+)</option>
+                            <option value="3">Good (3+)</option>
+                            <option value="4">Very Good (4+)</option>
+                            <option value="5">Excellent (5)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="analyze-clo-btn" class="primary-btn">
+                            <i class="fas fa-calculator"></i> Analyze CLO-MLO Alignment
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="export-clo-btn" class="secondary-btn" disabled>
+                            <i class="fas fa-download"></i> Export Results
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLO-MLO Analysis Results -->
+            <section id="clo-summary-section" class="summary-section hidden">
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-list-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="total-clo-alignments">0</h3>
+                            <p>Total CLO-MLO Alignments</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="avg-clo-score">0.0</h3>
+                            <p>Average Alignment Score</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="strong-clo-alignments">0</h3>
+                            <p>Strong Alignments (4+)</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="coverage-score">0%</h3>
+                            <p>MLO Coverage</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLO-MLO Matrix -->
+            <section id="clo-matrix-section" class="matrix-section hidden">
+                <div class="matrix-header">
+                    <h2><i class="fas fa-table"></i> CLO-MLO Alignment Matrix</h2>
+                    <div class="matrix-controls">
+                        <button id="toggle-clo-scores" class="control-btn active">
+                            <i class="fas fa-sort-numeric-down"></i> Show Scores
+                        </button>
+                        <button id="toggle-clo-colors" class="control-btn active">
+                            <i class="fas fa-palette"></i> Color Coding
+                        </button>
+                    </div>
+                </div>
+
+                <div class="matrix-container">
+                    <div class="matrix-wrapper">
+                        <table id="clo-alignment-matrix" class="alignment-matrix">
+                            <thead>
+                                <tr>
+                                    <th class="corner-cell">
+                                        <div class="corner-content">
+                                            <span class="corner-top">MLO</span>
+                                            <span class="corner-bottom">CLO</span>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <h4><i class="fas fa-info-circle"></i> Scoring Legend</h4>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-color score-5"></span>
+                            <span>5 - Excellent Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-4"></span>
+                            <span>4 - Very Good Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-3"></span>
+                            <span>3 - Good Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-2"></span>
+                            <span>2 - Fair Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-1"></span>
+                            <span>1 - Poor Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-0"></span>
+                            <span>0 - No Alignment</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Results -->
+            <section id="clo-details-section" class="details-section hidden">
+                <div class="details-header">
+                    <h2><i class="fas fa-list-alt"></i> Detailed CLO-MLO Analysis</h2>
+                    <div class="details-controls">
+                        <select id="sort-clo-details" class="form-select">
+                            <option value="score-desc">Sort by Score (High to Low)</option>
+                            <option value="score-asc">Sort by Score (Low to High)</option>
+                            <option value="clo">Sort by CLO</option>
+                            <option value="mlo">Sort by MLO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="clo-details-container" class="details-container">
+                    <!-- Detailed alignment cards will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Recommendations Section -->
+            <section id="recommendations-section" class="recommendations-section hidden">
+                <div class="recommendations-container">
+                    <div class="recommendations-header">
+                        <h2><i class="fas fa-lightbulb"></i> Improvement Recommendations</h2>
+                        <p>AI-powered suggestions to improve course-module alignment</p>
+                    </div>
+                    
+                    <div id="recommendations-content" class="recommendations-content">
+                        <!-- Recommendations will be generated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="loading-overlay hidden">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <h3 id="loading-title">Processing...</h3>
+                    <p id="loading-description">Please wait while we process your request...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Learning Outcomes Alignment Tool | CLO-MLO Analysis Module</p>
+        </footer>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>CLO-MLO Alignment Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alignment-detail">
+                    <div class="outcome-pair">
+                        <div class="outcome-box clo-box">
+                            <h4>Course Learning Outcome</h4>
+                            <p id="modal-clo-text"></p>
+                        </div>
+                        <div class="outcome-box mlo-box">
+                            <h4>Module Learning Outcome</h4>
+                            <p id="modal-mlo-text"></p>
+                            <div class="mlo-meta">
+                                <span class="mlo-category"></span>
+                                <span class="mlo-code"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="scoring-breakdown">
+                        <h4>Scoring Breakdown</h4>
+                        <div class="score-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Overall Score:</span>
+                                <span class="metric-value" id="modal-overall-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Keyword Match:</span>
+                                <span class="metric-value" id="modal-keyword-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Semantic Similarity:</span>
+                                <span class="metric-value" id="modal-semantic-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Bloom's Level:</span>
+                                <span class="metric-value" id="modal-bloom-score"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="justification">
+                        <h4>Analysis Justification</h4>
+                        <p id="modal-justification"></p>
+                    </div>
+
+                    <div class="improvements">
+                        <h4>Improvement Suggestions</h4>
+                        <ul id="modal-improvements"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data-manager.js"></script>
+    <script src="js/alignment-engine.js"></script>
+    <script src="js/mlo-clo.js"></script>
+</body>
+</html>

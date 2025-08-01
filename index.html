@@ -3,517 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAJ Learning Outcome Alignment Tool</title>
-    <link rel="stylesheet" href="style.css"> 
+    <title>Learning Outcomes Alignment Tool</title>
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* It is recommended to move this CSS to your style.css file */
-        body {
-            font-family: sans-serif;
-            background-color: #f4f4f9;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .home-btn {
-            padding: 10px 15px;
-            border: none;
-            background-color: #AA1352;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .programme-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .programme-box {
-            background: white;
-            border: 2px solid #AA1352;
-            border-radius: 8px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .programme-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            background: #AA1352;
-            color: white;
-        }
-        .programme-name {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .programme-code {
-            font-size: 0.9em;
-            color: #666;
-        }
-        .programme-box:hover .programme-code {
-            color: #eee;
-        }
-        .hidden {
-            display: none;
-        }
-        .mlo-groups {
-            margin: 20px 0;
-        }
-        .module-group {
-            margin: 30px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .module-header {
-            background-color: #342b60;
-            color: white;
-            padding: 15px 20px;
-            margin: 0;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        .mlo-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0;
-        }
-        .mlo-table th {
-            background-color: #f8f9fa;
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 2px solid #dee2e6;
-            font-weight: bold;
-        }
-        .mlo-table td {
-            padding: 15px;
-            border-bottom: 1px solid #dee2e6;
-            vertical-align: top;
-        }
-        .mlo-table tr:last-child td {
-            border-bottom: none;
-        }
-        .mlo-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        .mlo-code-col {
-            width: 15%;
-        }
-        .estonian-col {
-            width: 42.5%;
-        }
-        .english-col {
-            width: 42.5%;
-        }
-        .mlo-code {
-            font-family: monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-        .mlo-title {
-            font-size: 1.1em;
-            margin-bottom: 8px;
-            color: #212529;
-        }
-        .mlo-description {
-            font-size: 0.95em;
-            line-height: 1.4;
-            color: #495057;
-        }
-        .estonian-content, .english-content {
-            padding: 0;
-        }
-        .outcome-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            background-color: #f9f9f9;
-        }
-        .outcome-item:last-child {
-            border-bottom: none;
-        }
-        .outcomes-list .outcome-item {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-left: 3px solid #342b60;
-        }
-        
-        /* Analysis Options Styles */
-        .analysis-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        
-        .option-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .option-card:hover {
-            border-color: #AA1352;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        
-        .option-icon {
-            background: linear-gradient(135deg, #AA1352, #342b60);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            flex-shrink: 0;
-        }
-        
-        .option-content {
-            flex: 1;
-        }
-        
-        .option-content h3 {
-            margin: 0 0 8px 0;
-            color: #342b60;
-            font-size: 1.2em;
-        }
-        
-        .option-content p {
-            margin: 0;
-            color: #666;
-            line-height: 1.4;
-        }
-        
-        .option-arrow {
-            color: #AA1352;
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
-        }
-        
-        .option-card:hover .option-arrow {
-            transform: translateX(5px);
-        }
-        
-        /* Section Header Styles */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .back-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .back-btn:hover {
-            background: #5a6268;
-        }
-        
-        /* Course Grid Styles */
-        .course-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .course-item {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .course-item:hover {
-            border-color: #AA1352;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .course-code {
-            font-weight: bold;
-            color: #342b60;
-            margin-bottom: 5px;
-        }
-        
-        .course-name {
-            color: #666;
-            font-size: 0.9em;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-content">
-                <h1 id="hero-title"><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
-                <p id="hero-subtitle">Course and Module Learning Outcomes Alignment Tool</p>
+                <h1><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
+                <p>Educational Quality Management System</p>
             </div>
-            <button id="home-btn" class="home-btn"><i class="fas fa-home"></i> Home</button>
         </header>
 
         <main>
             <!-- Programme Selection Section -->
-            <section id="programme-select-section">
-                <h2><i class="fas fa-university"></i> Choose Study Programme</h2>
-                <div class="programme-grid">
-                    <div class="programme-box" data-programme="tvtb">
-                        <div class="programme-name">Rahvusvaheline ärikorraldus</div>
-                        <div class="programme-code">TVTB</div>
-                    </div>
-                    <div class="programme-box" data-programme="majb">
-                        <div class="programme-name">Jätkusuutlik ettevõtlus ja ringmajandus</div>
-                        <div class="programme-code">MAJB</div>
-                    </div>
-                    <div class="programme-box" data-programme="makm">
-                        <div class="programme-name">Kestlikkuse juhtimine</div>
-                        <div class="programme-code">MAKM</div>
+            <section id="programme-selection" class="active-section">
+                <div class="hero-section">
+                    <h2><i class="fas fa-university"></i> Select Study Programme</h2>
+                    <p>Choose a study programme to begin alignment analysis</p>
+                </div>
+                
+                <div id="programmes-container" class="programmes-grid">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading programmes...</p>
                     </div>
                 </div>
             </section>
 
-            <!-- PLO-MLO Alignment Section (initially hidden) -->
-            <section id="plo-mlo-section" class="hidden">
-                <h2><i class="fas fa-link"></i> Programme-Module Learning Outcomes Alignment</h2>
-                <div id="plo-mlo-matrix">
-                    <p>Programme data loading...</p>
+            <!-- Programme Overview Section -->
+            <section id="programme-overview" class="hidden-section">
+                <div class="programme-header">
+                    <button id="back-to-selection" class="back-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Programme Selection
+                    </button>
+                    <div class="programme-title">
+                        <h2 id="selected-programme-name"></h2>
+                        <p id="selected-programme-description">Choose your analysis path</p>
+                    </div>
                 </div>
-            </section>
 
-            <!-- Integrated Main Menu Section (initially hidden) -->
-            <section id="main-menu-section" class="hidden">
-                <h2><i class="fas fa-tasks"></i> Choose Analysis Type</h2>
-                <div class="analysis-options">
-                    <div class="option-card" id="plo-mlo-analysis-btn">
-                        <div class="option-icon">
+                <div class="analysis-paths">
+                    <div class="path-card" id="plo-mlo-path">
+                        <div class="path-icon">
                             <i class="fas fa-project-diagram"></i>
                         </div>
-                        <div class="option-content">
-                            <h3>PLO-MLO Analysis</h3>
-                            <p>Analyze alignment between Programme Learning Outcomes and Module Learning Outcomes</p>
+                        <div class="path-content">
+                            <h3>Programme-Module Alignment</h3>
+                            <p>Analyze how Module Learning Outcomes align with Programme Learning Outcomes</p>
+                            <ul class="path-features">
+                                <li><i class="fas fa-check-circle"></i> Comprehensive matrix analysis</li>
+                                <li><i class="fas fa-check-circle"></i> Sophisticated scoring algorithms</li>
+                                <li><i class="fas fa-check-circle"></i> Professional reporting</li>
+                            </ul>
                         </div>
-                        <div class="option-arrow">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
+                        <button class="path-btn primary-btn">
+                            <i class="fas fa-external-link-alt"></i> PLO-MLO Analysis
+                        </button>
                     </div>
-                    
-                    <div class="option-card" id="course-analysis-toggle">
-                        <div class="option-icon">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <div class="option-content">
-                            <h3>Course Analysis</h3>
-                            <p>Select a specific course to analyze MLO-CLO alignment</p>
-                        </div>
-                        <div class="option-arrow">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            <!-- Course Selection Section (initially hidden) -->
-            <section id="course-select-section" class="hidden">
-                <div class="section-header">
-                    <h2><i class="fas fa-book"></i> Select Course</h2>
-                    <button id="back-to-menu-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Analysis Menu</button>
+                    <div class="path-card" id="clo-mlo-path">
+                        <div class="path-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="path-content">
+                            <h3>Course-Module Alignment</h3>
+                            <p>Analyze how Course Learning Outcomes align with Module Learning Outcomes</p>
+                            <ul class="path-features">
+                                <li><i class="fas fa-check-circle"></i> AI-powered CLO generation</li>
+                                <li><i class="fas fa-check-circle"></i> Detailed alignment scoring</li>
+                                <li><i class="fas fa-check-circle"></i> Improvement recommendations</li>
+                            </ul>
+                        </div>
+                        <button class="path-btn secondary-btn">
+                            <i class="fas fa-external-link-alt"></i> CLO-MLO Analysis
+                        </button>
+                    </div>
                 </div>
-                <div class="input-container">
-                    <input type="text" id="course-code" list="course-code-list" placeholder="Enter course code or name">
-                    <datalist id="course-code-list"></datalist>
-                    <button id="search-btn" disabled>Analyze Course</button>
-                </div>
-                <div id="course-list-container">
-                    <h3>Available Courses:</h3>
-                    <div id="course-list" class="course-grid">
-                        <!-- Course list will be populated here -->
+
+                <div class="programme-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="plo-count">-</span>
+                        <span class="stat-label">Programme Learning Outcomes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="mlo-count">-</span>
+                        <span class="stat-label">Module Learning Outcomes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="module-count">-</span>
+                        <span class="stat-label">Module Categories</span>
                     </div>
                 </div>
             </section>
         </main>
+
+        <footer>
+            <p>&copy; 2025 Learning Outcomes Alignment Tool | Educational Quality Management</p>
+        </footer>
     </div>
 
-    <script src="main.js"></script>
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data-manager.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- DICTIONARY FOR ENGLISH NAMES ---
-            const programmeEnglishNames = {
-                tvtb: 'International Business Administration',
-                majb: 'Sustainable Entrepreneurship and Circular Economy',
-                makm: 'Sustainability Management'
-            };
+        // Main application controller
+        class IndexController {
+            constructor() {
+                this.currentProgramme = null;
+                this.init();
+            }
 
-            // --- ELEMENT SELECTIONS ---
-            const programmeSelectSection = document.getElementById('programme-select-section');
-            const ploMloSection = document.getElementById('plo-mlo-section');
-            const mainMenuSection = document.getElementById('main-menu-section');
-            const courseSelectSection = document.getElementById('course-select-section');
-            const heroTitle = document.getElementById('hero-title');
-            const heroSubtitle = document.getElementById('hero-subtitle');
-            const homeBtn = document.getElementById('home-btn');
-            const courseInput = document.getElementById('course-code');
-            const searchBtn = document.getElementById('search-btn');
-            const ploMloAnalysisBtn = document.getElementById('plo-mlo-analysis-btn');
-            const courseAnalysisToggle = document.getElementById('course-analysis-toggle');
-            const backToMenuBtn = document.getElementById('back-to-menu-btn');
-            
-            const originalTitleHTML = heroTitle.innerHTML;
-            const originalSubtitleHTML = heroSubtitle.innerHTML;
+            async init() {
+                try {
+                    // Load programmes data
+                    await window.dataManager.loadProgrammes();
+                    this.displayProgrammes();
+                    this.setupEventListeners();
+                } catch (error) {
+                    this.showError('Failed to load programmes. Please refresh the page.');
+                    console.error('Initialization error:', error);
+                }
+            }
 
-            // --- EVENT LISTENERS ---
-
-            // Listen for clicks on any programme box
-            document.querySelectorAll('.programme-box').forEach(box => {
-                box.addEventListener('click', function() {
-                    const programmeCode = this.dataset.programme;
-                    
-                    // Get the Estonian name from the clicked element
-                    const programmeNameInEstonian = this.querySelector('.programme-name').textContent;
-                    // Get the English name from the dictionary
-                    const programmeNameInEnglish = programmeEnglishNames[programmeCode] || "Selected Programme";
-                    
-                    // UPDATE: Set the header title to Estonian name and subtitle to English name
-                    heroTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeNameInEstonian} (${programmeCode.toUpperCase()})`;
-                    heroSubtitle.textContent = programmeNameInEnglish;
-                    
-                    // HIDE the programme selection grid
-                    programmeSelectSection.classList.add('hidden');
-                    
-                    // SHOW the main menu section instead of immediate data display
-                    mainMenuSection.classList.remove('hidden');
-                    
-                    // Store the selected programme code globally
-                    window.currentProgrammeCode = programmeCode;
-                    
-                    // Load programme data for background processing
-                    loadProgrammeData(programmeCode);
-                });
-            });
-
-            // Home button functionality to "start over"
-            homeBtn.addEventListener('click', function() {
-                // Restore original header content
-                heroTitle.innerHTML = originalTitleHTML;
-                heroSubtitle.innerHTML = originalSubtitleHTML;
-
-                // SHOW the programme selection grid again
-                programmeSelectSection.classList.remove('hidden');
+            displayProgrammes() {
+                const container = document.getElementById('programmes-container');
+                const programmes = window.dataManager.getProgrammes();
                 
-                // HIDE all other sections
-                ploMloSection.classList.add('hidden');
-                mainMenuSection.classList.add('hidden');
-                courseSelectSection.classList.add('hidden');
-
-                // Clear any data from the previous choice
-                document.getElementById('plo-mlo-matrix').innerHTML = '<p>Programme data loading...</p>';
-                courseInput.value = '';
-                searchBtn.disabled = true;
-            });
-
-            // PLO-MLO Analysis button
-            if (ploMloAnalysisBtn) {
-                ploMloAnalysisBtn.addEventListener('click', function() {
-                    // Get the current programme code from the stored data
-                    const currentProgramme = window.currentProgrammeCode || 'tvtb';
-                    // Redirect to PLO-MLO alignment page with programme parameter
-                    window.location.href = `plo-mlo-alignment.html?programme=${encodeURIComponent(currentProgramme)}`;
+                container.innerHTML = '';
+                
+                programmes.forEach(programme => {
+                    const programmeCard = document.createElement('div');
+                    programmeCard.className = 'programme-card';
+                    programmeCard.dataset.code = programme.code;
+                    
+                    programmeCard.innerHTML = `
+                        <div class="programme-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="programme-info">
+                            <h3>${programme.nameEn}</h3>
+                            <p class="programme-name-et">${programme.nameEt}</p>
+                            <div class="programme-stats-mini">
+                                <span><i class="fas fa-list-check"></i> ${programme.data.plos.length} PLOs</span>
+                                <span><i class="fas fa-layer-group"></i> ${programme.data.mlos.length} MLOs</span>
+                            </div>
+                        </div>
+                        <button class="select-programme-btn">
+                            <i class="fas fa-arrow-right"></i> Select Programme
+                        </button>
+                    `;
+                    
+                    container.appendChild(programmeCard);
                 });
             }
 
-            // Course Analysis toggle
-            if (courseAnalysisToggle) {
-                courseAnalysisToggle.addEventListener('click', function() {
-                    mainMenuSection.classList.add('hidden');
-                    courseSelectSection.classList.remove('hidden');
-                    // Populate course list
-                    populateCourseList();
+            setupEventListeners() {
+                // Programme selection
+                document.getElementById('programmes-container').addEventListener('click', (e) => {
+                    if (e.target.closest('.select-programme-btn')) {
+                        const card = e.target.closest('.programme-card');
+                        const programmeCode = card.dataset.code;
+                        this.selectProgramme(programmeCode);
+                    }
                 });
-            }
 
-            // Back to menu button
-            if (backToMenuBtn) {
-                backToMenuBtn.addEventListener('click', function() {
-                    courseSelectSection.classList.add('hidden');
-                    mainMenuSection.classList.remove('hidden');
+                // Back to selection
+                document.getElementById('back-to-selection').addEventListener('click', () => {
+                    this.showSection('programme-selection');
+                    window.dataManager.clearCurrentProgramme();
                 });
-            }
-            
-            // Logic to enable search button on input
-            courseInput.addEventListener('input', function() {
-                searchBtn.disabled = this.value.trim() === '';
-            });
 
-            // Search button functionality
-            if (searchBtn) {
-                searchBtn.addEventListener('click', function() {
-                    const selectedCourse = courseInput.value;
-                    if (selectedCourse) {
-                        // Redirect to MLO-CLO analysis page with course parameter
-                        const courseCode = selectedCourse.split(' - ')[0];
-                        window.location.href = `mlo-clo.html?course=${encodeURIComponent(courseCode)}`;
+                // Analysis path navigation
+                document.getElementById('plo-mlo-path').querySelector('.path-btn').addEventListener('click', () => {
+                    window.location.href = 'plo-mlo.html';
+                });
+
+                document.getElementById('clo-mlo-path').querySelector('.path-btn').addEventListener('click', () => {
+                    window.location.href = 'clo-mlo.html';
+                });
+
+                // Back to top
+                document.querySelector('.back-to-top').addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                // Show/hide back to top based on scroll
+                window.addEventListener('scroll', () => {
+                    const backToTop = document.querySelector('.back-to-top');
+                    if (window.pageYOffset > 300) {
+                        backToTop.style.opacity = '1';
+                    } else {
+                        backToTop.style.opacity = '0';
                     }
                 });
             }
 
-            // --- FUNCTIONS ---
-            // Function to populate course list
-            function populateCourseList() {
-                const courseListContainer = document.getElementById('course-list');
-                if (!courseListContainer || !window.currentCourseData) return;
-
-                courseListContainer.innerHTML = '';
-                
-                const uniqueCourses = [...new Set(window.currentCourseData.map(course => ({
-                    code: course.ainekood,
-                    name: course.ainenimetusik || course.ainenimetusek || ''
-                })))];
-
-                uniqueCourses.forEach(course => {
-                    const courseItem = document.createElement('div');
-                    courseItem.className = 'course-item';
-                    courseItem.innerHTML = `
-                        <div class="course-code">${course.code}</div>
-                        <div class="course-name">${course.name}</div>
-                    `;
-                    courseItem.addEventListener('click', function() {
-                        courseInput.value = `${course.code} - ${course.name}`;
-                        searchBtn.disabled = false;
-                    });
-                    courseListContainer.appendChild(courseItem);
-                });
+            selectProgramme(programmeCode) {
+                try {
+                    this.currentProgramme = window.dataManager.setCurrentProgramme(programmeCode);
+                    this.displayProgrammeOverview();
+                    this.showSection('programme-overview');
+                } catch (error) {
+                    this.showError(`Failed to select programme: ${error.message}`);
+                }
             }
-            
-            // Note: loadProgrammeData function is defined in main.js
+
+            displayProgrammeOverview() {
+                if (!this.currentProgramme) return;
+
+                // Update programme name
+                document.getElementById('selected-programme-name').textContent = 
+                    this.currentProgramme.kavanimetusik;
+
+                // Update statistics
+                const plos = this.currentProgramme.plos || [];
+                const mlos = this.currentProgramme.mlos || [];
+                const mlosByCategory = window.dataManager.getMLOsByCategory();
+                
+                document.getElementById('plo-count').textContent = plos.length;
+                document.getElementById('mlo-count').textContent = mlos.length;
+                document.getElementById('module-count').textContent = Object.keys(mlosByCategory).length;
+            }
+
+            showSection(sectionId) {
+                // Hide all sections
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.remove('active-section');
+                    section.classList.add('hidden-section');
+                });
+
+                // Show target section
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden-section');
+                    targetSection.classList.add('active-section');
+                }
+            }
+
+            showError(message) {
+                // Simple error display - could be enhanced with a modal
+                alert(message);
+            }
+        }
+
+        // Initialize application when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new IndexController();
         });
     </script>
 </body>
