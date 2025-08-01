@@ -495,17 +495,91 @@
         }
         
         .mlo-code-col, .code-col {
-            width: 80px !important;
-            max-width: 80px !important;
-            min-width: 80px !important;
+            width: 75px !important;
+            max-width: 75px !important;
+            min-width: 75px !important;
             height: 55.58px;
             font-family: 'Courier New', monospace;
             color: #495057;
             font-weight: bold;
         }
         
+        /* Ultra-specific rules to override any external CSS including style.css */
+        table.plo-table .code-col,
+        table.mlo-table .code-col,
+        table.plo-table th.code-col,
+        table.mlo-table th.code-col,
+        table.plo-table .mlo-header.code-col,
+        table.mlo-table .mlo-header.code-col {
+            width: 50px !important;
+            max-width: 50px !important;
+            min-width: 50px !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Also target the data cell classes with maximum specificity */
+        table.plo-table .plo-code,
+        table.mlo-table .mlo-code,
+        table.plo-table td.plo-code,
+        table.mlo-table td.mlo-code,
+        table.plo-table tbody td.plo-code,
+        table.mlo-table tbody td.mlo-code {
+            width: 50px !important;
+            max-width: 50px !important;
+            min-width: 50px !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Override any mlo-header, clo-header rules from external stylesheets */
+        table.mlo-table .mlo-header,
+        table.plo-table .mlo-header,
+        table.matrix-table .mlo-header,
+        table.matrix-table .clo-header {
+            max-width: 50px !important;
+            width: 50px !important;
+            min-width: 50px !important;
+        }
+        
         .content-col {
             width: 35%;
+        }
+        
+        /* Force table layout to respect our width settings */
+        .plo-table, .mlo-table {
+            table-layout: fixed !important;
+            width: 100% !important;
+        }
+        
+        /* Ensure code columns are properly constrained regardless of content */
+        .plo-table .code-col, .mlo-table .code-col,
+        .plo-table .plo-code, .mlo-table .mlo-code {
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+        
+        /* Add runtime style injection to override any dynamic styles */
+        .plo-table th.code-col, .mlo-table th.code-col,
+        .plo-table td.plo-code, .mlo-table td.mlo-code {
+            width: 50px !important;
+            max-width: 50px !important;
+            min-width: 50px !important;
+        }
+        
+        /* Nuclear option - target everything possible with inline style priority */
+        .plo-table th[class*="code"], .mlo-table th[class*="code"],
+        .plo-table td[class*="code"], .mlo-table td[class*="code"] {
+            width: 50px !important;
+            max-width: 50px !important;
+            min-width: 50px !important;
+        }
+        
+        /* Target by position if class targeting fails */
+        .plo-table th:first-child, .mlo-table th:first-child,
+        .plo-table td:first-child, .mlo-table td:first-child {
+            width: 50px !important;
+            max-width: 50px !important;
+            min-width: 50px !important;
         }
         
         .mlo-code, .plo-code {
@@ -840,12 +914,16 @@
             background-color: #d1d5db;
             color: #374151;
             font-size: 0.7em;
-            width: 70px;
+            width: 45px;
+            min-width: 45px;
+            max-width: 45px;
             font-weight: 600;
             text-align: center;
-            padding: 6px 4px;
+            padding: 4px 2px;
             height: 50px;
             line-height: 1.1;
+            overflow: hidden;
+            white-space: nowrap;
         }
         
         .matrix-table .module-avg-header {
@@ -910,20 +988,22 @@
             }
             
             .score-cell {
-                width: 60px;
+                width: 45px;
                 padding: 4px 2px;
             }
         }
         
         .score-cell {
             font-weight: 600;
-            width: 70px;
+            width: 45px;
+            min-width: 45px;
+            max-width: 45px;
             color: #374151;
             background-color: white;
             transition: all 0.2s ease;
             cursor: pointer;
             text-align: center;
-            padding: 8px 6px;
+            padding: 6px 3px;
             height: 40px;
             position: relative;
         }
@@ -1353,6 +1433,104 @@
         .view-toggle:hover {
             background-color: #5a6268;
             transform: translateY(-1px);
+        }
+        
+        /* New List-based Layout Styles */
+        .learning-outcomes-section {
+            margin: 20px 0;
+        }
+        
+        .section-title {
+            color: #342b60;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #342b60;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title .icon {
+            font-size: 1.2em;
+        }
+        
+        .outcomes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .outcome-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .outcome-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            border-color: #adb5bd;
+        }
+        
+        .outcome-header {
+            margin-bottom: 10px;
+        }
+        
+        .outcome-code {
+            background: #342b60;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+        
+        .outcome-content {
+            color: #495057;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        
+        .module-group {
+            margin-bottom: 30px;
+        }
+        
+        .module-title {
+            background: #343a40;
+            color: white;
+            padding: 12px 20px;
+            margin: 0 0 15px 0;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+            
+            .outcome-item {
+                padding: 12px;
+            }
+            
+            .outcome-code {
+                font-size: 0.8em;
+                padding: 4px 10px;
+            }
+            
+            .outcome-content {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
@@ -2223,39 +2401,49 @@
 
             // Function to display single language PLO and MLO tables
             function displaySingleLanguageTables(plos, mlos) {
-                // Display PLOs
+                console.log("displaySingleLanguageTables called with:", { plos: plos.length, mlos: mlos.length });
+                
+                // Display PLOs as a list
                 const ploContainer = document.getElementById('plo-container');
                 if (ploContainer && plos.length > 0) {
-                    let ploHtml = `<table class="plo-table">`;
-                    ploHtml += `<thead>`;
-                    ploHtml += `<tr>`;
-                    ploHtml += `<th class="code-col">PLO Code</th>`;
-                    ploHtml += `<th class="content-col">${currentLanguage === 'english' ? 'English' : 'Estonian'}</th>`;
-                    ploHtml += `</tr>`;
-                    ploHtml += `</thead>`;
-                    ploHtml += `<tbody>`;
+                    console.log("Creating PLO list");
+                    let ploHtml = `
+                        <div class="learning-outcomes-section">
+                            <h3 class="section-title">
+                                <span class="icon">📝</span> Programme Learning Outcomes (PLOs)
+                            </h3>
+                            <div class="outcomes-list">
+                    `;
                     
                     plos.forEach((plo, i) => {
                         const content = currentLanguage === 'english' 
                             ? (plo.plosisuik || plo.ilosisu || 'N/A')
                             : (plo.plosisuek || plo.ilosisu || 'N/A');
                             
-                        ploHtml += `<tr>`;
-                        ploHtml += `<td class="plo-code">${plo.plokood || `plo${i+1}`}</td>`;
-                        ploHtml += `<td class="content-cell">`;
-                        ploHtml += `<div class="plo-description">${content}</div>`;
-                        ploHtml += `</td>`;
-                        ploHtml += `</tr>`;
+                        const ploCode = plo.plokood || `PLO ${i+1}`;
+                        
+                        ploHtml += `
+                            <div class="outcome-item">
+                                <div class="outcome-header">
+                                    <span class="outcome-code">${ploCode}</span>
+                                </div>
+                                <div class="outcome-content">
+                                    ${content}
+                                </div>
+                            </div>
+                        `;
                     });
                     
-                    ploHtml += `</tbody>`;
-                    ploHtml += `</table>`;
+                    ploHtml += `
+                            </div>
+                        </div>
+                    `;
                     ploContainer.innerHTML = ploHtml;
                 } else if (ploContainer) {
                     ploContainer.innerHTML = '<p>No PLOs available for this programme.</p>';
                 }
 
-                // Display MLOs grouped by module category
+                // Display MLOs grouped by module category as lists
                 const mloContainer = document.getElementById('mlo-container');
                 if (mloContainer && mlos.length > 0) {
                     // Group MLOs by module category parsed from mlokood
@@ -2268,7 +2456,12 @@
                         groupedMLOs[category].push(mlo);
                     });
 
-                    let mloHtml = '<div class="mlo-groups">';
+                    let mloHtml = `
+                        <div class="learning-outcomes-section">
+                            <h3 class="section-title">
+                                <span class="icon">📚</span> Module Learning Outcomes (MLOs) by Category
+                            </h3>
+                    `;
                     
                     // Display groups in the specified order
                     moduleOrder.forEach(category => {
@@ -2279,34 +2472,35 @@
                                 ? (firstMLO.mlonimetusik || moduleNames[category]?.english || category.toUpperCase())
                                 : (firstMLO.mlonimetusek || moduleNames[category]?.estonian || category.toUpperCase());
                             
-                            mloHtml += `<div class="module-group">`;
-                            
-                            // Create single language table without module header
-                            mloHtml += `<table class="mlo-table">`;
-                            mloHtml += `<thead>`;
-                            mloHtml += `<tr>`;
-                            mloHtml += `<th class="code-col">MLO Code</th>`;
-                            mloHtml += `<th class="content-col">${moduleTitle}</th>`;
-                            mloHtml += `</tr>`;
-                            mloHtml += `</thead>`;
-                            mloHtml += `<tbody>`;
+                            mloHtml += `
+                                <div class="module-group">
+                                    <h4 class="module-title">${moduleTitle}</h4>
+                                    <div class="outcomes-list">
+                            `;
                             
                             groupedMLOs[category].forEach((mlo, i) => {
                                 const content = currentLanguage === 'english' 
                                     ? (mlo.mlosisuik || mlo.ilosisu || 'N/A')
                                     : (mlo.mlosisuek || mlo.ilosisu || 'N/A');
                                     
-                                mloHtml += `<tr>`;
-                                mloHtml += `<td class="mlo-code">${mlo.mlokood || `${category}_mlo${i+1}`}</td>`;
-                                mloHtml += `<td class="content-cell">`;
-                                mloHtml += `<div class="mlo-description">${content}</div>`;
-                                mloHtml += `</td>`;
-                                mloHtml += `</tr>`;
+                                const mloCode = mlo.mlokood || `${category}_mlo${i+1}`;
+                                
+                                mloHtml += `
+                                    <div class="outcome-item">
+                                        <div class="outcome-header">
+                                            <span class="outcome-code">${mloCode}</span>
+                                        </div>
+                                        <div class="outcome-content">
+                                            ${content}
+                                        </div>
+                                    </div>
+                                `;
                             });
                             
-                            mloHtml += `</tbody>`;
-                            mloHtml += `</table>`;
-                            mloHtml += `</div>`;
+                            mloHtml += `
+                                    </div>
+                                </div>
+                            `;
                         }
                     });
                     
@@ -2872,34 +3066,68 @@
             
             // AI Configuration
             const AI_CONFIG = {
-                baseUrl: 'http://localhost:5000',
+                // YOUR DEPLOYED RAILWAY SERVER URL (CORRECT URL):
+                baseUrl: 'https://maj-iloalignment-production.up.railway.app', // ✅ ACTUAL Railway URL
+                alternativeUrls: [
+                    'https://maj-iloalignment.up.railway.app',  // Alternative pattern
+                ],
                 timeout: 10000,
-                enabled: true,
+                enabled: true, // ENABLED - Remote AI server
                 cache: new Map(),
-                loadingCells: new Set()
+                loadingCells: new Set(),
+                
+                // Alternative possible URLs:
+                // baseUrl: 'https://adequate-perception.up.railway.app',
+                // baseUrl: 'https://adequate-perception-production.railway.app',
             };
 
             // Test AI server availability
             async function testAIServer() {
-                try {
-                    const response = await fetch(`${AI_CONFIG.baseUrl}/status`, {
-                        method: 'GET',
-                        signal: AbortSignal.timeout(5000)
-                    });
-                    
-                    if (response.ok) {
-                        const status = await response.json();
-                        console.log('✅ AI Server Available:', status.version);
-                        showAIStatus(true);
-                        return status.capabilities;
-                    }
-                    return false;
-                } catch (error) {
-                    console.log('⚠️ AI Server not available:', error.message);
-                    showAIStatus(false);
-                    AI_CONFIG.enabled = false;
+                if (!AI_CONFIG.enabled) {
+                    console.log('🤖 AI Enhancement disabled - set AI_CONFIG.enabled = true to activate');
                     return false;
                 }
+                
+                // Try primary URL first
+                console.log('🔍 Testing AI server at:', AI_CONFIG.baseUrl);
+                
+                const urlsToTry = [AI_CONFIG.baseUrl, ...AI_CONFIG.alternativeUrls];
+                
+                for (let i = 0; i < urlsToTry.length; i++) {
+                    const url = urlsToTry[i];
+                    console.log(`📡 Trying URL ${i + 1}/${urlsToTry.length}:`, url);
+                    
+                    try {
+                        const response = await fetch(`${url}/status`, {
+                            method: 'GET',
+                            signal: AbortSignal.timeout(5000)
+                        });
+                        
+                        console.log('📡 Response status:', response.status, response.statusText);
+                        
+                        if (response.ok) {
+                            const status = await response.json();
+                            console.log('✅ AI Server Found at:', url);
+                            console.log('✅ AI Server Available:', status.version);
+                            
+                            // Update the working URL
+                            AI_CONFIG.baseUrl = url;
+                            showAIStatus(true);
+                            return status.capabilities;
+                        } else {
+                            const errorText = await response.text();
+                            console.log(`❌ URL ${i + 1} failed:`, response.status, errorText);
+                        }
+                    } catch (error) {
+                        console.log(`⚠️ URL ${i + 1} connection failed:`, error.message);
+                    }
+                }
+                
+                console.log('💡 All URLs failed. Check Railway dashboard for correct service URL');
+                console.log('🔧 Go to Railway → Your Service → Settings → Domains');
+                showAIStatus(false);
+                AI_CONFIG.enabled = false;
+                return false;
             }
 
             // Show AI status indicator
@@ -3194,7 +3422,7 @@
 
             // Initialize AI enhancement
             async function initializeAIEnhancement() {
-                console.log('🤖 Initializing AI Enhancement...');
+                console.log('🤖 AI Enhancement module loaded');
                 
                 const capabilities = await testAIServer();
                 
@@ -3215,12 +3443,91 @@
                     // Auto-remove banner after 5 seconds
                     setTimeout(() => banner.remove(), 5000);
                 } else {
-                    console.log('⚠️ AI Enhancement not available - using standard analysis');
+                    console.log('ℹ️ AI Enhancement available but disabled - set AI_CONFIG.enabled = true and start AI server to activate');
                 }
+            }
+            
+            // Function to force column widths via JavaScript (now only for matrix tables)
+            function forceColumnWidths() {
+                console.log("forceColumnWidths called - targeting matrix tables only");
+                // Only apply to matrix tables since PLO/MLO are now lists
+                setTimeout(() => {
+                    const matrixElements = document.querySelectorAll('.matrix-table th.code-col, .matrix-table td.code-col');
+                    matrixElements.forEach((element, index) => {
+                        element.style.setProperty('width', '50px', 'important');
+                        element.style.setProperty('max-width', '50px', 'important');
+                        element.style.setProperty('min-width', '50px', 'important');
+                    });
+                    
+                    const matrixTables = document.querySelectorAll('.matrix-table');
+                    matrixTables.forEach((table) => {
+                        table.style.setProperty('table-layout', 'fixed', 'important');
+                    });
+                }, 100);
+            }
+            
+            // Function to watch matrix table styles only (lists don't need width enforcement)
+            function setupStyleWatcher() {
+                const targetElements = document.querySelectorAll('.matrix-table th.code-col, .matrix-table td.code-col');
+                
+                targetElements.forEach(element => {
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                                // Re-apply our width if it was changed
+                                const currentWidth = element.style.width;
+                                if (currentWidth !== '50px') {
+                                    console.log('Matrix width was changed, re-applying:', element.className);
+                                    element.style.setProperty('width', '50px', 'important');
+                                    element.style.setProperty('max-width', '50px', 'important');
+                                    element.style.setProperty('min-width', '50px', 'important');
+                                }
+                            }
+                        });
+                    });
+                    
+                    observer.observe(element, {
+                        attributes: true,
+                        attributeFilter: ['style']
+                    });
+                });
             }
 
             // Initialize AI when page loads
             initializeAIEnhancement();
+            
+            // Add dynamic CSS injection as last resort
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .plo-table th:first-child, .mlo-table th:first-child,
+                .plo-table td:first-child, .mlo-table td:first-child {
+                    width: 50px !important;
+                    max-width: 50px !important;
+                    min-width: 50px !important;
+                    box-sizing: border-box !important;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Also run the force function after everything loads
+            window.addEventListener('load', () => {
+                setTimeout(forceColumnWidths, 500);
+                
+                // Optional: uncomment if you need continuous width enforcement
+                /*
+                setInterval(() => {
+                    const elements = document.querySelectorAll('.plo-table th.code-col, .mlo-table th.code-col, .plo-table td.plo-code, .mlo-table td.mlo-code');
+                    elements.forEach(element => {
+                        if (element.offsetWidth > 60) { // If wider than expected
+                            console.log('Forcing width on element:', element.className, 'current width:', element.offsetWidth);
+                            element.style.setProperty('width', '50px', 'important');
+                            element.style.setProperty('max-width', '50px', 'important');
+                            element.style.setProperty('min-width', '50px', 'important');
+                        }
+                    });
+                }, 1000); // Check every second
+                */
+            });
         });
     </script>
 </body>
