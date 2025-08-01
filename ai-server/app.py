@@ -12,13 +12,7 @@ import os
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/*": {
-        "origins": ["*"],  # Allow all origins for development
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})  # Enable CORS for all routes with specific configuration
+CORS(app, origins="*")  # Simple CORS configuration for all origins
 
 # Simple keyword analysis for educational alignment
 COMPETENCY_KEYWORDS = {
