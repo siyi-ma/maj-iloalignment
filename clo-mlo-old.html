@@ -22,7 +22,7 @@
             --tt-white: #ffffff;          /* VALGE */
         }
         
-        /* Reset and base styles */
+        /* Reset and base styles following CVI */
         * {
             margin: 0;
             padding: 0;
@@ -79,7 +79,7 @@
         .page-header p {
             color: var(--tt-grey-2);
             text-transform: none;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
         
         .header-controls {
@@ -267,62 +267,11 @@
         }
         
         /* Analysis results */
-        .summary-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .stat-item {
-            background: var(--tt-grey-2);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            border-left: 4px solid var(--tt-burgundy);
-        }
-        
-        .stat-label {
-            display: block;
-            font-size: 0.9rem;
-            color: var(--tt-dark-blue);
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-        }
-        
-        /* Alignment matrix */
-        .matrix-container {
-            margin: 2rem 0;
-        }
-        
-        .matrix-controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .matrix-controls label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: var(--tt-dark-blue);
-        }
-        
         .alignment-matrix {
             width: 100%;
             border-collapse: collapse;
+            margin: 1rem 0;
             background: var(--tt-white);
-            box-shadow: 0 2px 8px rgba(170, 19, 82, 0.1);
         }
         
         .alignment-matrix th,
@@ -351,26 +300,6 @@
         .score-1 { background: #dc3545; color: white; }
         .score-0 { background: #f8f9fa; color: black; }
         
-        /* Legend */
-        .legend {
-            margin: 1rem 0;
-        }
-        
-        .legend-items {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        
         /* Utility classes */
         .hidden { display: none; }
         .text-center { text-align: center; }
@@ -397,7 +326,27 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Modal styles */
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-controls {
+                position: static;
+                margin-top: 1rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .alignment-matrix {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Modal styles - simplified */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -436,84 +385,6 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--tt-grey-1);
-        }
-        
-        /* Message toasts */
-        .message-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 400px;
-        }
-        
-        .message-toast {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-left: 4px solid #ccc;
-            animation: slideInRight 0.3s ease;
-            min-width: 300px;
-        }
-        
-        .message-toast.success { border-left-color: #28a745; }
-        .message-toast.error { border-left-color: #dc3545; }
-        .message-toast.info { border-left-color: var(--tt-burgundy); }
-        
-        .message-content {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex: 1;
-        }
-        
-        .message-close {
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            padding: 4px;
-        }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .header-controls {
-                position: static;
-                margin-top: 1rem;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .matrix-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .alignment-matrix {
-                font-size: 0.8rem;
-            }
-            
-            .summary-stats {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -623,15 +494,15 @@
                 <div id="analysis-summary" class="analysis-summary">
                     <div class="summary-stats">
                         <div class="stat-item">
-                            <span class="stat-label">Average Score</span>
+                            <span class="stat-label">Average Score:</span>
                             <span id="average-score" class="stat-value">0.0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Strong Alignments</span>
+                            <span class="stat-label">Strong Alignments:</span>
                             <span id="strong-alignments" class="stat-value">0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Coverage</span>
+                            <span class="stat-label">Coverage:</span>
                             <span id="coverage-score" class="stat-value">0%</span>
                         </div>
                     </div>
@@ -684,69 +555,347 @@
                 </div>
             </section>
         </main>
+                    </div>
 
-        <!-- API Configuration Modal -->
-        <div id="api-config-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-cog"></i> Gemini API Configuration</h3>
-                    <button class="close-modal" id="close-api-config">&times;</button>
+                    <div class="manual-actions">
+                        <button id="add-clo-btn" class="outline-btn">
+                            <i class="fas fa-plus"></i> Add CLO
+                        </button>
+                        <button id="proceed-manual-btn" class="primary-btn">
+                            <i class="fas fa-arrow-right"></i> Proceed to Analysis
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="gemini-api-key">Gemini API Key</label>
-                        <input type="password" id="gemini-api-key" class="form-input" 
-                               placeholder="Enter your Gemini API key">
-                        <small style="color: #666; font-size: 0.85rem;">
-                            Get your API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
-                        </small>
+            </section>
+
+            <!-- Generated CLOs Section -->
+            <section id="generated-clos-section" class="generated-clos-section hidden">
+                <div class="clos-container">
+                    <div class="clos-header">
+                        <h3><i class="fas fa-lightbulb"></i> Generated Course Learning Outcomes</h3>
+                        <p>AI-generated CLOs based on your course description</p>
+                        <div class="clos-actions">
+                            <button id="regenerate-clos-btn" class="outline-btn">
+                                <i class="fas fa-redo"></i> Regenerate
+                            </button>
+                            <button id="proceed-analysis-btn" class="primary-btn">
+                                <i class="fas fa-chart-line"></i> Analyze Alignment
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="api-status" style="margin: 1rem 0;">
-                        <div id="api-status" class="status-indicator">
-                            <i class="fas fa-circle" style="color: #ccc;"></i>
-                            <span id="api-status-text">Not configured</span>
+                    <div id="clos-list" class="clos-list">
+                        <!-- Generated CLOs will be displayed here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analysis Controls -->
+            <section id="analysis-controls-section" class="controls-section hidden">
+                <div class="controls-container">
+                    <div class="control-group">
+                        <label for="alignment-threshold-clo">Minimum Alignment Score:</label>
+                        <select id="alignment-threshold-clo" class="form-select">
+                            <option value="0">All Scores (0+)</option>
+                            <option value="1">Poor (1+)</option>
+                            <option value="2" selected>Fair (2+)</option>
+                            <option value="3">Good (3+)</option>
+                            <option value="4">Very Good (4+)</option>
+                            <option value="5">Excellent (5)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="analyze-clo-btn" class="primary-btn">
+                            <i class="fas fa-calculator"></i> Analyze CLO-MLO Alignment
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="export-clo-btn" class="secondary-btn" disabled>
+                            <i class="fas fa-download"></i> Export Results
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLO-MLO Analysis Results -->
+            <section id="clo-summary-section" class="summary-section hidden">
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-list-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="total-clo-alignments">0</h3>
+                            <p>Total CLO-MLO Alignments</p>
                         </div>
                     </div>
 
-                    <div class="form-actions">
-                        <button id="save-api-key" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="avg-clo-score">0.0</h3>
+                            <p>Average Alignment Score</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="strong-clo-alignments">0</h3>
+                            <p>Strong Alignments (4+)</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="coverage-score">0%</h3>
+                            <p>MLO Coverage</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLO-MLO Matrix -->
+            <section id="clo-matrix-section" class="matrix-section hidden">
+                <div class="matrix-header">
+                    <h2><i class="fas fa-table"></i> CLO-MLO Alignment Matrix</h2>
+                    <div class="matrix-controls">
+                        <button id="toggle-clo-scores" class="control-btn active">
+                            <i class="fas fa-sort-numeric-down"></i> Show Scores
                         </button>
-                        <button id="test-api-key" class="btn btn-secondary">
-                            <i class="fas fa-flask"></i> Test
+                        <button id="toggle-clo-colors" class="control-btn active">
+                            <i class="fas fa-palette"></i> Color Coding
                         </button>
-                        <button id="clear-api-key" class="btn btn-secondary">
-                            <i class="fas fa-trash"></i> Clear
-                        </button>
+                    </div>
+                </div>
+
+                <div class="matrix-container">
+                    <div class="matrix-wrapper">
+                        <table id="clo-alignment-matrix" class="alignment-matrix">
+                            <thead>
+                                <tr>
+                                    <th class="corner-cell">
+                                        <div class="corner-content">
+                                            <span class="corner-top">MLO</span>
+                                            <span class="corner-bottom">CLO</span>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <h4><i class="fas fa-info-circle"></i> Scoring Legend</h4>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-color score-5"></span>
+                            <span>5 - Excellent Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-4"></span>
+                            <span>4 - Very Good Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-3"></span>
+                            <span>3 - Good Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-2"></span>
+                            <span>2 - Fair Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-1"></span>
+                            <span>1 - Poor Alignment</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color score-0"></span>
+                            <span>0 - No Alignment</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Results -->
+            <section id="clo-details-section" class="details-section hidden">
+                <div class="details-header">
+                    <h2><i class="fas fa-list-alt"></i> Detailed CLO-MLO Analysis</h2>
+                    <div class="details-controls">
+                        <select id="sort-clo-details" class="form-select">
+                            <option value="score-desc">Sort by Score (High to Low)</option>
+                            <option value="score-asc">Sort by Score (Low to High)</option>
+                            <option value="clo">Sort by CLO</option>
+                            <option value="mlo">Sort by MLO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="clo-details-container" class="details-container">
+                    <!-- Detailed alignment cards will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Recommendations Section -->
+            <section id="recommendations-section" class="recommendations-section hidden">
+                <div class="recommendations-container">
+                    <div class="recommendations-header">
+                        <h2><i class="fas fa-lightbulb"></i> Improvement Recommendations</h2>
+                        <p>AI-powered suggestions to improve course-module alignment</p>
+                    </div>
+                    
+                    <div id="recommendations-content" class="recommendations-content">
+                        <!-- Recommendations will be generated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="loading-overlay hidden">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <h3 id="loading-title">Processing...</h3>
+                    <p id="loading-description">Please wait while we process your request...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Learning Outcomes Alignment Tool | CLO-MLO Analysis Module</p>
+        </footer>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>CLO-MLO Alignment Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alignment-detail">
+                    <div class="outcome-pair">
+                        <div class="outcome-box clo-box">
+                            <h4>Course Learning Outcome</h4>
+                            <p id="modal-clo-text"></p>
+                        </div>
+                        <div class="outcome-box mlo-box">
+                            <h4>Module Learning Outcome</h4>
+                            <p id="modal-mlo-text"></p>
+                            <div class="mlo-meta">
+                                <span class="mlo-category"></span>
+                                <span class="mlo-code"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="scoring-breakdown">
+                        <h4>Scoring Breakdown</h4>
+                        <div class="score-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Overall Score:</span>
+                                <span class="metric-value" id="modal-overall-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Keyword Match:</span>
+                                <span class="metric-value" id="modal-keyword-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Semantic Similarity:</span>
+                                <span class="metric-value" id="modal-semantic-score"></span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Bloom's Level:</span>
+                                <span class="metric-value" id="modal-bloom-score"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="justification">
+                        <h4>Analysis Justification</h4>
+                        <p id="modal-justification"></p>
+                    </div>
+
+                    <div class="improvements">
+                        <h4>Improvement Suggestions</h4>
+                        <ul id="modal-improvements"></ul>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Detail Modal -->
-        <div id="detail-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="modal-title">Alignment Details</h3>
-                    <button class="close-modal modal-close">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="alignment-detail">
-                        <h4>CLO:</h4>
-                        <p id="modal-clo-text"></p>
-                        <h4>MLO:</h4>
-                        <p id="modal-mlo-text"></p>
+    <!-- API Configuration Modal -->
+    <div id="api-config-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-cog"></i> Gemini API Configuration</h3>
+                <button class="close-modal" id="close-api-config">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="api-config-content">
+                    <div class="config-section">
+                        <h4><i class="fas fa-key"></i> API Key Setup</h4>
+                        <p>To enable AI-powered CLO generation with Google Gemini:</p>
                         
-                        <div class="scoring-breakdown">
-                            <h4>Scoring Breakdown</h4>
-                            <div class="score-metrics">
-                                <div>Overall: <span id="modal-overall-score"></span></div>
-                                <div>Keywords: <span id="modal-keyword-score"></span></div>
-                                <div>Semantic: <span id="modal-semantic-score"></span></div>
-                                <div>Bloom's: <span id="modal-bloom-score"></span></div>
+                        <div class="form-group">
+                            <label for="gemini-api-key">Gemini API Key</label>
+                            <div class="input-group">
+                                <input type="password" id="gemini-api-key" class="form-input" 
+                                       placeholder="Enter your Gemini API key" maxlength="200">
+                                <button type="button" id="toggle-api-key" class="toggle-btn" title="Show/Hide API Key">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <small class="help-text">
+                                Your API key is stored locally in your browser and never sent to our servers.
+                            </small>
+                        </div>
+
+                        <div class="api-status">
+                            <div class="status-indicator" id="api-status">
+                                <i class="fas fa-circle"></i>
+                                <span id="api-status-text">Not configured</span>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h4><i class="fas fa-info-circle"></i> How to Get a Gemini API Key</h4>
+                        <ol class="setup-steps">
+                            <li>Visit <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+                            <li>Sign in with your Google account</li>
+                            <li>Click "Create API Key" and select your project</li>
+                            <li>Copy the generated API key</li>
+                            <li>Paste it in the field above and click "Save"</li>
+                        </ol>
+                    </div>
+
+                    <div class="config-actions">
+                        <button type="button" id="save-api-key" class="primary-btn">
+                            <i class="fas fa-save"></i> Save Configuration
+                        </button>
+                        <button type="button" id="test-api-key" class="secondary-btn">
+                            <i class="fas fa-flask"></i> Test Connection
+                        </button>
+                        <button type="button" id="clear-api-key" class="danger-btn">
+                            <i class="fas fa-trash"></i> Clear Key
+                        </button>
                     </div>
                 </div>
             </div>

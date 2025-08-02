@@ -65,28 +65,23 @@ class CLOMLOController {
         });
 
         document.getElementById('manual-clos-btn').addEventListener('click', () => {
-            this.showManualCLOInput();
+            this.showManualCLOSection();
         });
 
         document.getElementById('regenerate-clos-btn').addEventListener('click', () => {
             this.generateCLOs();
         });
 
-        document.getElementById('proceed-analysis-btn').addEventListener('click', () => {
-            this.proceedToAnalysis();
-        });
-
-        document.getElementById('proceed-manual-btn').addEventListener('click', () => {
-            this.proceedToAnalysisManual();
-        });
-
-        // Manual CLO controls
-        document.getElementById('add-clo-btn').addEventListener('click', () => {
+        document.getElementById('add-manual-clo').addEventListener('click', () => {
             this.addManualCLOInput();
         });
 
+        document.getElementById('process-manual-clos').addEventListener('click', () => {
+            this.processManualCLOs();
+        });
+
         // Analysis controls
-        document.getElementById('analyze-clo-btn').addEventListener('click', () => {
+        document.getElementById('analyze-clos-btn').addEventListener('click', () => {
             this.performCLOAnalysis();
         });
 
@@ -97,21 +92,16 @@ class CLOMLOController {
         // Filter controls
         document.getElementById('alignment-threshold-clo').addEventListener('change', (e) => {
             this.currentThreshold = parseInt(e.target.value);
+            const thresholdDisplay = document.getElementById('threshold-value');
+            if (thresholdDisplay) {
+                thresholdDisplay.textContent = this.currentThreshold;
+            }
             this.applyFilters();
         });
 
         // Matrix controls
         document.getElementById('toggle-clo-scores').addEventListener('click', () => {
             this.toggleScores();
-        });
-
-        document.getElementById('toggle-clo-colors').addEventListener('click', () => {
-            this.toggleColors();
-        });
-
-        // Details sorting
-        document.getElementById('sort-clo-details').addEventListener('change', () => {
-            this.sortDetails();
         });
 
         // Modal controls
@@ -129,8 +119,173 @@ class CLOMLOController {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeModal();
+                this.closeApiConfigModal();
             }
         });
+
+        // API Configuration
+        this.setupApiConfigListeners();
+    }
+
+    setupApiConfigListeners() {
+        // API Config button
+        document.getElementById('api-config-btn').addEventListener('click', () => {
+            this.openApiConfigModal();
+        });
+
+        // API Config modal controls
+        document.getElementById('close-api-config').addEventListener('click', () => {
+            this.closeApiConfigModal();
+        });
+
+        document.getElementById('api-config-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'api-config-modal') {
+                this.closeApiConfigModal();
+            }
+        });
+
+        // Toggle API key visibility
+        document.getElementById('toggle-api-key').addEventListener('click', () => {
+            this.toggleApiKeyVisibility();
+        });
+
+        // API actions
+        document.getElementById('save-api-key').addEventListener('click', () => {
+            this.saveApiKey();
+        });
+
+        document.getElementById('test-api-key').addEventListener('click', () => {
+            this.testApiKey();
+        });
+
+        document.getElementById('clear-api-key').addEventListener('click', () => {
+            this.clearApiKey();
+        });
+
+        // Load existing API key status
+        this.updateApiStatus();
+    }
+
+    openApiConfigModal() {
+        const modal = document.getElementById('api-config-modal');
+        modal.style.display = 'flex';
+        
+        // Load existing API key (masked)
+        const apiKey = this.getGeminiApiKey();
+        const apiKeyInput = document.getElementById('gemini-api-key');
+        if (apiKey) {
+            apiKeyInput.value = apiKey;
+        }
+        
+        this.updateApiStatus();
+    }
+
+    closeApiConfigModal() {
+        const modal = document.getElementById('api-config-modal');
+        modal.style.display = 'none';
+    }
+
+    toggleApiKeyVisibility() {
+        const apiKeyInput = document.getElementById('gemini-api-key');
+        const toggleBtn = document.getElementById('toggle-api-key');
+        
+        if (apiKeyInput.type === 'password') {
+            apiKeyInput.type = 'text';
+            toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        } else {
+            apiKeyInput.type = 'password';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+        }
+    }
+
+    saveApiKey() {
+        const apiKey = document.getElementById('gemini-api-key').value.trim();
+        
+        if (!apiKey) {
+            this.showError('Please enter a valid API key');
+            return;
+        }
+        
+        // Basic validation
+        if (apiKey.length < 20) {
+            this.showError('API key seems too short. Please check and try again.');
+            return;
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('GEMINI_API_KEY', apiKey);
+        
+        this.updateApiStatus();
+        this.showSuccess('API key saved successfully! AI-powered CLO generation is now enabled.');
+        
+        // Close modal after successful save
+        setTimeout(() => {
+            this.closeApiConfigModal();
+        }, 1500);
+    }
+
+    async testApiKey() {
+        const apiKey = document.getElementById('gemini-api-key').value.trim();
+        
+        if (!apiKey) {
+            this.showError('Please enter an API key first');
+            return;
+        }
+        
+        const testBtn = document.getElementById('test-api-key');
+        const originalText = testBtn.innerHTML;
+        testBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+        testBtn.disabled = true;
+        
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: 'Hello, this is a test message. Please respond with "API connection successful".'
+                        }]
+                    }]
+                })
+            });
+            
+            if (response.ok) {
+                this.showSuccess('✅ API key is valid! Gemini connection successful.');
+            } else {
+                this.showError(`❌ API key test failed: ${response.status} ${response.statusText}`);
+            }
+        } catch (error) {
+            this.showError(`❌ Connection test failed: ${error.message}`);
+        } finally {
+            testBtn.innerHTML = originalText;
+            testBtn.disabled = false;
+        }
+    }
+
+    clearApiKey() {
+        if (confirm('Are you sure you want to clear the API key? This will disable AI-powered CLO generation.')) {
+            localStorage.removeItem('GEMINI_API_KEY');
+            document.getElementById('gemini-api-key').value = '';
+            this.updateApiStatus();
+            this.showSuccess('API key cleared successfully');
+        }
+    }
+
+    updateApiStatus() {
+        const apiKey = this.getGeminiApiKey();
+        const statusIndicator = document.getElementById('api-status');
+        const statusText = document.getElementById('api-status-text');
+        
+        if (apiKey) {
+            statusIndicator.className = 'status-indicator connected';
+            statusText.textContent = 'API key configured';
+        } else {
+            statusIndicator.className = 'status-indicator';
+            statusText.textContent = 'Not configured';
+        }
     }
 
     async generateCLOs() {
@@ -167,6 +322,108 @@ class CLOMLOController {
     }
 
     async generateCLOsWithAI(courseCode, courseName, courseDescription, count) {
+        // Check if Gemini API key is available
+        const apiKey = this.getGeminiApiKey();
+        
+        if (!apiKey) {
+            // Fallback to sophisticated local generation
+            return this.generateCLOsLocally(courseCode, courseName, courseDescription, count);
+        }
+
+        try {
+            // Real Gemini API integration
+            return await this.generateCLOsWithGemini(apiKey, courseCode, courseName, courseDescription, count);
+        } catch (error) {
+            console.warn('Gemini API failed, falling back to local generation:', error);
+            return this.generateCLOsLocally(courseCode, courseName, courseDescription, count);
+        }
+    }
+
+    getGeminiApiKey() {
+        // Check multiple possible sources for API key
+        return (
+            localStorage.getItem('GEMINI_API_KEY') ||
+            sessionStorage.getItem('GEMINI_API_KEY') ||
+            window.GEMINI_API_KEY ||
+            null
+        );
+    }
+
+    async generateCLOsWithGemini(apiKey, courseCode, courseName, courseDescription, count) {
+        const mlos = this.currentProgramme.mlos || [];
+        const mloContext = mlos.slice(0, 10).map(mlo => `- ${mlo.statement}`).join('\n');
+        
+        const prompt = `As an educational expert, generate ${count} Course Learning Outcomes (CLOs) for:
+
+Course: ${courseCode} - ${courseName}
+Description: ${courseDescription}
+
+Related Module Learning Outcomes (MLOs):
+${mloContext}
+
+Requirements:
+1. Each CLO should start with an action verb from Bloom's Taxonomy
+2. CLOs should be measurable and specific
+3. CLOs should align with the provided MLOs
+4. Use professional academic language
+5. Focus on what students will be able to DO after completing the course
+
+Return ONLY a JSON array of CLO objects in this format:
+[
+    {
+        "id": "CLO1",
+        "statement": "Analyze complex software architectures and identify design patterns",
+        "bloom_level": "analyze"
+    },
+    {
+        "id": "CLO2", 
+        "statement": "Evaluate the effectiveness of different programming paradigms",
+        "bloom_level": "evaluate"
+    }
+]`;
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const generatedText = data.candidates[0].content.parts[0].text;
+        
+        // Extract JSON from the response
+        const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) {
+            throw new Error('Could not parse CLOs from Gemini response');
+        }
+
+        const clos = JSON.parse(jsonMatch[0]);
+        return clos.map((clo, index) => ({
+            id: clo.id || `CLO${index + 1}`,
+            statement: clo.statement,
+            bloomLevel: clo.bloom_level || 'understand'
+        }));
+    }
+
+    async generateCLOsLocally(courseCode, courseName, courseDescription, count) {
         // Simulate processing time
         await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -276,9 +533,61 @@ class CLOMLOController {
         });
     }
 
+    showManualCLOSection() {
+        this.generateManualCLOInputs();
+        this.showSection('manual-clo-section');
+    }
+
     showManualCLOInput() {
         this.generateManualCLOInputs();
         this.showSection('manual-clo-section');
+    }
+
+    detectBloomLevel(statement) {
+        const bloomVerbs = {
+            'remember': ['list', 'identify', 'recall', 'name', 'state', 'define'],
+            'understand': ['explain', 'describe', 'interpret', 'summarize', 'classify'],
+            'apply': ['use', 'demonstrate', 'apply', 'implement', 'execute'],
+            'analyze': ['analyze', 'compare', 'contrast', 'examine', 'differentiate'],
+            'evaluate': ['evaluate', 'assess', 'critique', 'judge', 'justify'],
+            'create': ['create', 'design', 'develop', 'compose', 'construct']
+        };
+
+        const lowercaseStatement = statement.toLowerCase();
+        
+        for (const [level, verbs] of Object.entries(bloomVerbs)) {
+            for (const verb of verbs) {
+                if (lowercaseStatement.includes(verb)) {
+                    return level;
+                }
+            }
+        }
+        
+        return 'understand'; // Default level
+    }
+
+    processManualCLOs() {
+        const inputs = document.querySelectorAll('#manual-clo-inputs input[type="text"]');
+        this.manualCLOs = [];
+        
+        inputs.forEach((input, index) => {
+            if (input.value.trim()) {
+                this.manualCLOs.push({
+                    id: `CLO${index + 1}`,
+                    statement: input.value.trim(),
+                    bloomLevel: this.detectBloomLevel(input.value.trim())
+                });
+            }
+        });
+
+        if (this.manualCLOs.length === 0) {
+            this.showError('Please enter at least one CLO.');
+            return;
+        }
+
+        this.currentCLOs = this.manualCLOs;
+        this.displayGeneratedCLOs();
+        this.showSection('generated-clos-section');
     }
 
     generateManualCLOInputs() {
@@ -890,6 +1199,48 @@ class CLOMLOController {
             this.generatedCLOs.splice(index, 1);
             this.displayGeneratedCLOs();
         }
+    }
+
+    // Message display methods
+    showSuccess(message) {
+        this.showMessage(message, 'success');
+    }
+
+    showError(message) {
+        this.showMessage(message, 'error');
+    }
+
+    showMessage(message, type = 'info') {
+        // Create message element
+        const messageEl = document.createElement('div');
+        messageEl.className = `message-toast ${type}`;
+        messageEl.innerHTML = `
+            <div class="message-content">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+            <button class="message-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        // Add to container
+        let container = document.getElementById('message-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'message-container';
+            container.className = 'message-container';
+            document.body.appendChild(container);
+        }
+
+        container.appendChild(messageEl);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (messageEl.parentElement) {
+                messageEl.remove();
+            }
+        }, 5000);
     }
 }
 
