@@ -1,6 +1,27 @@
 /* ===================================
-   INDEX PAGE SPECIFIC STYLES
+   INDEX PAGE SPECIFIC STYLES - TalTech CVI
    =================================== */
+
+/* TalTech CVI Color Variables */
+:root {
+    /* Primary Colors - TalTech CVI */
+    --tt-burgundy: #aa1352;
+    --tt-magenta: #e4067e;
+    
+    /* Secondary Colors */
+    --tt-light-blue: #4dbed2;
+    --tt-dark-blue: #342b60;
+    
+    /* Neutral Colors */
+    --tt-grey-1: #9396b0;
+    --tt-grey-2: #dadae4;
+    --tt-black: #000000;
+    --tt-white: #ffffff;
+    
+    /* Typography */
+    --font-primary: 'Proxima Nova', 'Verdana', sans-serif;
+    --font-fallback: 'Verdana', sans-serif;
+}
 
 /* Container */
 .container {
@@ -10,16 +31,17 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: var(--font-primary);
 }
 
-/* Header Styles */
+/* Header Styles - TalTech CVI */
 header {
-    background: linear-gradient(135deg, #004181, #0066cc);
-    color: white;
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
     padding: 2rem 0;
     margin: -20px -20px 2rem -20px;
     border-radius: 0 0 15px 15px;
-    box-shadow: 0 4px 15px rgba(0, 65, 129, 0.3);
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
 }
 
 .header-content {
@@ -33,12 +55,18 @@ header {
     font-size: 2.5rem;
     margin: 0 0 0.5rem 0;
     font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.9; /* -10% leading as per CVI */
 }
 
 .header-content p {
     font-size: 1.2rem;
     opacity: 0.9;
     margin: 0;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 0.05em;
 }
 
 /* Main Content */
@@ -62,180 +90,306 @@ main {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Hero Section */
-.hero-section {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.hero-section h2 {
-    color: #004181;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    font-weight: 300;
-}
-
-.hero-section p {
-    font-size: 1.1rem;
-    color: #666;
-    margin: 0;
-}
-
-/* Programme Grid */
+/* Programme Grid - TalTech CVI */
 .programmes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
-    margin-bottom: 2rem;
+    margin: 2rem 0;
+    padding: 1rem 0;
 }
 
 .programme-card {
-    background: white;
+    background: var(--tt-white);
     border-radius: 12px;
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 20px rgba(170, 19, 82, 0.1);
+    border: 2px solid var(--tt-grey-2);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    text-align: center;
 }
 
 .programme-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 65, 129, 0.15);
-    border-color: #004181;
+    box-shadow: 0 8px 30px rgba(170, 19, 82, 0.2);
+    border-color: var(--tt-burgundy);
 }
 
-.programme-icon {
-    background: linear-gradient(135deg, #004181, #0066cc);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+.programme-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--tt-burgundy), var(--tt-magenta));
+}
+
+.programme-content {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem auto;
-    font-size: 1.5rem;
-}
-
-.programme-info h3 {
-    color: #004181;
-    font-size: 1.3rem;
-    margin: 0 0 0.5rem 0;
-    font-weight: 600;
-    line-height: 1.3;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .programme-name-et {
-    color: #666;
-    font-size: 0.95rem;
-    margin: 0 0 1rem 0;
-    font-style: italic;
+    color: var(--tt-burgundy);
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 600;
+    line-height: 0.9; /* -10% leading as per CVI */
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
-.programme-stats-mini {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.programme-stats-mini span {
-    background: #f8f9fa;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    color: #004181;
-    border: 1px solid #e9ecef;
-}
-
-.select-programme-btn {
-    background: linear-gradient(135deg, #004181, #0066cc);
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
+.programme-code {
+    color: var(--tt-white);
     font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    margin: 0;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(170, 19, 82, 0.3);
 }
 
-.select-programme-btn:hover {
-    background: linear-gradient(135deg, #003366, #0052a3);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 65, 129, 0.3);
+.programme-name-en {
+    color: var(--tt-grey-1);
+    font-size: 1rem;
+    margin: 0;
+    font-style: italic;
+    line-height: 1.4;
+    font-weight: 400;
 }
 
-/* Loading Spinner */
+/* Loading Spinner - TalTech CVI */
 .loading-spinner {
     text-align: center;
-    padding: 3rem;
-    color: #666;
+    padding: 4rem 2rem;
+    color: var(--tt-grey-1);
     grid-column: 1 / -1;
 }
 
 .loading-spinner i {
-    font-size: 2rem;
-    color: #004181;
+    font-size: 2.5rem;
+    color: var(--tt-burgundy);
     margin-bottom: 1rem;
 }
 
-/* Programme Overview Section */
+.loading-spinner p {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tt-grey-1);
+}
+
+/* Programme Overview Section - TalTech CVI */
 .programme-header {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-bottom: 3rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--tt-grey-2);
 }
 
 .back-btn {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    color: #004181;
-    padding: 0.6rem 1rem;
+    background: var(--tt-white);
+    color: var(--tt-burgundy);
+    border: 2px solid var(--tt-burgundy);
+    padding: 0.8rem 1.2rem;
     border-radius: 8px;
     text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-family: var(--font-primary);
 }
 
 .back-btn:hover {
-    background: #e9ecef;
-    transform: translateX(-3px);
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
 }
 
 .programme-title h2 {
-    color: #004181;
-    margin: 0 0 0.3rem 0;
-    font-size: 1.8rem;
-    font-weight: 500;
+    color: var(--tt-burgundy);
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
 }
 
 .programme-title p {
-    color: #666;
+    color: var(--tt-grey-1);
     margin: 0;
     font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+.back-btn:hover {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
 }
 
-/* Analysis Paths */
+.programme-title h2 {
+    color: var(--tt-burgundy);
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+}
+
+.programme-title p {
+    color: var(--tt-grey-1);
+    margin: 0;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Analysis Paths - TalTech CVI */
 .analysis-paths {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
     margin-bottom: 3rem;
+}
+
+.path-card {
+    background: var(--tt-white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(170, 19, 82, 0.1);
+    border: 2px solid var(--tt-grey-2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.path-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(170, 19, 82, 0.2);
+    border-color: var(--tt-burgundy);
+}
+
+.path-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--tt-burgundy), var(--tt-magenta));
+}
+
+.path-icon {
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+    font-size: 2rem;
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
+}
+
+.path-content h3 {
+    color: var(--tt-burgundy);
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+}
+
+.path-content p {
+    color: var(--tt-grey-1);
+    font-size: 1rem;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.path-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.path-features li {
+    color: var(--tt-grey-1);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.path-features i {
+    color: var(--tt-magenta);
+    font-size: 0.8rem;
+}
+
+.path-btn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-family: var(--font-primary);
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
+}
+
+.primary-btn:hover {
+    background: linear-gradient(135deg, #8a0f42, #c8056e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
+}
+
+.secondary-btn {
+    background: var(--tt-white);
+    color: var(--tt-burgundy);
+    border: 2px solid var(--tt-burgundy);
+}
+
+.secondary-btn:hover {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(170, 19, 82, 0.3);
 }
 
 .path-card {
@@ -379,24 +533,32 @@ main {
     font-weight: 500;
 }
 
-/* Footer */
+/* Footer - TalTech CVI */
 footer {
-    background: #f8f9fa;
-    border-top: 1px solid #dee2e6;
-    padding: 1.5rem 0;
-    margin: 2rem -20px -20px -20px;
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
     text-align: center;
-    color: #666;
-    font-size: 0.9rem;
+    padding: 2rem 0;
+    margin: 2rem -20px -20px -20px;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -4px 15px rgba(170, 19, 82, 0.2);
 }
 
-/* Back to Top */
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Back to Top - TalTech CVI */
 .back-to-top {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: linear-gradient(135deg, #004181, #0066cc);
-    color: white;
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -407,12 +569,16 @@ footer {
     opacity: 0;
     transition: all 0.3s ease;
     z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0, 65, 129, 0.3);
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
 }
 
 .back-to-top:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 65, 129, 0.4);
+    box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
+}
+
+.back-to-top i {
+    font-size: 1.2rem;
 }
 
 /* Input Container */

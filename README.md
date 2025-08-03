@@ -4,7 +4,17 @@
 
 A sophisticated modular system for analyzing alignment between Programme Learning Outcomes (PLOs) and Module Learning Outcomes (MLOs), with AI-powered Course Learning Outcome (CLO) generation capabilities. Built for educational institutions requiring comprehensive curriculum quality assessment.
 
-## 🎯 Key Features
+## � Design Standards
+
+This system follows the **TalTech Corporate Visual Identity (CVI)** guidelines to ensure brand consistency and professional appearance. See [TalTech CVI Guide](docs/TALTECH_CVI_GUIDE.md) for complete design specifications, color palette, and typography standards.
+
+### Key Design Elements
+- **Primary Colors**: TT Burgundy (#aa1352) and TT Magenta (#e4067e)
+- **Typography**: Proxima Nova with Verdana fallback
+- **Cultural Heritage**: Colors reflect TalTech's cultural identity
+- **Accessibility**: Maximum legibility across all applications
+
+## �🎯 Key Features
 
 ### **Advanced Alignment Analysis**
 - **Multi-dimensional scoring** combining lexical, semantic, and cognitive alignment

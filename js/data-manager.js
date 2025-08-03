@@ -118,6 +118,48 @@ class DataManager {
     }
 
     /**
+     * Get courses for current programme
+     */
+    getCurrentCourses() {
+        const programme = this.getCurrentProgramme();
+        return programme ? programme.courses : [];
+    }
+
+    /**
+     * Get course by code
+     */
+    getCourseByCode(courseCode) {
+        const courses = this.getCurrentCourses();
+        return courses.find(course => course.ainekood === courseCode);
+    }
+
+    /**
+     * Get courses grouped by module
+     */
+    getCoursesByModule() {
+        const courses = this.getCurrentCourses();
+        const grouped = {};
+        
+        courses.forEach(course => {
+            const moduleCode = course.moodulikood;
+            if (!grouped[moduleCode]) {
+                grouped[moduleCode] = [];
+            }
+            grouped[moduleCode].push(course);
+        });
+        
+        return grouped;
+    }
+
+    /**
+     * Get MLO information for a module code
+     */
+    getMLOForModule(moduleCode) {
+        const mlos = this.getCurrentMLOs();
+        return mlos.find(mlo => mlo.mlokood.startsWith(moduleCode));
+    }
+
+    /**
      * Clear current programme selection
      */
     clearCurrentProgramme() {

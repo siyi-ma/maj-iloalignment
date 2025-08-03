@@ -20,11 +20,6 @@
         <main>
             <!-- Programme Selection Section -->
             <section id="programme-selection" class="active-section">
-                <div class="hero-section">
-                    <h2><i class="fas fa-university"></i> Select Study Programme</h2>
-                    <p>Choose a study programme to begin alignment analysis</p>
-                </div>
-                
                 <div id="programmes-container" class="programmes-grid">
                     <div class="loading-spinner">
                         <i class="fas fa-spinner fa-spin"></i>
@@ -82,21 +77,6 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="programme-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="plo-count">-</span>
-                        <span class="stat-label">Programme Learning Outcomes</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="mlo-count">-</span>
-                        <span class="stat-label">Module Learning Outcomes</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="module-count">-</span>
-                        <span class="stat-label">Module Categories</span>
-                    </div>
-                </div>
             </section>
         </main>
 
@@ -143,20 +123,11 @@
                     programmeCard.dataset.code = programme.code;
                     
                     programmeCard.innerHTML = `
-                        <div class="programme-icon">
-                            <i class="fas fa-graduation-cap"></i>
+                        <div class="programme-content">
+                            <h3 class="programme-name-et">${programme.nameEt}</h3>
+                            <p class="programme-code">${programme.code}</p>
+                            <p class="programme-name-en">${programme.nameEn}</p>
                         </div>
-                        <div class="programme-info">
-                            <h3>${programme.nameEn}</h3>
-                            <p class="programme-name-et">${programme.nameEt}</p>
-                            <div class="programme-stats-mini">
-                                <span><i class="fas fa-list-check"></i> ${programme.data.plos.length} PLOs</span>
-                                <span><i class="fas fa-layer-group"></i> ${programme.data.mlos.length} MLOs</span>
-                            </div>
-                        </div>
-                        <button class="select-programme-btn">
-                            <i class="fas fa-arrow-right"></i> Select Programme
-                        </button>
                     `;
                     
                     container.appendChild(programmeCard);
@@ -164,10 +135,10 @@
             }
 
             setupEventListeners() {
-                // Programme selection
+                // Programme selection - click anywhere on the card
                 document.getElementById('programmes-container').addEventListener('click', (e) => {
-                    if (e.target.closest('.select-programme-btn')) {
-                        const card = e.target.closest('.programme-card');
+                    const card = e.target.closest('.programme-card');
+                    if (card) {
                         const programmeCode = card.dataset.code;
                         this.selectProgramme(programmeCode);
                     }
@@ -220,15 +191,6 @@
                 // Update programme name
                 document.getElementById('selected-programme-name').textContent = 
                     this.currentProgramme.kavanimetusik;
-
-                // Update statistics
-                const plos = this.currentProgramme.plos || [];
-                const mlos = this.currentProgramme.mlos || [];
-                const mlosByCategory = window.dataManager.getMLOsByCategory();
-                
-                document.getElementById('plo-count').textContent = plos.length;
-                document.getElementById('mlo-count').textContent = mlos.length;
-                document.getElementById('module-count').textContent = Object.keys(mlosByCategory).length;
             }
 
             showSection(sectionId) {

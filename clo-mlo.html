@@ -371,6 +371,247 @@
             font-size: 0.9rem;
         }
         
+        /* Course information display */
+        .course-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: var(--tt-grey-2);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--tt-burgundy);
+        }
+
+        .info-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .info-card h4 {
+            margin-bottom: 1rem;
+            color: var(--tt-burgundy);
+            border-bottom: 1px solid var(--tt-grey-1);
+            padding-bottom: 0.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(170, 19, 82, 0.1);
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 140px;
+        }
+
+        .info-value {
+            color: var(--tt-black);
+            flex: 1;
+            text-align: right;
+        }
+
+        .info-link {
+            color: var(--tt-burgundy);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .info-link:hover {
+            color: var(--tt-magenta);
+        }
+
+        .course-aims-content {
+            background: var(--tt-white);
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--tt-grey-1);
+            line-height: 1.6;
+            color: var(--tt-black);
+        }
+
+        .existing-clos-content {
+            background: var(--tt-white);
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--tt-grey-1);
+        }
+
+        .existing-clo-item {
+            background: var(--tt-grey-2);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            border-left: 3px solid var(--tt-light-blue);
+        }
+
+        .existing-clo-header {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .existing-clo-text {
+            color: var(--tt-black);
+            line-height: 1.4;
+        }
+
+        /* CLO Management Options */
+        .clo-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .option-card {
+            background: var(--tt-white);
+            border: 2px solid var(--tt-grey-1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            border-color: var(--tt-magenta);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.2);
+        }
+
+        .option-icon {
+            font-size: 3rem;
+            color: var(--tt-burgundy);
+            margin-bottom: 1rem;
+        }
+
+        .option-content h3 {
+            color: var(--tt-dark-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .option-content p {
+            color: var(--tt-grey-1);
+            margin-bottom: 1rem;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO Editor */
+        .clo-editor-item {
+            background: var(--tt-grey-2);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--tt-light-blue);
+        }
+
+        .clo-editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .clo-editor-label {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+        }
+
+        .clo-editor-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--tt-grey-1);
+            border-radius: 6px;
+            font-family: 'Proxima Nova', Verdana, sans-serif;
+            font-size: 1rem;
+            line-height: 1.4;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .clo-editor-textarea:focus {
+            outline: none;
+            border-color: var(--tt-magenta);
+            box-shadow: 0 0 0 3px rgba(228, 6, 126, 0.1);
+        }
+
+        /* Course modules display */
+        .course-modules {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--tt-grey-2);
+            border-radius: 8px;
+            border: 1px solid var(--tt-grey-1);
+        }
+
+        .course-modules h4 {
+            margin-bottom: 1rem;
+            color: var(--tt-burgundy);
+        }
+
+        .course-modules h4 {
+            margin-bottom: 1rem;
+            color: var(--tt-burgundy);
+        }
+
+        .module-category {
+            margin-bottom: 1.5rem;
+        }
+
+        .category-header {
+            margin-bottom: 0.75rem;
+        }
+
+        .category-header h5 {
+            color: var(--tt-dark-blue);
+            font-size: 1.1rem;
+            margin: 0;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid var(--tt-light-blue);
+        }
+
+        .module-item {
+            background: var(--tt-white);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            border-left: 3px solid var(--tt-light-blue);
+        }
+
+        .module-header {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .module-description {
+            font-size: 0.9rem;
+            color: var(--tt-black);
+            line-height: 1.4;
+        }
+
         /* Utility classes */
         .hidden { display: none; }
         .text-center { text-align: center; }
@@ -515,6 +756,306 @@
                 grid-template-columns: 1fr;
             }
         }
+/* CLO Editor Styles */
+.clo-editor {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 2rem;
+}
+
+.clo-editor-container {
+    margin-bottom: 2rem;
+}
+
+.clo-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.clo-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    min-width: 60px;
+    padding-top: 0.5rem;
+}
+
+.clo-textarea {
+    flex: 1;
+    min-height: 80px;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.clo-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(170, 19, 82, 0.1);
+}
+
+.remove-clo-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.remove-clo-btn:hover {
+    background: #c82333;
+}
+
+.clo-editor-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.existing-clo-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.existing-clo-header {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.existing-clo-text {
+    color: #495057;
+    line-height: 1.5;
+}
+
+/* Analysis Results Styles */
+.analysis-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.threshold-display {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.alignment-summary {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.1em;
+}
+
+.matrix-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+.alignment-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.alignment-matrix th,
+.alignment-matrix td {
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid #e9ecef;
+}
+
+.alignment-matrix th {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.clo-header {
+    background: #f8f9fa !important;
+    color: var(--primary-color) !important;
+    font-weight: 600;
+    text-align: left !important;
+}
+
+.score-cell {
+    position: relative;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.score-0 { background: #f8f9fa; color: #6c757d; }
+.score-1 { background: #fff3cd; color: #856404; }
+.score-2 { background: #d1ecf1; color: #0c5460; }
+.score-3 { background: #d4edda; color: #155724; }
+.score-4 { background: #d1e7dd; color: #0f5132; }
+
+.above-threshold {
+    box-shadow: inset 0 0 0 2px var(--primary-color);
+}
+
+.no-data {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.result-actions {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Toast Notifications */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.toast-success {
+    background: #28a745;
+}
+
+.toast-error {
+    background: #dc3545;
+}
+
+.toast-info {
+    background: #17a2b8;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Loading Modal */
+.loading-spinner {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.loading-spinner i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .course-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .option-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .analysis-controls {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .control-group {
+        justify-content: center;
+    }
+    
+    .clo-field {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .clo-label {
+        min-width: auto;
+        padding-top: 0;
+    }
+    
+    .alignment-matrix {
+        font-size: 0.875rem;
+    }
+    
+    .alignment-matrix th,
+    .alignment-matrix td {
+        padding: 0.5rem 0.25rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -535,87 +1076,200 @@
         </header>
 
         <main>
+            <!-- Course Selection Section -->
+            <section id="course-selection-section">
+                <h2><i class="fas fa-search"></i> Course Selection</h2>
+                
+                <div class="form-group">
+                    <label for="course-selector">Select Course</label>
+                    <select id="course-selector" class="form-select">
+                        <option value="">Choose a course...</option>
+                    </select>
+                </div>
+            </section>
+
             <!-- Course Information Section -->
-            <section id="course-input-section">
-                <h2><i class="fas fa-edit"></i> Course Information</h2>
+            <section id="course-information-section" class="hidden">
+                <h2><i class="fas fa-info-circle"></i> Course Information</h2>
                 
-                <div class="form-group">
-                    <label for="course-code">Course Code</label>
-                    <input type="text" id="course-code" class="form-input" placeholder="e.g., CS101" maxlength="20">
-                </div>
-                
-                <div class="form-group">
-                    <label for="course-name">Course Name</label>
-                    <input type="text" id="course-name" class="form-input" placeholder="e.g., Introduction to Computer Science" maxlength="200">
-                </div>
-                
-                <div class="form-group">
-                    <label for="course-description">Course Description</label>
-                    <textarea id="course-description" class="form-textarea" rows="4" 
-                        placeholder="Provide a detailed description of the course content, objectives, and scope..."></textarea>
+                <div class="course-info-grid">
+                    <div class="info-card">
+                        <h4>Course Details</h4>
+                        <div class="info-item">
+                            <span class="info-label">Course Code:</span>
+                            <span id="info-course-code" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Course Name (EN):</span>
+                            <span id="info-course-name-en" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Course Name (ET):</span>
+                            <span id="info-course-name-et" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">EAP Credits:</span>
+                            <span id="info-course-eap" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Module Codes:</span>
+                            <span id="info-course-modules" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Assessment Form:</span>
+                            <span id="info-course-assessment" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Course Type:</span>
+                            <span id="info-course-type" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Course URL:</span>
+                            <a id="info-course-url" class="info-link" href="#" target="_blank">View Course</a>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Course Aims</h4>
+                        <div id="info-course-aims" class="course-aims-content">
+                            Select a course to view aims...
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="clo-count">Number of CLOs</label>
-                        <select id="clo-count" class="form-select">
-                            <option value="3">3 CLOs</option>
-                            <option value="4" selected>4 CLOs</option>
-                            <option value="5">5 CLOs</option>
-                            <option value="6">6 CLOs</option>
-                        </select>
+                <div class="info-card full-width">
+                    <h4>Existing Course Learning Outcomes (CLOs)</h4>
+                    <div id="info-existing-clos" class="existing-clos-content">
+                        Select a course to view CLOs...
                     </div>
-                    <div class="form-group">
-                        <label for="mlo-category-filter">MLO Category Focus</label>
-                        <select id="mlo-category-filter" class="form-select">
-                            <option value="">All Categories</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button id="generate-clos-btn" class="btn btn-primary">
-                        <i class="fas fa-magic"></i> Generate CLOs
-                    </button>
-                    <button id="manual-clos-btn" class="btn btn-secondary">
-                        <i class="fas fa-edit"></i> Manual Entry
-                    </button>
                 </div>
             </section>
 
-            <!-- Manual CLO Entry Section -->
-            <section id="manual-clo-section" class="hidden">
-                <h3><i class="fas fa-keyboard"></i> Manual CLO Entry</h3>
-                <div id="manual-clo-inputs" class="manual-clo-inputs">
-                    <!-- Manual CLO inputs will be dynamically generated -->
-                </div>
-                <div class="form-actions">
-                    <button id="add-manual-clo" class="btn btn-secondary">
-                        <i class="fas fa-plus"></i> Add CLO
-                    </button>
-                    <button id="process-manual-clos" class="btn btn-primary">
-                        <i class="fas fa-check"></i> Process CLOs
-                    </button>
+            <!-- CLO Management Section -->
+            <section id="clo-management-section" class="hidden">
+                <h2><i class="fas fa-cogs"></i> CLO Management</h2>
+                
+                <div class="clo-options">
+                    <div class="option-card" id="edit-existing-clos">
+                        <div class="option-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="option-content">
+                            <h3>Edit Existing CLOs</h3>
+                            <p>Modify the current CLOs for this course</p>
+                        </div>
+                        <button class="option-btn">Edit CLOs</button>
+                    </div>
+
+                    <div class="option-card" id="manual-entry-clos">
+                        <div class="option-icon">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <div class="option-content">
+                            <h3>Manual Entry</h3>
+                            <p>Enter new CLOs manually</p>
+                        </div>
+                        <button class="option-btn">Manual Entry</button>
+                    </div>
+
+                    <div class="option-card" id="ai-generate-clos">
+                        <div class="option-icon">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <div class="option-content">
+                            <h3>AI Generation</h3>
+                            <p>Generate new CLOs based on course aims</p>
+                        </div>
+                        <button class="option-btn">Generate with AI</button>
+                    </div>
                 </div>
             </section>
 
-            <!-- Generated CLOs Section -->
-            <section id="generated-clos-section" class="hidden">
-                <h3><i class="fas fa-list"></i> Generated Course Learning Outcomes</h3>
-                <div id="clos-list" class="clos-list">
-                    <!-- Generated CLOs will be displayed here -->
+            <!-- CLO Editor Section -->
+            <section id="clo-editor-section" class="content-section hidden">
+                <div class="section-header">
+                    <h3 id="clo-editor-title">Edit CLOs</h3>
+                    <p class="section-description">Edit or create course learning outcomes below.</p>
+                </div>
+
+                <div class="clo-editor">
+                    <div id="clo-editor-container" class="clo-editor-container">
+                        <!-- CLO fields will be dynamically added here -->
+                    </div>
+                    
+                    <div class="clo-editor-actions">
+                        <button id="add-clo-field-btn" class="btn btn-secondary" onclick="cloController.addNewCLOField()">
+                            <i class="fas fa-plus"></i> Add CLO
+                        </button>
+                        <div class="button-group">
+                            <button id="save-clos-btn" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save CLOs
+                            </button>
+                            <button id="cancel-edit-btn" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="clo-editor-section" class="hidden">
+                <h3><i class="fas fa-edit"></i> CLO Editor</h3>
+                <div id="clo-editor-content">
+                    <!-- CLO editing interface will be dynamically generated -->
                 </div>
                 <div class="form-actions">
-                    <button id="analyze-clos-btn" class="btn btn-primary">
-                        <i class="fas fa-chart-line"></i> Analyze Alignment
+                    <button id="save-clos-btn" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save CLOs
                     </button>
-                    <button id="regenerate-clos-btn" class="btn btn-secondary">
-                        <i class="fas fa-redo"></i> Regenerate
+                    <button id="cancel-edit-btn" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
                     </button>
                 </div>
             </section>
 
             <!-- Analysis Results Section -->
+            <section id="analysis-results-section" class="content-section hidden">
+                <div class="section-header">
+                    <h3>CLO-MLO Alignment Analysis</h3>
+                    <p class="section-description">Analysis results showing how well course learning outcomes align with module learning outcomes.</p>
+                </div>
+
+                <div class="analysis-controls">
+                    <div class="control-group">
+                        <label for="alignment-threshold-clo">Alignment Threshold:</label>
+                        <select id="alignment-threshold-clo">
+                            <option value="0">Show All (≥0)</option>
+                            <option value="1">Weak+ (≥1)</option>
+                            <option value="2" selected>Moderate+ (≥2)</option>
+                            <option value="3">Strong+ (≥3)</option>
+                            <option value="4">Very Strong (4)</option>
+                        </select>
+                        <span class="threshold-display">Current: <span id="threshold-value">2</span></span>
+                    </div>
+                    <div class="control-group">
+                        <button id="toggle-clo-scores" class="btn btn-secondary">
+                            <i class="fas fa-eye"></i> Hide Scores
+                        </button>
+                        <button id="export-clo-btn" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Export Results
+                        </button>
+                    </div>
+                </div>
+
+                <div id="alignment-summary" class="alignment-summary">
+                    <!-- Summary statistics will be populated here -->
+                </div>
+
+                <div id="alignment-matrix-container" class="matrix-container">
+                    <!-- Alignment matrix will be populated here -->
+                </div>
+
+                <div class="result-actions">
+                    <button id="back-to-clo-management" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to CLO Management
+                    </button>
+                </div>
+            </section>
             <section id="analysis-results-section" class="hidden">
                 <h3><i class="fas fa-chart-bar"></i> CLO-MLO Alignment Analysis</h3>
                 
@@ -672,6 +1326,15 @@
                         <span class="legend-item score-1">1 - Weak</span>
                         <span class="legend-item score-0">0 - No Alignment</span>
                     </div>
+                </div>
+
+                <div class="form-actions">
+                    <button id="analyze-alignment-btn" class="btn btn-primary">
+                        <i class="fas fa-chart-line"></i> Analyze Alignment
+                    </button>
+                    <button id="back-to-clo-management" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to CLO Management
+                    </button>
                 </div>
             </section>
 
@@ -756,6 +1419,6 @@
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
     <script src="js/alignment-engine.js"></script>
-    <script src="js/mlo-clo.js"></script>
+    <script src="js/mlo-clo-new.js"></script>
 </body>
 </html>

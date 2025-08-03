@@ -2,6 +2,7 @@
 class CLOMLOController {
     constructor() {
         this.currentProgramme = null;
+        this.selectedCourse = null;
         this.generatedCLOs = [];
         this.manualCLOs = [];
         this.currentCLOs = [];
@@ -27,7 +28,7 @@ class CLOMLOController {
             }
 
             this.displayProgrammeInfo();
-            this.populateMLOCategories();
+            this.populateCourseSelector();
             this.setupEventListeners();
             
         } catch (error) {
@@ -43,22 +44,158 @@ class CLOMLOController {
         }
     }
 
-    populateMLOCategories() {
-        const categoryFilter = document.getElementById('mlo-category-filter');
-        const mlosByCategory = window.dataManager.getMLOsByCategory();
+    populateCourseSelector() {
+        const courseSelector = document.getElementById('course-selector');
+        const courses = window.dataManager.getCurrentCourses();
         
-        // Clear existing options except "All Categories"
-        categoryFilter.innerHTML = '<option value="">All Categories</option>';
+        // Clear existing options except the default
+        courseSelector.innerHTML = '<option value="">Choose a course...</option>';
         
-        Object.keys(mlosByCategory).forEach(category => {
+        courses.forEach(course => {
             const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categoryFilter.appendChild(option);
+            option.value = course.ainekood;
+            option.textContent = `${course.ainekood} - ${course.ainenimetusik}`;
+            courseSelector.appendChild(option);
         });
     }
 
+    handleCourseSelection(courseCode) {
+        if (!courseCode) {
+            this.hideCourseDetails();
+            return;
+        }
+
+        this.selectedCourse = window.dataManager.getCourseByCode(courseCode);
+        if (this.selectedCourse) {
+            this.displayCourseDetails();
+        }
+    }
+
+    displayCourseDetails() {
+        const course = this.selectedCourse;
+        if (!course) return;
+
+        // Show course details section
+        const courseDetails = document.getElementById('course-details');
+        courseDetails.classList.remove('hidden');
+
+        // Populate fields
+        document.getElementById('course-name-et').value = course.ainenimetusek || '';
+        document.getElementById('course-name-en').value = course.ainenimetusik || '';
+        document.getElementById('course-eap').value = course.eap || '';
+        document.getElementById('course-module').value = course.moodulikood || '';
+        document.getElementById('course-description').value = course.eesmarkik || course.eesmarkek || '';
+
+        // Display related modules
+        this.displayRelatedModules();
+
+        // Check if course has existing CLOs
+        this.checkExistingCLOs();
+    }
+
+    displayRelatedModules() {
+        const moduleContent = document.getElementById('module-content');
+        moduleContent.innerHTML = '';
+
+        if (!this.selectedCourse) return;
+
+        const moduleCode = this.selectedCourse.moodulikood;
+        
+        // Get all MLOs that belong to this module
+        const allMLOs = window.dataManager.getCurrentMLOs();
+        const relatedMLOs = allMLOs.filter(mlo => 
+            mlo.mlokood.startsWith(moduleCode + '_') || 
+            mlo.mlokood.startsWith(moduleCode)
+        );
+
+        if (relatedMLOs.length > 0) {
+            // Group MLOs by their category for better organization
+            const mlosByCategory = {};
+            
+            relatedMLOs.forEach(mlo => {
+                const category = mlo.mlonimetusik || 'Other';
+                if (!mlosByCategory[category]) {
+                    mlosByCategory[category] = [];
+                }
+                mlosByCategory[category].push(mlo);
+            });
+
+            // Display each category and its MLOs
+            Object.entries(mlosByCategory).forEach(([category, mlos]) => {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'module-category';
+                categorySection.innerHTML = `
+                    <div class="category-header">
+                        <h5>${category}</h5>
+                    </div>
+                `;
+
+                mlos.forEach(mlo => {
+                    const mloItem = document.createElement('div');
+                    mloItem.className = 'module-item';
+                    mloItem.innerHTML = `
+                        <div class="module-header">
+                            ${mlo.mlokood} - ${mlo.mlonimetusik}
+                        </div>
+                        <div class="module-description">
+                            ${mlo.mlosisuik}
+                        </div>
+                    `;
+                    categorySection.appendChild(mloItem);
+                });
+
+                moduleContent.appendChild(categorySection);
+            });
+        } else {
+            moduleContent.innerHTML = '<p style="color: #666;">No module information available.</p>';
+        }
+    }
+
+    checkExistingCLOs() {
+        if (!this.selectedCourse) return;
+
+        const course = this.selectedCourse;
+        const existingInfo = document.getElementById('existing-clos-info');
+        
+        // Check if course has predefined CLOs
+        if (course.cloik && Object.keys(course.cloik).length > 0) {
+            // Show existing CLOs info
+            existingInfo.classList.remove('hidden');
+            
+            // Update generate button text to indicate existing CLOs
+            const generateBtn = document.getElementById('generate-clos-btn');
+            generateBtn.innerHTML = '<i class="fas fa-list"></i> Load Existing CLOs';
+            
+        } else {
+            // Hide existing CLOs info
+            existingInfo.classList.add('hidden');
+            
+            // Reset generate button text
+            const generateBtn = document.getElementById('generate-clos-btn');
+            generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate CLOs';
+        }
+    }
+
+    hideCourseDetails() {
+        const courseDetails = document.getElementById('course-details');
+        const existingInfo = document.getElementById('existing-clos-info');
+        const generateBtn = document.getElementById('generate-clos-btn');
+        
+        courseDetails.classList.add('hidden');
+        existingInfo.classList.add('hidden');
+        
+        // Reset generate button
+        generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate CLOs';
+        
+        this.selectedCourse = null;
+    }
+
     setupEventListeners() {
+        // Course selection
+        document.getElementById('course-selector').addEventListener('change', (e) => {
+            this.handleCourseSelection(e.target.value);
+        });
+
         // Course input controls
         document.getElementById('generate-clos-btn').addEventListener('click', () => {
             this.generateCLOs();
@@ -291,13 +428,43 @@ class CLOMLOController {
     async generateCLOs() {
         if (this.isGenerating) return;
 
-        const courseCode = document.getElementById('course-code').value.trim();
-        const courseName = document.getElementById('course-name').value.trim();
-        const courseDescription = document.getElementById('course-description').value.trim();
-        const cloCount = parseInt(document.getElementById('clo-count').value);
+        if (!this.selectedCourse) {
+            this.showError('Please select a course first.');
+            return;
+        }
+
+        const course = this.selectedCourse;
+
+        // Check if course has existing CLOs and use them first
+        if (course.cloik && Object.keys(course.cloik).length > 0) {
+            this.generatedCLOs = Object.entries(course.cloik).map(([key, value], index) => ({
+                id: `clo_${index + 1}`,
+                text: value,
+                bloomLevel: this.detectBloomLevel(value),
+                isExisting: true
+            }));
+
+            this.displayGeneratedCLOs();
+            this.showSection('generated-clos-section');
+            this.showMessage('Loaded existing CLOs for this course.', 'success');
+            return;
+        }
+
+        // Fall back to AI generation if no existing CLOs
+        const courseCode = course.ainekood;
+        const courseName = course.ainenimetusik;
+        const courseDescription = course.eesmarkik || course.eesmarkek;
+        
+        // Determine CLO count from existing course data or default to 5
+        let cloCount = 5; // default
+        if (course.cloik) {
+            cloCount = Object.keys(course.cloik).length;
+        } else if (course.cloek) {
+            cloCount = Object.keys(course.cloek).length;
+        }
 
         if (!courseName || !courseDescription) {
-            this.showError('Please provide course name and description.');
+            this.showError('Selected course is missing required information.');
             return;
         }
 
@@ -305,7 +472,7 @@ class CLOMLOController {
         this.showLoading(true, 'Generating CLOs', 'AI is creating Course Learning Outcomes based on your course description...');
 
         try {
-            // Simulate AI generation with sophisticated algorithm
+            // Generate new CLOs with AI
             this.generatedCLOs = await this.generateCLOsWithAI(courseCode, courseName, courseDescription, cloCount);
             
             this.displayGeneratedCLOs();
@@ -592,7 +759,16 @@ Return ONLY a JSON array of CLO objects in this format:
 
     generateManualCLOInputs() {
         const container = document.getElementById('manual-clo-inputs');
-        const count = parseInt(document.getElementById('clo-count').value);
+        
+        // Use existing course CLO count if available, otherwise default to 5
+        let count = 5;
+        if (this.selectedCourse) {
+            if (this.selectedCourse.cloik) {
+                count = Object.keys(this.selectedCourse.cloik).length;
+            } else if (this.selectedCourse.cloek) {
+                count = Object.keys(this.selectedCourse.cloek).length;
+            }
+        }
         
         container.innerHTML = '';
         this.manualCLOs = [];
