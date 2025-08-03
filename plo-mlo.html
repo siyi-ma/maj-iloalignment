@@ -45,7 +45,7 @@
             z-index: 10;
         }
         
-        .matrix-table th {
+        .matrix-table th:not(.mlo-header) {
             background-color: var(--tt-burgundy);
             color: var(--tt-white);
             font-weight: bold;
@@ -54,29 +54,54 @@
             writing-mode: horizontal-tb !important;
             text-orientation: mixed !important;
             transform: rotate(0deg) !important;
-            vertical-align: middle;
-            white-space: nowrap;
+            vertical-align: middle !important;
+            white-space: nowrap !important;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 80px;
             min-width: 60px;
-            padding: 8px 4px;
+            padding: 8px 4px !important;
+            text-align: center !important;
         }
         
+        /* Matrix table header fix - ensure MLO headers display horizontally */
+        .matrix-table thead th.mlo-header {
+            background-color: var(--tt-grey-1) !important;
+            color: var(--tt-white) !important;
+            writing-mode: horizontal-tb !important;
+            text-orientation: unset !important;
+            transform: none !important;
+            white-space: nowrap !important;
+            padding: 8px 4px !important;
+            min-width: 60px !important;
+            max-width: 100px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            vertical-align: middle !important;
+            font-size: 11px !important;
+            text-align: center !important;
+            height: auto !important;
+            line-height: normal !important;
+            display: table-cell !important;
+        }
+
         .matrix-table th.mlo-header {
             background-color: var(--tt-grey-1) !important;
             color: var(--tt-white) !important;
             writing-mode: horizontal-tb !important;
-            text-orientation: mixed !important;
-            transform: rotate(0deg) !important;
-            white-space: nowrap;
-            padding: 8px 4px;
-            min-width: 60px;
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            vertical-align: middle;
-            font-size: 11px;
+            text-orientation: unset !important;
+            transform: none !important;
+            white-space: nowrap !important;
+            padding: 8px 4px !important;
+            min-width: 60px !important;
+            max-width: 100px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            vertical-align: middle !important;
+            font-size: 11px !important;
+            text-align: center !important;
+            height: auto !important;
+            line-height: normal !important;
         }
         
         .module-header {
@@ -671,12 +696,6 @@
                 font-size: 2rem;
             }
             
-            .home-btn {
-                position: static;
-                margin: 1rem auto 0;
-                display: block;
-            }
-            
             .legend-items {
                 flex-direction: column;
                 align-items: stretch;
@@ -865,18 +884,191 @@
             font-weight: bold;
             color: var(--tt-burgundy);
         }
+
+        /* MLO Category Distribution Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* PDF Preview Modal Styles */
+        .pdf-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pdf-preview-content {
+            background: var(--tt-white);
+            width: 90%;
+            max-width: 800px;
+            height: 90%;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(170, 19, 82, 0.3);
+        }
+
+        .pdf-preview-header {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pdf-preview-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .pdf-preview-close {
+            background: none;
+            border: none;
+            color: var(--tt-white);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .pdf-preview-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+
+        .pdf-preview-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .pdf-preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+            background: var(--tt-white);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .pdf-preview-actions {
+            padding: 15px 20px;
+            border-top: 1px solid var(--tt-grey-2);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            background: var(--tt-white);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .pdf-action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+        }
+
+        .pdf-save-btn {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+        }
+
+        .pdf-save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
+        }
+
+        .pdf-cancel-btn {
+            background: var(--tt-grey-2);
+            color: var(--tt-black);
+        }
+
+        .pdf-cancel-btn:hover {
+            background: var(--tt-grey-1);
+            color: var(--tt-white);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-content">
-                <h1><i class="fas fa-graduation-cap"></i> PLO-MLO Learning Outcome Alignment</h1>
-                <p>Programme and Module Learning Outcomes Alignment Tool</p>
+                <h1 id="header-title"><i class="fas fa-graduation-cap"></i> PLO-MLO Learning Outcome Alignment</h1>
+                <p id="header-subtitle">Programme and Module Learning Outcomes Alignment Tool</p>
             </div>
-            <button id="home-btn" class="home-btn">
-                <i class="fas fa-home"></i> Home
-            </button>
         </header>
 
         <main>
@@ -893,17 +1085,6 @@
             <section id="overview" class="overview-section">
                 <h2><i class="fas fa-info-circle"></i> Overview</h2>
                 <p>This analysis examines the alignment between Programme Learning Outcomes (PLOs) and Module Learning Outcomes (MLOs) for the selected study programme. The assessment uses a 5-point scale to evaluate how well module outcomes support the achievement of programme-level goals.</p>
-                
-                <div class="score-legend">
-                    <h3>Alignment Score Legend:</h3>
-                    <div class="legend-items">
-                        <div class="legend-item legend-score-1">1: Minimal alignment</div>
-                        <div class="legend-item legend-score-2">2: Partial alignment</div>
-                        <div class="legend-item legend-score-3">3: Moderate alignment</div>
-                        <div class="legend-item legend-score-4">4: Strong alignment</div>
-                        <div class="legend-item legend-score-5">5: Excellent alignment</div>
-                    </div>
-                </div>
             </section>
 
             <!-- Methodology Section -->
@@ -943,6 +1124,17 @@
                     
                     <h4><i class="fas fa-tags"></i> Keyword Highlighting:</h4>
                     <p>Matching keywords and phrases are highlighted in both PLO and MLO texts to provide visual evidence of semantic alignment and facilitate expert review of automated assessments.</p>
+                    
+                    <div class="score-legend">
+                        <h3>Alignment Score Legend:</h3>
+                        <div class="legend-items">
+                            <div class="legend-item legend-score-1">1: Minimal alignment</div>
+                            <div class="legend-item legend-score-2">2: Partial alignment</div>
+                            <div class="legend-item legend-score-3">3: Moderate alignment</div>
+                            <div class="legend-item legend-score-4">4: Strong alignment</div>
+                            <div class="legend-item legend-score-5">5: Excellent alignment</div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -972,7 +1164,6 @@
                 <h2><i class="fas fa-table"></i> Alignment Matrix</h2>
                 <div class="matrix-actions">
                     <button class="export-btn" id="export-excel-btn"><i class="fas fa-file-excel"></i> Export Matrix to Excel</button>
-                    <button class="export-btn" id="filter-btn"><i class="fas fa-filter"></i> Filter Results</button>
                 </div>
                 <div id="matrix-container">
                     <p>Loading alignment matrix...</p>
@@ -1011,7 +1202,6 @@
 
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
-    <script src="js/plo-mlo-analyzer.js"></script>
     <script>
         // Global state
         let currentLanguage = 'english';
@@ -1024,18 +1214,58 @@
         // Initialize the application
         async function init() {
             try {
-                // Get current programme from data manager
-                currentProgramme = window.dataManager.getCurrentProgramme();
+                // Check if data manager is available
+                if (!window.dataManager) {
+                    console.error('Data manager not available');
+                    showError('Data manager not loaded. Please ensure data-manager.js is loaded.');
+                    return;
+                }
+
+                // Check for programme code in URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const kavakood = urlParams.get('kavakood');
+                
+                if (kavakood) {
+                    // Load programme by kavakood from URL parameter
+                    const programmes = window.dataManager.getProgrammes();
+                    currentProgramme = programmes.find(p => 
+                        (p.kavakood && p.kavakood.toLowerCase() === kavakood.toLowerCase()) ||
+                        (p.programmeCode && p.programmeCode.toLowerCase() === kavakood.toLowerCase())
+                    );
+                    
+                    if (currentProgramme) {
+                        // Set the programme in data manager
+                        window.dataManager.setCurrentProgramme(currentProgramme);
+                    }
+                }
+                
+                // Get current programme from data manager (either from URL or previously set)
+                if (!currentProgramme) {
+                    currentProgramme = window.dataManager.getCurrentProgramme();
+                }
                 
                 if (!currentProgramme) {
                     // Redirect to home if no programme selected
                     window.location.href = 'index.html';
                     return;
                 }
+                
+                // Update URL to include programme code if not already present
+                if (!kavakood && currentProgramme) {
+                    const programmeCode = currentProgramme.kavakood || currentProgramme.programmeCode;
+                    if (programmeCode) {
+                        const newUrl = new URL(window.location);
+                        newUrl.searchParams.set('kavakood', programmeCode);
+                        window.history.replaceState({}, '', newUrl);
+                    }
+                }
 
                 // Load programme data
                 currentPLOs = currentProgramme.plos || [];
                 currentMLOs = currentProgramme.mlos || [];
+
+                // Update header with programme information
+                updateHeader();
 
                 // Perform alignment analysis
                 await performAlignment();
@@ -1057,24 +1287,58 @@
             }
         }
 
+        function updateHeader() {
+            if (currentProgramme) {
+                const programmeCode = currentProgramme.kavakood || currentProgramme.programmeCode || '';
+                const programmeName = currentProgramme.programmeNameEng || currentProgramme.programmeName || '';
+                
+                const headerTitle = document.getElementById('header-title');
+                const headerSubtitle = document.getElementById('header-subtitle');
+                
+                if (programmeCode && programmeName) {
+                    headerTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeCode} - PLO-MLO Alignment`;
+                    headerSubtitle.textContent = programmeName;
+                } else if (programmeCode) {
+                    headerTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeCode} - PLO-MLO Alignment`;
+                    headerSubtitle.textContent = 'Programme Learning Outcomes Alignment Analysis';
+                } else if (programmeName) {
+                    headerTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> PLO-MLO Alignment`;
+                    headerSubtitle.textContent = programmeName;
+                }
+            }
+        }
+
         async function performAlignment() {
             try {
+                console.log('Starting alignment analysis...');
+                console.log('Current PLOs:', currentPLOs ? currentPLOs.length : 'undefined');
+                console.log('Current MLOs:', currentMLOs ? currentMLOs.length : 'undefined');
+                
                 // Create alignment results based on our methodology
                 alignmentResults = [];
                 
+                if (!currentPLOs || !currentMLOs) {
+                    console.error('PLOs or MLOs not available');
+                    return;
+                }
+                
                 currentPLOs.forEach(plo => {
                     currentMLOs.forEach(mlo => {
-                        const keywordAnalysis = analyzeKeywords(plo, mlo);
-                        const score = calculateAlignmentScore(keywordAnalysis);
-                        const justification = generateJustification(score, keywordAnalysis);
-                        
-                        alignmentResults.push({
-                            plo: plo,
-                            mlo: mlo,
-                            score: score,
-                            justification: justification,
-                            ...keywordAnalysis
-                        });
+                        try {
+                            const keywordAnalysis = analyzeKeywords(plo, mlo);
+                            const score = calculateAlignmentScore(keywordAnalysis);
+                            const justification = generateJustification(score, keywordAnalysis);
+                            
+                            alignmentResults.push({
+                                plo: plo,
+                                mlo: mlo,
+                                score: score,
+                                justification: justification,
+                                ...keywordAnalysis
+                            });
+                        } catch (error) {
+                            console.error('Error processing PLO-MLO pair:', plo.plokood, mlo.mlokood, error);
+                        }
                     });
                 });
                 
@@ -1116,30 +1380,37 @@
             return 1;
         }
 
-        // Generate justification that matches the score
+        // Generate justification that matches the score with quantifiable reasoning
         function generateJustification(score, analysis) {
             const { keywordOverlap, competencyMatches, matchingKeywords } = analysis;
             const competencyCount = competencyMatches ? competencyMatches.length : 0;
             const competencyNames = competencyMatches ? competencyMatches.map(m => m.category).join(', ') : 'none';
-            const keywordList = matchingKeywords && matchingKeywords.length > 0 ? 
-                matchingKeywords.slice(0, 3).join(', ') + (matchingKeywords.length > 3 ? '...' : '') : 'none';
+            
+            // Generate quantifiable reasoning
+            const quantifiableAnalysis = {
+                keywordOverlap: keywordOverlap.toFixed(1),
+                competencyMatches: competencyCount,
+                competencyCategories: competencyNames,
+                bloomsLevel: 'Progressive',
+                keywordCount: matchingKeywords ? matchingKeywords.length : 0
+            };
             
             switch(score) {
                 case 5:
-                    return `Excellent alignment achieved with ${keywordOverlap.toFixed(1)}% keyword overlap (${keywordList}) and ${competencyCount} competency matches (${competencyNames}). Strong semantic and competency framework alignment indicates comprehensive PLO support.`;
+                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
                 
                 case 4:
-                    return `Strong alignment demonstrated through ${keywordOverlap.toFixed(1)}% keyword overlap (${keywordList}) and ${competencyCount} competency matches (${competencyNames}). Good conceptual alignment with substantial PLO contribution.`;
+                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
                 
                 case 3:
-                    return `Moderate alignment established with ${keywordOverlap.toFixed(1)}% keyword overlap (${keywordList}) and ${competencyCount} competency match(es) (${competencyNames}). Clear connection exists with room for enhancement.`;
+                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
                 
                 case 2:
-                    return `Partial alignment identified through ${keywordOverlap >= 2 ? keywordOverlap.toFixed(1) + '% keyword overlap (' + keywordList + ')' : 'limited keyword overlap'} ${competencyCount > 0 ? 'and ' + competencyCount + ' competency match(es) (' + competencyNames + ')' : 'with no significant competency matches'}. Minimal connection requires strengthening.`;
+                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
                 
                 case 1:
                 default:
-                    return `Minimal alignment detected with ${keywordOverlap.toFixed(1)}% keyword overlap (${keywordList}) and ${competencyCount} competency matches. Fundamental review needed to establish meaningful PLO contribution.`;
+                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
             }
         }
 
@@ -1293,21 +1564,6 @@
             return suggestions.length > 0 ? suggestions : null;
         }
 
-        function generateBasicAlignment() {
-            const results = [];
-            currentPLOs.forEach(plo => {
-                currentMLOs.forEach(mlo => {
-                    results.push({
-                        plo: plo,
-                        mlo: mlo,
-                        score: Math.floor(Math.random() * 5) + 1, // Random score 1-5
-                        justification: "Basic alignment assessment based on content similarity."
-                    });
-                });
-            });
-            return results;
-        }
-
         function renderOverview() {
             // Overview is already rendered in HTML
         }
@@ -1331,6 +1587,22 @@
                 5: alignmentResults.filter(r => r.score === 5).length
             };
 
+            // Calculate MLO category distribution based on mlokood prefix
+            const mloCategories = {};
+            alignmentResults.forEach(result => {
+                // Extract category from mlokood prefix (e.g., "yl_mlo1" -> "YL")
+                const mlokood = result.mlo.mlokood || '';
+                const category = mlokood.includes('_') ? 
+                    mlokood.split('_')[0].toUpperCase() : 
+                    mlokood.substring(0, 2).toUpperCase() || 'OTHER';
+                    
+                if (!mloCategories[category]) {
+                    mloCategories[category] = { total: 0, scores: {1:0, 2:0, 3:0, 4:0, 5:0} };
+                }
+                mloCategories[category].total++;
+                mloCategories[category].scores[result.score]++;
+            });
+
             const strongAlignments = scoreDistribution[4] + scoreDistribution[5];
             const weakAlignments = scoreDistribution[1] + scoreDistribution[2];
             const coveragePercentage = (strongAlignments / totalAlignments * 100).toFixed(1);
@@ -1347,21 +1619,102 @@
                 <div class="score-distribution-chart">
                     <h3><i class="fas fa-chart-column"></i> Score Distribution Analysis</h3>
                     <div class="chart-container">
-                        ${Object.entries(scoreDistribution).map(([score, count]) => `
-                            <div class="chart-bar" style="height: ${maxCount > 0 ? (count / maxCount * 160) + 20 : 20}px;" title="Score ${score}: ${count} alignments">
-                                ${count}
-                            </div>
-                        `).join('')}
+                        ${Object.entries(scoreDistribution).map(([score, count]) => {
+                            const percentage = totalAlignments > 0 ? ((count / totalAlignments) * 100).toFixed(1) : 0;
+                            const scoreColors = {
+                                1: '#ffcdd2', 2: '#ffecb3', 3: '#fff9c4', 4: '#c8e6c9', 5: '#a5d6a7'
+                            };
+                            return `
+                                <div class="chart-bar" 
+                                     style="height: ${maxCount > 0 ? (count / maxCount * 160) + 20 : 20}px; 
+                                            background: ${scoreColors[score]}; 
+                                            color: #000000;" 
+                                     title="Score ${score}: ${count} (${percentage}%)">
+                                    ${count} (${percentage}%)
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                     <div class="chart-labels">
-                        <div class="chart-label">Score 1<br><small>Minimal</small></div>
-                        <div class="chart-label">Score 2<br><small>Partial</small></div>
-                        <div class="chart-label">Score 3<br><small>Moderate</small></div>
-                        <div class="chart-label">Score 4<br><small>Strong</small></div>
-                        <div class="chart-label">Score 5<br><small>Excellent</small></div>
+                        <div class="chart-label">Minimal<br><small>Score 1</small></div>
+                        <div class="chart-label">Partial<br><small>Score 2</small></div>
+                        <div class="chart-label">Moderate<br><small>Score 3</small></div>
+                        <div class="chart-label">Strong<br><small>Score 4</small></div>
+                        <div class="chart-label">Excellent<br><small>Score 5</small></div>
                     </div>
                     <div style="text-align: center; margin-top: 15px; color: var(--tt-burgundy); font-weight: bold;">
                         Average Score: ${averageScore} | Strong Alignments: ${coveragePercentage}%
+                    </div>
+                </div>
+                
+                <div class="score-distribution-chart">
+                    <h3><i class="fas fa-layer-group"></i> Score Distribution by MLO Category</h3>
+                    <p style="color: var(--tt-grey-1); font-style: italic; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle"></i> Each number represents the count of PLO-MLO alignment pairs. 
+                        For example, if a module has 1 MLO and the programme has 6 PLOs, this creates 6 alignment pairs to be evaluated.
+                    </p>
+                    
+                    <!-- Category Score Distribution -->
+                    <div class="mlo-category-charts">
+                        <div class="mlo-stacked-chart-container">
+                            ${(() => {
+                                // Define category order
+                                const categoryOrder = ['YL', 'P1', 'P2', 'E1', 'E2', 'GD', 'VB', 'MN'];
+                                const scoreColors = {
+                                    1: '#ffcdd2', 2: '#ffecb3', 3: '#fff9c4', 4: '#c8e6c9', 5: '#a5d6a7'
+                                };
+                                const scoreLabels = {
+                                    1: 'Minimal', 2: 'Partial', 3: 'Moderate', 4: 'Strong', 5: 'Excellent'
+                                };
+                                
+                                // Sort categories by defined order, then add any others
+                                const sortedCategories = [];
+                                categoryOrder.forEach(cat => {
+                                    if (mloCategories[cat]) {
+                                        sortedCategories.push([cat, mloCategories[cat]]);
+                                    }
+                                });
+                                
+                                // Add any remaining categories not in the predefined order
+                                Object.entries(mloCategories).forEach(([cat, data]) => {
+                                    if (!categoryOrder.includes(cat)) {
+                                        sortedCategories.push([cat, data]);
+                                    }
+                                });
+                                
+                                // Calculate max count for width scaling
+                                const maxCount = Math.max(...sortedCategories.flatMap(([cat, data]) => Object.values(data.scores)));
+                                
+                                return sortedCategories.map(([category, data]) => {
+                                    const averageScore = data.total > 0 ? 
+                                        (Object.entries(data.scores).reduce((sum, [score, count]) => sum + (parseInt(score) * count), 0) / data.total).toFixed(1) : 0;
+                                    
+                                    return `
+                                        <div class="category-row">
+                                            <div class="category-name">${category}</div>
+                                            <div class="category-bars">
+                                                ${Object.entries(data.scores).filter(([score, count]) => count > 0).map(([score, count]) => {
+                                                    const percentage = data.total > 0 ? ((count / data.total) * 100).toFixed(1) : 0;
+                                                    const barWidth = maxCount > 0 ? Math.max((count / maxCount * 200), 25) : 25;
+                                                    return `
+                                                        <div class="category-bar" 
+                                                             style="width: ${barWidth}px; 
+                                                                    background: ${scoreColors[score]};" 
+                                                             title="${category} - ${scoreLabels[score]}: ${count} alignment pairs (${percentage}%)">
+                                                            ${count}
+                                                        </div>
+                                                    `;
+                                                }).join('')}
+                                            </div>
+                                            <div class="category-info">
+                                                ${data.total} pairs<br>
+                                                <small>Avg: ${averageScore}</small>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('');
+                            })()}
+                        </div>
                     </div>
                 </div>
                 
@@ -1482,12 +1835,52 @@
             const uniqueMLOs = [...new Set(alignmentResults.map(r => r.mlo.mlokood))];
             const uniquePLOs = [...new Set(alignmentResults.map(r => r.plo.plokood))];
 
+            // Group MLOs by category and sort according to specified order
+            const categoryOrder = ['YL', 'P1', 'P2', 'E1', 'E2', 'GD', 'VB', 'MN'];
+            const mlosByCategory = {};
+            
+            uniqueMLOs.forEach(mloCode => {
+                const category = mloCode.includes('_') ? 
+                    mloCode.split('_')[0].toUpperCase() : 
+                    mloCode.substring(0, 2).toUpperCase() || 'OTHER';
+                    
+                if (!mlosByCategory[category]) {
+                    mlosByCategory[category] = [];
+                }
+                mlosByCategory[category].push(mloCode);
+            });
+
+            // Sort categories according to specified order
+            const sortedCategories = [];
+            categoryOrder.forEach(cat => {
+                if (mlosByCategory[cat]) {
+                    sortedCategories.push([cat, mlosByCategory[cat].sort()]);
+                }
+            });
+            
+            // Add any remaining categories
+            Object.entries(mlosByCategory).forEach(([cat, mlos]) => {
+                if (!categoryOrder.includes(cat)) {
+                    sortedCategories.push([cat, mlos.sort()]);
+                }
+            });
+
+            // Create sorted MLO list
+            const sortedMLOs = sortedCategories.flatMap(([cat, mlos]) => mlos);
+
             let matrixHTML = `
                 <table class="matrix-table">
                     <thead>
+                        <!-- Category Header Row -->
                         <tr>
-                            <th>PLO \\ MLO</th>
-                            ${uniqueMLOs.map(mloCode => `<th class="mlo-header">${mloCode}</th>`).join('')}
+                            <th rowspan="2">PLO \\ MLO</th>
+                            ${sortedCategories.map(([category, mlos]) => 
+                                `<th colspan="${mlos.length}" style="background-color: var(--tt-dark-blue) !important; color: var(--tt-white) !important; text-align: center; font-weight: bold;">${category}</th>`
+                            ).join('')}
+                        </tr>
+                        <!-- MLO Code Row -->
+                        <tr>
+                            ${sortedMLOs.map(mloCode => `<th class="mlo-header">${mloCode}</th>`).join('')}
                         </tr>
                     </thead>
                     <tbody>
@@ -1495,7 +1888,7 @@
 
             uniquePLOs.forEach(ploCode => {
                 matrixHTML += `<tr><td class="plo-header">${ploCode}</td>`;
-                uniqueMLOs.forEach(mloCode => {
+                sortedMLOs.forEach(mloCode => {
                     const result = alignmentResults.find(r => r.plo.plokood === ploCode && r.mlo.mlokood === mloCode);
                     const score = result ? result.score : 0;
                     const justification = result ? result.justification : 'No alignment data';
@@ -1529,12 +1922,17 @@
                 const averageScore = ploResults.length > 0 ? 
                     (ploResults.reduce((sum, r) => sum + r.score, 0) / ploResults.length).toFixed(2) : 0;
 
+                // Get all matching keywords for this PLO from all its MLO alignments
+                const allMatchingKeywords = [...new Set(ploResults.flatMap(r => r.matchingKeywords || []))];
+                const ploText = (currentLanguage === 'english' ? (plo.plosisuik || plo.plosisu) : (plo.plosisuek || plo.plosisu)) || '';
+                const highlightedPLOText = highlightKeywords(ploText, allMatchingKeywords);
+
                 html += `
                     <div class="plo-analysis-section">
                         <div class="plo-header-section">
                             <h3>${plo.plokood}: Average Alignment Score: ${averageScore}</h3>
                             <div class="plo-text">
-                                ${plo.highlightedPLO || (currentLanguage === 'english' ? (plo.plosisuik || plo.plosisu) : (plo.plosisuek || plo.plosisu))}
+                                ${highlightedPLOText}
                             </div>
                         </div>
                         
@@ -1572,24 +1970,16 @@
                                 <span class="alignment-score score-${result.score}">${result.score}</span>
                             </td>
                             <td class="justification-cell">
-                                <div class="alignment-justification">${result.justification}</div>
-                                <div style="margin-top: 8px;">
-                                    <small><strong>Keyword overlap:</strong> ${(result.keywordOverlap || 0).toFixed(1)}% 
+                                <div style="font-size: 0.9em;">
+                                    <div><strong>Keyword overlap:</strong> ${(result.keywordOverlap || 0).toFixed(1)}% 
                                     ${result.matchingKeywords && result.matchingKeywords.length > 0 ? 
                                         `(${result.matchingKeywords.slice(0, 3).join(', ')}${result.matchingKeywords.length > 3 ? '...' : ''})` : '(none)'}
-                                    </small><br>
-                                    <small><strong>Competency matches:</strong> ${result.competencyMatches && result.competencyMatches.length > 0 ? 
-                                        `${result.competencyMatches.length} found (${result.competencyMatches.map(m => m.category).join(', ')})` : 'none detected'}
-                                    </small>
-                                </div>
-                                ${improvementSuggestions ? `
-                                    <div class="improvement-suggestions">
-                                        <strong>Improvement suggestions:</strong>
-                                        <ul>
-                                            ${improvementSuggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
-                                        </ul>
                                     </div>
-                                ` : ''}
+                                    <div style="margin-top: 4px;"><strong>Competency matches:</strong> ${result.competencyMatches && result.competencyMatches.length > 0 ? 
+                                        `${result.competencyMatches.length} found (${result.competencyMatches.map(m => m.category).join(', ')})` : 'none detected'}
+                                    </div>
+                                    ${result.bloomsAlignment ? `<div style="margin-top: 4px;"><strong>Bloom's level:</strong> ${result.bloomsAlignment}</div>` : ''}
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -1606,10 +1996,15 @@
         }
 
         function renderMLOView(container) {
-            // Group MLOs by module
+            // Group MLOs by module prefix from mlokood
             const mlosByModule = {};
             currentMLOs.forEach(mlo => {
-                const moduleCode = mlo.mlokood.split('_')[0] || 'OTHER';
+                // Extract module prefix from mlokood (e.g., "yl_mlo1" -> "YL")
+                const mlokood = mlo.mlokood || '';
+                const moduleCode = mlokood.includes('_') ? 
+                    mlokood.split('_')[0].toUpperCase() : 
+                    mlokood.substring(0, 2).toUpperCase() || 'OTHER';
+                    
                 if (!mlosByModule[moduleCode]) {
                     mlosByModule[moduleCode] = [];
                 }
@@ -1640,12 +2035,16 @@
                     const averageScore = mloResults.length > 0 ? 
                         (mloResults.reduce((sum, r) => sum + r.score, 0) / mloResults.length).toFixed(2) : 0;
 
-                    // Add MLO header row
+                    // Add MLO header row with highlighted text
+                    const mloText = (currentLanguage === 'english' ? (mlo.mlosisuik || mlo.mlosisu) : (mlo.mlosisuek || mlo.mlosisu)) || '';
+                    const allMatchingKeywords = [...new Set(mloResults.flatMap(r => r.matchingKeywords || []))];
+                    const highlightedMLOText = highlightKeywords(mloText, allMatchingKeywords);
+                    
                     html += `
                         <tr style="background-color: var(--tt-grey-2);">
                             <td colspan="4" style="font-weight: bold; padding: 15px;">
                                 <strong>${mlo.mlokood}: Average Score: ${averageScore}</strong><br>
-                                <em>MLO: ${mlo.highlightedMLO || (currentLanguage === 'english' ? (mlo.mlosisuik || mlo.mlosisu) : (mlo.mlosisuek || mlo.mlosisu))}</em>
+                                <em>MLO: ${highlightedMLOText}</em>
                             </td>
                         </tr>
                     `;
@@ -1666,7 +2065,7 @@
                             <tr>
                                 <td class="mlo-code-cell">${result.plo.plokood}</td>
                                 <td class="mlo-content-cell">
-                                    ${result.highlightedPLO || ploText}
+                                    ${result.matchingKeywords ? highlightKeywords(ploText, result.matchingKeywords) : ploText}
                                 </td>
                                 <td class="alignment-score-cell">
                                     <span class="alignment-score score-${result.score}">${result.score}</span>
@@ -1737,11 +2136,7 @@
             engLabel.classList.add('active');
             estLabel.classList.add('inactive');
 
-            // Home buttons
-            document.getElementById('home-btn').addEventListener('click', () => {
-                window.location.href = 'index.html';
-            });
-
+            // Floating home button
             document.getElementById('home-btn-float').addEventListener('click', () => {
                 window.location.href = 'index.html';
             });
@@ -1788,20 +2183,57 @@
         function exportToExcel() {
             // Create CSV data for Excel export
             const csvData = generateCSVData();
-            downloadCSV(csvData, 'PLO-MLO-Alignment-Matrix.csv');
+            const programmeCode = currentProgramme ? (currentProgramme.kavakood || currentProgramme.programmeCode || 'programme') : 'programme';
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            const fileName = `${programmeCode}-plo-mlo-alignment-matrix-${today}.csv`;
+            downloadCSV(csvData, fileName);
         }
 
         function generateCSVData() {
             if (!alignmentResults || alignmentResults.length === 0) return '';
 
+            // Use the same sorting logic as in renderMatrix
             const uniqueMLOs = [...new Set(alignmentResults.map(r => r.mlo.mlokood))];
             const uniquePLOs = [...new Set(alignmentResults.map(r => r.plo.plokood))];
 
-            let csvContent = 'PLO\\MLO,' + uniqueMLOs.join(',') + '\n';
+            // Group MLOs by category and sort according to specified order
+            const categoryOrder = ['YL', 'P1', 'P2', 'E1', 'E2', 'GD', 'VB', 'MN'];
+            const mlosByCategory = {};
+            
+            uniqueMLOs.forEach(mloCode => {
+                const category = mloCode.includes('_') ? 
+                    mloCode.split('_')[0].toUpperCase() : 
+                    mloCode.substring(0, 2).toUpperCase() || 'OTHER';
+                    
+                if (!mlosByCategory[category]) {
+                    mlosByCategory[category] = [];
+                }
+                mlosByCategory[category].push(mloCode);
+            });
+
+            // Sort categories according to specified order
+            const sortedCategories = [];
+            categoryOrder.forEach(cat => {
+                if (mlosByCategory[cat]) {
+                    sortedCategories.push([cat, mlosByCategory[cat].sort()]);
+                }
+            });
+            
+            // Add any remaining categories
+            Object.entries(mlosByCategory).forEach(([cat, mlos]) => {
+                if (!categoryOrder.includes(cat)) {
+                    sortedCategories.push([cat, mlos.sort()]);
+                }
+            });
+
+            // Create sorted MLO list
+            const sortedMLOs = sortedCategories.flatMap(([cat, mlos]) => mlos);
+
+            let csvContent = 'PLO\\MLO,' + sortedMLOs.join(',') + '\n';
 
             uniquePLOs.forEach(ploCode => {
                 let row = ploCode;
-                uniqueMLOs.forEach(mloCode => {
+                sortedMLOs.forEach(mloCode => {
                     const result = alignmentResults.find(r => r.plo.plokood === ploCode && r.mlo.mlokood === mloCode);
                     const score = result ? result.score : 0;
                     row += ',' + score;
@@ -1827,9 +2259,289 @@
         }
 
         function exportReport() {
-            // Create a comprehensive report
-            const reportContent = generateReportContent();
-            downloadTextFile(reportContent, 'PLO-MLO-Analysis-Report.txt');
+            // Show PDF preview modal
+            showPdfPreview();
+        }
+
+        function showPdfPreview() {
+            const modal = document.getElementById('pdf-preview-modal');
+            const iframe = document.getElementById('pdf-preview-iframe');
+            
+            // Generate HTML content for preview
+            const previewContent = generatePreviewHTML();
+            
+            // Create a blob URL for the preview
+            const blob = new Blob([previewContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            iframe.src = url;
+            modal.style.display = 'flex';
+            
+            // Close modal when clicking outside content
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closePdfPreview();
+                }
+            });
+            
+            // Cleanup URL after modal is closed
+            modal.addEventListener('transitionend', () => {
+                if (modal.style.display === 'none') {
+                    URL.revokeObjectURL(url);
+                }
+            }, { once: true });
+        }
+
+        function closePdfPreview() {
+            const modal = document.getElementById('pdf-preview-modal');
+            modal.style.display = 'none';
+        }
+
+        function savePdfReport() {
+            // Generate PDF filename with programme code and date
+            const programmeCode = currentProgramme ? (currentProgramme.kavakood || currentProgramme.programmeCode || 'programme') : 'programme';
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            const fileName = `${programmeCode}-plo-mlo-alignment-report-${today}.pdf`;
+            
+            // Create full HTML content for PDF
+            const htmlContent = generatePDFHTML();
+            
+            // Use the browser's print functionality to save as PDF
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            // Trigger print dialog (user can choose "Save as PDF")
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+            
+            // Close the preview modal
+            closePdfPreview();
+        }
+
+        function generatePreviewHTML() {
+            const programmeCode = currentProgramme ? (currentProgramme.kavakood || currentProgramme.programmeCode || 'Unknown') : 'Unknown';
+            const programmeName = currentProgramme ? (currentProgramme.programmeNameEng || currentProgramme.programmeName || 'Programme') : 'Programme';
+            const today = new Date().toLocaleDateString();
+            
+            return `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PLO-MLO Alignment Report - ${programmeCode}</title>
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            margin: 20px; 
+            line-height: 1.6; 
+            color: #333;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 3px solid #aa1352;
+            padding-bottom: 20px;
+        }
+        .header h1 { 
+            color: #aa1352; 
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p { 
+            margin: 10px 0 5px 0; 
+            font-size: 16px;
+            color: #666;
+        }
+        .legend { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 20px 0;
+            border-left: 4px solid #aa1352;
+        }
+        .legend h3 { 
+            margin-top: 0; 
+            color: #aa1352;
+        }
+        .summary-stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 15px; 
+            margin: 20px 0;
+        }
+        .stat-card { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 8px; 
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .stat-number { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: #aa1352;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        th, td { 
+            border: 1px solid #dee2e6; 
+            padding: 8px; 
+            text-align: center;
+        }
+        th { 
+            background: #aa1352; 
+            color: white; 
+            font-weight: bold;
+        }
+        .score-1 { background-color: #ffcdd2; }
+        .score-2 { background-color: #ffecb3; }
+        .score-3 { background-color: #fff9c4; }
+        .score-4 { background-color: #c8e6c9; }
+        .score-5 { background-color: #a5d6a7; }
+        .plo-header { 
+            background: #f8f9fa !important; 
+            color: #aa1352 !important;
+            text-align: left !important;
+            font-weight: bold;
+        }
+        @media print {
+            body { margin: 0; }
+            .header { page-break-after: avoid; }
+            table { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Programme-Module Learning Outcomes Alignment Report</h1>
+        <p><strong>Programme:</strong> ${programmeCode} - ${programmeName}</p>
+        <p><strong>Generated:</strong> ${today}</p>
+    </div>
+
+    <div class="legend">
+        <h3>Alignment Score Legend</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <span style="background: #ffcdd2; padding: 5px 10px; border-radius: 15px;">1: Minimal alignment</span>
+            <span style="background: #ffecb3; padding: 5px 10px; border-radius: 15px;">2: Partial alignment</span>
+            <span style="background: #fff9c4; padding: 5px 10px; border-radius: 15px;">3: Moderate alignment</span>
+            <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 15px;">4: Strong alignment</span>
+            <span style="background: #a5d6a7; padding: 5px 10px; border-radius: 15px;">5: Excellent alignment</span>
+        </div>
+    </div>
+
+    ${generateMatrixHTML()}
+
+    <div style="margin-top: 40px; text-align: center; color: #666; border-top: 2px solid #dee2e6; padding-top: 20px;">
+        <p>Report generated by TalTech PLO-MLO Alignment Tool</p>
+    </div>
+</body>
+</html>`;
+        }
+
+        function generatePDFHTML() {
+            return generatePreviewHTML(); // Same content for PDF
+        }
+
+        function generateMatrixHTML() {
+            if (!alignmentResults || alignmentResults.length === 0) {
+                return '<p>No alignment data available.</p>';
+            }
+
+            const totalAlignments = alignmentResults.length;
+            const averageScore = (alignmentResults.reduce((sum, result) => sum + result.score, 0) / totalAlignments).toFixed(2);
+            
+            // Generate summary statistics
+            const scoreDistribution = [1,2,3,4,5].map(score => ({
+                score,
+                count: alignmentResults.filter(r => r.score === score).length,
+                percentage: ((alignmentResults.filter(r => r.score === score).length / totalAlignments) * 100).toFixed(1)
+            }));
+
+            let html = `
+    <div class="summary-stats">
+        <div class="stat-card">
+            <div class="stat-number">${totalAlignments}</div>
+            <div>Total Alignments</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">${averageScore}</div>
+            <div>Average Score</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">${currentPLOs.length}</div>
+            <div>Programme LOs</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">${currentMLOs.length}</div>
+            <div>Module LOs</div>
+        </div>
+    </div>
+
+    <h3 style="color: #aa1352; margin-top: 30px;">PLO-MLO Alignment Matrix</h3>
+    <table>`;
+
+            // Generate the same matrix table as in the main view
+            const uniqueMLOs = [...new Set(alignmentResults.map(r => r.mlo.mlokood))];
+            const uniquePLOs = [...new Set(alignmentResults.map(r => r.plo.plokood))];
+
+            // Sort MLOs by category
+            const categoryOrder = ['YL', 'P1', 'P2', 'E1', 'E2', 'GD', 'VB', 'MN'];
+            const mlosByCategory = {};
+            
+            uniqueMLOs.forEach(mloCode => {
+                const category = mloCode.includes('_') ? 
+                    mloCode.split('_')[0].toUpperCase() : 
+                    mloCode.substring(0, 2).toUpperCase() || 'OTHER';
+                    
+                if (!mlosByCategory[category]) {
+                    mlosByCategory[category] = [];
+                }
+                mlosByCategory[category].push(mloCode);
+            });
+
+            const sortedMLOs = [];
+            categoryOrder.forEach(cat => {
+                if (mlosByCategory[cat]) {
+                    sortedMLOs.push(...mlosByCategory[cat].sort());
+                }
+            });
+
+            // Add remaining categories not in the specified order
+            Object.keys(mlosByCategory).forEach(cat => {
+                if (!categoryOrder.includes(cat)) {
+                    sortedMLOs.push(...mlosByCategory[cat].sort());
+                }
+            });
+
+            // Table header
+            html += '<thead><tr><th style="width: 150px;">PLO / MLO</th>';
+            sortedMLOs.forEach(mloCode => {
+                html += '<th style="width: 60px; font-size: 10px;">' + mloCode + '</th>';
+            });
+            html += '</tr></thead><tbody>';
+
+            // Table rows
+            uniquePLOs.sort().forEach(ploCode => {
+                html += '<tr><td class="plo-header">' + ploCode + '</td>';
+                sortedMLOs.forEach(mloCode => {
+                    const result = alignmentResults.find(r => r.plo.plokood === ploCode && r.mlo.mlokood === mloCode);
+                    if (result) {
+                        html += '<td class="score-' + result.score + '"><strong>' + result.score + '</strong></td>';
+                    } else {
+                        html += '<td>-</td>';
+                    }
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            return html;
         }
 
         function generateReportContent() {
@@ -1886,5 +2598,28 @@
         // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', init);
     </script>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdf-preview-modal" class="pdf-preview-modal">
+        <div class="pdf-preview-content">
+            <div class="pdf-preview-header">
+                <h3><i class="fas fa-file-pdf"></i> Report Preview</h3>
+                <button class="pdf-preview-close" onclick="closePdfPreview()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="pdf-preview-body">
+                <iframe id="pdf-preview-iframe" class="pdf-preview-iframe"></iframe>
+            </div>
+            <div class="pdf-preview-actions">
+                <button class="pdf-action-btn pdf-cancel-btn" onclick="closePdfPreview()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="pdf-action-btn pdf-save-btn" onclick="savePdfReport()">
+                    <i class="fas fa-download"></i> Save as PDF
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
