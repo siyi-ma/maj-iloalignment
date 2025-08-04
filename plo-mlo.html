@@ -397,26 +397,7 @@
             color: rgba(255,255,255,0.7);
         }
         
-        /* Overview and Legend Styles */
-        .overview-section {
-            background: var(--tt-white);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--tt-burgundy);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .overview-section h2 {
-            color: var(--tt-burgundy);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-        
+        /* Score Legend Styles */
         .score-legend {
             background: #f8f9fa;
             border-radius: 8px;
@@ -625,6 +606,107 @@
             background: var(--tt-white);
             color: var(--tt-burgundy);
             transform: translateY(-2px);
+        }
+
+        /* Page Header with TalTech colors */
+        .page-header {
+            background: linear-gradient(135deg, var(--tt-burgundy) 40%, var(--tt-magenta) 60%);
+            color: var(--tt-white);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.2);
+            position: relative;
+        }
+        
+        .page-header h1 {
+            color: var(--tt-white);
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: var(--tt-grey-2);
+            text-transform: none;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+        }
+        
+        .header-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: var(--tt-white);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .config-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--tt-white);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .config-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Floating Home Button */
+        .floating-home {
+            position: fixed;
+            bottom: 80px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--tt-dark-blue);
+            color: var(--tt-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 43, 96, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        .floating-home:hover {
+            background: var(--tt-burgundy);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
         }
 
         /* Main container */
@@ -1064,11 +1146,14 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="header-content">
-                <h1 id="header-title"><i class="fas fa-graduation-cap"></i> PLO-MLO Learning Outcome Alignment</h1>
-                <p id="header-subtitle">Programme and Module Learning Outcomes Alignment Tool</p>
+        <!-- Page Header -->
+        <header class="page-header">
+            <div class="header-controls">
+                <button id="ai-assistant-btn" class="header-btn" onclick="openAIAssistant()" title="Open AI Assistant for custom prompts and analysis">
+                    <i class="fas fa-robot"></i> AI Assistant
+                </button>
             </div>
+            <h1 id="page-title"><i class="fas fa-graduation-cap"></i> PLO-MLO Alignment</h1>
         </header>
 
         <main>
@@ -1081,11 +1166,6 @@
                 </label>
                 <span class="language-label" id="eng-label">ENG</span>
             </div>
-
-            <section id="overview" class="overview-section">
-                <h2><i class="fas fa-info-circle"></i> Overview</h2>
-                <p>This analysis examines the alignment between Programme Learning Outcomes (PLOs) and Module Learning Outcomes (MLOs) for the selected study programme. The assessment uses a 5-point scale to evaluate how well module outcomes support the achievement of programme-level goals.</p>
-            </section>
 
             <!-- Methodology Section -->
             <section id="methodology" class="analysis-summary">
@@ -1196,12 +1276,15 @@
         </div>
         
         <div class="report-footer-actions">
-            <button id="export-plo-mlo-btn" class="export-btn"><i class="fas fa-file-export"></i> Export Complete Report</button>
+            <button id="export-plo-mlo-btn" class="export-btn"><i class="fas fa-file-export"></i> Export Report</button>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
+    <script src="js/personal-api-config.js"></script>
+    <script src="js/secure-api-config.js"></script>
+    <script src="js/enhanced-ai-features.js"></script>
     <script>
         // Global state
         let currentLanguage = 'english';
@@ -1210,6 +1293,24 @@
         let currentMLOs = [];
         let alignmentResults = [];
         let currentView = 'plo'; // 'plo' or 'mlo'
+
+        // Open AI Assistant in new window/tab
+        function openAIAssistant() {
+            // Open AI Assistant with context from current page
+            const currentContext = {
+                page: 'PLO-MLO Alignment',
+                programme: currentProgramme ? currentProgramme.name : null,
+                ploCount: currentPLOs.length,
+                mloCount: currentMLOs.length,
+                language: currentLanguage
+            };
+            
+            // Store context for AI assistant
+            sessionStorage.setItem('aiAssistantContext', JSON.stringify(currentContext));
+            
+            // Open in new tab
+            window.open('ai-assistant.html', '_blank');
+        }
 
         // Initialize the application
         async function init() {
@@ -1221,21 +1322,20 @@
                     return;
                 }
 
+                // Load programmes data first
+                await window.dataManager.loadProgrammes();
+
                 // Check for programme code in URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
                 const kavakood = urlParams.get('kavakood');
                 
                 if (kavakood) {
-                    // Load programme by kavakood from URL parameter
-                    const programmes = window.dataManager.getProgrammes();
-                    currentProgramme = programmes.find(p => 
-                        (p.kavakood && p.kavakood.toLowerCase() === kavakood.toLowerCase()) ||
-                        (p.programmeCode && p.programmeCode.toLowerCase() === kavakood.toLowerCase())
-                    );
-                    
-                    if (currentProgramme) {
-                        // Set the programme in data manager
-                        window.dataManager.setCurrentProgramme(currentProgramme);
+                    // Set current programme by kavakood from URL parameter
+                    try {
+                        currentProgramme = window.dataManager.setCurrentProgramme(kavakood);
+                    } catch (error) {
+                        console.warn(`Programme ${kavakood} not found:`, error);
+                        // Continue with existing programme from sessionStorage if available
                     }
                 }
                 
@@ -1271,7 +1371,6 @@
                 await performAlignment();
 
                 // Render all sections
-                renderOverview();
                 renderSummary();
                 renderPLOs();
                 renderMLOs();
@@ -1280,30 +1379,51 @@
 
                 // Setup event listeners
                 setupEventListeners();
+                
+                // Setup floating home button
+                setupFloatingHomeButton();
 
             } catch (error) {
                 console.error('Initialization error:', error);
                 showError('Failed to load programme data. Please try again.');
             }
         }
+        
+        // Setup floating home button functionality
+        function setupFloatingHomeButton() {
+            const floatingHomeBtn = document.getElementById('home-btn-float');
+            if (floatingHomeBtn) {
+                floatingHomeBtn.addEventListener('click', () => {
+                    // Get current URL parameters for continuation
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const kavakood = urlParams.get('kavakood');
+                    
+                    // Navigate to index with current programme context
+                    if (kavakood) {
+                        window.location.href = `index.html?kavakood=${kavakood}`;
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        }
 
         function updateHeader() {
             if (currentProgramme) {
-                const programmeCode = currentProgramme.kavakood || currentProgramme.programmeCode || '';
-                const programmeName = currentProgramme.programmeNameEng || currentProgramme.programmeName || '';
+                const programmeCode = currentProgramme.code || currentProgramme.kavakood || currentProgramme.programmeCode || '';
+                const programmeNameText = currentProgramme.kavanimetusik || currentProgramme.programmeNameEng || currentProgramme.programmeName || '';
                 
-                const headerTitle = document.getElementById('header-title');
-                const headerSubtitle = document.getElementById('header-subtitle');
+                const pageTitle = document.getElementById('page-title');
+                const programmeNameElement = document.getElementById('current-programme-name');
                 
-                if (programmeCode && programmeName) {
-                    headerTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeCode} - PLO-MLO Alignment`;
-                    headerSubtitle.textContent = programmeName;
-                } else if (programmeCode) {
-                    headerTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeCode} - PLO-MLO Alignment`;
-                    headerSubtitle.textContent = 'Programme Learning Outcomes Alignment Analysis';
-                } else if (programmeName) {
-                    headerTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> PLO-MLO Alignment`;
-                    headerSubtitle.textContent = programmeName;
+                if (pageTitle && programmeCode && programmeNameText) {
+                    pageTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeCode.toUpperCase()} ${programmeNameText} - PLO-MLO Alignment`;
+                }
+                
+                if (programmeNameElement && programmeCode && programmeNameText) {
+                    programmeNameElement.textContent = `${programmeCode.toUpperCase()} - ${programmeNameText}`;
+                } else if (programmeNameElement && programmeCode) {
+                    programmeNameElement.textContent = programmeCode.toUpperCase();
                 }
             }
         }
@@ -1511,6 +1631,34 @@
             const mloWords = extractWords(mloText || '');
             const ploWords = extractWords(ploText || '');
             
+            // Bloom's Taxonomy analysis
+            const bloomsLevels = {
+                remember: ['remember', 'recall', 'identify', 'define', 'list', 'name', 'state', 'describe'],
+                understand: ['understand', 'explain', 'summarize', 'interpret', 'classify', 'compare', 'discuss'],
+                apply: ['apply', 'use', 'implement', 'execute', 'carry out', 'practice', 'employ', 'demonstrate'],
+                analyze: ['analyze', 'examine', 'evaluate', 'assess', 'investigate', 'differentiate', 'break down'],
+                evaluate: ['evaluate', 'judge', 'critique', 'assess', 'justify', 'validate', 'defend', 'argue'],
+                create: ['create', 'design', 'develop', 'construct', 'generate', 'produce', 'formulate', 'synthesize']
+            };
+            
+            // Detect cognitive levels in PLO and MLO
+            let ploBloomsLevel = 'remember';
+            let mloBloomsLevel = 'remember';
+            
+            Object.entries(bloomsLevels).forEach(([level, verbs]) => {
+                if (verbs.some(verb => ploText.toLowerCase().includes(verb))) {
+                    ploBloomsLevel = level;
+                }
+                if (verbs.some(verb => mloText.toLowerCase().includes(verb))) {
+                    mloBloomsLevel = level;
+                }
+            });
+            
+            // Level progression mapping
+            const levelHierarchy = ['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create'];
+            const ploLevelIndex = levelHierarchy.indexOf(ploBloomsLevel);
+            const mloLevelIndex = levelHierarchy.indexOf(mloBloomsLevel);
+            
             // Analyze specific content gaps
             const missingCompetencies = [];
             const competencyCategories = {
@@ -1535,37 +1683,46 @@
                 }
             });
             
-            // Generate specific suggestions based on content analysis
-            if (keywordOverlap < 5) {
-                const ploKeyTerms = ploWords.filter(word => word.length > 5).slice(0, 3);
-                if (ploKeyTerms.length > 0) {
-                    suggestions.push(`Incorporate key PLO terminology: "${ploKeyTerms.join('", "')}" into this MLO description to strengthen semantic alignment.`);
-                }
+            // Bloom's taxonomy specific suggestions
+            if (ploLevelIndex > mloLevelIndex) {
+                const targetLevel = levelHierarchy[ploLevelIndex];
+                const suggestedVerbs = bloomsLevels[targetLevel].slice(0, 3);
+                suggestions.push(`Elevate cognitive level from "${mloBloomsLevel}" to "${targetLevel}" by using action verbs like: "${suggestedVerbs.join('", "')}"`);
+            }
+            
+            // Content-specific recommendations based on actual PLO text
+            const ploKeyTerms = ploWords.filter(word => 
+                word.length > 4 && 
+                !['student', 'students', 'learning', 'knowledge', 'skills', 'ability', 'capable'].includes(word.toLowerCase())
+            ).slice(0, 3);
+            
+            if (keywordOverlap < 10 && ploKeyTerms.length > 0) {
+                suggestions.push(`Incorporate specific PLO terminology: "${ploKeyTerms.join('", "')}" to strengthen semantic alignment with programme outcomes.`);
             }
             
             if (missingCompetencies.length > 0) {
                 const primaryMissing = missingCompetencies[0];
-                suggestions.push(`Enhance ${primaryMissing.category} competency by incorporating terms like "${primaryMissing.keywords.slice(0, 2).join('" or "')}" in learning activities.`);
+                suggestions.push(`Address missing ${primaryMissing.category} competency by incorporating "${primaryMissing.keywords.slice(0, 2).join('" and "')}" in learning activities.`);
             }
             
+            // Specific score-based recommendations
             if (score === 1) {
-                suggestions.push(`Restructure this MLO to directly address PLO requirements. Consider rewriting to explicitly demonstrate how students will "${ploWords.filter(w => ['develop', 'understand', 'apply', 'analyze', 'create'].includes(w.toLowerCase()))[0] || 'achieve'}" the stated outcomes.`);
+                suggestions.push(`Critical misalignment detected. Restructure MLO to directly address PLO core competencies. Consider explicit mapping to programme learning outcomes.`);
+            } else if (score === 2) {
+                suggestions.push(`Partial alignment present. Enhance MLO by adding specific assessment methods and learning activities that demonstrate PLO achievement.`);
             }
             
-            // Content-specific suggestions based on MLO analysis
-            if (mloText.toLowerCase().includes('understand') && !mloText.toLowerCase().includes('apply')) {
-                suggestions.push(`Elevate cognitive level from understanding to application/analysis to better align with PLO expectations.`);
-            }
-            
+            // Content depth and specificity suggestions
             if (mloText.length < 50) {
-                suggestions.push(`Expand MLO description to include specific skills, knowledge areas, and assessment methods that demonstrate PLO achievement.`);
+                suggestions.push(`Expand MLO description to include specific learning objectives, skills development, and measurable outcomes that align with PLO requirements.`);
+            }
+            
+            // Assessment and demonstration suggestions
+            if (!mloText.toLowerCase().includes('assess') && !mloText.toLowerCase().includes('demonstrat')) {
+                suggestions.push(`Add explicit assessment criteria or demonstration methods to show how students will achieve the stated PLO competencies.`);
             }
             
             return suggestions.length > 0 ? suggestions : null;
-        }
-
-        function renderOverview() {
-            // Overview is already rendered in HTML
         }
 
         function renderSummary() {
@@ -1760,10 +1917,12 @@
                 <thead>
                     <tr>
                         <th class="code-col">Code</th>
-                        <th class="content-col">Learning Outcome</th>
+                        <th class="content-col" onclick="togglePLOTable()" style="cursor: pointer;">
+                            Learning Outcome <i id="plo-table-caret" class="fas fa-chevron-down" style="margin-left: 5px;"></i>
+                        </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="plo-table-body">
                     ${currentPLOs.map(plo => `
                         <tr>
                             <td class="plo-code code-col">${plo.plokood || 'PLO'}</td>
@@ -1979,6 +2138,14 @@
                                         `${result.competencyMatches.length} found (${result.competencyMatches.map(m => m.category).join(', ')})` : 'none detected'}
                                     </div>
                                     ${result.bloomsAlignment ? `<div style="margin-top: 4px;"><strong>Bloom's level:</strong> ${result.bloomsAlignment}</div>` : ''}
+                                    ${improvementSuggestions && improvementSuggestions.length > 0 ? `
+                                        <div style="margin-top: 8px; padding: 6px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                                            <strong><i class="fas fa-lightbulb" style="color: #856404;"></i> Improvement Suggestions:</strong>
+                                            <ul style="margin: 4px 0 0 0; padding-left: 16px;">
+                                                ${improvementSuggestions.map(suggestion => `<li style="margin-bottom: 2px;">${suggestion}</li>`).join('')}
+                                            </ul>
+                                        </div>
+                                    ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -2081,11 +2248,11 @@
                                             `${result.competencyMatches.length} found (${result.competencyMatches.map(m => m.category).join(', ')})` : 'none detected'}
                                         </small>
                                     </div>
-                                    ${improvementSuggestions ? `
-                                        <div class="improvement-suggestions">
-                                            <strong>Improvement suggestions:</strong>
-                                            <ul>
-                                                ${improvementSuggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+                                    ${improvementSuggestions && improvementSuggestions.length > 0 ? `
+                                        <div style="margin-top: 8px; padding: 6px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                                            <strong><i class="fas fa-lightbulb" style="color: #856404;"></i> Improvement Suggestions:</strong>
+                                            <ul style="margin: 4px 0 0 0; padding-left: 16px;">
+                                                ${improvementSuggestions.map(suggestion => `<li style="margin-bottom: 2px;">${suggestion}</li>`).join('')}
                                             </ul>
                                         </div>
                                     ` : ''}
@@ -2180,6 +2347,21 @@
             document.getElementById('methodology').scrollIntoView({ behavior: 'smooth' });
         }
 
+        function togglePLOTable() {
+            const tableBody = document.getElementById('plo-table-body');
+            const caret = document.getElementById('plo-table-caret');
+            
+            if (tableBody && caret) {
+                if (tableBody.style.display === 'none') {
+                    tableBody.style.display = '';
+                    caret.className = 'fas fa-chevron-down';
+                } else {
+                    tableBody.style.display = 'none';
+                    caret.className = 'fas fa-chevron-right';
+                }
+            }
+        }
+
         function exportToExcel() {
             // Create CSV data for Excel export
             const csvData = generateCSVData();
@@ -2259,8 +2441,13 @@
         }
 
         function exportReport() {
-            // Show PDF preview modal
-            showPdfPreview();
+            // Generate full HTML content including detailed analysis
+            const htmlContent = generateCompleteReportHTML();
+            
+            // Open in a new tab
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write(htmlContent);
+            newWindow.document.close();
         }
 
         function showPdfPreview() {
@@ -2589,6 +2776,165 @@
                 link.click();
                 document.body.removeChild(link);
             }
+        }
+
+        function generateCompleteReportHTML() {
+            const programmeCode = currentProgramme ? (currentProgramme.kavakood || currentProgramme.programmeCode || 'Unknown') : 'Unknown';
+            const programmeName = currentProgramme ? (currentProgramme.programmeNameEng || currentProgramme.programmeName || 'Programme') : 'Programme';
+            const today = new Date().toLocaleDateString();
+            
+            // Get the current content from the visible page
+            const summaryContent = document.getElementById('summary-content').innerHTML;
+            const matrixContent = document.getElementById('matrix-container').innerHTML;
+            const detailedContent = document.getElementById('detailed-container').innerHTML;
+            const ploContent = document.getElementById('plo-container').innerHTML;
+            const mloContent = document.getElementById('mlo-container').innerHTML;
+            const methodologyContent = document.querySelector('#methodology .summary-content').innerHTML;
+            
+            return `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PLO-MLO Alignment Report - ${programmeCode}</title>
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            margin: 20px; 
+            line-height: 1.6; 
+            color: #333;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 3px solid #aa1352;
+            padding-bottom: 20px;
+        }
+        .header h1 { 
+            color: #aa1352; 
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p { 
+            margin: 10px 0 5px 0; 
+            font-size: 16px;
+            color: #666;
+        }
+        .section { 
+            margin: 30px 0; 
+        }
+        .section h2 { 
+            color: #aa1352; 
+            border-bottom: 2px solid #aa1352; 
+            padding-bottom: 10px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0;
+            font-size: 11px;
+        }
+        th, td { 
+            border: 1px solid #dee2e6; 
+            padding: 6px; 
+            text-align: left;
+            vertical-align: top;
+        }
+        th { 
+            background: #aa1352; 
+            color: white; 
+            font-weight: bold;
+            text-align: center;
+        }
+        .score-1 { background-color: #ffcdd2; text-align: center; }
+        .score-2 { background-color: #ffecb3; text-align: center; }
+        .score-3 { background-color: #fff9c4; text-align: center; }
+        .score-4 { background-color: #c8e6c9; text-align: center; }
+        .score-5 { background-color: #a5d6a7; text-align: center; }
+        .plo-header, .mlo-header { 
+            background: #f8f9fa !important; 
+            color: #aa1352 !important;
+            text-align: left !important;
+            font-weight: bold;
+        }
+        .chart-container { 
+            display: flex; 
+            gap: 10px; 
+            margin: 10px 0; 
+        }
+        .chart-bar { 
+            padding: 5px; 
+            border-radius: 4px; 
+            min-width: 60px; 
+            text-align: center; 
+            font-size: 10px;
+        }
+        .keyword-highlight { 
+            background-color: #ffeb3b; 
+            padding: 1px 3px; 
+            border-radius: 3px; 
+            font-weight: bold; 
+        }
+        .improvement-suggestions {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 10px;
+        }
+        .detailed-breakdown-table {
+            font-size: 10px;
+        }
+        .justification-cell {
+            font-size: 9px;
+            max-width: 200px;
+        }
+        @media print {
+            body { margin: 0; font-size: 10px; }
+            .header { page-break-after: avoid; }
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Programme-Module Learning Outcomes Alignment Report</h1>
+        <p><strong>Programme:</strong> ${programmeCode} - ${programmeName}</p>
+        <p><strong>Generated:</strong> ${today}</p>
+    </div>
+
+    <div class="section">
+        <h2>Methodology</h2>
+        ${methodologyContent}
+    </div>
+
+    <div class="section">
+        <h2>Alignment Summary</h2>
+        ${summaryContent}
+    </div>
+
+    <div class="section">
+        <h2>Programme Learning Outcomes (PLOs)</h2>
+        ${ploContent}
+    </div>
+
+    <div class="section">
+        <h2>Module Learning Outcomes (MLOs)</h2>
+        ${mloContent}
+    </div>
+
+    <div class="section">
+        <h2>Alignment Matrix</h2>
+        ${matrixContent}
+    </div>
+
+    <div class="section">
+        <h2>Detailed Breakdown Analysis</h2>
+        ${detailedContent}
+    </div>
+</body>
+</html>`;
         }
 
         function showError(message) {

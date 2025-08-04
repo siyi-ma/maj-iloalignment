@@ -11,6 +11,7 @@ config/secrets.json
 secrets/
 *.key
 *.pem
+js/personal-api-config.js
 
 # Python
 __pycache__/

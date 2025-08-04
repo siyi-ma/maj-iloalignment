@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant with Custom Prompts</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quota-info {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .prompt-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .prompt-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: white;
+        }
+        
+        .tab-button:not(.active) {
+            background: #e9ecef;
+            color: #666;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group textarea, 
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group textarea:focus,
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #aa1352;
+        }
+        
+        .advanced-options {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .option-group label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .option-group input[type="range"] {
+            margin-bottom: 5px;
+        }
+        
+        .range-value {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(170, 19, 82, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .results-section {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 25px;
+            min-height: 200px;
+        }
+        
+        .result-success {
+            border-color: #28a745;
+        }
+        
+        .result-error {
+            border-color: #dc3545;
+        }
+        
+        .result-loading {
+            border-color: #ffc107;
+            background: #fff9e6;
+        }
+        
+        .result-content {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .result-meta {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+        }
+        
+        .quick-prompts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .quick-prompt {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .quick-prompt:hover {
+            background: #bbdefb;
+            transform: translateY(-1px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Assistant for Education</h1>
+            <p>Powered by Gemini 1.5 Flash • Custom Prompts & PLO-MLO Analysis</p>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-indicator">
+                <span id="status-indicator">🔄 Initializing...</span>
+                <span id="status-text">Connecting to AI service...</span>
+            </div>
+            <div class="quota-info">
+                <small>Free: 15 req/min • 1M tokens/day • 1.5K req/day</small>
+            </div>
+        </div>
+
+        <div class="prompt-section">
+            <div class="prompt-tabs">
+                <button class="tab-button active" onclick="switchTab('custom')">Custom Prompt</button>
+                <button class="tab-button" onclick="switchTab('plo-mlo')">PLO-MLO Analysis</button>
+                <button class="tab-button" onclick="switchTab('course')">Course Analysis</button>
+            </div>
+
+            <!-- Custom Prompt Tab -->
+            <div id="custom-tab" class="tab-content active">
+                <div class="form-group">
+                    <label for="custom-prompt">💬 Your Custom Prompt</label>
+                    <textarea id="custom-prompt" rows="6" placeholder="Ask anything about curriculum design, learning outcomes, educational best practices, or any other topic...
+
+Examples:
+• How can I improve assessment alignment with learning outcomes?
+• What are the best practices for writing measurable learning objectives?
+• Analyze this course description for potential improvements..."></textarea>
+                </div>
+
+                <div class="quick-prompts">
+                    <div class="quick-prompt" onclick="setQuickPrompt('assessment')">
+                        📝 Assessment Strategy Help
+                    </div>
+                    <div class="quick-prompt" onclick="setQuickPrompt('bloom')">
+                        🧠 Bloom's Taxonomy Analysis
+                    </div>
+                    <div class="quick-prompt" onclick="setQuickPrompt('curriculum')">
+                        📚 Curriculum Design Tips
+                    </div>
+                    <div class="quick-prompt" onclick="setQuickPrompt('outcomes')">
+                        🎯 Learning Outcomes Review
+                    </div>
+                </div>
+
+                <details class="advanced-options">
+                    <summary style="cursor: pointer; font-weight: 600; margin-bottom: 15px;">🔧 Advanced Options</summary>
+                    <div class="options-grid">
+                        <div class="option-group">
+                            <label>Creativity (Temperature)</label>
+                            <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7" oninput="updateRangeValue('temperature')">
+                            <div class="range-value" id="temperature-value">0.7</div>
+                        </div>
+                        <div class="option-group">
+                            <label>Response Length (Max Tokens)</label>
+                            <input type="range" id="maxTokens" min="256" max="4096" step="256" value="2048" oninput="updateRangeValue('maxTokens')">
+                            <div class="range-value" id="maxTokens-value">2048</div>
+                        </div>
+                        <div class="option-group">
+                            <label>Focus (Top P)</label>
+                            <input type="range" id="topP" min="0.1" max="1" step="0.1" value="0.8" oninput="updateRangeValue('topP')">
+                            <div class="range-value" id="topP-value">0.8</div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- PLO-MLO Analysis Tab -->
+            <div id="plo-mlo-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="plo-text">🎓 Programme Learning Outcome (PLO)</label>
+                    <textarea id="plo-text" rows="3" placeholder="Enter the Programme Learning Outcome to analyze..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="mlo-text">📖 Module Learning Outcome (MLO)</label>
+                    <textarea id="mlo-text" rows="3" placeholder="Enter the Module Learning Outcome to compare..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="current-score">📊 Current Alignment Score (1-5)</label>
+                    <input type="number" id="current-score" min="1" max="5" value="3" placeholder="Rate current alignment">
+                </div>
+            </div>
+
+            <!-- Course Analysis Tab -->
+            <div id="course-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="course-description">📚 Course Description</label>
+                    <textarea id="course-description" rows="4" placeholder="Enter the course description or content to analyze..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="learning-outcomes">🎯 Learning Outcomes (one per line)</label>
+                    <textarea id="learning-outcomes" rows="5" placeholder="Enter learning outcomes, one per line:
+1. Students will be able to...
+2. Upon completion, learners can...
+3. At the end of this course..."></textarea>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="analyze-btn" class="btn btn-primary" onclick="runAnalysis()">
+                    🚀 Analyze with AI
+                </button>
+                <button class="btn btn-secondary" onclick="clearResults()">
+                    🗑️ Clear Results
+                </button>
+            </div>
+        </div>
+
+        <div id="results-section" class="results-section">
+            <h3>💡 AI Analysis Results</h3>
+            <div id="result-content" class="result-content">
+                Results will appear here after you run an analysis...
+                
+                Try the different tabs above:
+                • <strong>Custom Prompt</strong>: Ask any educational question
+                • <strong>PLO-MLO Analysis</strong>: Compare learning outcomes
+                • <strong>Course Analysis</strong>: Analyze course content and outcomes
+            </div>
+            <div id="result-meta" class="result-meta" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="js/personal-api-config.js"></script>
+    <script src="js/secure-api-config.js"></script>
+    <script src="js/enhanced-ai-features.js"></script>
+
+    <script>
+        let currentTab = 'custom';
+
+        // Initialize the application
+        async function initApp() {
+            console.log('🚀 Initializing AI Assistant...');
+            
+            // Wait for AI features to initialize
+            let attempts = 0;
+            while (attempts < 10) {
+                if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
+                    updateStatus('✅ Ready', 'AI Assistant connected and ready to help!');
+                    break;
+                }
+                
+                updateStatus('🔄 Connecting...', `Initializing AI service... (${attempts + 1}/10)`);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                attempts++;
+            }
+            
+            if (attempts >= 10) {
+                updateStatus('❌ Connection Failed', 'Unable to connect to AI service. Check configuration.');
+            }
+        }
+
+        function updateStatus(indicator, text) {
+            document.getElementById('status-indicator').textContent = indicator;
+            document.getElementById('status-text').textContent = text;
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            currentTab = tabName;
+        }
+
+        function updateRangeValue(rangeName) {
+            const range = document.getElementById(rangeName);
+            const valueDisplay = document.getElementById(rangeName + '-value');
+            valueDisplay.textContent = range.value;
+        }
+
+        function setQuickPrompt(type) {
+            const prompts = {
+                assessment: "How can I design assessments that properly align with my learning outcomes? What are the best practices for ensuring assessment validity and reliability in higher education?",
+                bloom: "Analyze my learning outcomes using Bloom's Taxonomy. Are they appropriately distributed across cognitive levels? How can I improve the cognitive progression?",
+                curriculum: "What are the current best practices in curriculum design for higher education? How can I ensure my curriculum is both rigorous and engaging for students?",
+                outcomes: "Review my learning outcomes for clarity, measurability, and alignment with program goals. What improvements would you recommend?"
+            };
+            
+            document.getElementById('custom-prompt').value = prompts[type];
+        }
+
+        async function runAnalysis() {
+            const button = document.getElementById('analyze-btn');
+            const resultsSection = document.getElementById('results-section');
+            const resultContent = document.getElementById('result-content');
+            const resultMeta = document.getElementById('result-meta');
+            
+            // Disable button and show loading
+            button.disabled = true;
+            button.textContent = '🔄 Analyzing...';
+            resultsSection.className = 'results-section result-loading';
+            resultContent.textContent = 'AI is analyzing your request... This may take a few seconds.';
+            resultMeta.style.display = 'none';
+            
+            try {
+                let result;
+                
+                if (currentTab === 'custom') {
+                    // Custom prompt analysis
+                    const prompt = document.getElementById('custom-prompt').value;
+                    if (!prompt.trim()) {
+                        throw new Error('Please enter a prompt');
+                    }
+                    
+                    const options = {
+                        temperature: parseFloat(document.getElementById('temperature').value),
+                        maxTokens: parseInt(document.getElementById('maxTokens').value),
+                        topP: parseFloat(document.getElementById('topP').value)
+                    };
+                    
+                    result = await window.enhancedAIFeatures.executeCustomPrompt(prompt, {}, options);
+                    
+                } else if (currentTab === 'plo-mlo') {
+                    // PLO-MLO analysis
+                    const ploText = document.getElementById('plo-text').value;
+                    const mloText = document.getElementById('mlo-text').value;
+                    const score = parseInt(document.getElementById('current-score').value);
+                    
+                    if (!ploText.trim() || !mloText.trim()) {
+                        throw new Error('Please enter both PLO and MLO text');
+                    }
+                    
+                    result = await window.enhancedAIFeatures.generateImprovementSuggestions(ploText, mloText, score);
+                    
+                } else if (currentTab === 'course') {
+                    // Course analysis
+                    const courseDesc = document.getElementById('course-description').value;
+                    const outcomes = document.getElementById('learning-outcomes').value.split('\n').filter(line => line.trim());
+                    
+                    if (!courseDesc.trim() || outcomes.length === 0) {
+                        throw new Error('Please enter course description and learning outcomes');
+                    }
+                    
+                    result = await window.enhancedAIFeatures.analyzeCourseContent(courseDesc, outcomes);
+                }
+                
+                // Display results
+                if (result.success) {
+                    resultsSection.className = 'results-section result-success';
+                    resultContent.textContent = result.response;
+                    
+                    // Show metadata
+                    resultMeta.innerHTML = `
+                        <strong>Analysis Complete:</strong> 
+                        Tokens used: ~${result.tokensUsed || 'Unknown'} • 
+                        Model: Gemini 1.5 Flash • 
+                        Time: ${new Date().toLocaleTimeString()}
+                    `;
+                    resultMeta.style.display = 'block';
+                } else {
+                    throw new Error(result.error || 'Analysis failed');
+                }
+                
+            } catch (error) {
+                resultsSection.className = 'results-section result-error';
+                resultContent.textContent = `❌ Error: ${error.message}\n\nPlease check your input and try again. If the problem persists, verify your API configuration.`;
+                resultMeta.style.display = 'none';
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                button.textContent = '🚀 Analyze with AI';
+            }
+        }
+
+        function clearResults() {
+            const resultsSection = document.getElementById('results-section');
+            const resultContent = document.getElementById('result-content');
+            const resultMeta = document.getElementById('result-meta');
+            
+            resultsSection.className = 'results-section';
+            resultContent.textContent = 'Results cleared. Ready for new analysis...';
+            resultMeta.style.display = 'none';
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', initApp);
+    </script>
+</body>
+</html>

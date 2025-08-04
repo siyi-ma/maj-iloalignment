@@ -81,6 +81,42 @@
             text-transform: none;
             margin-bottom: 0.5rem;
         }
+
+        /* AI Assistant Section */
+        .ai-assistant-section {
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(170, 19, 82, 0.05), rgba(228, 6, 126, 0.05));
+            border-radius: 8px;
+            border: 1px solid var(--tt-grey-2);
+        }
+
+        .ai-assistant-btn {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-assistant-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
+            background: linear-gradient(135deg, var(--tt-magenta), var(--tt-burgundy));
+        }
+
+        .ai-assistant-btn i {
+            font-size: 1.1rem;
+        }
         
         .header-controls {
             display: flex;
@@ -89,6 +125,30 @@
             position: absolute;
             top: 2rem;
             right: 2rem;
+        }
+        
+        .header-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: var(--tt-white);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-btn i {
+            margin-right: 0.5rem;
         }
         
         .back-home, .config-btn {
@@ -115,6 +175,33 @@
             width: 40px;
             height: 40px;
             justify-content: center;
+        }
+        
+        /* Floating Home Button */
+        .floating-home {
+            position: fixed;
+            bottom: 80px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--tt-dark-blue);
+            color: var(--tt-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 43, 96, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        .floating-home:hover {
+            background: var(--tt-burgundy);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
         }
         
         /* Main sections */
@@ -518,6 +605,62 @@
             box-shadow: 0 4px 8px rgba(170, 19, 82, 0.3);
         }
 
+        /* AI Enhancement Styles */
+        .ai-badge {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ai-model-info {
+            display: block;
+            color: var(--tt-grey-1);
+            font-style: italic;
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .ai-enhanced-btn {
+            background: linear-gradient(135deg, #6a4c93, #9d50bb);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-enhanced-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .ai-enhanced-btn:hover:before {
+            left: 100%;
+        }
+
+        #ai-generate-clos {
+            border: 2px solid #6a4c93;
+            background: linear-gradient(135deg, rgba(106, 76, 147, 0.05), rgba(157, 80, 187, 0.05));
+        }
+
+        #ai-generate-clos:hover {
+            border-color: #9d50bb;
+            box-shadow: 0 4px 15px rgba(106, 76, 147, 0.3);
+        }
+
+        #ai-generate-clos .option-icon {
+            color: #6a4c93;
+        }
+
         /* CLO Editor */
         .clo-editor-item {
             background: var(--tt-grey-2);
@@ -862,11 +1005,6 @@
     gap: 1rem;
 }
 
-.threshold-display {
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
 .alignment-summary {
     margin-bottom: 2rem;
     padding: 1rem;
@@ -1017,6 +1155,93 @@
     color: var(--primary-color);
 }
 
+/* Enhanced Loading Styles */
+.loading-content {
+    text-align: center;
+    padding: 1rem;
+}
+
+.loading-text {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    color: var(--tt-dark-blue);
+    font-weight: 500;
+}
+
+.progress-container {
+    margin: 1.5rem 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--tt-grey-2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--tt-burgundy), var(--tt-magenta));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.3) 50%,
+        transparent 100%
+    );
+    animation: progressShimmer 2s infinite;
+}
+
+@keyframes progressShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    color: var(--tt-grey-1);
+    font-weight: 500;
+}
+
+.patience-message {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(170, 19, 82, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid var(--tt-burgundy);
+    color: var(--tt-dark-blue);
+    font-style: italic;
+}
+
+.patience-message i {
+    color: var(--tt-burgundy);
+    margin-right: 0.5rem;
+    animation: spin 2s linear infinite;
+}
+
+.spinner {
+    border: 4px solid var(--tt-grey-2);
+    border-top: 4px solid var(--tt-burgundy);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .course-info-grid {
@@ -1056,24 +1281,370 @@
         padding: 0.5rem 0.25rem;
     }
 }
+
+/* New PLO-MLO Style Layout */
+.alignment-overview {
+    background: linear-gradient(135deg, var(--tt-white) 0%, var(--tt-grey-2) 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--tt-grey-2);
+}
+
+.overview-header h4 {
+    margin-bottom: 1.5rem;
+    color: var(--tt-burgundy);
+}
+
+.summary-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.metric-card {
+    background: var(--tt-white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 2px solid var(--tt-grey-2);
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.metric-card.strong {
+    border-color: #28a745;
+    background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+}
+
+.metric-card.moderate {
+    border-color: #ffc107;
+    background: linear-gradient(135deg, #fffef8 0%, #fff8e1 100%);
+}
+
+.metric-card.weak {
+    border-color: #dc3545;
+    background: linear-gradient(135deg, #fff8f8 0%, #ffeaea 100%);
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--tt-dark-blue);
+    display: block;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--tt-grey-1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+}
+
+.matrix-section {
+    margin-bottom: 2rem;
+}
+
+.compact-matrix {
+    overflow-x: auto;
+    background: var(--tt-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.alignment-matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.alignment-matrix-table th,
+.alignment-matrix-table td {
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid var(--tt-grey-2);
+}
+
+.alignment-matrix-table th {
+    background: var(--tt-dark-blue);
+    color: var(--tt-white);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.matrix-corner {
+    background: var(--tt-burgundy) !important;
+}
+
+.clo-header {
+    background: var(--tt-grey-2);
+    font-weight: bold;
+    color: var(--tt-dark-blue);
+}
+
+.matrix-cell {
+    font-weight: bold;
+    min-width: 40px;
+}
+
+.matrix-cell.score-very-strong {
+    background: #28a745;
+    color: white;
+}
+
+.matrix-cell.score-strong {
+    background: #6f42c1;
+    color: white;
+}
+
+.matrix-cell.score-moderate {
+    background: #ffc107;
+    color: #000;
+}
+
+.matrix-cell.score-weak {
+    background: #fd7e14;
+    color: white;
+}
+
+.matrix-cell.score-none {
+    background: #dc3545;
+    color: white;
+}
+
+.matrix-cell.no-data {
+    background: var(--tt-grey-2);
+    color: var(--tt-grey-1);
+}
+
+.detailed-breakdown {
+    background: var(--tt-white);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.breakdown-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--tt-grey-2);
+    background: var(--tt-white);
+    color: var(--tt-dark-blue);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    background: var(--tt-grey-2);
+}
+
+.filter-btn.active {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    border-color: var(--tt-burgundy);
+}
+
+.breakdown-table-container {
+    overflow-x: auto;
+}
+
+.breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.breakdown-table th {
+    background: var(--tt-dark-blue);
+    color: var(--tt-white);
+    padding: 1rem 0.75rem;
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.breakdown-table td {
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid var(--tt-grey-2);
+    vertical-align: top;
+}
+
+.breakdown-row:hover {
+    background: rgba(170, 19, 82, 0.05);
+}
+
+.clo-code {
+    font-weight: bold;
+    color: var(--tt-burgundy);
+    min-width: 60px;
+}
+
+.clo-content .content-text {
+    line-height: 1.4;
+    color: var(--tt-black);
+}
+
+.mlo-info {
+    min-width: 150px;
+}
+
+.mlo-info strong {
+    color: var(--tt-dark-blue);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.mlo-content {
+    font-size: 0.85rem;
+    color: var(--tt-grey-1);
+    line-height: 1.3;
+}
+
+.score-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    min-width: 60px;
+    font-weight: bold;
+}
+
+.score-badge.score-very-strong {
+    background: #28a745;
+    color: white;
+}
+
+.score-badge.score-strong {
+    background: #6f42c1;
+    color: white;
+}
+
+.score-badge.score-moderate {
+    background: #ffc107;
+    color: #000;
+}
+
+.score-badge.score-weak {
+    background: #fd7e14;
+    color: white;
+}
+
+.score-badge.score-none {
+    background: #dc3545;
+    color: white;
+}
+
+.score-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+    opacity: 0.9;
+}
+
+.analysis-cell {
+    max-width: 300px;
+}
+
+.justification {
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    color: var(--tt-black);
+}
+
+.recommendations {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 3px solid #dc3545;
+    padding: 0.75rem;
+    border-radius: 4px;
+}
+
+.recommendations strong {
+    color: #dc3545;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.rec-item {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+    color: #721c24;
+}
+
+.no-results {
+    text-align: center;
+    color: var(--tt-grey-1);
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Responsive adjustments for new layout */
+@media (max-width: 768px) {
+    .summary-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .breakdown-filters {
+        justify-content: center;
+    }
+    
+    .breakdown-table th,
+    .breakdown-table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8rem;
+    }
+    
+    .analysis-cell {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-metrics {
+        grid-template-columns: 1fr;
+    }
+    
+    .alignment-overview {
+        padding: 1rem;
+    }
+    
+    .detailed-breakdown {
+        padding: 1rem;
+    }
+}
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Page Header -->
         <header class="page-header">
-            <div class="header-controls">
-                <a href="index.html" class="back-home">
-                    <i class="fas fa-home"></i> Home
-                </a>
-                <button id="api-config-btn" class="config-btn" title="Configure Gemini API">
-                    <i class="fas fa-cog"></i>
-                </button>
-            </div>
-            <h1><i class="fas fa-clipboard-list"></i> CLO-MLO Alignment</h1>
+            <h1 id="page-title"><i class="fas fa-clipboard-list"></i> CLO-MLO Alignment</h1>
             <p>Course Learning Outcomes to Module Learning Outcomes Analysis</p>
-            <p><strong>Programme:</strong> <span id="current-programme-name">Loading...</span></p>
         </header>
+
+        <!-- AI Assistant Button -->
+        <div class="ai-assistant-section">
+            <button id="ai-assistant-btn" class="ai-assistant-btn" onclick="openAIAssistant()" title="Open AI Assistant for custom prompts and analysis">
+                <i class="fas fa-robot"></i> AI Assistant
+            </button>
+        </div>
 
         <main>
             <!-- Course Selection Section -->
@@ -1174,13 +1745,14 @@
 
                     <div class="option-card" id="ai-generate-clos">
                         <div class="option-icon">
-                            <i class="fas fa-magic"></i>
+                            <i class="fas fa-robot"></i>
                         </div>
                         <div class="option-content">
-                            <h3>AI Generation</h3>
-                            <p>Generate new CLOs based on course aims</p>
+                            <h3>AI Generation <span class="ai-badge">Enhanced</span></h3>
+                            <p>Generate contextual CLOs using course data and programme alignment</p>
+                            <small class="ai-model-info">Powered by Gemini 1.5 Flash</small>
                         </div>
-                        <button class="option-btn">Generate with AI</button>
+                        <button class="option-btn ai-enhanced-btn">Generate with AI</button>
                     </div>
                 </div>
             </section>
@@ -1236,22 +1808,8 @@
 
                 <div class="analysis-controls">
                     <div class="control-group">
-                        <label for="alignment-threshold-clo">Alignment Threshold:</label>
-                        <select id="alignment-threshold-clo">
-                            <option value="0">Show All (≥0)</option>
-                            <option value="1">Weak+ (≥1)</option>
-                            <option value="2" selected>Moderate+ (≥2)</option>
-                            <option value="3">Strong+ (≥3)</option>
-                            <option value="4">Very Strong (4)</option>
-                        </select>
-                        <span class="threshold-display">Current: <span id="threshold-value">2</span></span>
-                    </div>
-                    <div class="control-group">
-                        <button id="toggle-clo-scores" class="btn btn-secondary">
-                            <i class="fas fa-eye"></i> Hide Scores
-                        </button>
-                        <button id="export-clo-btn" class="btn btn-primary">
-                            <i class="fas fa-download"></i> Export Results
+                        <button id="preview-report-btn" class="btn btn-primary">
+                            <i class="fas fa-file-alt"></i> Preview Report
                         </button>
                     </div>
                 </div>
@@ -1295,10 +1853,6 @@
                 <div class="matrix-container">
                     <h4>Alignment Matrix</h4>
                     <div class="matrix-controls">
-                        <label>
-                            <input type="range" id="alignment-threshold-clo" min="0" max="5" value="2" step="1">
-                            Threshold: <span id="threshold-value">2</span>
-                        </label>
                         <button id="toggle-clo-scores" class="btn btn-secondary">Toggle Scores</button>
                         <button id="export-clo-btn" class="btn btn-secondary">
                             <i class="fas fa-download"></i> Export CSV
@@ -1317,14 +1871,14 @@
 
                 <!-- Legend -->
                 <div class="legend">
-                    <h4>Scoring Legend</h4>
+                    <h4>Scoring Legend (Advanced Methodology)</h4>
                     <div class="legend-items">
-                        <span class="legend-item score-5">5 - Excellent</span>
-                        <span class="legend-item score-4">4 - Very Good</span>
-                        <span class="legend-item score-3">3 - Good</span>
-                        <span class="legend-item score-2">2 - Fair</span>
-                        <span class="legend-item score-1">1 - Weak</span>
-                        <span class="legend-item score-0">0 - No Alignment</span>
+                        <span class="legend-item score-5">5 - Excellent: Full, direct, and explicit alignment in all dimensions</span>
+                        <span class="legend-item score-4">4 - Very Strong: Strong alignment, minor gaps, nearly full match</span>
+                        <span class="legend-item score-3">3 - Moderate: Partial alignment, some key elements present</span>
+                        <span class="legend-item score-2">2 - Weak: Minimal alignment, only a few elements match</span>
+                        <span class="legend-item score-1">1 - Very Weak: Barely any alignment, mostly unrelated</span>
+                        <span class="legend-item score-0">0 - No Alignment: No meaningful connection</span>
                     </div>
                 </div>
 
@@ -1416,9 +1970,124 @@
         </div>
     </div>
 
+    <!-- Floating Home Button (single instance) -->
+    <div class="floating-home" id="floating-home">
+        <i class="fas fa-home"></i>
+    </div>
+    <!-- Preview Report Modal -->
+    <div id="preview-report-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-alt"></i> CLO-MLO Alignment Report Preview</h3>
+                <button class="close-modal" id="close-preview-report">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="report-preview-content">
+                    <!-- Report preview will be dynamically generated here -->
+                </div>
+                <div class="form-actions" style="margin-top:2rem;">
+                    <button id="download-pdf-btn" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Download PDF
+                    </button>
+                    <button class="btn btn-secondary" id="close-preview-report-bottom">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
+    <script src="js/personal-api-config.js"></script>
+    <script src="js/secure-api-config.js"></script>
+    <script src="js/enhanced-ai-features.js"></script>
     <script src="js/alignment-engine.js"></script>
     <script src="js/mlo-clo-new.js"></script>
+    
+    <script>
+        // Open AI Assistant in new window/tab
+        function openAIAssistant() {
+            // Open AI Assistant with context from current page
+            const currentContext = {
+                page: 'CLO-MLO Alignment',
+                language: 'english' // You can make this dynamic if needed
+            };
+            
+            // Store context for AI assistant
+            sessionStorage.setItem('aiAssistantContext', JSON.stringify(currentContext));
+            
+            // Open in new tab
+            window.open('ai-assistant.html', '_blank');
+        }
+
+        // Initialize programme information on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('DOMContentLoaded fired for CLO-MLO page');
+            
+            try {
+                // Initialize data manager if not already done
+                if (!window.dataManager) {
+                    console.log('Creating new DataManager instance');
+                    window.dataManager = new DataManager();
+                } else {
+                    console.log('DataManager already exists');
+                }
+                
+                // Check for programme in sessionStorage or URL parameter
+                let currentProgramme = window.dataManager.getCurrentProgramme();
+                const urlParams = new URLSearchParams(window.location.search);
+                const kavakood = urlParams.get('kavakood');
+                
+                console.log('Current programme:', currentProgramme);
+                console.log('URL kavakood:', kavakood);
+                
+                // If no current programme but URL has kavakood, load programmes and set current
+                if (!currentProgramme && kavakood) {
+                    console.log('Loading programmes and setting current...');
+                    await window.dataManager.loadProgrammes();
+                    currentProgramme = window.dataManager.setCurrentProgramme(kavakood);
+                }
+                
+                // Update page title and programme display
+                if (currentProgramme) {
+                    updatePageHeader(currentProgramme);
+                } else {
+                    console.warn('No current programme found');
+                }
+                
+                // Setup floating home button
+                const homeBtn = document.getElementById('floating-home');
+                if (homeBtn) {
+                    homeBtn.addEventListener('click', function() {
+                        window.location.href = 'index.html';
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Error initializing CLO-MLO page:', error);
+            }
+        });
+        
+        function updatePageHeader(programme) {
+            // Update page title with programme info
+            const pageTitle = document.getElementById('page-title');
+            const programmeName = document.getElementById('current-programme-name');
+            
+            if (pageTitle && programme) {
+                pageTitle.innerHTML = `<i class="fas fa-clipboard-list"></i> ${programme.code.toUpperCase()} ${programme.kavanimetusik} - CLO-MLO Alignment`;
+            }
+            
+            if (programmeName && programme) {
+                programmeName.textContent = `${programme.code.toUpperCase()} - ${programme.kavanimetusik}`;
+            }
+        }
+    </script>
+
+    <!-- Floating home button -->
+    <button id="floating-home" class="floating-home" title="Return to Home">
+        <i class="fas fa-home"></i>
+    </button>
+
 </body>
 </html>

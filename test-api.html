@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .loading {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+        button {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(170, 19, 82, 0.3);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .response-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Gemini API Test Suite</h1>
+        <p>Test your Gemini API key configuration and functionality.</p>
+
+        <!-- Configuration Status -->
+        <div class="test-section" id="config-status">
+            <h3>📋 Configuration Status</h3>
+            <div id="config-results">Loading...</div>
+        </div>
+
+        <!-- Basic API Test -->
+        <div class="test-section">
+            <h3>🔌 Basic API Connection Test</h3>
+            <button onclick="testBasicAPI()" id="basic-test-btn">Test API Connection</button>
+            <div id="basic-test-results"></div>
+        </div>
+
+        <!-- Custom Prompt Test -->
+        <div class="test-section">
+            <h3>💬 Custom Prompt Test</h3>
+            <textarea id="custom-prompt" placeholder="Enter your test prompt here...">Explain what PLO and MLO mean in educational curriculum design.</textarea>
+            <br>
+            <button onclick="testCustomPrompt()" id="custom-test-btn">Send Custom Prompt</button>
+            <div id="custom-test-results"></div>
+        </div>
+
+        <!-- AI Features Test -->
+        <div class="test-section">
+            <h3>🤖 AI Features Test</h3>
+            <button onclick="testAIFeatures()" id="ai-test-btn">Test Improvement Suggestions</button>
+            <div id="ai-test-results"></div>
+        </div>
+    </div>
+
+    <!-- Include your API configuration scripts -->
+    <script src="js/personal-api-config.js"></script>
+    <script src="js/secure-api-config.js"></script>
+    <script src="js/ai-features-example.js"></script>
+
+    <script>
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkConfiguration();
+        });
+
+        async function checkConfiguration() {
+            const statusDiv = document.getElementById('config-results');
+            
+            try {
+                // Check if scripts are loaded
+                const checks = [
+                    { name: 'Personal API Config', obj: window.personalAPIConfig, key: 'getApiKey' },
+                    { name: 'Secure API Config', obj: window.secureAPIConfig, key: 'init' },
+                    { name: 'AI Features', obj: window.aiFeatures, key: 'isAIReady' }
+                ];
+
+                let html = '<ul>';
+                let allGood = true;
+
+                for (const check of checks) {
+                    if (check.obj && typeof check.obj[check.key] === 'function') {
+                        html += `<li>✅ ${check.name}: Loaded</li>`;
+                    } else {
+                        html += `<li>❌ ${check.name}: Not loaded</li>`;
+                        allGood = false;
+                    }
+                }
+
+                // Initialize secure API config
+                if (window.secureAPIConfig) {
+                    await window.secureAPIConfig.init();
+                    const apiStatus = window.aiFeatures ? window.aiFeatures.getAPIStatus() : 'Unknown';
+                    html += `<li>🔑 API Status: ${apiStatus}</li>`;
+                }
+
+                html += '</ul>';
+                statusDiv.innerHTML = html;
+                statusDiv.className = allGood ? 'success' : 'error';
+
+            } catch (error) {
+                statusDiv.innerHTML = `❌ Configuration Error: ${error.message}`;
+                statusDiv.className = 'error';
+            }
+        }
+
+        async function testBasicAPI() {
+            const button = document.getElementById('basic-test-btn');
+            const resultsDiv = document.getElementById('basic-test-results');
+            
+            button.disabled = true;
+            resultsDiv.className = 'loading';
+            resultsDiv.innerHTML = '⏳ Testing API connection...';
+
+            try {
+                if (!window.secureAPIConfig || !window.secureAPIConfig.isReady()) {
+                    throw new Error('API configuration not ready');
+                }
+
+                const testPrompt = "Please respond with exactly: 'Hello! Your Gemini API is working correctly. Test completed successfully!'";
+                const response = await window.secureAPIConfig.callGeminiAPI(testPrompt);
+
+                resultsDiv.innerHTML = `
+                    <strong>✅ API Test Successful!</strong>
+                    <div class="response-box">${response}</div>
+                `;
+                resultsDiv.className = 'success';
+
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <strong>❌ API Test Failed</strong>
+                    <div class="response-box">Error: ${error.message}</div>
+                    <p><strong>Common solutions:</strong></p>
+                    <ul>
+                        <li>Check if your API key is correct in personal-api-config.js</li>
+                        <li>Verify the API key has proper permissions in Google AI Studio</li>
+                        <li>Check if you've enabled the Generative Language API</li>
+                        <li>Ensure you haven't exceeded your quota</li>
+                    </ul>
+                `;
+                resultsDiv.className = 'error';
+            }
+
+            button.disabled = false;
+        }
+
+        async function testCustomPrompt() {
+            const button = document.getElementById('custom-test-btn');
+            const resultsDiv = document.getElementById('custom-test-results');
+            const prompt = document.getElementById('custom-prompt').value.trim();
+
+            if (!prompt) {
+                alert('Please enter a prompt to test');
+                return;
+            }
+
+            button.disabled = true;
+            resultsDiv.className = 'loading';
+            resultsDiv.innerHTML = '⏳ Processing your prompt...';
+
+            try {
+                if (!window.secureAPIConfig || !window.secureAPIConfig.isReady()) {
+                    throw new Error('API configuration not ready');
+                }
+
+                const response = await window.secureAPIConfig.callGeminiAPI(prompt);
+
+                resultsDiv.innerHTML = `
+                    <strong>✅ Custom Prompt Response:</strong>
+                    <div class="response-box">${response}</div>
+                `;
+                resultsDiv.className = 'success';
+
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <strong>❌ Custom Prompt Failed</strong>
+                    <div class="response-box">Error: ${error.message}</div>
+                `;
+                resultsDiv.className = 'error';
+            }
+
+            button.disabled = false;
+        }
+
+        async function testAIFeatures() {
+            const button = document.getElementById('ai-test-btn');
+            const resultsDiv = document.getElementById('ai-test-results');
+            
+            button.disabled = true;
+            resultsDiv.className = 'loading';
+            resultsDiv.innerHTML = '⏳ Testing AI improvement suggestions...';
+
+            try {
+                if (!window.aiFeatures || !window.aiFeatures.isAIReady()) {
+                    throw new Error('AI features not ready');
+                }
+
+                // Test with sample PLO and MLO
+                const samplePLO = "Students will demonstrate advanced analytical thinking and problem-solving skills in computer science applications.";
+                const sampleMLO = "Students can write basic programming code.";
+                const score = 2;
+
+                const suggestions = await window.aiFeatures.generateImprovementSuggestions(samplePLO, sampleMLO, score);
+
+                resultsDiv.innerHTML = `
+                    <strong>✅ AI Features Test Successful!</strong>
+                    <p><strong>Sample PLO:</strong> ${samplePLO}</p>
+                    <p><strong>Sample MLO:</strong> ${sampleMLO}</p>
+                    <p><strong>Score:</strong> ${score}/5</p>
+                    <p><strong>AI-Generated Suggestions:</strong></p>
+                    <div class="response-box">${suggestions ? suggestions.map((s, i) => `${i+1}. ${s}`).join('\n') : 'No suggestions generated'}</div>
+                `;
+                resultsDiv.className = 'success';
+
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <strong>❌ AI Features Test Failed</strong>
+                    <div class="response-box">Error: ${error.message}</div>
+                `;
+                resultsDiv.className = 'error';
+            }
+
+            button.disabled = false;
+        }
+    </script>
+</body>
+</html>

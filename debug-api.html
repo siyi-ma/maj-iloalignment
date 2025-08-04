@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Gemini API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        button { padding: 10px 20px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Gemini API Debug Tool</h1>
+    
+    <button onclick="debugAPIKey()">Debug API Key</button>
+    <button onclick="testDirectAPI()">Test Direct API Call</button>
+    <button onclick="testAllEndpoints()">Test All Model Endpoints</button>
+    <button onclick="checkAPIService()">Check API Service Status</button>
+    
+    <div id="debug-output"></div>
+
+    <script src="js/personal-api-config.js"></script>
+    <script src="js/secure-api-config.js"></script>
+
+    <script>
+        function log(message, type = 'log') {
+            const output = document.getElementById('debug-output');
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(div);
+            console.log(message);
+        }
+
+        async function debugAPIKey() {
+            log('🔍 Starting API Key Debug...');
+            
+            try {
+                // Check if personal config is loaded
+                if (!window.personalAPIConfig) {
+                    log('❌ Personal API Config not loaded', 'error');
+                    return;
+                }
+                
+                const apiKey = window.personalAPIConfig.getApiKey();
+                log(`✅ API Key loaded: ${apiKey ? 'Yes' : 'No'}`);
+                log(`📏 API Key length: ${apiKey ? apiKey.length : 0}`);
+                log(`🔤 API Key starts with: ${apiKey ? apiKey.substring(0, 10) + '...' : 'N/A'}`);
+                log(`🎯 API Key format check: ${apiKey && apiKey.startsWith('AIza') ? 'Valid format' : 'Invalid format'}`, 
+                    apiKey && apiKey.startsWith('AIza') ? 'success' : 'error');
+                
+                const endpoint = window.personalAPIConfig.getEndpoint();
+                log(`🌐 Endpoint: ${endpoint}`);
+                
+            } catch (error) {
+                log(`❌ Debug failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDirectAPI() {
+            log('🚀 Starting Direct API Test...');
+            
+            try {
+                const apiKey = window.personalAPIConfig.getApiKey();
+                const endpoint = window.personalAPIConfig.getEndpoint();
+                
+                if (!apiKey) {
+                    log('❌ No API key available', 'error');
+                    return;
+                }
+                
+                log('📡 Making direct fetch request...');
+                
+                const requestBody = {
+                    contents: [{
+                        parts: [{
+                            text: "Say 'API test successful' if you can read this."
+                        }]
+                    }]
+                };
+                
+                const url = `${endpoint}?key=${apiKey}`;
+                log(`🎯 Request URL: ${endpoint}?key=${apiKey.substring(0, 10)}...`);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                log(`📥 Response Status: ${response.status} ${response.statusText}`);
+                log(`📋 Response Headers: ${JSON.stringify([...response.headers.entries()])}`);
+                
+                const responseText = await response.text();
+                log(`📄 Raw Response: ${responseText}`);
+                
+                if (response.ok) {
+                    const data = JSON.parse(responseText);
+                    log('✅ API call successful!', 'success');
+                    log(`🎉 Response: ${JSON.stringify(data, null, 2)}`);
+                } else {
+                    log(`❌ API call failed: ${response.status}`, 'error');
+                    log(`💡 Error details: ${responseText}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Direct API test failed: ${error.message}`, 'error');
+                log(`🔍 Error stack: ${error.stack}`, 'error');
+            }
+        }
+
+        async function testAllEndpoints() {
+            log('🎯 Testing All Model Endpoints...');
+            
+            try {
+                const apiKey = window.personalAPIConfig.getApiKey();
+                if (!apiKey) {
+                    log('❌ No API key available', 'error');
+                    return;
+                }
+                
+                const endpoints = window.personalAPIConfig.getAllEndpoints();
+                log(`📡 Found ${Object.keys(endpoints).length} endpoints to test`);
+                
+                for (const [modelName, endpoint] of Object.entries(endpoints)) {
+                    log(`🚀 Testing ${modelName}...`);
+                    
+                    try {
+                        const requestBody = {
+                            contents: [{
+                                parts: [{
+                                    text: `Say "Hello from ${modelName}" to confirm this model works.`
+                                }]
+                            }]
+                        };
+                        
+                        const url = `${endpoint}?key=${apiKey}`;
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+                        
+                        log(`📊 ${modelName} Response: ${response.status} ${response.statusText}`);
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                                const result = data.candidates[0].content.parts[0].text;
+                                log(`✅ ${modelName} SUCCESS: ${result}`, 'success');
+                            } else {
+                                log(`⚠️ ${modelName} returned unexpected format`, 'error');
+                            }
+                        } else {
+                            const errorText = await response.text();
+                            log(`❌ ${modelName} FAILED: ${errorText}`, 'error');
+                        }
+                        
+                    } catch (error) {
+                        log(`❌ ${modelName} ERROR: ${error.message}`, 'error');
+                    }
+                    
+                    // Small delay between requests
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                log('🏁 Endpoint testing complete');
+                
+            } catch (error) {
+                log(`❌ Endpoint testing failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkAPIService() {
+            log('🔬 Checking API Service Status...');
+            
+            try {
+                // Test if the base URL is reachable
+                const baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
+                log(`🌐 Testing base URL: ${baseUrl}`);
+                
+                const response = await fetch(baseUrl, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                log(`📊 Service status: ${response.status} ${response.statusText}`);
+                
+                if (response.status === 401) {
+                    log('🔑 Service is running (401 = authentication required - expected)', 'success');
+                } else if (response.status === 200) {
+                    log('✅ Service is running and accessible', 'success');
+                } else {
+                    log(`⚠️ Unexpected status: ${response.status}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Service check failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run basic checks on load
+        window.addEventListener('load', async () => {
+            log('🌟 Debug tool loaded');
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for scripts to load
+            debugAPIKey();
+        });
+    </script>
+</body>
+</html>

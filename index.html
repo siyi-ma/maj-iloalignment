@@ -12,8 +12,10 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <h1><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
-                <p>Educational Quality Management System</p>
+                <div>
+                    <h1><i class="fas fa-graduation-cap"></i> MAJ Intended Learning Outcomes Alignment</h1>
+                    <p>Course and Module Learning Outcomes Alignment Tool</p>
+                </div>
             </div>
         </header>
 
@@ -40,40 +42,28 @@
                     </div>
                 </div>
 
-                <div class="analysis-paths">
-                    <div class="path-card" id="plo-mlo-path">
-                        <div class="path-icon">
-                            <i class="fas fa-project-diagram"></i>
+                <div class="section-header">
+                    <h2><i class="fas fa-project-diagram"></i> Programme-Module Alignment Analysis</h2>
+                    <p>View the comprehensive alignment between Programme Learning Outcomes and Module Learning Outcomes</p>
+                    <div class="analysis-action">
+                        <div class="analysis-description">
+                            <p><i class="fas fa-list"></i> Analyze how well different module learning outcomes align with overall programme learning outcomes</p>
                         </div>
-                        <div class="path-content">
-                            <h3>Programme-Module Alignment</h3>
-                            <p>Analyze how Module Learning Outcomes align with Programme Learning Outcomes</p>
-                            <ul class="path-features">
-                                <li><i class="fas fa-check-circle"></i> Comprehensive matrix analysis</li>
-                                <li><i class="fas fa-check-circle"></i> Sophisticated scoring algorithms</li>
-                                <li><i class="fas fa-check-circle"></i> Professional reporting</li>
-                            </ul>
-                        </div>
-                        <button class="path-btn primary-btn">
-                            <i class="fas fa-external-link-alt"></i> PLO-MLO Analysis
+                        <button class="access-btn" id="access-plo-mlo">
+                            <i class="fas fa-external-link-alt"></i> Access PLO-MLO Analysis
                         </button>
                     </div>
+                </div>
 
-                    <div class="path-card" id="clo-mlo-path">
-                        <div class="path-icon">
-                            <i class="fas fa-clipboard-list"></i>
+                <div class="section-header">
+                    <h2><i class="fas fa-search"></i> Course-Module Alignment</h2>
+                    <p>Analyze how Course Learning Outcomes align with Module Learning Outcomes</p>
+                    <div class="analysis-action">
+                        <div class="analysis-description">
+                            <p><i class="fas fa-clipboard-list"></i> Generate and analyze Course Learning Outcomes with AI-powered tools</p>
                         </div>
-                        <div class="path-content">
-                            <h3>Course-Module Alignment</h3>
-                            <p>Analyze how Course Learning Outcomes align with Module Learning Outcomes</p>
-                            <ul class="path-features">
-                                <li><i class="fas fa-check-circle"></i> AI-powered CLO generation</li>
-                                <li><i class="fas fa-check-circle"></i> Detailed alignment scoring</li>
-                                <li><i class="fas fa-check-circle"></i> Improvement recommendations</li>
-                            </ul>
-                        </div>
-                        <button class="path-btn secondary-btn">
-                            <i class="fas fa-external-link-alt"></i> CLO-MLO Analysis
+                        <button class="access-btn" id="access-mlo-clo">
+                            <i class="fas fa-external-link-alt"></i> Access MLO-CLO Analysis
                         </button>
                     </div>
                 </div>
@@ -81,12 +71,16 @@
         </main>
 
         <footer>
-            <p>&copy; 2025 Learning Outcomes Alignment Tool | Educational Quality Management</p>
+            <p>&copy; 2025 ILO Alignment | TalTech Majandusteaduskonna Siyi Ma</p>
         </footer>
     </div>
 
     <div class="back-to-top">
         <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div class="floating-home">
+        <i class="fas fa-home"></i>
     </div>
 
     <!-- Scripts -->
@@ -105,6 +99,13 @@
                     await window.dataManager.loadProgrammes();
                     this.displayProgrammes();
                     this.setupEventListeners();
+                    
+                    // Check for programme code in URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const programmeCode = urlParams.get('kavakood');
+                    if (programmeCode) {
+                        this.selectProgramme(programmeCode);
+                    }
                 } catch (error) {
                     this.showError('Failed to load programmes. Please refresh the page.');
                     console.error('Initialization error:', error);
@@ -119,7 +120,10 @@
                 
                 programmes.forEach(programme => {
                     const programmeCard = document.createElement('div');
-                    programmeCard.className = 'programme-card';
+                    
+                    // Check if it's a master's programme (codes ending with 'M')
+                    const isMaster = programme.code.toUpperCase().endsWith('M');
+                    programmeCard.className = isMaster ? 'programme-card master' : 'programme-card';
                     programmeCard.dataset.code = programme.code;
                     
                     programmeCard.innerHTML = `
@@ -148,20 +152,41 @@
                 document.getElementById('back-to-selection').addEventListener('click', () => {
                     this.showSection('programme-selection');
                     window.dataManager.clearCurrentProgramme();
+                    
+                    // Clear URL parameter
+                    const url = new URL(window.location);
+                    url.searchParams.delete('kavakood');
+                    window.history.pushState({}, '', url);
                 });
 
-                // Analysis path navigation
-                document.getElementById('plo-mlo-path').querySelector('.path-btn').addEventListener('click', () => {
-                    window.location.href = 'plo-mlo.html';
+                // Access PLO-MLO Analysis button
+                document.getElementById('access-plo-mlo')?.addEventListener('click', () => {
+                    const currentProgramme = window.dataManager.getCurrentProgramme();
+                    const url = currentProgramme ? `plo-mlo.html?kavakood=${currentProgramme.code}` : 'plo-mlo.html';
+                    window.location.href = url;
                 });
 
-                document.getElementById('clo-mlo-path').querySelector('.path-btn').addEventListener('click', () => {
-                    window.location.href = 'clo-mlo.html';
+                // Access MLO-CLO Analysis button
+                document.getElementById('access-mlo-clo')?.addEventListener('click', () => {
+                    const currentProgramme = window.dataManager.getCurrentProgramme();
+                    const url = currentProgramme ? `clo-mlo.html?kavakood=${currentProgramme.code}` : 'clo-mlo.html';
+                    window.location.href = url;
                 });
 
                 // Back to top
                 document.querySelector('.back-to-top').addEventListener('click', () => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                // Floating home button
+                document.querySelector('.floating-home').addEventListener('click', () => {
+                    this.showSection('programme-selection');
+                    window.dataManager.clearCurrentProgramme();
+                    
+                    // Clear URL parameter
+                    const url = new URL(window.location);
+                    url.searchParams.delete('kavakood');
+                    window.history.pushState({}, '', url);
                 });
 
                 // Show/hide back to top based on scroll
@@ -180,6 +205,11 @@
                     this.currentProgramme = window.dataManager.setCurrentProgramme(programmeCode);
                     this.displayProgrammeOverview();
                     this.showSection('programme-overview');
+                    
+                    // Add programme code to URL
+                    const url = new URL(window.location);
+                    url.searchParams.set('kavakood', programmeCode);
+                    window.history.pushState({ programmeCode }, '', url);
                 } catch (error) {
                     this.showError(`Failed to select programme: ${error.message}`);
                 }

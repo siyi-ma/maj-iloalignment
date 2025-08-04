@@ -6,8 +6,6 @@ class CLOMLOController {
         this.currentCLOs = [];
         this.alignmentResults = [];
         this.showScores = true;
-        this.showColors = true;
-        this.currentThreshold = 2;
         this.editMode = null; // 'edit', 'manual', 'generate'
         
         this.init();
@@ -15,23 +13,51 @@ class CLOMLOController {
 
     async init() {
         try {
+            // Ensure data manager is initialized
+            if (!window.dataManager) {
+                console.warn('DataManager not found, initializing...');
+                window.dataManager = new DataManager();
+            }
+
+            // Wait for data manager to be ready
+            await this.waitForDataManager();
+            
             // Check if we have a current programme
             this.currentProgramme = window.dataManager.getCurrentProgramme();
             
             if (!this.currentProgramme) {
-                // Redirect to home if no programme selected
-                window.location.href = 'index.html';
+                console.warn('No programme selected, redirecting to home...');
+                // Show a message before redirecting
+                this.showError('No programme selected. Redirecting to home page...');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
                 return;
             }
 
+            console.log('Current programme:', this.currentProgramme);
+            
             this.displayProgrammeInfo();
-            this.populateCourseSelector();
+            await this.populateCourseSelector();
             this.setupEventListeners();
+            
+            console.log('CLO-MLO Controller initialized successfully');
             
         } catch (error) {
             console.error('Initialization error:', error);
-            this.showError('Failed to initialize CLO-MLO analysis. Please try again.');
+            this.showError('Failed to initialize CLO-MLO analysis. Please refresh the page or return to home.');
         }
+    }
+
+    async waitForDataManager(maxAttempts = 10) {
+        for (let i = 0; i < maxAttempts; i++) {
+            if (window.dataManager && typeof window.dataManager.getCurrentProgramme === 'function') {
+                return true;
+            }
+            console.log(`Waiting for DataManager... attempt ${i + 1}/${maxAttempts}`);
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        throw new Error('DataManager not available after waiting');
     }
 
     displayProgrammeInfo() {
@@ -41,19 +67,45 @@ class CLOMLOController {
         }
     }
 
-    populateCourseSelector() {
+    async populateCourseSelector() {
         const courseSelector = document.getElementById('course-selector');
-        const courses = window.dataManager.getCurrentCourses();
         
-        // Clear existing options except the default
-        courseSelector.innerHTML = '<option value="">Choose a course...</option>';
-        
-        courses.forEach(course => {
-            const option = document.createElement('option');
-            option.value = course.ainekood;
-            option.textContent = `${course.ainekood} - ${course.ainenimetusik}`;
-            courseSelector.appendChild(option);
-        });
+        if (!courseSelector) {
+            console.error('Course selector element not found');
+            return;
+        }
+
+        try {
+            // Clear existing options except the default
+            courseSelector.innerHTML = '<option value="">Choose a course...</option>';
+            
+            // Get courses and ensure they exist
+            const courses = window.dataManager.getCurrentCourses();
+            console.log('Available courses:', courses.length);
+            
+            if (!courses || courses.length === 0) {
+                console.warn('No courses available');
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No courses available';
+                option.disabled = true;
+                courseSelector.appendChild(option);
+                return;
+            }
+            
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.ainekood;
+                option.textContent = `${course.ainekood} - ${course.ainenimetusik}`;
+                courseSelector.appendChild(option);
+            });
+            
+            console.log(`Populated course selector with ${courses.length} courses`);
+            
+        } catch (error) {
+            console.error('Error populating course selector:', error);
+            courseSelector.innerHTML = '<option value="">Error loading courses</option>';
+        }
     }
 
     handleCourseSelection(courseCode) {
@@ -189,8 +241,13 @@ class CLOMLOController {
         
         // Check if API is configured
         if (!this.isAPIConfigured()) {
-            this.showError('Please configure your Gemini API key first.');
-            this.showAPIConfig();
+            this.showError('AI service not available. Please ensure your API configuration is set up correctly.');
+            return;
+        }
+
+        // Validate course selection
+        if (!this.selectedCourse) {
+            this.showError('Please select a course before generating CLOs.');
             return;
         }
 
@@ -198,27 +255,59 @@ class CLOMLOController {
         this.showSection('clo-editor-section');
         this.hideSection('clo-management-section');
 
-        // Set editor title
-        document.getElementById('clo-editor-title').textContent = 'AI Generated CLOs';
+        // Set editor title with course context
+        const courseTitle = this.selectedCourse.ainenimetusik || this.selectedCourse.ainekood;
+        document.getElementById('clo-editor-title').textContent = `AI Generated CLOs - ${courseTitle}`;
 
         try {
-            // Show loading state
-            this.showLoading('Generating CLOs with AI...');
+            // Show enhanced loading state with context information
+            this.showEnhancedLoading();
 
-            // Generate CLOs using AI
+            // Generate CLOs using enhanced AI
             const generatedCLOs = await this.generateCLOsWithAI();
             
             // Populate editor with generated CLOs
             this.populateCLOEditor(generatedCLOs);
             
             this.hideLoading();
-            this.showMessage('CLOs generated successfully! You can edit them before saving.', 'success');
+            
+            // Show success message with AI insights
+            const cloCount = Object.keys(generatedCLOs).length;
+            this.showMessage(
+                `🎓 Successfully generated ${cloCount} CLOs using AI! The outcomes are aligned with your course context and programme objectives. Review and edit as needed before saving.`, 
+                'success'
+            );
             
         } catch (error) {
             this.hideLoading();
             console.error('AI generation error:', error);
-            this.showError('Failed to generate CLOs with AI. Please try again or use manual entry.');
+            
+            // More helpful error messages
+            let errorMessage = 'Failed to generate CLOs with AI. ';
+            if (error.message.includes('quota')) {
+                errorMessage += 'You may have exceeded your API quota. Please try again later or check your Google AI Studio console.';
+            } else if (error.message.includes('network') || error.message.includes('fetch')) {
+                errorMessage += 'Network connection issue. Please check your internet connection and try again.';
+            } else {
+                errorMessage += 'Please try again or use manual entry. If the problem persists, check your API configuration.';
+            }
+            
+            this.showError(errorMessage);
         }
+    }
+
+    // Enhanced loading display with context
+    showEnhancedLoading() {
+        const course = this.selectedCourse;
+        const programme = this.currentProgramme;
+        
+        let loadingMessage = '🤖 AI is analyzing your course and generating CLOs...\n\n';
+        loadingMessage += `📚 Course: ${course?.ainenimetusik || 'Unknown'}\n`;
+        loadingMessage += `🎓 Programme: ${programme?.kavanimetusik || 'Unknown'}\n`;
+        loadingMessage += `⚡ Using: Gemini 1.5 Flash\n\n`;
+        loadingMessage += 'This may take 3-5 seconds...';
+        
+        this.showLoading(loadingMessage);
     }
 
     populateCLOEditor(clos) {
@@ -301,14 +390,57 @@ class CLOMLOController {
             index: index
         }));
 
-        // Hide editor and show management section
+        // Hide editor and show ready-for-analysis section
         this.hideSection('clo-editor-section');
         this.showSection('clo-management-section');
 
         // Update the display of existing CLOs
         this.displayExistingCLOs();
 
+        // Show the analysis section with analyze button
+        this.showAnalysisReadySection();
+
         this.showMessage('CLOs saved successfully! You can now analyze their alignment with MLOs.', 'success');
+    }
+
+    // Show section with analyze alignment button
+    showAnalysisReadySection() {
+        // Create or update a section that shows the analyze button
+        const managementSection = document.getElementById('clo-management-section');
+        
+        // Remove any existing analysis prompt
+        const existingPrompt = managementSection.querySelector('.analysis-prompt');
+        if (existingPrompt) {
+            existingPrompt.remove();
+        }
+
+        // Add analysis prompt section
+        const analysisPrompt = document.createElement('div');
+        analysisPrompt.className = 'analysis-prompt';
+        analysisPrompt.innerHTML = `
+            <div class="prompt-card">
+                <div class="prompt-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="prompt-content">
+                    <h3>Ready for Analysis</h3>
+                    <p>Your CLOs have been saved. Click below to analyze their alignment with Module Learning Outcomes (MLOs).</p>
+                    <div class="clo-summary">
+                        <span class="clo-count">${this.currentCLOs.length} CLOs ready for analysis</span>
+                    </div>
+                </div>
+                <button id="start-analysis-btn" class="btn btn-primary analysis-btn">
+                    <i class="fas fa-chart-line"></i> Analyze CLO-MLO Alignment
+                </button>
+            </div>
+        `;
+
+        managementSection.appendChild(analysisPrompt);
+
+        // Add event listener for the new analysis button
+        document.getElementById('start-analysis-btn').addEventListener('click', () => {
+            this.performCLOAnalysis();
+        });
     }
 
     cancelEdit() {
@@ -331,9 +463,16 @@ class CLOMLOController {
 
         try {
             // Show loading state
-            this.showLoading('Analyzing CLO-MLO alignment...');
+            this.showLoading('🔍 Analyzing CLO-MLO alignment...');
 
-            // Perform analysis
+            // Debug API configuration
+            console.log('🔑 API Configuration Check:', {
+                enhancedAI: window.enhancedAIFeatures?.isReady() || false,
+                secureAPI: window.secureAPIConfig?.isReady() || false,
+                localStorageKey: !!localStorage.getItem('gemini_api_key')
+            });
+
+            // Perform analysis with retry logic
             this.alignmentResults = await this.analyzeCLOMLOAlignment();
 
             // Show results section
@@ -344,12 +483,27 @@ class CLOMLOController {
             this.displayAlignmentResults();
 
             this.hideLoading();
-            this.showMessage('Alignment analysis completed successfully!', 'success');
+            this.showMessage('✅ Alignment analysis completed successfully!', 'success');
 
         } catch (error) {
             this.hideLoading();
             console.error('Analysis error:', error);
-            this.showError('Failed to analyze CLO-MLO alignment. Please try again.');
+            
+            // More specific error messages
+            let errorMessage = 'Failed to analyze CLO-MLO alignment. ';
+            if (error.message.includes('MODEL_OVERLOADED')) {
+                errorMessage += '🔄 The AI service is currently busy. We tried multiple times but the service is still overloaded. Please try again in a few minutes.';
+            } else if (error.message.includes('400')) {
+                errorMessage += 'API request error (400). Please check your API key configuration.';
+            } else if (error.message.includes('quota')) {
+                errorMessage += 'API quota exceeded. Please try again later.';
+            } else if (error.message.includes('No related MLOs')) {
+                errorMessage += 'No related Module Learning Outcomes found for this course.';
+            } else {
+                errorMessage += `Error: ${error.message}`;
+            }
+            
+            this.showError(errorMessage);
         }
     }
 
@@ -362,41 +516,143 @@ class CLOMLOController {
         const course = this.selectedCourse;
         if (!course) throw new Error('No course selected');
 
-        const prompt = this.buildCLOGenerationPrompt(course);
-        const apiKey = localStorage.getItem('gemini_api_key');
+        try {
+            // Use the enhanced AI features with secure configuration
+            if (!window.enhancedAIFeatures || !window.enhancedAIFeatures.isReady()) {
+                // Fallback to direct API call if enhanced features not available
+                return await this.generateCLOsDirectAPI(course);
+            }
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens: 1024,
-                }
-            })
-        });
+            const prompt = this.buildEnhancedCLOGenerationPrompt(course);
+            
+            // Show what context we're using to the user
+            console.log('🎓 Generating CLOs with enhanced context:', {
+                course: course.ainenimetusik,
+                module: course.moodulikood,
+                programme: this.currentProgramme?.kavanimetusik
+            });
 
-        if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`);
+            const result = await window.enhancedAIFeatures.executeCustomPrompt(prompt, {
+                courseData: course,
+                programmeData: this.currentProgramme,
+                mloData: this.getRelatedMLOs(course)
+            }, {
+                temperature: 0.7,
+                maxTokens: 1500  // Increased for detailed CLOs
+            });
+
+            if (!result.success) {
+                throw new Error(result.error || 'AI generation failed');
+            }
+
+            return this.parseCLOResponse(result.response);
+
+        } catch (error) {
+            console.error('Enhanced AI generation failed, trying fallback:', error);
+            // Fallback to original method
+            return await this.generateCLOsDirectAPI(course);
+        }
+    }
+
+    // Enhanced fallback method using secure API directly
+    async generateCLOsDirectAPI(course) {
+        if (!window.secureAPIConfig || !window.secureAPIConfig.isReady()) {
+            throw new Error('AI service not available. Please check your configuration.');
         }
 
-        const data = await response.json();
+        const prompt = this.buildEnhancedCLOGenerationPrompt(course);
         
-        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-            throw new Error('Invalid response from API');
+        return await this.retryAPICall(async () => {
+            const response = await window.secureAPIConfig.callGeminiAPI(prompt, {
+                temperature: 0.7,
+                maxOutputTokens: 1200  // Slightly reduced for efficiency
+            });
+
+            return this.parseCLOResponse(response);
+        });
+    }
+
+    // Get related MLOs for the course's module
+    getRelatedMLOs(course) {
+        try {
+            const allMLOs = window.dataManager.getCurrentMLOs();
+            const moduleCode = course.moodulikood;
+            
+            // Get MLOs related to this course's module
+            const relatedMLOs = allMLOs.filter(mlo => 
+                mlo.mlokood.includes(moduleCode) || 
+                mlo.mlonimetusik?.toLowerCase().includes(moduleCode?.toLowerCase())
+            );
+
+            return relatedMLOs.slice(0, 5); // Limit to 5 most relevant MLOs
+        } catch (error) {
+            console.warn('Could not get related MLOs:', error);
+            return [];
+        }
+    }
+
+    buildEnhancedCLOGenerationPrompt(course) {
+        const programme = this.currentProgramme;
+        const relatedMLOs = this.getRelatedMLOs(course);
+        const relatedPLOs = programme?.plos?.slice(0, 3) || []; // Top 3 PLOs for context
+
+        let prompt = `As an expert in educational curriculum design, generate 5-7 Course Learning Outcomes (CLOs) for the following course.
+
+COURSE INFORMATION:
+Course Code: ${course.ainekood}
+Course Name (English): ${course.ainenimetusik}
+Course Name (Estonian): ${course.ainenimetusek || 'N/A'}
+EAP Credits: ${course.eap}
+Module: ${course.moodulikood}
+Course Aims: ${course.eesmarkik || course.eesmarkek || 'N/A'}
+Course Description: ${course.kirjeldiksik || course.kirjeldikek || 'N/A'}`;
+
+        // Add programme context if available
+        if (programme) {
+            prompt += `\n\nPROGRAMME CONTEXT:
+Programme: ${programme.kavanimetusik}`;
+            
+            if (relatedPLOs.length > 0) {
+                prompt += `\nKey Programme Learning Outcomes (PLOs) to consider:`;
+                relatedPLOs.forEach((plo, index) => {
+                    prompt += `\n${index + 1}. ${plo.plosisuik}`;
+                });
+            }
         }
 
-        const generatedText = data.candidates[0].content.parts[0].text;
-        return this.parseCLOResponse(generatedText);
+        // Add module context if available
+        if (relatedMLOs.length > 0) {
+            prompt += `\n\nRELATED MODULE LEARNING OUTCOMES (MLOs):`;
+            relatedMLOs.forEach((mlo, index) => {
+                prompt += `\n${index + 1}. [${mlo.mlokood}] ${mlo.mlosisuik}`;
+            });
+        }
+
+        prompt += `\n\nINSTRUCTIONS:
+Generate CLOs that:
+1. Are specific, measurable, and achievable within the ${course.eap} EAP credit scope
+2. Use action verbs from Bloom's taxonomy (analyze, synthesize, evaluate, create, etc.)
+3. Align well with the course aims and programme objectives
+4. Progress logically from foundational to advanced cognitive levels
+5. Are professionally written and assessment-friendly
+6. Consider the ${course.moodulikood} module context`;
+
+        if (relatedMLOs.length > 0) {
+            prompt += `\n7. Support and complement the related Module Learning Outcomes listed above`;
+        }
+
+        prompt += `\n\nRESPONSE FORMAT:
+Format your response exactly as follows (start each line with "CLO" followed by number and colon):
+
+CLO1: [Clear, measurable learning outcome using appropriate Bloom's taxonomy verb]
+CLO2: [Another learning outcome, slightly more advanced]
+CLO3: [Continue progression...]
+CLO4: [...]
+CLO5: [...]
+
+IMPORTANT: Generate exactly 5 CLOs. Each CLO must start with "CLO" followed by a number and colon. Be specific and avoid generic language.`;
+
+        return prompt;
     }
 
     buildCLOGenerationPrompt(course) {
@@ -446,56 +702,190 @@ Make sure each CLO starts with "CLO" followed by a number and colon.`;
         const allMLOs = window.dataManager.getCurrentMLOs();
         const moduleCode = course.moodulikood;
         
-        // Get related MLOs for this course's module
+        // Get related MLOs for this course's module (limit to top 3 for efficiency)
         const relatedMLOs = allMLOs.filter(mlo => 
             mlo.mlokood.includes(moduleCode)
-        );
+        ).slice(0, 3); // Limit MLOs to reduce prompt size
 
         if (relatedMLOs.length === 0) {
             throw new Error('No related MLOs found for this course module');
         }
 
-        const alignmentPrompt = this.buildAlignmentAnalysisPrompt(this.currentCLOs, relatedMLOs);
-        const apiKey = localStorage.getItem('gemini_api_key');
+        // Limit CLOs to first 5 for analysis efficiency
+        const limitedCLOs = this.currentCLOs.slice(0, 5);
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: alignmentPrompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.3,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens: 2048,
+        const alignmentPrompt = this.buildOptimizedAlignmentPrompt(limitedCLOs, relatedMLOs);
+        
+        // Debug logging
+        console.log('🔍 Analysis Debug Info:', {
+            cloCount: limitedCLOs.length,
+            mloCount: relatedMLOs.length,
+            promptLength: alignmentPrompt.length,
+            moduleCode: moduleCode
+        });
+        
+        return await this.retryAnalysisWithParsing(limitedCLOs, relatedMLOs, alignmentPrompt);
+    }
+
+    async retryAnalysisWithParsing(limitedCLOs, relatedMLOs, alignmentPrompt, maxAttempts = 5) {
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                this.showProgressiveLoading('Analyzing alignment and parsing results', attempt, maxAttempts);
+                
+                const analysisText = await this.retryAPICall(async () => {
+                    // Use secure API configuration if available
+                    if (window.secureAPIConfig && window.secureAPIConfig.isReady()) {
+                        return await window.secureAPIConfig.callGeminiAPI(alignmentPrompt, {
+                            temperature: 0.3,
+                            maxOutputTokens: 1024
+                        });
+                    }
+                    
+                    // Fallback to direct API call
+                    const apiKey = localStorage.getItem('gemini_api_key');
+                    if (!apiKey) {
+                        throw new Error('No API key configured');
+                    }
+
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: alignmentPrompt
+                                }]
+                            }],
+                            generationConfig: {
+                                temperature: 0.4,
+                                topK: 20,
+                                topP: 0.9,
+                                maxOutputTokens: 1024,
+                            }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('API Error Response:', errorText);
+                        
+                        if (response.status === 503 || errorText.includes('overloaded')) {
+                            throw new Error('MODEL_OVERLOADED');
+                        }
+                        
+                        throw new Error(`Analysis API request failed: ${response.status} - ${errorText}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+                        throw new Error('Invalid API response format');
+                    }
+                    
+                    return data.candidates[0].content.parts[0].text;
+                });
+
+                console.log('🤖 AI Analysis Response:', analysisText);
+                
+                // Try to parse the results
+                this.showLoading(`Validating analysis quality... (Attempt ${attempt}/${maxAttempts})`, true, 75);
+                
+                const parsedResults = this.parseAnalysisResponse(analysisText, limitedCLOs, relatedMLOs);
+                
+                // Check if parsing was successful (got actual scores, not all defaults)
+                const hasActualScores = this.validateParsedResults(parsedResults, limitedCLOs, relatedMLOs);
+                
+                if (hasActualScores) {
+                    console.log(`✅ Parsing successful on attempt ${attempt}`);
+                    this.showLoading('Analysis complete! Preparing results...', true, 100);
+                    await new Promise(resolve => setTimeout(resolve, 500)); // Brief success display
+                    return parsedResults;
                 }
-            })
+                
+                console.warn(`⚠️ Parsing failed on attempt ${attempt} - retrying with different approach`);
+                
+                // If this isn't the last attempt, try with a modified prompt
+                if (attempt < maxAttempts) {
+                    this.showLoading(`Parsing quality insufficient, trying different format... (${attempt}/${maxAttempts})`, true, 25);
+                    alignmentPrompt = this.buildEnhancedAlignmentPrompt(limitedCLOs, relatedMLOs, attempt);
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Brief pause
+                }
+                
+            } catch (error) {
+                console.error(`Analysis attempt ${attempt} failed:`, error);
+                
+                if (error.message === 'MODEL_OVERLOADED' && attempt < maxAttempts) {
+                    const delay = Math.pow(2, attempt - 1) * 1000;
+                    this.showLoading(`Service busy, retrying in ${delay/1000} seconds... (Attempt ${attempt}/${maxAttempts})`, true, (attempt / maxAttempts) * 50);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    continue;
+                }
+                
+                if (attempt === maxAttempts) {
+                    throw new Error(`Analysis failed after ${maxAttempts} attempts: ${error.message}`);
+                }
+            }
+        }
+        
+        throw new Error('Unable to complete analysis with reliable parsing');
+    }
+
+    // Retry API calls with exponential backoff
+    async retryAPICall(apiCallFunction, maxRetries = 3) {
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                return await apiCallFunction();
+            } catch (error) {
+                if (error.message === 'MODEL_OVERLOADED' && attempt < maxRetries) {
+                    const delay = Math.pow(2, attempt - 1) * 1000; // 1s, 2s, 4s
+                    console.log(`🔄 Attempt ${attempt} failed (model overloaded). Retrying in ${delay/1000}s...`);
+                    
+                    // Update loading message to show retry
+                    this.showLoading(`Service busy, retrying in ${delay/1000} seconds... (Attempt ${attempt}/${maxRetries})`);
+                    
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    continue;
+                }
+                
+                // If not overloaded or max retries reached, throw the error
+                throw error;
+            }
+        }
+    }
+
+    // Optimized prompt builder for better efficiency
+    buildOptimizedAlignmentPrompt(clos, mlos) {
+        let prompt = `Analyze CLO-MLO alignment. Rate each pair 1-5:
+1=Minimal, 2=Weak, 3=Moderate, 4=Strong, 5=Very Strong
+
+CLOs:`;
+
+        clos.forEach(clo => {
+            prompt += `\n${clo.id.toUpperCase()}: ${clo.text}`;
         });
 
-        if (!response.ok) {
-            throw new Error(`Analysis API request failed: ${response.status}`);
-        }
+        prompt += `\n\nMLOs:`;
 
-        const data = await response.json();
-        const analysisText = data.candidates[0].content.parts[0].text;
-        
-        return this.parseAlignmentResults(analysisText, this.currentCLOs, relatedMLOs);
+        mlos.forEach(mlo => {
+            prompt += `\n${mlo.mlokood}: ${mlo.mlosisuik}`;
+        });
+
+        prompt += `\n\nFormat: CLO1-MLO_CODE: score (brief reason)
+Example: CLO1-TI1.1: 4 (both focus on problem-solving skills)`;
+
+        return prompt;
     }
 
     buildAlignmentAnalysisPrompt(clos, mlos) {
-        let prompt = `Analyze the alignment between the following Course Learning Outcomes (CLOs) and Module Learning Outcomes (MLOs). Rate each CLO-MLO pair on a scale of 0-4:
+        let prompt = `Analyze the alignment between the following Course Learning Outcomes (CLOs) and Module Learning Outcomes (MLOs). Rate each CLO-MLO pair on a scale of 1-5:
 
-0 = No alignment
-1 = Weak alignment  
-2 = Moderate alignment
-3 = Strong alignment
-4 = Very strong alignment
+1 = Minimal alignment
+2 = Weak alignment  
+3 = Moderate alignment
+4 = Strong alignment
+5 = Very strong alignment
 
 CLOs:
 `;
@@ -521,108 +911,514 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
         return prompt;
     }
 
-    parseAlignmentResults(analysisText, clos, mlos) {
-        const results = [];
-        const lines = analysisText.split('\n');
+    validateParsedResults(results, expectedCLOs, expectedMLOs) {
+        if (!results || results.length === 0) {
+            console.warn('No results parsed');
+            return false;
+        }
         
-        lines.forEach(line => {
-            const match = line.match(/^(CLO\d+)-([\w_]+):\s*(\d+)\s*\((.+)\)$/i);
-            if (match) {
-                const cloId = match[1].toLowerCase();
-                const mloCode = match[2];
-                const score = parseInt(match[3]);
-                const justification = match[4];
-                
-                const clo = clos.find(c => c.id === cloId);
-                const mlo = mlos.find(m => m.mlokood === mloCode);
-                
-                if (clo && mlo) {
-                    results.push({
-                        clo: clo,
-                        mlo: mlo,
-                        score: score,
-                        justification: justification
-                    });
-                }
-            }
+        const expectedCount = expectedCLOs.length * expectedMLOs.length;
+        if (results.length !== expectedCount) {
+            console.warn(`Expected ${expectedCount} results, got ${results.length}`);
+            return false;
+        }
+        
+        // Check if we have varied scores (not all defaults)
+        const scores = results.map(r => r.score);
+        const uniqueScores = [...new Set(scores)];
+        
+        // If all scores are 2 (default), it's likely parsing failed
+        if (uniqueScores.length === 1 && uniqueScores[0] === 2) {
+            console.warn('All results have default score 2 - likely parsing failure');
+            return false;
+        }
+        
+        // Check if justifications are meaningful (not just defaults)
+        const defaultJustifications = results.filter(r => 
+            r.justification.includes('Default alignment') || 
+            r.justification.includes('parsing may have failed')
+        ).length;
+        
+        const successRate = (results.length - defaultJustifications) / results.length;
+        console.log(`✅ Parsing validation: ${(successRate * 100).toFixed(1)}% success rate`);
+        
+        // Require at least 70% successful parsing
+        return successRate >= 0.7;
+    }
+
+    buildEnhancedAlignmentPrompt(clos, mlos, attempt) {
+        const variations = [
+            // Attempt 1: Original optimized format
+            this.buildOptimizedAlignmentPrompt(clos, mlos),
+            
+            // Attempt 2: More explicit format
+            this.buildExplicitFormatPrompt(clos, mlos),
+            
+            // Attempt 3: JSON-like format
+            this.buildJSONLikePrompt(clos, mlos),
+            
+            // Attempt 4: Table format
+            this.buildTableFormatPrompt(clos, mlos),
+            
+            // Attempt 5: Simple list format
+            this.buildSimpleListPrompt(clos, mlos)
+        ];
+        
+        return variations[attempt - 1] || variations[0];
+    }
+
+    buildExplicitFormatPrompt(clos, mlos) {
+        let prompt = `INSTRUCTION: Rate each CLO-MLO alignment pair exactly as shown in the format below.
+
+RATING SCALE:
+1 = Minimal alignment
+2 = Weak alignment  
+3 = Moderate alignment
+4 = Strong alignment
+5 = Very strong alignment
+
+COURSE LEARNING OUTCOMES:`;
+
+        clos.forEach(clo => {
+            prompt += `\n${clo.id.toUpperCase()}: ${clo.text}`;
         });
 
-        return results;
+        prompt += `\n\nMODULE LEARNING OUTCOMES:`;
+        mlos.forEach(mlo => {
+            prompt += `\n${mlo.mlokood}: ${mlo.mlosisuik}`;
+        });
+
+        prompt += `\n\nFORMAT REQUIRED - Rate each pair EXACTLY like this:
+${clos[0].id.toUpperCase()}-${mlos[0].mlokood}: [1-5] (brief reason)
+
+COMPLETE ALL PAIRS:`;
+
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n${clo.id.toUpperCase()}-${mlo.mlokood}: `;
+            });
+        });
+
+        return prompt;
+    }
+
+    buildJSONLikePrompt(clos, mlos) {
+        let prompt = `Rate CLO-MLO alignment pairs. Respond in this exact JSON-like format:
+
+CLOs: ${clos.map(c => `${c.id.toUpperCase()}: ${c.text}`).join(' | ')}
+MLOs: ${mlos.map(m => `${m.mlokood}: ${m.mlosisuik}`).join(' | ')}
+
+Ratings (1=Minimal, 2=Weak, 3=Moderate, 4=Strong, 5=Very Strong):
+`;
+
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n"${clo.id.toUpperCase()}-${mlo.mlokood}": `;
+            });
+        });
+
+        return prompt;
+    }
+
+    buildTableFormatPrompt(clos, mlos) {
+        let prompt = `Create alignment table. Rate 1-5 scale:
+
+CLO | MLO | Score | Reason
+----|-----|-------|-------`;
+
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n${clo.id.toUpperCase()} | ${mlo.mlokood} | [1-5] | [reason]`;
+            });
+        });
+
+        prompt += `\n\nCLO Details:`;
+        clos.forEach(clo => {
+            prompt += `\n${clo.id.toUpperCase()}: ${clo.text}`;
+        });
+
+        prompt += `\n\nMLO Details:`;
+        mlos.forEach(mlo => {
+            prompt += `\n${mlo.mlokood}: ${mlo.mlosisuik}`;
+        });
+
+        return prompt;
+    }
+
+    buildSimpleListPrompt(clos, mlos) {
+        let prompt = `Rate each CLO-MLO pair (1-5 scale):
+
+CLOs:`;
+        clos.forEach(clo => {
+            prompt += `\n• ${clo.id.toUpperCase()}: ${clo.text}`;
+        });
+
+        prompt += `\n\nMLOs:`;
+        mlos.forEach(mlo => {
+            prompt += `\n• ${mlo.mlokood}: ${mlo.mlosisuik}`;
+        });
+
+        prompt += `\n\nRatings:`;
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n${clo.id.toUpperCase()}_${mlo.mlokood} = `;
+            });
+        });
+
+        return prompt;
+    }
+
+    parseAnalysisResponse(analysisText, clos, mlos) {
+        const results = [];
+        
+        console.log('🔍 Parsing analysis response:', {
+            responseLength: analysisText.length,
+            cloIds: clos.map(c => c.id),
+            mloCodes: mlos.map(m => m.mlokood)
+        });
+        
+        console.log('🤖 Full AI Response:', analysisText);
+        
+        // Create all possible CLO-MLO combinations
+        const allCombinations = [];
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                allCombinations.push({
+                    clo: clo,
+                    mlo: mlo,
+                    score: 3, // Default moderate score for 1-5 scale
+                    justification: 'Default alignment score - parsing may have failed'
+                });
+            });
+        });
+        
+        // Try to parse actual scores from the response
+        const lines = analysisText.split('\n');
+        let parsedCount = 0;
+        
+        lines.forEach(line => {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) return;
+            
+            // Look for patterns like CLOIK1-e1_mlo1: 1 or CLO1-MLO_CODE: score
+        const pairMatch = trimmedLine.match(/(CLO[A-Z]*\d+)[^:]*([a-z_]+\d+[a-z_]*)[^:]*:\s*([1-5])/i);
+            if (pairMatch) {
+                const cloIdFromResponse = pairMatch[1].toLowerCase();
+                const mloCodeFromResponse = pairMatch[2].toLowerCase();
+                const score = parseInt(pairMatch[3]);
+                
+                // Find the corresponding combination
+                const combo = allCombinations.find(c => {
+                    const cloMatches = c.clo.id.toLowerCase() === cloIdFromResponse || 
+                                     c.clo.id.toLowerCase().includes(cloIdFromResponse.replace(/clo[a-z]*/, ''));
+                    const mloMatches = c.mlo.mlokood.toLowerCase() === mloCodeFromResponse ||
+                                      c.mlo.mlokood.toLowerCase().includes(mloCodeFromResponse);
+                    return cloMatches && mloMatches;
+                });
+                
+        if (combo && score >= 1 && score <= 5) {
+                    combo.score = score;
+                    combo.justification = this.extractJustification(trimmedLine);
+                    parsedCount++;
+                    console.log('✅ Parsed pair:', { clo: cloIdFromResponse, mlo: mloCodeFromResponse, score });
+                    return; // Continue to next line
+                }
+            }
+            
+            // Fallback: Look for CLO-MLO patterns (handle both CLO1 and CLOIK1 formats)
+            const cloMatch = trimmedLine.match(/(CLO[A-Z]*\d+)/i);
+        const scoreMatch = trimmedLine.match(/\b([1-5])\b/);
+            
+            if (cloMatch && scoreMatch) {
+                const cloIdFromResponse = cloMatch[1].toLowerCase();
+                const score = parseInt(scoreMatch[1]);
+                
+                // Find which MLO this line refers to
+                mlos.forEach(mlo => {
+                    if (trimmedLine.toLowerCase().includes(mlo.mlokood.toLowerCase())) {
+                        // Find the corresponding combination by matching the CLO ID
+                        const combo = allCombinations.find(c => 
+                            c.clo.id.toLowerCase() === cloIdFromResponse || 
+                            c.clo.id.toLowerCase().includes(cloIdFromResponse.replace('clo', ''))
+                        );
+                        
+        if (combo && score >= 1 && score <= 5) {
+                            combo.score = score;
+                            combo.justification = this.extractJustification(trimmedLine);
+                            parsedCount++;
+                            console.log('✅ Parsed:', { cloId: cloIdFromResponse, mloCode: mlo.mlokood, score });
+                        }
+                    }
+                });
+            }
+        });
+        
+        console.log(`🎯 Parsing completed: ${parsedCount}/${allCombinations.length} combinations found`);
+        
+        return allCombinations;
+    }
+    
+    extractJustification(line) {
+        // Extract text after score, removing common patterns
+        const cleanLine = line.replace(/CLO\d+/i, '').replace(/[a-z_]+\d+[a-z_]*/i, '').replace(/[0-4]/, '');
+        
+        // Look for text in parentheses or after colon/dash
+        let justification = cleanLine.match(/\(([^)]+)\)/)?.[1] ||
+                           cleanLine.match(/[:\-–]\s*(.+)$/)?.[1] ||
+                           cleanLine.trim();
+                           
+        return justification.trim() || 'Alignment assessment provided';
     }
 
     displayAlignmentResults() {
         const resultsContainer = document.getElementById('alignment-matrix-container');
         
         if (!this.alignmentResults || this.alignmentResults.length === 0) {
-            resultsContainer.innerHTML = '<p>No alignment results to display.</p>';
+            resultsContainer.innerHTML = '<p class="no-results">No alignment results to display.</p>';
             return;
         }
 
-        // Create matrix table
-        const table = this.createAlignmentMatrix();
-        resultsContainer.innerHTML = '';
-        resultsContainer.appendChild(table);
+        // Create the new layout following PLO-MLO design
+        const resultHTML = this.createPLOMLOStyleLayout();
+        resultsContainer.innerHTML = resultHTML;
 
         // Update summary statistics
         this.updateAlignmentSummary();
+        
+        // Add event listeners for the new layout
+        this.setupDetailedLayoutEvents();
     }
 
-    createAlignmentMatrix() {
-        const table = document.createElement('table');
-        table.className = 'alignment-matrix';
+    createPLOMLOStyleLayout() {
+        // Calculate statistics
+        const totalPairs = this.alignmentResults.length;
+        const veryStrongAlignments = this.alignmentResults.filter(r => r.score === 5).length;
+        const strongAlignments = this.alignmentResults.filter(r => r.score === 4).length;
+        const moderateAlignments = this.alignmentResults.filter(r => r.score === 3).length;
+        const weakAlignments = this.alignmentResults.filter(r => r.score === 2).length;
+        const minimalAlignments = this.alignmentResults.filter(r => r.score === 1).length;
+        const averageScore = this.alignmentResults.reduce((sum, r) => sum + r.score, 0) / totalPairs;
+        
+        return `
+            <!-- Alignment Summary -->
+            <div class="alignment-overview">
+                <div class="overview-header">
+                    <h4><i class="fas fa-chart-line"></i> Alignment Analysis Summary</h4>
+                    <div class="summary-metrics">
+                        <div class="metric-card very-strong">
+                            <div class="metric-value">${veryStrongAlignments}</div>
+                            <div class="metric-label">Very Strong (5)</div>
+                        </div>
+                        <div class="metric-card strong">
+                            <div class="metric-value">${strongAlignments}</div>
+                            <div class="metric-label">Strong (4)</div>
+                        </div>
+                        <div class="metric-card moderate">
+                            <div class="metric-value">${moderateAlignments}</div>
+                            <div class="metric-label">Moderate (3)</div>
+                        </div>
+                        <div class="metric-card weak">
+                            <div class="metric-value">${weakAlignments}</div>
+                            <div class="metric-label">Weak (2)</div>
+                        </div>
+                        <div class="metric-card minimal">
+                            <div class="metric-value">${minimalAlignments}</div>
+                            <div class="metric-label">Minimal (1)</div>
+                        </div>
+                        <div class="metric-card avg">
+                            <div class="metric-value">${averageScore.toFixed(2)}</div>
+                            <div class="metric-label">Average Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Alignment Matrix -->
+            <div class="matrix-section">
+                <h4><i class="fas fa-table"></i> Alignment Matrix</h4>
+                ${this.createCompactMatrix()}
+            </div>
+
+            <!-- Detailed Breakdown -->
+            <div class="detailed-breakdown">
+                <h4><i class="fas fa-list-alt"></i> Detailed Alignment Analysis</h4>
+                <div class="breakdown-filters">
+                    <button class="filter-btn active" data-filter="all">All (${totalPairs})</button>
+                    <button class="filter-btn" data-filter="very-strong">Very Strong (${veryStrongAlignments})</button>
+                    <button class="filter-btn" data-filter="strong">Strong (${strongAlignments})</button>
+                    <button class="filter-btn" data-filter="moderate">Moderate (${moderateAlignments})</button>
+                    <button class="filter-btn" data-filter="weak">Weak (${weakAlignments})</button>
+                    <button class="filter-btn" data-filter="minimal">Minimal (${minimalAlignments})</button>
+                </div>
+                
+                <div class="breakdown-table-container">
+                    <table class="breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>CLO</th>
+                                <th>CLO Content</th>
+                                <th>MLO</th>
+                                <th>Score</th>
+                                <th>Analysis & Recommendations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.createDetailedBreakdownRows()}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    createCompactMatrix() {
         // Get unique MLOs and CLOs from results
         const uniqueMLOs = [...new Set(this.alignmentResults.map(r => r.mlo.mlokood))];
         const uniqueCLOs = [...new Set(this.alignmentResults.map(r => r.clo.id))];
 
-        // Create header row
-        const headerRow = document.createElement('tr');
-        headerRow.innerHTML = '<th>CLO \\ MLO</th>';
-        uniqueMLOs.forEach(mloCode => {
-            const th = document.createElement('th');
-            th.textContent = mloCode;
-            th.className = 'mlo-header';
-            headerRow.appendChild(th);
-        });
-        table.appendChild(headerRow);
+        let matrixHTML = `
+            <div class="compact-matrix">
+                <table class="alignment-matrix-table">
+                    <thead>
+                        <tr>
+                            <th class="matrix-corner">CLO \\ MLO</th>
+                            ${uniqueMLOs.map(mlo => `<th class="mlo-header">${mlo}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
 
-        // Create data rows
         uniqueCLOs.forEach(cloId => {
-            const row = document.createElement('tr');
+            matrixHTML += `<tr>`;
+            matrixHTML += `<td class="clo-header">${cloId.toUpperCase()}</td>`;
             
-            // CLO header cell
-            const cloHeader = document.createElement('td');
-            cloHeader.textContent = cloId.toUpperCase();
-            cloHeader.className = 'clo-header';
-            row.appendChild(cloHeader);
-
-            // Score cells
             uniqueMLOs.forEach(mloCode => {
-                const cell = document.createElement('td');
                 const result = this.alignmentResults.find(r => 
                     r.clo.id === cloId && r.mlo.mlokood === mloCode
                 );
 
                 if (result) {
-                    cell.textContent = this.showScores ? result.score : '';
-                    cell.className = `score-cell score-${result.score}`;
-                    cell.title = result.justification;
-                    
-                    if (result.score >= this.currentThreshold) {
-                        cell.classList.add('above-threshold');
-                    }
+                    const scoreClass = this.getScoreClass(result.score);
+                    matrixHTML += `<td class="matrix-cell ${scoreClass}" title="${result.justification}">${result.score}</td>`;
                 } else {
-                    cell.textContent = '-';
-                    cell.className = 'score-cell no-data';
+                    matrixHTML += `<td class="matrix-cell no-data">-</td>`;
                 }
-
-                row.appendChild(cell);
             });
-
-            table.appendChild(row);
+            
+            matrixHTML += `</tr>`;
         });
 
-        return table;
+        matrixHTML += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        return matrixHTML;
+    }
+
+    createDetailedBreakdownRows() {
+        return this.alignmentResults.map(result => {
+            const scoreClass = this.getScoreClass(result.score);
+            const filterClass = this.getFilterClass(result.score);
+            const recommendations = this.generateRecommendations(result);
+            
+            return `
+                <tr class="breakdown-row ${filterClass}" data-filter="${filterClass}">
+                    <td class="clo-code">${result.clo.id.toUpperCase()}</td>
+                    <td class="clo-content">
+                        <div class="content-text">${result.clo.text}</div>
+                    </td>
+                    <td class="mlo-code">
+                        <div class="mlo-info">
+                            <strong>${result.mlo.mlokood}</strong>
+                            <div class="mlo-content">${result.mlo.mlosisuik}</div>
+                        </div>
+                    </td>
+                    <td class="score-cell">
+                        <div class="score-badge ${scoreClass}">
+                            ${result.score}
+                            <div class="score-label">${this.getScoreLabel(result.score)}</div>
+                        </div>
+                    </td>
+                    <td class="analysis-cell">
+                        <div class="justification">${result.justification}</div>
+                        ${recommendations ? `<div class="recommendations">${recommendations}</div>` : ''}
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    getScoreClass(score) {
+        if (score === 5) return 'score-very-strong';
+        if (score === 4) return 'score-strong';
+        if (score === 3) return 'score-moderate';
+        if (score === 2) return 'score-weak';
+        if (score === 1) return 'score-minimal';
+        return 'score-none';
+    }
+
+    getFilterClass(score) {
+        if (score === 5) return 'very-strong';
+        if (score === 4) return 'strong';
+        if (score === 3) return 'moderate';
+        if (score === 2) return 'weak';
+        if (score === 1) return 'minimal';
+        return 'none';
+    }
+
+    getScoreLabel(score) {
+        const labels = {
+            5: 'Very Strong',
+            4: 'Strong',
+            3: 'Moderate',
+            2: 'Weak',
+            1: 'Minimal',
+            0: 'None'
+        };
+        return labels[score] || 'Unknown';
+    }
+
+    generateRecommendations(result) {
+        if (result.score >= 3) return null; // No recommendations needed for moderate or better alignments
+        const recommendations = [];
+        if (result.score === 2) {
+            recommendations.push("• Consider revising CLO to better match MLO cognitive level");
+            recommendations.push("• Review content overlap and strengthen connection");
+            recommendations.push("• Ensure assessment methods align with both outcomes");
+        } else if (result.score === 1) {
+            recommendations.push("• Minimal alignment detected - significant revision needed");
+            recommendations.push("• Consider if this CLO-MLO pairing is necessary");
+            recommendations.push("• Review learning objectives and content mapping");
+        }
+        return recommendations.length > 0 ? `
+            <div class="recommendation-list">
+                <strong>Improvement Suggestions:</strong>
+                ${recommendations.map(rec => `<div class="rec-item">${rec}</div>`).join('')}
+            </div>
+        ` : null;
+    }
+
+    setupDetailedLayoutEvents() {
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Filter rows
+                const filter = e.target.dataset.filter;
+                document.querySelectorAll('.breakdown-row').forEach(row => {
+                    if (filter === 'all' || row.dataset.filter === filter) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
     }
 
     updateAlignmentSummary() {
@@ -651,23 +1447,6 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
                 </div>
             `;
         }
-    }
-
-    applyFilters() {
-        const cells = document.querySelectorAll('.score-cell');
-        cells.forEach(cell => {
-            const scoreText = cell.textContent;
-            if (scoreText && scoreText !== '-') {
-                const score = parseInt(scoreText);
-                if (score >= this.currentThreshold) {
-                    cell.classList.add('above-threshold');
-                    cell.style.display = '';
-                } else {
-                    cell.classList.remove('above-threshold');
-                    cell.style.display = this.showColors ? '' : 'none';
-                }
-            }
-        });
     }
 
     toggleScores() {
@@ -757,40 +1536,49 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
         });
 
         // CLO Editor actions
-        document.getElementById('save-clos-btn').addEventListener('click', () => {
-            this.saveCLOs();
-        });
+        const saveCLOsBtn = document.getElementById('save-clos-btn');
+        if (saveCLOsBtn) {
+            saveCLOsBtn.addEventListener('click', () => {
+                this.saveCLOs();
+            });
+        }
 
-        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
-            this.cancelEdit();
-        });
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        if (cancelEditBtn) {
+            cancelEditBtn.addEventListener('click', () => {
+                this.cancelEdit();
+            });
+        }
 
         // Analysis actions
-        document.getElementById('analyze-alignment-btn').addEventListener('click', () => {
-            this.performCLOAnalysis();
-        });
+        const analyzeAlignmentBtn = document.getElementById('analyze-alignment-btn');
+        if (analyzeAlignmentBtn) {
+            analyzeAlignmentBtn.addEventListener('click', () => {
+                this.performCLOAnalysis();
+            });
+        }
 
-        document.getElementById('back-to-clo-management').addEventListener('click', () => {
-            this.backToCLOManagement();
-        });
+        const backToCLOBtn = document.getElementById('back-to-clo-management');
+        if (backToCLOBtn) {
+            backToCLOBtn.addEventListener('click', () => {
+                this.backToCLOManagement();
+            });
+        }
 
         // Matrix controls
-        document.getElementById('alignment-threshold-clo').addEventListener('change', (e) => {
-            this.currentThreshold = parseInt(e.target.value);
-            const thresholdDisplay = document.getElementById('threshold-value');
-            if (thresholdDisplay) {
-                thresholdDisplay.textContent = this.currentThreshold;
-            }
-            this.applyFilters();
-        });
+        const toggleScoresBtn = document.getElementById('toggle-clo-scores');
+        if (toggleScoresBtn) {
+            toggleScoresBtn.addEventListener('click', () => {
+                this.toggleScores();
+            });
+        }
 
-        document.getElementById('toggle-clo-scores').addEventListener('click', () => {
-            this.toggleScores();
-        });
-
-        document.getElementById('export-clo-btn').addEventListener('click', () => {
-            this.exportResults();
-        });
+        const exportCLOBtn = document.getElementById('export-clo-btn');
+        if (exportCLOBtn) {
+            exportCLOBtn.addEventListener('click', () => {
+                this.exportResults();
+            });
+        }
 
         // Modal controls
         document.querySelectorAll('.modal-close').forEach(btn => {
@@ -800,25 +1588,40 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
         });
 
         // API Configuration
-        document.getElementById('api-config-btn').addEventListener('click', () => {
-            this.showAPIConfig();
-        });
+        const apiConfigBtn = document.getElementById('api-config-btn');
+        if (apiConfigBtn) {
+            apiConfigBtn.addEventListener('click', () => {
+                this.showAPIConfig();
+            });
+        }
 
-        document.getElementById('close-api-config').addEventListener('click', () => {
-            this.hideAPIConfig();
-        });
+        const closeApiConfig = document.getElementById('close-api-config');
+        if (closeApiConfig) {
+            closeApiConfig.addEventListener('click', () => {
+                this.hideAPIConfig();
+            });
+        }
 
-        document.getElementById('save-api-key').addEventListener('click', () => {
-            this.saveAPIKey();
-        });
+        const saveApiKey = document.getElementById('save-api-key');
+        if (saveApiKey) {
+            saveApiKey.addEventListener('click', () => {
+                this.saveAPIKey();
+            });
+        }
 
-        document.getElementById('test-api-key').addEventListener('click', () => {
-            this.testAPIKey();
-        });
+        const testApiKey = document.getElementById('test-api-key');
+        if (testApiKey) {
+            testApiKey.addEventListener('click', () => {
+                this.testAPIKey();
+            });
+        }
 
-        document.getElementById('clear-api-key').addEventListener('click', () => {
-            this.clearAPIKey();
-        });
+        const clearApiKey = document.getElementById('clear-api-key');
+        if (clearApiKey) {
+            clearApiKey.addEventListener('click', () => {
+                this.clearAPIKey();
+            });
+        }
     }
 
     // Utility methods
@@ -836,13 +1639,44 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
         }
     }
 
-    showLoading(message) {
+    showLoading(message, showProgress = false, progress = 0) {
         const modal = document.getElementById('loading-modal');
         const messageEl = document.getElementById('loading-message');
         if (modal && messageEl) {
-            messageEl.textContent = message;
+            // Enhanced loading message with progress
+            if (showProgress) {
+                messageEl.innerHTML = `
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <div class="loading-text">${message}</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <div class="progress-text">${progress}% complete</div>
+                        </div>
+                        <div class="patience-message">
+                            <i class="fas fa-hourglass-half"></i>
+                            Please be patient while we analyze alignment and parse results...
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageEl.innerHTML = `
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <div class="loading-text">${message}</div>
+                    </div>
+                `;
+            }
             modal.classList.remove('hidden');
         }
+    }
+
+    showProgressiveLoading(baseMessage, attempt, maxAttempts) {
+        const progress = Math.round((attempt / maxAttempts) * 100);
+        const message = `${baseMessage} (Attempt ${attempt}/${maxAttempts})`;
+        this.showLoading(message, true, progress);
     }
 
     hideLoading() {
@@ -886,6 +1720,17 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
 
     // API Configuration methods
     isAPIConfigured() {
+        // Check if enhanced AI features are available and ready
+        if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
+            return true;
+        }
+        
+        // Check if secure API config is available and ready
+        if (window.secureAPIConfig && window.secureAPIConfig.isReady()) {
+            return true;
+        }
+        
+        // Fallback to old localStorage method
         return !!localStorage.getItem('gemini_api_key');
     }
 
@@ -935,7 +1780,7 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
         try {
             this.showLoading('Testing API connection...');
 
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -970,6 +1815,164 @@ Be precise and consider semantic similarity, cognitive levels, and learning obje
             keyInput.value = '';
         }
         this.showMessage('API key cleared.', 'info');
+    }
+
+    // Enhanced parsing validation
+    validateParsedResults(results, expectedCLOs, expectedMLOs) {
+        if (!results || results.length === 0) {
+            console.warn('No results parsed');
+            return false;
+        }
+        
+        const expectedCount = expectedCLOs.length * expectedMLOs.length;
+        if (results.length !== expectedCount) {
+            console.warn(`Expected ${expectedCount} results, got ${results.length}`);
+            return false;
+        }
+        
+        // Check if we have varied scores (not all defaults)
+        const scores = results.map(r => r.score);
+        const uniqueScores = [...new Set(scores)];
+        
+        // If all scores are 2 (default), it's likely parsing failed
+        if (uniqueScores.length === 1 && uniqueScores[0] === 2) {
+            console.warn('All results have default score 2 - likely parsing failure');
+            return false;
+        }
+        
+        // Check if justifications are meaningful (not just defaults)
+        const defaultJustifications = results.filter(r => 
+            r.justification.includes('Default alignment') || 
+            r.justification.includes('parsing may have failed')
+        ).length;
+        
+        const successRate = (results.length - defaultJustifications) / results.length;
+        console.log(`✅ Parsing validation: ${(successRate * 100).toFixed(1)}% success rate`);
+        
+        // Require at least 70% successful parsing
+        return successRate >= 0.7;
+    }
+
+    buildEnhancedAlignmentPrompt(clos, mlos, attempt) {
+        const variations = [
+            // Attempt 1: Original optimized format
+            this.buildOptimizedAlignmentPrompt(clos, mlos),
+            
+            // Attempt 2: More explicit format
+            this.buildExplicitFormatPrompt(clos, mlos),
+            
+            // Attempt 3: JSON-like format
+            this.buildJSONLikePrompt(clos, mlos),
+            
+            // Attempt 4: Table format
+            this.buildTableFormatPrompt(clos, mlos),
+            
+            // Attempt 5: Simple list format
+            this.buildSimpleListPrompt(clos, mlos)
+        ];
+        
+        return variations[attempt - 1] || variations[0];
+    }
+
+    buildExplicitFormatPrompt(clos, mlos) {
+        let prompt = `INSTRUCTION: Rate each CLO-MLO alignment pair exactly as shown in the format below.
+
+RATING SCALE:
+0 = No alignment
+1 = Weak alignment  
+2 = Moderate alignment
+3 = Strong alignment
+4 = Very strong alignment
+
+COURSE LEARNING OUTCOMES:`;
+
+        clos.forEach(clo => {
+            prompt += `\n${clo.id.toUpperCase()}: ${clo.text}`;
+        });
+
+        prompt += `\n\nMODULE LEARNING OUTCOMES:`;
+        mlos.forEach(mlo => {
+            prompt += `\n${mlo.mlokood}: ${mlo.mlosisuik}`;
+        });
+
+        prompt += `\n\nFORMAT REQUIRED - Rate each pair EXACTLY like this:
+${clos[0].id.toUpperCase()}-${mlos[0].mlokood}: [0-4] (brief reason)
+
+COMPLETE ALL PAIRS:`;
+
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n${clo.id.toUpperCase()}-${mlo.mlokood}: `;
+            });
+        });
+
+        return prompt;
+    }
+
+    buildJSONLikePrompt(clos, mlos) {
+        let prompt = `Rate CLO-MLO alignment pairs. Respond in this exact JSON-like format:
+
+CLOs: ${clos.map(c => `${c.id.toUpperCase()}: ${c.text}`).join(' | ')}
+MLOs: ${mlos.map(m => `${m.mlokood}: ${m.mlosisuik}`).join(' | ')}
+
+Ratings (0=None, 1=Weak, 2=Moderate, 3=Strong, 4=Very Strong):
+`;
+
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n"${clo.id.toUpperCase()}-${mlo.mlokood}": `;
+            });
+        });
+
+        return prompt;
+    }
+
+    buildTableFormatPrompt(clos, mlos) {
+        let prompt = `Create alignment table. Rate 0-4 scale:
+
+CLO | MLO | Score | Reason
+----|-----|-------|-------`;
+
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n${clo.id.toUpperCase()} | ${mlo.mlokood} | [score] | [reason]`;
+            });
+        });
+
+        prompt += `\n\nCLO Details:`;
+        clos.forEach(clo => {
+            prompt += `\n${clo.id.toUpperCase()}: ${clo.text}`;
+        });
+
+        prompt += `\n\nMLO Details:`;
+        mlos.forEach(mlo => {
+            prompt += `\n${mlo.mlokood}: ${mlo.mlosisuik}`;
+        });
+
+        return prompt;
+    }
+
+    buildSimpleListPrompt(clos, mlos) {
+        let prompt = `Rate each CLO-MLO pair (0-4 scale):
+
+CLOs:`;
+        clos.forEach(clo => {
+            prompt += `\n• ${clo.id.toUpperCase()}: ${clo.text}`;
+        });
+
+        prompt += `\n\nMLOs:`;
+        mlos.forEach(mlo => {
+            prompt += `\n• ${mlo.mlokood}: ${mlo.mlosisuik}`;
+        });
+
+        prompt += `\n\nRatings:`;
+        clos.forEach(clo => {
+            mlos.forEach(mlo => {
+                prompt += `\n${clo.id.toUpperCase()}_${mlo.mlokood} = `;
+            });
+        });
+
+        return prompt;
     }
 }
 
