@@ -1650,7 +1650,6 @@
             <!-- Course Selection Section -->
             <section id="course-selection-section">
                 <h2><i class="fas fa-search"></i> Course Selection</h2>
-                
                 <div class="form-group">
                     <label for="course-selector">Select Course</label>
                     <select id="course-selector" class="form-select">
@@ -1658,6 +1657,10 @@
                     </select>
                 </div>
             </section>
+            <!-- New Course Button (hidden by default, shown after selection) -->
+            <div id="new-course-btn-container" class="form-actions" style="display:none; justify-content:flex-end;">
+                <button id="new-course-btn" class="btn btn-secondary"><i class="fas fa-plus"></i> New Course</button>
+            </div>
 
             <!-- Course Information Section -->
             <section id="course-information-section" class="hidden">
@@ -1717,6 +1720,14 @@
             </section>
 
             <!-- CLO Management Section -->
+            <!-- Module Content Section (shown before CLOs, with caret toggle) -->
+            <section id="module-content-section" class="hidden">
+                <div class="section-header" style="display:flex;align-items:center;gap:1rem;cursor:pointer;" onclick="toggleModuleContent()">
+                    <h2 style="margin-bottom:0;"><i class="fas fa-cubes"></i> Module Content</h2>
+                    <i id="module-caret" class="fas fa-chevron-down"></i>
+                </div>
+                <div id="module-content-list" style="display:block; margin-top:1rem;"></div>
+            </section>
             <section id="clo-management-section" class="hidden">
                 <h2><i class="fas fa-cogs"></i> CLO Management</h2>
                 
@@ -1820,6 +1831,12 @@
 
                 <div id="alignment-matrix-container" class="matrix-container">
                     <!-- Alignment matrix will be populated here -->
+                </div>
+
+                <!-- Score Distribution Chart -->
+                <div id="score-distribution-chart-container" class="matrix-container" style="margin-top:2rem;">
+                    <h4>Score Distribution</h4>
+                    <canvas id="score-distribution-chart" height="120"></canvas>
                 </div>
 
                 <div class="result-actions">
@@ -2003,7 +2020,7 @@
     <script src="js/secure-api-config.js"></script>
     <script src="js/enhanced-ai-features.js"></script>
     <script src="js/alignment-engine.js"></script>
-    <script src="js/mlo-clo-new.js"></script>
+    <script src="js/clo-mlo.js"></script>
     
     <script>
         // Open AI Assistant in new window/tab
@@ -2021,53 +2038,74 @@
             window.open('ai-assistant.html', '_blank');
         }
 
-        // Initialize programme information on page load
+        // Initialize page and workflow enhancements
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log('DOMContentLoaded fired for CLO-MLO page');
-            
             try {
-                // Initialize data manager if not already done
-                if (!window.dataManager) {
-                    console.log('Creating new DataManager instance');
-                    window.dataManager = new DataManager();
-                } else {
-                    console.log('DataManager already exists');
-                }
-                
-                // Check for programme in sessionStorage or URL parameter
+                if (!window.dataManager) window.dataManager = new DataManager();
                 let currentProgramme = window.dataManager.getCurrentProgramme();
                 const urlParams = new URLSearchParams(window.location.search);
                 const kavakood = urlParams.get('kavakood');
-                
-                console.log('Current programme:', currentProgramme);
-                console.log('URL kavakood:', kavakood);
-                
-                // If no current programme but URL has kavakood, load programmes and set current
                 if (!currentProgramme && kavakood) {
-                    console.log('Loading programmes and setting current...');
                     await window.dataManager.loadProgrammes();
                     currentProgramme = window.dataManager.setCurrentProgramme(kavakood);
                 }
-                
-                // Update page title and programme display
-                if (currentProgramme) {
-                    updatePageHeader(currentProgramme);
-                } else {
-                    console.warn('No current programme found');
-                }
-                
-                // Setup floating home button
+                if (currentProgramme) updatePageHeader(currentProgramme);
+                // Floating home button
                 const homeBtn = document.getElementById('floating-home');
-                if (homeBtn) {
-                    homeBtn.addEventListener('click', function() {
-                        window.location.href = 'index.html';
+                if (homeBtn) homeBtn.onclick = () => window.location.href = 'index.html';
+
+                // Course selection workflow
+                const courseSelector = document.getElementById('course-selector');
+                const courseSection = document.getElementById('course-selection-section');
+                const infoSection = document.getElementById('course-information-section');
+                const moduleSection = document.getElementById('module-content-section');
+                const cloSection = document.getElementById('clo-management-section');
+                const newCourseBtnContainer = document.getElementById('new-course-btn-container');
+                const newCourseBtn = document.getElementById('new-course-btn');
+                if (courseSelector) {
+                    courseSelector.addEventListener('change', function() {
+                        if (this.value) {
+                            courseSection.style.display = 'none';
+                            infoSection.classList.remove('hidden');
+                            moduleSection.classList.remove('hidden');
+                            cloSection.classList.remove('hidden');
+                            newCourseBtnContainer.style.display = 'flex';
+                        } else {
+                            courseSection.style.display = '';
+                            infoSection.classList.add('hidden');
+                            moduleSection.classList.add('hidden');
+                            cloSection.classList.add('hidden');
+                            newCourseBtnContainer.style.display = 'none';
+                        }
                     });
                 }
-                
+                if (newCourseBtn) {
+                    newCourseBtn.onclick = function() {
+                        courseSelector.value = '';
+                        courseSection.style.display = '';
+                        infoSection.classList.add('hidden');
+                        moduleSection.classList.add('hidden');
+                        cloSection.classList.add('hidden');
+                        newCourseBtnContainer.style.display = 'none';
+                    };
+                }
             } catch (error) {
                 console.error('Error initializing CLO-MLO page:', error);
             }
         });
+
+        // Module content caret toggle
+        function toggleModuleContent() {
+            const caret = document.getElementById('module-caret');
+            const list = document.getElementById('module-content-list');
+            if (list.style.display === 'none') {
+                list.style.display = 'block';
+                caret.className = 'fas fa-chevron-down';
+            } else {
+                list.style.display = 'none';
+                caret.className = 'fas fa-chevron-right';
+            }
+        }
         
         function updatePageHeader(programme) {
             // Update page title with programme info
@@ -2084,10 +2122,10 @@
         }
     </script>
 
-    <!-- Floating home button -->
-    <button id="floating-home" class="floating-home" title="Return to Home">
+    <!-- Floating home button (single instance, fixed) -->
+    <div class="floating-home" id="floating-home" title="Return to Home">
         <i class="fas fa-home"></i>
-    </button>
+    </div>
 
 </body>
 </html>

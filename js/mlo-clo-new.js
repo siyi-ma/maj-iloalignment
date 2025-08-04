@@ -1069,93 +1069,34 @@ CLOs:`;
     }
 
     parseAnalysisResponse(analysisText, clos, mlos) {
-        const results = [];
-        
-        console.log('🔍 Parsing analysis response:', {
-            responseLength: analysisText.length,
-            cloIds: clos.map(c => c.id),
-            mloCodes: mlos.map(m => m.mlokood)
-        });
-        
-        console.log('🤖 Full AI Response:', analysisText);
-        
-        // Create all possible CLO-MLO combinations
-        const allCombinations = [];
-        clos.forEach(clo => {
-            mlos.forEach(mlo => {
-                allCombinations.push({
-                    clo: clo,
-                    mlo: mlo,
-                    score: 3, // Default moderate score for 1-5 scale
-                    justification: 'Default alignment score - parsing may have failed'
-                });
-            });
-        });
-        
-        // Try to parse actual scores from the response
+        // Only return CLO-MLO pairs with a real parsed score (not default)
+        const parsedResults = [];
         const lines = analysisText.split('\n');
-        let parsedCount = 0;
-        
         lines.forEach(line => {
             const trimmedLine = line.trim();
             if (!trimmedLine) return;
-            
             // Look for patterns like CLOIK1-e1_mlo1: 1 or CLO1-MLO_CODE: score
-        const pairMatch = trimmedLine.match(/(CLO[A-Z]*\d+)[^:]*([a-z_]+\d+[a-z_]*)[^:]*:\s*([1-5])/i);
+            const pairMatch = trimmedLine.match(/(CLO[A-Z]*\d+)[^:]*([a-zA-Z0-9_.-]+)[^:]*:\s*([1-5])/i);
             if (pairMatch) {
                 const cloIdFromResponse = pairMatch[1].toLowerCase();
                 const mloCodeFromResponse = pairMatch[2].toLowerCase();
                 const score = parseInt(pairMatch[3]);
-                
-                // Find the corresponding combination
-                const combo = allCombinations.find(c => {
-                    const cloMatches = c.clo.id.toLowerCase() === cloIdFromResponse || 
-                                     c.clo.id.toLowerCase().includes(cloIdFromResponse.replace(/clo[a-z]*/, ''));
-                    const mloMatches = c.mlo.mlokood.toLowerCase() === mloCodeFromResponse ||
-                                      c.mlo.mlokood.toLowerCase().includes(mloCodeFromResponse);
-                    return cloMatches && mloMatches;
-                });
-                
-        if (combo && score >= 1 && score <= 5) {
-                    combo.score = score;
-                    combo.justification = this.extractJustification(trimmedLine);
-                    parsedCount++;
-                    console.log('✅ Parsed pair:', { clo: cloIdFromResponse, mlo: mloCodeFromResponse, score });
-                    return; // Continue to next line
+                // Find the corresponding CLO and MLO objects
+                const clo = clos.find(c => c.id.toLowerCase() === cloIdFromResponse || c.id.toLowerCase().includes(cloIdFromResponse.replace(/clo[a-z]*/, '')));
+                const mlo = mlos.find(m => m.mlokood.toLowerCase() === mloCodeFromResponse || m.mlokood.toLowerCase().includes(mloCodeFromResponse));
+                if (clo && mlo && score >= 1 && score <= 5) {
+                    parsedResults.push({
+                        clo,
+                        mlo,
+                        score,
+                        justification: this.extractJustification(trimmedLine)
+                    });
                 }
             }
-            
-            // Fallback: Look for CLO-MLO patterns (handle both CLO1 and CLOIK1 formats)
-            const cloMatch = trimmedLine.match(/(CLO[A-Z]*\d+)/i);
-        const scoreMatch = trimmedLine.match(/\b([1-5])\b/);
-            
-            if (cloMatch && scoreMatch) {
-                const cloIdFromResponse = cloMatch[1].toLowerCase();
-                const score = parseInt(scoreMatch[1]);
-                
-                // Find which MLO this line refers to
-                mlos.forEach(mlo => {
-                    if (trimmedLine.toLowerCase().includes(mlo.mlokood.toLowerCase())) {
-                        // Find the corresponding combination by matching the CLO ID
-                        const combo = allCombinations.find(c => 
-                            c.clo.id.toLowerCase() === cloIdFromResponse || 
-                            c.clo.id.toLowerCase().includes(cloIdFromResponse.replace('clo', ''))
-                        );
-                        
-        if (combo && score >= 1 && score <= 5) {
-                            combo.score = score;
-                            combo.justification = this.extractJustification(trimmedLine);
-                            parsedCount++;
-                            console.log('✅ Parsed:', { cloId: cloIdFromResponse, mloCode: mlo.mlokood, score });
-                        }
-                    }
-                });
-            }
         });
-        
-        console.log(`🎯 Parsing completed: ${parsedCount}/${allCombinations.length} combinations found`);
-        
-        return allCombinations;
+        // If no real results parsed, return null to indicate failure
+        if (parsedResults.length === 0) return null;
+        return parsedResults;
     }
     
     extractJustification(line) {
@@ -1177,95 +1118,78 @@ CLOs:`;
             resultsContainer.innerHTML = '<p class="no-results">No alignment results to display.</p>';
             return;
         }
-
-        // Create the new layout following PLO-MLO design
-        const resultHTML = this.createPLOMLOStyleLayout();
+        // If all results are default (parsing failed), show error instead of table
+        const allDefault = !this.alignmentResults.some(r => r && r.score && !r.justification?.includes('parsing may have failed') && !r.justification?.includes('Default alignment'));
+        if (allDefault) {
+            resultsContainer.innerHTML = '<div class="ai-error">❌ Unable to parse any valid CLO-MLO alignments from the AI response. Please try again or adjust your CLOs/MLOs for clearer results.</div>';
+            return;
+        }
+        // Create the new layout following PLO-MLO design, but only for real parsed results
+        const filteredResults = this.alignmentResults.filter(r => r && r.score && !r.justification?.includes('parsing may have failed') && !r.justification?.includes('Default alignment'));
+        const resultHTML = this.createPLOMLOStyleLayout(filteredResults);
         resultsContainer.innerHTML = resultHTML;
-
         // Update summary statistics
         this.updateAlignmentSummary();
-        
         // Add event listeners for the new layout
         this.setupDetailedLayoutEvents();
     }
 
-    createPLOMLOStyleLayout() {
+    createPLOMLOStyleLayout(filteredResults) {
+        // Use only filteredResults (real parsed results)
+        const results = filteredResults || [];
+        if (!results.length) {
+            return '<div class="ai-error">❌ No valid CLO-MLO alignments could be parsed from the AI response.</div>';
+        }
         // Calculate statistics
-        const totalPairs = this.alignmentResults.length;
-        const veryStrongAlignments = this.alignmentResults.filter(r => r.score === 5).length;
-        const strongAlignments = this.alignmentResults.filter(r => r.score === 4).length;
-        const moderateAlignments = this.alignmentResults.filter(r => r.score === 3).length;
-        const weakAlignments = this.alignmentResults.filter(r => r.score === 2).length;
-        const minimalAlignments = this.alignmentResults.filter(r => r.score === 1).length;
-        const averageScore = this.alignmentResults.reduce((sum, r) => sum + r.score, 0) / totalPairs;
-        
+        const totalPairs = results.length;
+        const veryStrongAlignments = results.filter(r => r.score === 5).length;
+        const strongAlignments = results.filter(r => r.score === 4).length;
+        const moderateAlignments = results.filter(r => r.score === 3).length;
+        const weakAlignments = results.filter(r => r.score === 2).length;
+        const minimalAlignments = results.filter(r => r.score === 1).length;
+        const averageScore = results.reduce((sum, r) => sum + r.score, 0) / totalPairs;
+        // Matrix
+        const uniqueMLOs = [...new Set(results.map(r => r.mlo.mlokood))];
+        const uniqueCLOs = [...new Set(results.map(r => r.clo.id))];
+        let matrixHTML = `<div class="compact-matrix"><table class="alignment-matrix-table"><thead><tr><th class="matrix-corner">CLO \\ MLO</th>` +
+            uniqueMLOs.map(mlo => `<th class="mlo-header">${mlo}</th>`).join('') +
+            `</tr></thead><tbody>`;
+        uniqueCLOs.forEach(cloId => {
+            matrixHTML += `<tr><td class="clo-header">${cloId.toUpperCase()}</td>`;
+            uniqueMLOs.forEach(mloCode => {
+                const cell = results.find(r => r.clo.id === cloId && r.mlo.mlokood === mloCode);
+                matrixHTML += `<td class="score-cell score-${cell?.score || 0}">${cell ? cell.score : '-'}</td>`;
+            });
+            matrixHTML += '</tr>';
+        });
+        matrixHTML += '</tbody></table></div>';
+        // Detailed breakdown
+        let breakdownRows = '';
+        results.forEach(r => {
+            breakdownRows += `<tr><td>${r.clo.id.toUpperCase()}</td><td>${r.clo.text}</td><td>${r.mlo.mlokood}</td><td class="score-cell score-${r.score}">${r.score}</td><td>${r.justification}</td></tr>`;
+        });
         return `
-            <!-- Alignment Summary -->
             <div class="alignment-overview">
                 <div class="overview-header">
                     <h4><i class="fas fa-chart-line"></i> Alignment Analysis Summary</h4>
                     <div class="summary-metrics">
-                        <div class="metric-card very-strong">
-                            <div class="metric-value">${veryStrongAlignments}</div>
-                            <div class="metric-label">Very Strong (5)</div>
-                        </div>
-                        <div class="metric-card strong">
-                            <div class="metric-value">${strongAlignments}</div>
-                            <div class="metric-label">Strong (4)</div>
-                        </div>
-                        <div class="metric-card moderate">
-                            <div class="metric-value">${moderateAlignments}</div>
-                            <div class="metric-label">Moderate (3)</div>
-                        </div>
-                        <div class="metric-card weak">
-                            <div class="metric-value">${weakAlignments}</div>
-                            <div class="metric-label">Weak (2)</div>
-                        </div>
-                        <div class="metric-card minimal">
-                            <div class="metric-value">${minimalAlignments}</div>
-                            <div class="metric-label">Minimal (1)</div>
-                        </div>
-                        <div class="metric-card avg">
-                            <div class="metric-value">${averageScore.toFixed(2)}</div>
-                            <div class="metric-label">Average Score</div>
-                        </div>
+                        <div class="metric-card very-strong"><div class="metric-value">${veryStrongAlignments}</div><div class="metric-label">Very Strong (5)</div></div>
+                        <div class="metric-card strong"><div class="metric-value">${strongAlignments}</div><div class="metric-label">Strong (4)</div></div>
+                        <div class="metric-card moderate"><div class="metric-value">${moderateAlignments}</div><div class="metric-label">Moderate (3)</div></div>
+                        <div class="metric-card weak"><div class="metric-value">${weakAlignments}</div><div class="metric-label">Weak (2)</div></div>
+                        <div class="metric-card minimal"><div class="metric-value">${minimalAlignments}</div><div class="metric-label">Minimal (1)</div></div>
+                        <div class="metric-card avg"><div class="metric-value">${averageScore.toFixed(2)}</div><div class="metric-label">Average Score</div></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Alignment Matrix -->
             <div class="matrix-section">
                 <h4><i class="fas fa-table"></i> Alignment Matrix</h4>
-                ${this.createCompactMatrix()}
+                ${matrixHTML}
             </div>
-
-            <!-- Detailed Breakdown -->
             <div class="detailed-breakdown">
                 <h4><i class="fas fa-list-alt"></i> Detailed Alignment Analysis</h4>
-                <div class="breakdown-filters">
-                    <button class="filter-btn active" data-filter="all">All (${totalPairs})</button>
-                    <button class="filter-btn" data-filter="very-strong">Very Strong (${veryStrongAlignments})</button>
-                    <button class="filter-btn" data-filter="strong">Strong (${strongAlignments})</button>
-                    <button class="filter-btn" data-filter="moderate">Moderate (${moderateAlignments})</button>
-                    <button class="filter-btn" data-filter="weak">Weak (${weakAlignments})</button>
-                    <button class="filter-btn" data-filter="minimal">Minimal (${minimalAlignments})</button>
-                </div>
-                
                 <div class="breakdown-table-container">
-                    <table class="breakdown-table">
-                        <thead>
-                            <tr>
-                                <th>CLO</th>
-                                <th>CLO Content</th>
-                                <th>MLO</th>
-                                <th>Score</th>
-                                <th>Analysis & Recommendations</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.createDetailedBreakdownRows()}
-                        </tbody>
-                    </table>
+                    <table class="breakdown-table"><thead><tr><th>CLO</th><th>CLO Content</th><th>MLO</th><th>Score</th><th>Analysis & Recommendations</th></tr></thead><tbody>${breakdownRows}</tbody></table>
                 </div>
             </div>
         `;
