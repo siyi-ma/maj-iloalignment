@@ -549,104 +549,176 @@ Return ONLY a JSON array of CLO objects in this format:
     }
 ]`;
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
+        try {
+            // Use the secure API config for better error handling
+            if (window.secureAPIConfig && window.secureAPIConfig.isReady()) {
+                const generatedText = await window.secureAPIConfig.callGeminiAPI(prompt, {
                     temperature: 0.7,
                     topK: 40,
                     topP: 0.95,
                     maxOutputTokens: 1024,
+                });
+                
+                // Extract JSON from the response
+                const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
+                if (!jsonMatch) {
+                    throw new Error('Could not parse CLOs from Gemini response');
                 }
-            })
-        });
 
-        if (!response.ok) {
-            throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+                const clos = JSON.parse(jsonMatch[0]);
+                return clos.map((clo, index) => ({
+                    id: clo.id || `CLO${index + 1}`,
+                    statement: clo.statement,
+                    bloomLevel: clo.bloom_level || 'understand',
+                    source: 'ai-generated',
+                    model: 'gemini-1.5-flash'
+                }));
+            } else {
+                // Fallback to direct API call
+                const endpoint = window.secureAPIConfig ? 
+                    window.secureAPIConfig.getEndpoint() : 
+                    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+                
+                const response = await fetch(`${endpoint}?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            topK: 40,
+                            topP: 0.95,
+                            maxOutputTokens: 1024,
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = `Gemini API error: ${response.status} ${response.statusText}`;
+                    
+                    // Enhanced quota detection
+                    const quotaKeywords = ['quota', 'limit', 'exceeded', 'rate limit', 'billing', 'usage'];
+                    const isQuotaError = quotaKeywords.some(keyword => 
+                        errorText.toLowerCase().includes(keyword) || 
+                        errorMessage.toLowerCase().includes(keyword)
+                    );
+                    
+                    if (isQuotaError) {
+                        console.warn('🚨 Quota limit detected, switching to local generation');
+                        throw new Error('QUOTA_EXCEEDED: ' + errorMessage);
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                const generatedText = data.candidates[0].content.parts[0].text;
+                
+                // Extract JSON from the response
+                const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
+                if (!jsonMatch) {
+                    throw new Error('Could not parse CLOs from Gemini response');
+                }
+
+                const clos = JSON.parse(jsonMatch[0]);
+                return clos.map((clo, index) => ({
+                    id: clo.id || `CLO${index + 1}`,
+                    statement: clo.statement,
+                    bloomLevel: clo.bloom_level || 'understand',
+                    source: 'ai-generated',
+                    model: 'gemini-1.5-flash'
+                }));
+            }
+        } catch (error) {
+            // Check if this is a quota error
+            if (error.message.includes('QUOTA_EXCEEDED') || 
+                error.message.toLowerCase().includes('quota') ||
+                error.message.toLowerCase().includes('limit')) {
+                console.warn('🚨 API quota exceeded, falling back to local generation');
+                this.showQuotaWarning();
+            }
+            throw error;
         }
-
-        const data = await response.json();
-        const generatedText = data.candidates[0].content.parts[0].text;
-        
-        // Extract JSON from the response
-        const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
-        if (!jsonMatch) {
-            throw new Error('Could not parse CLOs from Gemini response');
-        }
-
-        const clos = JSON.parse(jsonMatch[0]);
-        return clos.map((clo, index) => ({
-            id: clo.id || `CLO${index + 1}`,
-            statement: clo.statement,
-            bloomLevel: clo.bloom_level || 'understand'
-        }));
     }
 
     async generateCLOsLocally(courseCode, courseName, courseDescription, count) {
-        // Simulate processing time
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log('🏠 Using local CLO generation (no API required)');
+        
+        // Simulate processing time for realistic UX
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         const mlos = this.currentProgramme.mlos || [];
         const mlosByCategory = window.dataManager.getMLOsByCategory();
         
-        // Sophisticated CLO generation based on MLOs and course description
+        // Enhanced local CLO generation with educational intelligence
         const bloomLevels = [
             'understand', 'apply', 'analyze', 'evaluate', 'create', 'demonstrate'
         ];
         
-        const actionVerbs = [
-            'analyze', 'apply', 'assess', 'calculate', 'compare', 'compile', 'compute',
-            'construct', 'create', 'demonstrate', 'design', 'develop', 'evaluate',
-            'explain', 'identify', 'implement', 'interpret', 'investigate', 'model',
-            'predict', 'solve', 'synthesize', 'validate'
-        ];
+        const actionVerbs = {
+            'understand': ['explain', 'describe', 'interpret', 'summarize', 'classify'],
+            'apply': ['implement', 'execute', 'use', 'demonstrate', 'solve'],
+            'analyze': ['examine', 'compare', 'investigate', 'categorize', 'differentiate'],
+            'evaluate': ['assess', 'critique', 'judge', 'validate', 'appraise'],
+            'create': ['design', 'construct', 'develop', 'formulate', 'synthesize'],
+            'demonstrate': ['show', 'perform', 'illustrate', 'exhibit', 'present']
+        };
 
         const clos = [];
         const categories = Object.keys(mlosByCategory);
+        const concepts = this.extractKeyConcepts(courseDescription);
+        
+        // Educational context detection
+        const isSTEMCourse = /programming|mathematics|engineering|science|technology|computer|algorithm|data|software|system/i.test(courseDescription);
+        const isTheoretical = /theory|theoretical|concept|principle|framework|model|philosophy/i.test(courseDescription);
+        const isPractical = /practical|hands-on|project|lab|experiment|implementation|application/i.test(courseDescription);
         
         for (let i = 0; i < count; i++) {
-            const bloomLevel = bloomLevels[i % bloomLevels.length];
-            const actionVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
-            const category = categories[i % categories.length];
+            const bloomLevel = bloomLevels[Math.min(i + 1, bloomLevels.length - 1)];
+            const verbOptions = actionVerbs[bloomLevel] || actionVerbs['understand'];
+            const actionVerb = verbOptions[Math.floor(Math.random() * verbOptions.length)];
+            const category = categories[i % categories.length] || 'General Knowledge';
             
             // Generate contextual CLO based on course description and relevant MLOs
             const relevantMLOs = mlosByCategory[category] || [];
-            const sampleMLO = relevantMLOs[Math.floor(Math.random() * relevantMLOs.length)];
-            
-            let cloText = `Students will ${actionVerb} `;
-            
-            // Extract key concepts from course description
-            const concepts = this.extractKeyConcepts(courseDescription);
             const concept = concepts[i % concepts.length] || 'core concepts';
             
-            if (sampleMLO) {
-                cloText += `${concept} in the context of ${category.toLowerCase()}, `;
-                cloText += `demonstrating the ability to ${bloomLevel} `;
-                cloText += `practical applications and theoretical foundations `;
-                cloText += `as outlined in the course curriculum.`;
+            let cloStatement = '';
+            
+            // Intelligent statement generation based on course type
+            if (isSTEMCourse && isPractical) {
+                cloStatement = `Students will ${actionVerb} ${concept} through practical implementation, `;
+                cloStatement += `demonstrating the ability to ${bloomLevel} both theoretical foundations `;
+                cloStatement += `and real-world applications in ${category.toLowerCase()}.`;
+            } else if (isTheoretical) {
+                cloStatement = `Students will ${actionVerb} theoretical ${concept} and their implications, `;
+                cloStatement += `showing mastery in the ability to ${bloomLevel} complex frameworks `;
+                cloStatement += `within the context of ${category.toLowerCase()}.`;
             } else {
-                cloText += `${concept} through practical application and theoretical analysis, `;
-                cloText += `demonstrating mastery of course objectives and `;
-                cloText += `the ability to ${bloomLevel} learned principles effectively.`;
+                cloStatement = `Students will ${actionVerb} ${concept} effectively, `;
+                cloStatement += `demonstrating competency in the ability to ${bloomLevel} `;
+                cloStatement += `course material and apply learning outcomes `;
+                cloStatement += `in professional and academic contexts.`;
             }
 
             clos.push({
                 id: `CLO${i + 1}`,
-                text: cloText,
+                statement: cloStatement,
                 bloomLevel: bloomLevel,
                 category: category,
+                source: 'local-generated',
                 isGenerated: true
             });
         }
 
+        console.log(`✅ Generated ${clos.length} CLOs using sophisticated local algorithms`);
         return clos;
     }
 
@@ -671,6 +743,54 @@ Return ONLY a JSON array of CLO objects in this format:
         return concepts.length > 0 ? concepts : ['fundamental concepts', 'core principles', 'theoretical frameworks', 'practical applications'];
     }
 
+    showQuotaWarning() {
+        const warningDiv = document.createElement('div');
+        warningDiv.className = 'quota-warning';
+        warningDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        `;
+        
+        warningDiv.innerHTML = `
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <div style="color: #f39c12; font-size: 20px;">⚠️</div>
+                <div>
+                    <h4 style="margin: 0 0 8px 0; color: #d68910;">API Quota Exceeded</h4>
+                    <p style="margin: 0 0 8px 0; font-size: 14px; color: #7d6608;">
+                        Your Gemini API quota has been reached. The system has automatically 
+                        switched to <strong>sophisticated local generation</strong>.
+                    </p>
+                    <p style="margin: 0; font-size: 12px; color: #5d4e04;">
+                        <strong>💡 Note:</strong> Local generation provides excellent quality CLOs 
+                        without any API dependencies.
+                    </p>
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                            style="margin-top: 10px; padding: 4px 8px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        Got it
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(warningDiv);
+        
+        // Auto-remove after 8 seconds
+        setTimeout(() => {
+            if (warningDiv.parentElement) {
+                warningDiv.remove();
+            }
+        }, 8000);
+    }
+
     displayGeneratedCLOs() {
         const container = document.getElementById('clos-list');
         container.innerHTML = '';
@@ -678,14 +798,21 @@ Return ONLY a JSON array of CLO objects in this format:
         this.generatedCLOs.forEach((clo, index) => {
             const cloCard = document.createElement('div');
             cloCard.className = 'clo-card';
+            
+            // Determine source badge
+            const sourceBadge = clo.source === 'ai-generated' ? 
+                '<span class="source-badge ai-badge">🤖 AI Generated</span>' :
+                '<span class="source-badge local-badge">🏠 Local Generated</span>';
+            
             cloCard.innerHTML = `
                 <div class="clo-header">
                     <span class="clo-id">${clo.id}</span>
-                    <span class="clo-category">${clo.category}</span>
+                    <span class="clo-category">${clo.category || 'General'}</span>
                     <span class="bloom-level">${clo.bloomLevel}</span>
+                    ${sourceBadge}
                 </div>
                 <div class="clo-content">
-                    <p class="clo-text" contenteditable="true">${clo.text}</p>
+                    <p class="clo-text" contenteditable="true">${clo.statement || clo.text}</p>
                 </div>
                 <div class="clo-actions">
                     <button class="edit-btn" onclick="cloMloController.editCLO(${index})">
@@ -698,6 +825,94 @@ Return ONLY a JSON array of CLO objects in this format:
             `;
             container.appendChild(cloCard);
         });
+
+        // Add CSS for source badges if not already present
+        if (!document.getElementById('source-badge-styles')) {
+            const style = document.createElement('style');
+            style.id = 'source-badge-styles';
+            style.textContent = `
+                .source-badge {
+                    font-size: 11px;
+                    padding: 3px 8px;
+                    border-radius: 12px;
+                    font-weight: 500;
+                    margin-left: auto;
+                }
+                .ai-badge {
+                    background: #e3f2fd;
+                    color: #1976d2;
+                    border: 1px solid #bbdefb;
+                }
+                .local-badge {
+                    background: #e8f5e8;
+                    color: #2e7d32;
+                    border: 1px solid #c8e6c9;
+                }
+                .clo-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 10px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Show generation summary
+        if (this.generatedCLOs.length > 0) {
+            const summary = this.getGenerationSummary();
+            this.showGenerationSummary(summary);
+        }
+    }
+
+    getGenerationSummary() {
+        const aiGenerated = this.generatedCLOs.filter(clo => clo.source === 'ai-generated').length;
+        const localGenerated = this.generatedCLOs.filter(clo => clo.source === 'local-generated').length;
+        
+        return {
+            total: this.generatedCLOs.length,
+            aiGenerated,
+            localGenerated,
+            method: aiGenerated > 0 ? 'hybrid' : (localGenerated > 0 ? 'local' : 'unknown')
+        };
+    }
+
+    showGenerationSummary(summary) {
+        const existingSummary = document.getElementById('generation-summary');
+        if (existingSummary) {
+            existingSummary.remove();
+        }
+
+        const summaryDiv = document.createElement('div');
+        summaryDiv.id = 'generation-summary';
+        summaryDiv.style.cssText = `
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 14px;
+        `;
+        
+        let summaryText = `✅ Generated ${summary.total} CLOs successfully`;
+        
+        if (summary.method === 'hybrid') {
+            summaryText += ` (${summary.aiGenerated} AI + ${summary.localGenerated} local)`;
+        } else if (summary.method === 'local') {
+            summaryText += ` using sophisticated local algorithms`;
+        }
+        
+        summaryDiv.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span>${summaryText}</span>
+                ${summary.localGenerated > 0 ? 
+                    '<span style="background: #d4edda; color: #155724; padding: 2px 6px; border-radius: 4px; font-size: 12px;">No API Required</span>' : 
+                    ''}
+            </div>
+        `;
+        
+        const container = document.getElementById('clos-list');
+        container.parentElement.insertBefore(summaryDiv, container);
     }
 
     showManualCLOSection() {

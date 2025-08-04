@@ -375,6 +375,114 @@
         .hidden { display: none; }
         .text-center { text-align: center; }
         
+        /* Module Content and CLOs Sections */
+        .section-header {
+            background: var(--tt-grey-2);
+            padding: 1rem 1.5rem;
+            border-radius: 8px 8px 0 0;
+            border-left: 4px solid var(--tt-magenta);
+        }
+        
+        .section-header h3 {
+            color: var(--tt-dark-blue);
+            margin: 0;
+        }
+        
+        .mlo-item, .existing-clo-item {
+            background: var(--tt-white);
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mlo-header, .existing-clo-header {
+            font-weight: 600;
+            color: var(--tt-burgundy);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .mlo-description, .existing-clo-text {
+            color: var(--tt-black);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+        
+        .existing-clos-content {
+            background: #f8f9fa;
+            border-radius: 0 0 8px 8px;
+            padding: 1rem;
+            min-height: 100px;
+        }
+        
+        /* Course Information Display */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .info-card {
+            background: var(--tt-white);
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-card h4 {
+            color: var(--tt-burgundy);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--tt-grey-2);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--tt-dark-blue);
+            flex: 0 0 45%;
+        }
+        
+        .info-value {
+            color: var(--tt-black);
+            flex: 1;
+            text-align: right;
+        }
+        
+        .info-link {
+            color: var(--tt-magenta);
+            text-decoration: none;
+            flex: 1;
+            text-align: right;
+        }
+        
+        .info-link:hover {
+            text-decoration: underline;
+        }
+        
+        .course-aims-content {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 1rem;
+            line-height: 1.6;
+            color: var(--tt-black);
+            font-size: 0.9rem;
+        }
+        
         /* Loading states */
         .loading {
             text-align: center;
@@ -540,6 +648,13 @@
                 <h2><i class="fas fa-edit"></i> Course Information</h2>
                 
                 <div class="form-group">
+                    <label for="course-selector">Select Course</label>
+                    <select id="course-selector" class="form-select">
+                        <option value="">Choose a course...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label for="course-code">Course Code</label>
                     <input type="text" id="course-code" class="form-input" placeholder="e.g., CS101" maxlength="20">
                 </div>
@@ -553,6 +668,54 @@
                     <label for="course-description">Course Description</label>
                     <textarea id="course-description" class="form-textarea" rows="4" 
                         placeholder="Provide a detailed description of the course content, objectives, and scope..."></textarea>
+                </div>
+
+                <!-- Course Information Display (hidden initially, shown when course is selected) -->
+                <div id="course-information-section" class="hidden" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> Course Details</h3>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-item">
+                                <span class="info-label">Course Code:</span>
+                                <span id="info-course-code" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Course Name (EN):</span>
+                                <span id="info-course-name-en" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Course Name (ET):</span>
+                                <span id="info-course-name-et" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">EAP Credits:</span>
+                                <span id="info-course-eap" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Module:</span>
+                                <span id="info-course-modules" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Assessment:</span>
+                                <span id="info-course-assessment" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Course Type:</span>
+                                <span id="info-course-type" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Course URL:</span>
+                                <a id="info-course-url" class="info-link" href="#" target="_blank">View Course</a>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h4>Course Aims</h4>
+                            <div id="info-course-aims" class="course-aims-content">
+                                Select a course to view aims...
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -580,6 +743,25 @@
                     <button id="manual-clos-btn" class="btn btn-secondary">
                         <i class="fas fa-edit"></i> Manual Entry
                     </button>
+                </div>
+            </section>
+
+            <!-- Module Content Section -->
+            <section id="module-content-section" class="hidden">
+                <div class="section-header" style="display:flex;align-items:center;gap:1rem;cursor:pointer;" onclick="toggleModuleContent()">
+                    <h3 style="margin-bottom:0;"><i class="fas fa-cubes"></i> Module Content</h3>
+                    <i id="module-caret" class="fas fa-chevron-down"></i>
+                </div>
+                <div id="module-content-list" style="display:block; margin-top:1rem;">
+                    <!-- Module learning outcomes will be displayed here -->
+                </div>
+            </section>
+
+            <!-- Existing CLOs Section -->
+            <section id="existing-clos-section" class="hidden">
+                <h3><i class="fas fa-list"></i> Existing Course Learning Outcomes (CLOs)</h3>
+                <div id="info-existing-clos" class="existing-clos-content">
+                    Select a course to view existing CLOs...
                 </div>
             </section>
 
@@ -756,6 +938,23 @@
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
     <script src="js/alignment-engine.js"></script>
-    <script src="js/mlo-clo.js"></script>
+    <script src="js/secure-api-config.js"></script>
+    <script src="js/enhanced-ai-features.js"></script>
+    <script src="js/mlo-clo-new.js"></script>
+    
+    <script>
+        // Module content caret toggle
+        function toggleModuleContent() {
+            const caret = document.getElementById('module-caret');
+            const list = document.getElementById('module-content-list');
+            if (list.style.display === 'none') {
+                list.style.display = 'block';
+                caret.className = 'fas fa-chevron-down';
+            } else {
+                list.style.display = 'none';
+                caret.className = 'fas fa-chevron-right';
+            }
+        }
+    </script>
 </body>
 </html>

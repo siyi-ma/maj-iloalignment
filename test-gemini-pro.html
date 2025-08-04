@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Gemini 1.5 Flash</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; }
+        .test-container { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .loading { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .result { margin: 15px 0; padding: 15px; border-radius: 4px; white-space: pre-wrap; }
+        .model-info { font-weight: bold; color: #6f42c1; }
+        .endpoint-info { font-size: 0.9em; color: #666; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Gemini 1.5 Flash API Test</h1>
+    <p>This page will test if Gemini 1.5 Flash is working with your API key.</p>
+    
+    <div class="test-container">
+        <h3>Current Configuration</h3>
+        <div class="model-info">Model: Gemini 1.5 Flash</div>
+        <div class="endpoint-info" id="endpoint-info">Loading configuration...</div>
+        <div id="api-status">Checking API status...</div>
+    </div>
+
+    <div class="test-container">
+        <h3>Quick Test</h3>
+        <button onclick="testGeminiPro()" id="test-btn">🚀 Test Gemini 1.5 Flash</button>
+        <button onclick="testConnectivity()" id="connectivity-btn">🌐 Test Connectivity</button>
+        <div id="test-result" class="result"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Detailed Test</h3>
+        <button onclick="testWithPrompt()" id="prompt-btn">📝 Test with Custom Prompt</button>
+        <div>
+            <textarea id="custom-prompt" rows="3" style="width: 100%; margin: 10px 0;" placeholder="Enter a custom prompt to test...">Generate 3 learning outcomes for a course about web development.</textarea>
+        </div>
+        <div id="detailed-result" class="result"></div>
+    </div>
+
+    <!-- Load the API configuration -->
+    <script src="js/personal-api-config.js"></script>
+    <script src="js/secure-api-config.js"></script>
+
+    <script>
+        // Wait for scripts to load and initialize
+        window.addEventListener('load', async function() {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await checkConfiguration();
+        });
+
+        async function checkConfiguration() {
+            const endpointInfo = document.getElementById('endpoint-info');
+            const apiStatus = document.getElementById('api-status');
+
+            try {
+                if (window.secureAPIConfig) {
+                    await window.secureAPIConfig.init();
+                    const endpoint = window.secureAPIConfig.getEndpoint();
+                    const hasKey = window.secureAPIConfig.isReady();
+                    
+                    endpointInfo.innerHTML = `Endpoint: ${endpoint}`;
+                    apiStatus.innerHTML = hasKey ? 
+                        '<span style="color: green;">✅ API Key configured and ready</span>' : 
+                        '<span style="color: red;">❌ No API key configured</span>';
+                } else {
+                    endpointInfo.innerHTML = 'Configuration loading...';
+                    apiStatus.innerHTML = '<span style="color: orange;">⚠️ Configuration not loaded</span>';
+                }
+            } catch (error) {
+                endpointInfo.innerHTML = `Error: ${error.message}`;
+                apiStatus.innerHTML = '<span style="color: red;">❌ Configuration error</span>';
+            }
+        }
+
+        async function testGeminiPro() {
+            const button = document.getElementById('test-btn');
+            const result = document.getElementById('test-result');
+            
+            button.disabled = true;
+            button.textContent = '⏳ Testing...';
+            result.className = 'result loading';
+            result.textContent = 'Testing Gemini 1.5 Flash connection...';
+
+            try {
+                if (!window.secureAPIConfig || !window.secureAPIConfig.isReady()) {
+                    throw new Error('API configuration not ready. Please check your API key.');
+                }
+
+                const testPrompt = "Please respond with exactly: 'SUCCESS! Gemini 1.5 Flash is working correctly for CLO-MLO alignment analysis.'";
+                
+                console.log('🚀 Making API call to Gemini 1.5 Flash...');
+                const response = await window.secureAPIConfig.callGeminiAPI(testPrompt);
+
+                result.className = 'result success';
+                result.innerHTML = `
+✅ Gemini 1.5 Flash Test SUCCESSFUL!
+
+Model: Gemini 1.5 Flash
+Response: ${response}
+
+🎉 Your API is working! You can now use Gemini 1.5 Flash for AI-powered CLO generation.
+                `;
+
+            } catch (error) {
+                result.className = 'result error';
+                result.innerHTML = `
+❌ Gemini 1.5 Flash Test FAILED
+
+Error: ${error.message}
+
+Possible solutions:
+• Check if your API key is correct
+• Verify the API key has proper permissions
+• Ensure you haven't exceeded your quota
+• Try testing connectivity first
+• The system will fall back to local CLO generation automatically
+                `;
+                console.error('API test failed:', error);
+            }
+
+            button.disabled = false;
+            button.textContent = '🚀 Test Gemini 1.5 Flash';
+        }
+
+        async function testConnectivity() {
+            const button = document.getElementById('connectivity-btn');
+            const result = document.getElementById('test-result');
+            
+            button.disabled = true;
+            button.textContent = '⏳ Testing...';
+            result.className = 'result loading';
+            result.textContent = 'Testing network connectivity to Google API...';
+
+            try {
+                const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models';
+                const response = await fetch(endpoint);
+                
+                if (response.ok || response.status === 401) {
+                    result.className = 'result success';
+                    result.textContent = `
+✅ Connectivity Test SUCCESSFUL!
+
+Network connection to Google Generative AI API is working.
+Status: ${response.status} (${response.status === 401 ? 'Unauthorized - API key needed' : 'OK'})
+
+Your network can reach the API endpoints.
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `
+❌ Connectivity Test FAILED
+
+Error: ${error.message}
+
+This suggests a network connectivity issue.
+Check your internet connection and firewall settings.
+                `;
+            }
+
+            button.disabled = false;
+            button.textContent = '🌐 Test Connectivity';
+        }
+
+        async function testWithPrompt() {
+            const button = document.getElementById('prompt-btn');
+            const result = document.getElementById('detailed-result');
+            const promptText = document.getElementById('custom-prompt').value.trim();
+            
+            if (!promptText) {
+                result.className = 'result error';
+                result.textContent = 'Please enter a prompt to test.';
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = '⏳ Testing...';
+            result.className = 'result loading';
+            result.textContent = 'Sending custom prompt to Gemini 1.5 Flash...';
+
+            try {
+                if (!window.secureAPIConfig || !window.secureAPIConfig.isReady()) {
+                    throw new Error('API configuration not ready. Please check your API key.');
+                }
+
+                console.log('🚀 Making custom API call...');
+                const startTime = Date.now();
+                const response = await window.secureAPIConfig.callGeminiAPI(promptText);
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+
+                result.className = 'result success';
+                result.innerHTML = `
+✅ Custom Prompt Test SUCCESSFUL!
+
+Model: Gemini 1.5 Flash
+Duration: ${duration}ms
+Prompt: "${promptText}"
+
+Response:
+${response}
+                `;
+
+            } catch (error) {
+                result.className = 'result error';
+                result.innerHTML = `
+❌ Custom Prompt Test FAILED
+
+Error: ${error.message}
+
+Prompt: "${promptText}"
+                `;
+                console.error('Custom prompt test failed:', error);
+            }
+
+            button.disabled = false;
+            button.textContent = '📝 Test with Custom Prompt';
+        }
+    </script>
+</body>
+</html>

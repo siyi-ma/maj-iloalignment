@@ -139,13 +139,27 @@ class SecureAPIConfig {
                 
                 // Parse the error for more specific feedback
                 let errorMessage = `Gemini API error: ${response.status} ${response.statusText}`;
+                let isQuotaError = false;
+                
                 try {
                     const errorData = JSON.parse(errorText);
                     if (errorData.error && errorData.error.message) {
                         errorMessage = errorData.error.message;
+                        
+                        // Check for quota-related errors
+                        const quotaKeywords = ['quota', 'limit', 'exceeded', 'rate limit', 'billing'];
+                        isQuotaError = quotaKeywords.some(keyword => 
+                            errorMessage.toLowerCase().includes(keyword)
+                        );
                     }
                 } catch (e) {
                     // Fallback to generic error
+                }
+                
+                // If it's a quota error, provide helpful guidance
+                if (isQuotaError) {
+                    console.warn('🚨 Quota limit reached, fallback system should activate');
+                    errorMessage += '\n\nTip: The system will automatically fall back to local CLO generation.';
                 }
                 
                 throw new Error(errorMessage);
