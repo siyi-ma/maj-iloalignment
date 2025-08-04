@@ -91,6 +91,27 @@ CLOMLOController     // CLO-MLO analysis with AI generation
 
 4. **Open browser to `http://localhost:8000`**
 
+## 🌐 GitHub Pages Deployment
+
+This webapp is configured for automatic deployment to GitHub Pages:
+
+### **Live Demo**
+Visit the deployed application: `https://siyi-ma.github.io/maj-iloalignment/`
+
+### **Automatic Deployment**
+- ✅ Deploys automatically on push to `main` branch
+- ✅ Custom GitHub Actions workflow configured
+- ✅ All static files optimized for web deployment
+- ✅ Secure configuration with proper `.gitignore`
+
+### **Deployment Features**
+- **Fast Loading**: Optimized static assets
+- **Mobile Responsive**: Works on all devices  
+- **Professional Branding**: TalTech CVI compliant
+- **Error Handling**: Custom 404 page included
+
+For detailed deployment instructions, see [GITHUB_PAGES_DEPLOYMENT.md](GITHUB_PAGES_DEPLOYMENT.md)
+
 ## 📖 User Guide
 
 ### **1. Programme Selection (index.html)**
