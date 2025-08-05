@@ -180,8 +180,8 @@
         /* Floating Home Button */
         .floating-home {
             position: fixed;
-            bottom: 80px;
-            right: 30px;
+            bottom: 20px;
+            left: 30px;
             width: 50px;
             height: 50px;
             background: var(--tt-dark-blue);
@@ -193,7 +193,7 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(52, 43, 96, 0.3);
             transition: all 0.3s ease;
-            z-index: 1000;
+            z-index: 999;
             border: none;
             font-size: 1.2rem;
         }
@@ -1901,15 +1901,704 @@
     background: var(--tt-grey-1);
     transform: translateY(-1px);
 }
+
+        /* Enhanced table styling for detailed analysis */
+        .detailed-analysis-table-container {
+            margin: 1.5rem 0;
+        }
+
+        .mlo-section {
+            margin-bottom: 2.5rem;
+            background: var(--tt-white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(170, 19, 82, 0.1);
+            border-left: 4px solid var(--tt-light-blue);
+        }
+
+        .mlo-header {
+            color: var(--tt-dark-blue);
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .mlo-description {
+            color: var(--tt-grey-1);
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background: var(--tt-grey-2);
+            border-radius: 4px;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .detailed-analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: var(--tt-white);
+        }
+
+        .detailed-analysis-table th {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .detailed-analysis-table td {
+            padding: 1rem 0.75rem;
+            border-bottom: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+
+        .detailed-analysis-table tr:hover {
+            background: rgba(170, 19, 82, 0.02);
+        }
+
+        .clo-code {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            width: 10%;
+        }
+
+        .clo-content {
+            width: 55%;
+            line-height: 1.4;
+        }
+
+        .score-cell {
+            width: 8%;
+            text-align: center;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 0.4rem 0.6rem;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+            min-width: 2rem;
+            text-align: center;
+        }
+
+        .score-1 .score-badge { background: #dc3545; }
+        .score-2 .score-badge { background: #fd7e14; }
+        .score-3 .score-badge { background: #ffc107; color: #000; }
+        .score-4 .score-badge { background: #28a745; }
+        .score-5 .score-badge { background: #20c997; }
+
+        .justification-cell {
+            width: 27%;
+            line-height: 1.5;
+        }
+
+        .improvement-suggestions ul {
+            list-style-type: disc;
+            margin-left: 1rem;
+        }
+
+        .improvement-suggestions li {
+            margin-bottom: 0.25rem;
+            line-height: 1.4;
+        }
+
+        /* Table of Contents Styling */
+        .analysis-toc {
+            background: var(--tt-white);
+            border: 2px solid var(--tt-grey-2);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(170, 19, 82, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .analysis-toc.collapsed .toc-content {
+            display: none;
+        }
+
+        .toc-header {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 1rem 1.5rem;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toc-header h4 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1rem;
+        }
+
+        .toc-toggle {
+            background: none;
+            border: none;
+            color: var(--tt-white);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .toc-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .analysis-toc.collapsed .toc-toggle i {
+            transform: rotate(180deg);
+        }
+
+        .toc-content {
+            padding: 1.5rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .toc-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover {
+            background: linear-gradient(135deg, rgba(170, 19, 82, 0.1), rgba(228, 6, 126, 0.1));
+            color: var(--tt-burgundy);
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+
+        .toc-link i {
+            width: 1.2rem;
+            text-align: center;
+            color: var(--tt-light-blue);
+        }
+
+        /* Enhanced styling for CLO editing form */
+        .clo-editing-form {
+            background: var(--tt-white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--tt-grey-2);
+        }
+
+        .form-header {
+            border-bottom: 2px solid var(--tt-grey-2);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-header h4 {
+            color: var(--tt-dark-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-description {
+            color: var(--tt-grey-1);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .clo-edit-item {
+            background: rgba(77, 190, 210, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .clo-edit-item:hover {
+            background: rgba(77, 190, 210, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .clo-label {
+            display: block;
+            color: var(--tt-dark-blue);
+            font-weight: 600;
+        }
+
+        .saved-clos-display {
+            background: var(--tt-white);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .saved-clos-list h4 {
+            color: var(--tt-dark-blue);
+            margin-bottom: 1rem;
+        }
+
+        .saved-clo-item {
+            transition: all 0.3s ease;
+        }
+
+        .saved-clo-item:hover {
+            background: rgba(77, 190, 210, 0.1) !important;
+            transform: translateX(5px);
+        }
+
+        .clo-actions {
+            border-top: 2px solid var(--tt-grey-2);
+            padding-top: 1.5rem;
+        }
+
+        /* Loading styles */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--tt-grey-2);
+            border-top: 4px solid var(--tt-burgundy);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .analysis-toc {
+                margin: 1rem 0;
+            }
+            
+            .toc-content {
+                padding: 1rem;
+            }
+            
+            .detailed-analysis-table {
+                font-size: 0.85rem;
+            }
+            
+            .detailed-analysis-table th,
+            .detailed-analysis-table td {
+                padding: 0.5rem;
+            }
+            
+            .mlo-section {
+                padding: 1rem;
+            }
+            
+            .clo-editing-form {
+                padding: 1rem;
+            }
+        }
+
+        /* Floating TOC Styles */
+        .floating-toc {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 225px;
+            background: var(--tt-white);
+            border: 2px solid var(--tt-burgundy);
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.2);
+            z-index: 10001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .floating-toc.visible {
+            transform: translateX(0);
+        }
+
+        .floating-toc-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .floating-toc-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(170, 19, 82, 0.4);
+        }
+
+        .floating-toc-header {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 1rem;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .floating-toc-header h4 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .floating-toc-close {
+            background: none;
+            border: none;
+            color: var(--tt-white);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .floating-toc-content {
+            padding: 1rem;
+        }
+
+        .floating-toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .floating-toc-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .floating-toc-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .floating-toc-link:hover {
+            background: linear-gradient(135deg, rgba(170, 19, 82, 0.1), rgba(228, 6, 126, 0.1));
+            color: var(--tt-burgundy);
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+
+        .floating-toc-link i {
+            width: 1rem;
+            text-align: center;
+            color: var(--tt-light-blue);
+        }
+
+        /* Methodology Section Styles */
+        .methodology-section {
+            background: var(--tt-white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+            border-left: 4px solid var(--tt-burgundy);
+        }
+
+        .methodology-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--tt-dark-blue);
+        }
+
+        .methodology-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .methodology-content h4 {
+            color: var(--tt-burgundy);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .methodology-details {
+            background: var(--tt-grey-2);
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .methodology-details ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .methodology-details li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .scoring-criteria {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .criteria-card {
+            background: var(--tt-white);
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 6px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .criteria-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.1);
+        }
+
+        .criteria-score {
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            margin-bottom: 0.5rem;
+        }
+
+        .keyword-highlighting {
+            background: linear-gradient(135deg, rgba(77, 190, 210, 0.1), rgba(228, 6, 126, 0.1));
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border-left: 3px solid var(--tt-light-blue);
+        }
+
+        /* Enhanced table with highlighting */
+        .enhanced-analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--tt-white);
+        }
+
+        .enhanced-analysis-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 1rem 0.75rem;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .enhanced-analysis-table td {
+            padding: 1rem 0.75rem;
+            border-bottom: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .enhanced-analysis-table tr:hover {
+            background: rgba(170, 19, 82, 0.02);
+        }
+
+        .keyword-highlight {
+            background: linear-gradient(135deg, rgba(228, 6, 126, 0.2), rgba(170, 19, 82, 0.2));
+            color: var(--tt-dark-blue);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .competency-tag {
+            display: inline-block;
+            background: var(--tt-light-blue);
+            color: var(--tt-white);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+            font-weight: 500;
+        }
+
+        .bloom-level {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .floating-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            color: var(--tt-white);
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(170, 19, 82, 0.4);
+        }
+
+        .home-btn-float {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+        }
+
+        .back-to-top {
+            background: linear-gradient(135deg, var(--tt-dark-blue), var(--tt-light-blue));
+        }
+
+        @media (max-width: 768px) {
+            .floating-toc {
+                width: 90vw;
+                right: 5vw;
+            }
+            
+            .methodology-section {
+                padding: 1rem;
+            }
+            
+            .scoring-criteria {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Floating TOC Toggle -->
+        <button id="floating-toc-toggle" class="floating-toc-toggle" title="Toggle Table of Contents">
+            <i class="fas fa-list"></i>
+        </button>
+
+        <!-- Floating TOC -->
+        <div id="floating-toc" class="floating-toc">
+            <div class="floating-toc-header">
+                <h4><i class="fas fa-list"></i> Table of Contents</h4>
+                <button class="floating-toc-close" onclick="toggleFloatingTOC()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="floating-toc-content">
+                <ul class="floating-toc-list" id="floating-toc-list">
+                    <!-- TOC items will be dynamically populated -->
+                </ul>
+            </div>
+        </div>
+
         <!-- Page Header -->
         <header class="page-header">
             <h1 id="page-title"><i class="fas fa-clipboard-list"></i> CLO-MLO Alignment</h1>
             <p>Course Learning Outcomes to Module Learning Outcomes Analysis</p>
         </header>
+
+        <!-- Advanced Methodology Section -->
+        <section id="methodology" class="methodology-section" style="display: none;">
+            <div class="methodology-header">
+                <i class="fas fa-cogs"></i>
+                <h2>Advanced CLO-MLO Alignment Assessment</h2>
+            </div>
+            <div class="methodology-content">
+                <p>Our sophisticated alignment analysis employs a multi-dimensional approach combining semantic analysis, cognitive taxonomy mapping, and competency framework evaluation:</p>
+                
+                <h4><i class="fas fa-brain"></i> Analysis Components:</h4>
+                <ul>
+                    <li><strong>Keyword Semantic Matching:</strong> Advanced text analysis identifying shared vocabulary and conceptual overlap between CLO and MLO texts with highlighting of matching terms</li>
+                    <li><strong>Bloom's Taxonomy Cognitive Level Mapping:</strong> Assessment of cognitive complexity progression from basic knowledge through comprehension, application, analysis, synthesis, to evaluation levels</li>
+                    <li><strong>Competency Framework Alignment:</strong> Evaluation across 10 specialized competency categories including analytical, creative, management, communication, research, and technical skills</li>
+                    <li><strong>Learning Progression Analysis:</strong> Assessment of how modules build sequential understanding toward course-level achievement</li>
+                    <li><strong>Contextual Relevance Scoring:</strong> Domain-specific terminology matching and thematic coherence evaluation</li>
+                </ul>
+                
+                <h4><i class="fas fa-calculator"></i> Scoring Algorithm:</h4>
+                <div class="methodology-details">
+                    <p><strong>Multi-tier Scoring System:</strong></p>
+                    <ul>
+                        <li><strong>Tier 1:</strong> Keyword overlap percentage (shared terms / total CLO terms × 100)</li>
+                        <li><strong>Tier 2:</strong> Bloom's taxonomy level compatibility and progression mapping</li>
+                        <li><strong>Tier 3:</strong> Competency category matches across specialized skill domains</li>
+                    </ul>
+                    
+                    <p><strong>Scoring Criteria (5-point scale):</strong></p>
+                    <div class="scoring-criteria">
+                        <div class="criteria-card">
+                            <div class="criteria-score">Score 5 (Excellent):</div>
+                            ≥15% keyword overlap + ≥3 competency matches + compatible Bloom's levels
+                        </div>
+                        <div class="criteria-card">
+                            <div class="criteria-score">Score 4 (Strong):</div>
+                            ≥10% keyword overlap + ≥2 competency matches + progressive Bloom's alignment
+                        </div>
+                        <div class="criteria-card">
+                            <div class="criteria-score">Score 3 (Moderate):</div>
+                            ≥5% keyword overlap + ≥1 competency match + related cognitive levels
+                        </div>
+                        <div class="criteria-card">
+                            <div class="criteria-score">Score 2 (Partial):</div>
+                            ≥2% keyword overlap OR ≥1 competency match with limited cognitive alignment
+                        </div>
+                        <div class="criteria-card">
+                            <div class="criteria-score">Score 1 (Minimal):</div>
+                            &lt;2% keyword overlap + 0 competency matches + misaligned cognitive levels
+                        </div>
+                    </div>
+                </div>
+                
+                <h4><i class="fas fa-tags"></i> Keyword Highlighting:</h4>
+                <div class="keyword-highlighting">
+                    <p>Matching keywords and phrases are highlighted in both CLO and MLO texts to provide visual evidence of semantic alignment and facilitate expert review of automated assessments.</p>
+                </div>
+            </div>
+        </section>
 
         <!-- AI Assistant Button -->
         <div class="ai-assistant-section">
@@ -2112,19 +2801,19 @@
                     </div>
                 </div>
 
-                <!-- Detailed Analysis Section -->
-                <div id="detailed-analysis-section" class="analysis-section">
-                    <h4><i class="fas fa-table"></i> Detailed Analysis by MLO</h4>
-                    <div id="detailed-analysis-content" class="detailed-content">
-                        <!-- Detailed analysis grouped by MLO will be populated here -->
-                    </div>
-                </div>
-
                 <!-- Alignment Matrix Section -->
                 <div id="matrix-section" class="analysis-section">
                     <h4><i class="fas fa-th"></i> Alignment Matrix</h4>
                     <div id="alignment-matrix-container" class="matrix-container">
                         <!-- Alignment matrix will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Detailed Analysis Section -->
+                <div id="detailed-analysis-section" class="analysis-section">
+                    <h4><i class="fas fa-table"></i> Detailed Analysis by MLO</h4>
+                    <div id="detailed-analysis-content" class="detailed-content">
+                        <!-- Detailed analysis grouped by MLO will be populated here -->
                     </div>
                 </div>
             </section>
@@ -2207,10 +2896,6 @@
         </div>
     </div>
 
-    <!-- Floating Home Button (single instance) -->
-    <div class="floating-home" id="floating-home">
-        <i class="fas fa-home"></i>
-    </div>
     <!-- Preview Report Modal -->
     <div id="preview-report-modal" class="modal-overlay">
         <div class="modal-content">
@@ -2271,8 +2956,8 @@
                 }
                 if (currentProgramme) updatePageHeader(currentProgramme);
                 // Floating home button
-                const homeBtn = document.getElementById('floating-home');
-                if (homeBtn) homeBtn.onclick = () => window.location.href = 'index.html';
+                const homeBtnFloat = document.getElementById('home-btn-float');
+                if (homeBtnFloat) homeBtnFloat.onclick = () => window.location.href = 'index.html';
 
                 // Course selection workflow
                 const courseSelector = document.getElementById('course-selector');
@@ -2347,10 +3032,130 @@
         }
     </script>
 
-    <!-- Floating home button (single instance, fixed) -->
-    <div class="floating-home" id="floating-home" title="Return to Home">
-        <i class="fas fa-home"></i>
-    </div>
+    <!-- PLO-MLO Style CSS for Detailed Breakdown -->
+    <style>
+        /* Keyword highlighting from PLO-MLO style */
+        .keyword-highlight {
+            background-color: #ffeb3b;
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        /* Detailed breakdown table styling */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell {
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score-cell .alignment-score {
+            color: #000000 !important;
+            font-weight: bold;
+        }
+        
+        .justification-cell {
+            line-height: 1.4;
+            width: auto;
+            min-width: 350px;
+        }
+        
+        /* MLO analysis section */
+        .mlo-analysis-section {
+            margin-bottom: 30px;
+        }
+        
+        .mlo-header-section {
+            margin-bottom: 15px;
+        }
+        
+        .mlo-header-section h3 {
+            color: var(--tt-burgundy);
+            margin-bottom: 10px;
+        }
+        
+        .mlo-text {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid var(--tt-burgundy);
+            font-style: italic;
+            line-height: 1.4;
+        }
+        
+        /* Competency tags */
+        .competency-tag {
+            display: inline-block;
+            background-color: var(--tt-burgundy);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-right: 4px;
+            margin-bottom: 2px;
+        }
+        
+        /* Score color scheme matching PLO-MLO */
+        .score-1 { background-color: #ffcdd2 !important; color: #c62828 !important; }
+        .score-2 { background-color: #ffecb3 !important; color: #ef6c00 !important; }
+        .score-3 { background-color: #fff9c4 !important; color: #f57f17 !important; }
+        .score-4 { background-color: #c8e6c9 !important; color: #2e7d32 !important; }
+        .score-5 { background-color: #a5d6a7 !important; color: #1b5e20 !important; }
+        
+        /* Improvement suggestions styling */
+        .improvement-suggestions {
+            background-color: #fff3cd;
+            border-left: 3px solid #ffc107;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+    </style>
 
     <!-- PDF Preview Modal -->
     <div id="pdf-preview-modal" class="pdf-preview-modal">
@@ -2373,6 +3178,16 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button id="home-btn-float" class="floating-btn home-btn-float" title="Go to Home">
+            <i class="fas fa-home"></i>
+        </button>
+        <button id="back-to-top" class="floating-btn back-to-top" title="Back to top">
+            <i class="fas fa-chevron-up"></i>
+        </button>
     </div>
 
 </body>

@@ -1,46 +1,141 @@
-// Remove duplicate floating home buttons from the DOM
-function removeDuplicateFloatingHomeButtons() {
-    const buttons = document.querySelectorAll('#floating-home');
-    if (buttons.length > 1) {
-        // Keep the first, remove the rest
-        for (let i = 1; i < buttons.length; i++) {
-            buttons[i].remove();
-        }
-    }
-}
 // CLO-MLO Analysis Controller - Dynamic, Data-Driven
 class CLOMLOController {
 
     showEditCLOsInline() {
         const closContent = document.getElementById('info-existing-clos');
         if (!this.selectedCourse || !closContent) return;
+        
         const clos = this.selectedCourse.cloik || this.selectedCourse.cloek || {};
-        let closHtml = '';
-        Object.entries(clos).forEach(([key, text]) => {
-            closHtml += `<div style="margin-bottom:1em"><label><strong>${key.toUpperCase()}</strong><br><textarea data-clo-key="${key}" style="width:100%;min-height:3em">${text}</textarea></label></div>`;
+        const cloEntries = Object.entries(clos);
+        
+        // Limit to maximum 9 CLOs
+        const limitedClos = cloEntries.slice(0, 9);
+        
+        let closHtml = '<div class="clo-editing-form">';
+        closHtml += '<div class="form-header"><h4><i class="fas fa-edit"></i> Edit Course Learning Outcomes</h4>';
+        closHtml += '<p class="form-description">Maximum 9 CLOs allowed. Currently editing ' + limitedClos.length + ' CLOs.</p></div>';
+        
+        limitedClos.forEach(([key, text], index) => {
+            closHtml += `
+                <div class="clo-edit-item" style="margin-bottom:1.5em; padding:1em; border:1px solid #ddd; border-radius:6px;">
+                    <label class="clo-label">
+                        <strong>CLO ${index + 1} (${key.toUpperCase()})</strong>
+                        <textarea data-clo-key="${key}" 
+                                  style="width:100%; min-height:4em; margin-top:0.5em; padding:0.75em; border:1px solid #ccc; border-radius:4px; font-family:inherit;" 
+                                  placeholder="Enter CLO description...">${text}</textarea>
+                    </label>
+                </div>`;
         });
-        if (!closHtml) closHtml = '<p>No CLOs to edit for this course.</p>';
-        closHtml += '<button id="save-edit-clos-btn" class="option-btn" style="margin-top:1em">Save Changes</button>';
+        
+        if (limitedClos.length === 0) {
+            closHtml += '<p>No CLOs to edit for this course.</p>';
+        }
+        
+        closHtml += '<div class="form-actions" style="margin-top:1.5em;">';
+        closHtml += '<button id="save-edit-clos-btn" class="btn btn-primary" style="margin-right:1em"><i class="fas fa-save"></i> Save Changes</button>';
+        closHtml += '<button id="cancel-edit-clos-btn" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</button>';
+        closHtml += '</div></div>';
+        
         closContent.innerHTML = `<form id="edit-clos-form">${closHtml}</form>`;
-        // Attach save handler
+        
+        // Attach event handlers
         setTimeout(() => {
             const form = document.getElementById('edit-clos-form');
-            if (form) {
-                form.onsubmit = (e) => {
+            const saveBtn = document.getElementById('save-edit-clos-btn');
+            const cancelBtn = document.getElementById('cancel-edit-clos-btn');
+            
+            if (saveBtn) {
+                saveBtn.onclick = (e) => {
                     e.preventDefault();
-                    // Save changes
-                    // After saving, show Analyze button
-                    closContent.innerHTML = '<div class="alert-success">CLO changes saved successfully!</div>' +
-                        '<button id="analyze-clo-mlo-btn" class="option-btn" style="margin-top:1em">Analyze CLO-MLO Alignment</button>' +
-                        '<div id="clo-mlo-alignment-report" style="margin-top:2em"></div>';
-                    const analyzeBtn = document.getElementById('analyze-clo-mlo-btn');
-                    if (analyzeBtn) {
-                        analyzeBtn.onclick = () => this.showCloMloAlignmentReport();
-                    }
+                    this.saveEditedCLOs();
+                };
+            }
+            
+            if (cancelBtn) {
+                cancelBtn.onclick = (e) => {
+                    e.preventDefault();
+                    this.showExistingCLOs(); // Revert to display mode
                 };
             }
         }, 0);
+        
         closContent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    saveEditedCLOs() {
+        const closContent = document.getElementById('info-existing-clos');
+        const textareas = document.querySelectorAll('[data-clo-key]');
+        
+        // Collect edited CLOs
+        const editedCLOs = {};
+        textareas.forEach(textarea => {
+            const key = textarea.getAttribute('data-clo-key');
+            const value = textarea.value.trim();
+            if (value) {
+                editedCLOs[key] = value;
+            }
+        });
+        
+        // Update the course data
+        if (this.selectedCourse) {
+            if (this.selectedCourse.cloik) {
+                this.selectedCourse.cloik = editedCLOs;
+            } else if (this.selectedCourse.cloek) {
+                this.selectedCourse.cloek = editedCLOs;
+            }
+        }
+        
+        // Show success message and display saved CLOs
+        this.displaySavedCLOs(editedCLOs);
+    }
+
+    displaySavedCLOs(editedCLOs) {
+        const closContent = document.getElementById('info-existing-clos');
+        
+        let html = '<div class="saved-clos-display">';
+        html += '<div class="alert alert-success"><i class="fas fa-check-circle"></i> CLO changes saved successfully!</div>';
+        
+        // Display the saved CLOs
+        html += '<div class="saved-clos-list">';
+        html += '<h4><i class="fas fa-list-check"></i> Saved Course Learning Outcomes</h4>';
+        
+        Object.entries(editedCLOs).forEach(([key, text], index) => {
+            html += `
+                <div class="saved-clo-item" style="margin-bottom:1em; padding:1em; background:#f8f9fa; border-left:3px solid var(--tt-light-blue); border-radius:4px;">
+                    <div class="clo-header" style="font-weight:bold; color:var(--tt-dark-blue); margin-bottom:0.5em;">
+                        CLO ${index + 1} (${key.toUpperCase()})
+                    </div>
+                    <div class="clo-text" style="color:var(--tt-black); line-height:1.4;">
+                        ${text}
+                    </div>
+                </div>`;
+        });
+        
+        html += '</div>';
+        
+        // Add analyze button
+        html += '<div class="clo-actions" style="margin-top:1.5em; text-align:center;">';
+        html += '<button id="analyze-clo-mlo-btn" class="btn btn-primary" style="margin-right:1em;"><i class="fas fa-chart-line"></i> Analyze CLO-MLO Alignment</button>';
+        html += '<button id="edit-clos-again-btn" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit CLOs Again</button>';
+        html += '</div>';
+        
+        html += '</div>';
+        
+        closContent.innerHTML = html;
+        
+        // Attach event handlers
+        setTimeout(() => {
+            const analyzeBtn = document.getElementById('analyze-clo-mlo-btn');
+            const editAgainBtn = document.getElementById('edit-clos-again-btn');
+            
+            if (analyzeBtn) {
+                analyzeBtn.onclick = () => this.showCloMloAlignmentReport();
+            }
+            
+            if (editAgainBtn) {
+                editAgainBtn.onclick = () => this.showEditCLOsInline();
+            }
+        }, 0);
     }
     // Robust AI-powered CLO-MLO alignment analysis and reporting
     async showCloMloAlignmentReport() {
@@ -48,8 +143,10 @@ class CLOMLOController {
         const closObj = this.selectedCourse.cloik || this.selectedCourse.cloek || {};
         const allMLOs = window.dataManager.getCurrentMLOs();
         const moduleCode = this.selectedCourse.moodulikood;
-        const relatedMLOs = allMLOs.filter(mlo => mlo.mlokood && mlo.mlokood.includes(moduleCode)).slice(0, 3);
-        const cloKeys = Object.keys(closObj);
+        
+        // Limit to maximum 9 MLOs and 9 CLOs
+        const relatedMLOs = allMLOs.filter(mlo => mlo.mlokood && mlo.mlokood.includes(moduleCode)).slice(0, 9);
+        const cloKeys = Object.keys(closObj).slice(0, 9);
         
         if (cloKeys.length === 0 || relatedMLOs.length === 0) {
             alert('No CLOs or MLOs available for alignment analysis.');
@@ -57,7 +154,7 @@ class CLOMLOController {
         }
         
         // Prepare CLOs in array format for prompt
-        const clos = cloKeys.slice(0, 5).map((key, idx) => ({ id: key, text: closObj[key], index: idx }));
+        const clos = cloKeys.map((key, idx) => ({ id: key, text: closObj[key], index: idx }));
         
         // Show loading state
         this.showLoadingState('Analyzing CLO-MLO alignment...');
@@ -183,7 +280,9 @@ class CLOMLOController {
         
         clos.forEach((clo, cloIndex) => {
             mlos.forEach((mlo, mloIndex) => {
-                const analysis = this.performAdvancedLocalAnalysis(clo, mlo);
+                const cloText = clo.text || clo.clotext || '';
+                const mloText = mlo.mlosisuik || mlo.mlotext || mlo.description || '';
+                const analysis = this.performAdvancedLocalAnalysis(cloText, mloText);
                 analysisResult += `CLO ${cloIndex + 1} - MLO ${mloIndex + 1}: ${analysis.score}/5\n`;
                 analysisResult += `Analysis: ${analysis.explanation}\n`;
                 if (analysis.improvements && analysis.improvements.length > 0) {
@@ -237,8 +336,20 @@ class CLOMLOController {
 
         return {
             score: score,
-            explanation: analysisResult.explanation,
-            improvements: improvements
+            justification: this.generateEnhancedJustification(analysisResult, score),
+            explanation: this.generateEnhancedJustification(analysisResult, score),
+            improvements: improvements,
+            keywordOverlap: analysisResult.keywordOverlap,
+            competencyAlignment: analysisResult.competencyAlignment,
+            bloomsAlignment: analysisResult.cloBloomsLevel === analysisResult.mloBloomsLevel,
+            highlightedCLO: this.highlightKeywords(cloText, analysisResult.commonWords),
+            highlightedMLO: this.highlightKeywords(mloText, analysisResult.commonWords),
+            competencyTags: analysisResult.sharedCompetencies,
+            commonWords: analysisResult.commonWords,
+            bloomLevels: {
+                clo: analysisResult.cloBloomsLevel,
+                mlo: analysisResult.mloBloomsLevel
+            }
         };
     }
 
@@ -319,26 +430,35 @@ class CLOMLOController {
     calculateAdvancedAlignmentScore(analysis) {
         let score = 1;
         
-        // Base score from keyword overlap
-        if (analysis.keywordOverlap >= 30) score = 4;
-        else if (analysis.keywordOverlap >= 20) score = 3;
-        else if (analysis.keywordOverlap >= 10) score = 2;
+        // Base score from keyword overlap - more granular scoring
+        if (analysis.keywordOverlap >= 40) score = 5;
+        else if (analysis.keywordOverlap >= 25) score = 4;
+        else if (analysis.keywordOverlap >= 15) score = 3;
+        else if (analysis.keywordOverlap >= 8) score = 2;
         else score = 1;
         
         // Boost for competency alignment
-        if (analysis.competencyAlignment >= 60) score = Math.min(5, score + 1);
-        else if (analysis.competencyAlignment >= 40) score = Math.min(5, score + 0.5);
+        if (analysis.competencyAlignment >= 70) score = Math.min(5, score + 1);
+        else if (analysis.competencyAlignment >= 50) score = Math.min(5, score + 0.5);
+        else if (analysis.competencyAlignment >= 30) score = Math.min(5, score + 0.25);
         
         // Boost for Bloom's taxonomy alignment
         const levelDifference = Math.abs(analysis.cloLevelIndex - analysis.mloLevelIndex);
-        if (levelDifference <= 1) score = Math.min(5, score + 0.5);
+        if (levelDifference === 0) score = Math.min(5, score + 0.5); // Perfect match
+        else if (levelDifference === 1) score = Math.min(5, score + 0.25); // Close match
+        else if (levelDifference >= 3) score = Math.max(1, score - 0.5); // Poor match
         
         // Bonus for excellent alignment
-        if (analysis.keywordOverlap >= 40 && analysis.competencyAlignment >= 50 && levelDifference <= 1) {
-            score = 5;
+        if (analysis.keywordOverlap >= 30 && analysis.competencyAlignment >= 40 && levelDifference <= 1) {
+            score = Math.min(5, score + 0.5);
         }
         
-        return Math.round(score);
+        // Penalty for very poor alignment
+        if (analysis.keywordOverlap < 5 && analysis.competencyAlignment < 20) {
+            score = 1;
+        }
+        
+        return Math.round(Math.max(1, Math.min(5, score)));
     }
 
     generateAdvancedImprovements(cloText, mloText, analysis, score) {
@@ -405,9 +525,63 @@ class CLOMLOController {
         return suggestions.length > 0 ? suggestions : [`Consider adding shared terminology and competency-based language to strengthen alignment.`];
     }
 
+    // Enhanced justification generation
+    generateEnhancedJustification(analysis, score) {
+        const { keywordOverlap, competencyAlignment, sharedCompetencies, cloBloomsLevel, mloBloomsLevel, commonWords } = analysis;
+        
+        let justification = `Enhanced Analysis: ${keywordOverlap.toFixed(1)}% keyword overlap`;
+        
+        if (sharedCompetencies.length > 0) {
+            justification += `, shared competencies: ${sharedCompetencies.join(', ')}`;
+        }
+        
+        if (cloBloomsLevel !== 'remember' || mloBloomsLevel !== 'remember') {
+            justification += `. Cognitive levels: CLO(${cloBloomsLevel}) ↔ MLO(${mloBloomsLevel})`;
+        }
+        
+        if (commonWords.length > 0) {
+            justification += `. Key terms: ${commonWords.slice(0, 5).join(', ')}`;
+        }
+        
+        // Score-specific details
+        switch(score) {
+            case 5:
+                justification += `. Excellent alignment with strong semantic overlap and competency matching.`;
+                break;
+            case 4:
+                justification += `. Strong alignment with good thematic connection and competency overlap.`;
+                break;
+            case 3:
+                justification += `. Moderate alignment with some shared concepts and terminology.`;
+                break;
+            case 2:
+                justification += `. Weak alignment with limited connection between outcomes.`;
+                break;
+            case 1:
+                justification += `. Minimal alignment requiring significant revision.`;
+                break;
+        }
+        
+        return justification;
+    }
+
+    // Keyword highlighting method
+    highlightKeywords(text, keywords) {
+        if (!keywords || keywords.length === 0) return text;
+        
+        let highlightedText = text;
+        keywords.forEach(keyword => {
+            const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+            highlightedText = highlightedText.replace(regex, `<span class="keyword-highlight">${keyword}</span>`);
+        });
+        return highlightedText;
+    }
+
     calculateLocalAlignmentScore(clo, mlo) {
         // Legacy method for compatibility - redirects to advanced analysis
-        const analysis = this.performAdvancedLocalAnalysis(clo, mlo);
+        const cloText = clo.text || clo.clotext || '';
+        const mloText = mlo.mlosisuik || mlo.mlotext || mlo.description || '';
+        const analysis = this.performAdvancedLocalAnalysis(cloText, mloText);
         return analysis.score;
     }
 
@@ -545,21 +719,34 @@ class CLOMLOController {
 
     // New methods for enhanced PLO-MLO style analysis
     displayEnhancedAnalysisResults(results, clos, mlos) {
+        // Show methodology section
+        showMethodologySection();
+        
         // Hide CLO management and show results
         this.hideCLOManagementSection();
         this.showAnalysisResultsSection();
         
+        // Generate Table of Contents (removed)
+        this.renderTableOfContents();
+        
         // Generate summary content
         this.renderSummary(results, clos, mlos);
         
-        // Generate detailed analysis grouped by MLO
+        // Generate detailed analysis grouped by MLO (moved before matrix)
         this.renderDetailedAnalysisByMLO(results, clos, mlos);
         
-        // Generate alignment matrix
+        // Generate alignment matrix (moved after detailed analysis)
         this.renderAlignmentMatrix(results, clos, mlos);
+        
+        // Update floating TOC
+        updateFloatingTOC();
         
         // Setup event handlers
         this.setupAnalysisEventHandlers();
+    }
+
+    renderTableOfContents() {
+        // TOC elements removed per user request
     }
 
     hideCLOManagementSection() {
@@ -632,27 +819,6 @@ class CLOMLOController {
                     Average Score: ${averageScore} | Strong Alignments: ${coveragePercentage}%
                 </div>
             </div>
-            
-            <div class="alignment-insights">
-                <h3><i class="fas fa-lightbulb"></i> Key Findings & Recommendations:</h3>
-                <ul>
-                    ${weakAlignments > 0 ? `
-                        <li><strong>Immediate Action Required:</strong> ${weakAlignments} alignments scored ≤2. Focus on strengthening these weak alignments through curriculum revision.</li>
-                    ` : ''}
-                    ${strongAlignments > totalAlignments * 0.6 ? `
-                        <li><strong>Leverage Strength:</strong> Strong performing alignments demonstrate excellent patterns. Use these as templates for improving weaker areas.</li>
-                    ` : `
-                        <li><strong>Strategic Enhancement Needed:</strong> Only ${coveragePercentage}% of alignments are strong. Implement systematic review of learning outcomes to improve alignment.</li>
-                    `}
-                    ${averageScore >= 4 ? `
-                        <li><strong>Quality Assurance:</strong> Maintain current high standards through regular monitoring and stakeholder feedback collection.</li>
-                    ` : averageScore >= 3 ? `
-                        <li><strong>Incremental Improvement:</strong> Implement targeted enhancements in lowest-scoring alignments to achieve excellence benchmark.</li>
-                    ` : `
-                        <li><strong>Comprehensive Review Required:</strong> Conduct systematic curriculum mapping workshop to fundamentally improve CLO-MLO alignment quality.</li>
-                    `}
-                </ul>
-            </div>
         `;
     }
 
@@ -673,53 +839,100 @@ class CLOMLOController {
             resultsByMLO[mloCode].push(result);
         });
 
-        let html = '<div class="detailed-analysis-table-container">';
+        let html = '<div class="detailed-breakdown">';
         
         Object.entries(resultsByMLO).forEach(([mloCode, mloResults]) => {
             const mlo = mlos.find(m => m.mlokood === mloCode);
+            const mloDescription = mlo ? (mlo.mlosisuik || mlo.mlotext || mlo.description || 'MLO description not available') : 'MLO description not available';
+            const averageScore = (mloResults.reduce((sum, r) => sum + r.score, 0) / mloResults.length).toFixed(1);
+            
+            // Get all matching keywords for this MLO from all its CLO alignments
+            const allMatchingKeywords = [...new Set(mloResults.flatMap(r => r.commonWords || []))];
+            const highlightedMLOText = this.highlightKeywords(mloDescription, allMatchingKeywords);
+            
             html += `
-                <table class="detailed-analysis-table">
-                    <thead>
-                        <tr class="mlo-group-header">
-                            <td colspan="5">
-                                <strong>MLO: ${mloCode}</strong><br>
-                                <em>${mlo ? mlo.mlotext : 'MLO description not available'}</em>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>CLO Code</th>
-                            <th>CLO Content</th>
-                            <th>Score</th>
-                            <th>Justification</th>
-                            <th>Improvement Suggestions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="mlo-analysis-section">
+                    <div class="mlo-header-section">
+                        <h3>${mloCode}: Average Alignment Score: ${averageScore}</h3>
+                        <div class="mlo-text">
+                            ${highlightedMLOText}
+                        </div>
+                    </div>
+                    
+                    <table class="detailed-breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>CLO Code</th>
+                                <th>CLO Content</th>
+                                <th>Score</th>
+                                <th>Justification & Analysis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             mloResults.forEach(result => {
-                const hasImprovements = result.score < 3 && result.improvements && result.improvements.length > 0;
+                const cloText = result.clo.text || result.clo.clotext || 'CLO text not available';
+                const cloCode = result.clo.id || result.clo.clokood;
+                
+                // Apply keyword highlighting to CLO text
+                const highlightedCLOText = result.highlightedCLO || this.highlightKeywords(cloText, result.commonWords || []);
+                
+                // Build competency tags display
+                let competencyTags = '';
+                if (result.competencyTags && result.competencyTags.length > 0) {
+                    competencyTags = result.competencyTags.map(tag => 
+                        `<span class="competency-tag">${tag}</span>`
+                    ).join(' ');
+                }
+                
+                // Build Bloom's levels display
+                let bloomsDisplay = '';
+                if (result.bloomLevels) {
+                    bloomsDisplay = `CLO(${result.bloomLevels.clo}) ↔ MLO(${result.bloomLevels.mlo})`;
+                }
+                
+                // Generate improvement suggestions for low scores
+                const improvementSuggestions = result.score < 3 && result.improvements && result.improvements.length > 0 ? 
+                    result.improvements : null;
+                
                 html += `
                     <tr>
-                        <td><strong>${result.clo.id || result.clo.clokood}</strong></td>
-                        <td>${result.clo.text || result.clo.clotext}</td>
-                        <td class="score-${result.score}">${result.score}</td>
-                        <td>${result.justification || result.explanation || 'Analysis provided'}</td>
-                        <td>
-                            ${hasImprovements ? `
-                                <div class="improvement-suggestions">
-                                    <h5><i class="fas fa-lightbulb"></i> Suggestions:</h5>
-                                    <ul>
-                                        ${result.improvements.map(imp => `<li>${imp}</li>`).join('')}
-                                    </ul>
+                        <td class="mlo-code-cell">${cloCode}</td>
+                        <td class="mlo-content-cell">
+                            ${highlightedCLOText}
+                        </td>
+                        <td class="alignment-score-cell">
+                            <span class="alignment-score score-${result.score}">${result.score}</span>
+                        </td>
+                        <td class="justification-cell">
+                            <div style="font-size: 0.9em;">
+                                <div><strong>Keyword overlap:</strong> ${(result.keywordOverlap || 0).toFixed(1)}% 
+                                ${result.commonWords && result.commonWords.length > 0 ? 
+                                    `(${result.commonWords.slice(0, 3).join(', ')}${result.commonWords.length > 3 ? '...' : ''})` : '(none)'}
                                 </div>
-                            ` : '<em>Strong alignment - no improvements needed</em>'}
+                                <div style="margin-top: 4px;"><strong>Competency matches:</strong> ${competencyTags || 'none detected'}
+                                </div>
+                                ${bloomsDisplay ? `<div style="margin-top: 4px;"><strong>Bloom's level:</strong> ${bloomsDisplay}</div>` : ''}
+                                ${improvementSuggestions && improvementSuggestions.length > 0 ? `
+                                    <div style="margin-top: 8px; padding: 6px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                                        <strong><i class="fas fa-lightbulb" style="color: #856404;"></i> Improvement Suggestions:</strong>
+                                        <ul style="margin: 4px 0 0 0; padding-left: 16px;">
+                                            ${improvementSuggestions.map(suggestion => `<li style="margin-bottom: 2px;">${suggestion}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </td>
                     </tr>
                 `;
             });
             
-            html += '</tbody></table>';
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
         });
         
         html += '</div>';
@@ -761,20 +974,6 @@ class CLOMLOController {
         });
         
         matrixHTML += '</tbody></table>';
-        
-        // Add legend
-        matrixHTML += `
-            <div class="legend" style="margin-top: 1rem;">
-                <h4>Scoring Legend</h4>
-                <div class="legend-items">
-                    <span class="legend-item score-5">5 - Excellent: Strong semantic overlap, shared competencies, and cognitive level match</span>
-                    <span class="legend-item score-4">4 - Very Strong: Clear thematic connection with good competency overlap</span>
-                    <span class="legend-item score-3">3 - Moderate: Some shared concepts and terminology</span>
-                    <span class="legend-item score-2">2 - Weak: Limited connection between learning outcomes</span>
-                    <span class="legend-item score-1">1 - Minimal: Different focus areas requiring significant revision</span>
-                </div>
-            </div>
-        `;
         
         container.innerHTML = matrixHTML;
     }
@@ -952,7 +1151,7 @@ class CLOMLOController {
     <div class="header">
         <h1>Course-Module Learning Outcomes Alignment Report</h1>
         <p><strong>Programme:</strong> ${currentProgramme ? `${currentProgramme.code} - ${currentProgramme.kavanimetusik}` : 'Not specified'}</p>
-        <p><strong>Course:</strong> ${selectedCourse ? `${selectedCourse.course_code} - ${selectedCourse.course_name_en || selectedCourse.course_name_et}` : 'Not specified'}</p>
+        <p><strong>Course:</strong> ${selectedCourse ? `${selectedCourse.ainekood} - ${selectedCourse.ainenimetusik}` : 'Not specified'}</p>
         <p><strong>Generated:</strong> ${today}</p>
     </div>
 
@@ -1201,12 +1400,10 @@ document.addEventListener('DOMContentLoaded', () => {
     (async () => {
         window.cloController = new CLOMLOController();
         if (window.cloController.init) await window.cloController.init();
-        removeDuplicateFloatingHomeButtons();
         attachFloatingHomeHandler();
 
         // Observe DOM changes to re-attach handler if the button is replaced
         const observer = new MutationObserver(() => {
-            removeDuplicateFloatingHomeButtons();
             attachFloatingHomeHandler();
         });
         observer.observe(document.body, { childList: true, subtree: true });
@@ -1214,10 +1411,157 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function attachFloatingHomeHandler() {
-    const homeBtn = document.getElementById('floating-home');
-    if (homeBtn && !homeBtn._homeHandlerAttached) {
-        homeBtn.onclick = () => window.location.href = 'index.html';
-        homeBtn._homeHandlerAttached = true;
+    const homeBtnFloat = document.getElementById('home-btn-float');
+    
+    if (homeBtnFloat && !homeBtnFloat._homeHandlerAttached) {
+        homeBtnFloat.onclick = () => window.location.href = 'index.html';
+        homeBtnFloat._homeHandlerAttached = true;
     }
 }
+
+// Floating TOC functionality
+function toggleFloatingTOC() {
+    const toc = document.getElementById('floating-toc');
+    const toggle = document.getElementById('floating-toc-toggle');
+    
+    if (!toc || !toggle) return;
+    
+    const isVisible = toc.classList.contains('visible');
+    
+    if (isVisible) {
+        toc.classList.remove('visible');
+        toggle.innerHTML = '<i class="fas fa-list"></i>';
+        toggle.title = 'Show Table of Contents';
+    } else {
+        toc.classList.add('visible');
+        toggle.innerHTML = '<i class="fas fa-times"></i>';
+        toggle.title = 'Hide Table of Contents';
+        updateFloatingTOC();
+    }
+}
+
+function updateFloatingTOC() {
+    const tocList = document.getElementById('floating-toc-list');
+    if (!tocList) return;
+    
+    // Clear existing TOC items
+    tocList.innerHTML = '';
+    
+    // Check if analysis results are visible
+    const analysisSection = document.getElementById('analysis-results-section');
+    if (analysisSection && analysisSection.style.display !== 'none') {
+        // Add methodology section
+        const methodologySection = document.getElementById('methodology');
+        if (methodologySection && methodologySection.style.display !== 'none') {
+            tocList.innerHTML += `
+                <li><a href="#methodology" class="floating-toc-link" onclick="scrollToSection('methodology')">
+                    <i class="fas fa-cogs"></i> Methodology
+                </a></li>
+            `;
+        }
+        
+        // Add analysis sections
+        tocList.innerHTML += `
+            <li><a href="#summary-section" class="floating-toc-link" onclick="scrollToSection('summary-section')">
+                <i class="fas fa-chart-pie"></i> Analysis Summary
+            </a></li>
+            <li><a href="#matrix-section" class="floating-toc-link" onclick="scrollToSection('matrix-section')">
+                <i class="fas fa-th"></i> Alignment Matrix
+            </a></li>
+            <li><a href="#detailed-analysis-section" class="floating-toc-link" onclick="scrollToSection('detailed-analysis-section')">
+                <i class="fas fa-table"></i> Detailed Analysis
+            </a></li>
+        `;
+        
+        // Add MLO sections
+        const mloSections = document.querySelectorAll('.mlo-section');
+        mloSections.forEach((section, index) => {
+            const mloHeader = section.querySelector('.mlo-header');
+            const mloText = mloHeader ? mloHeader.textContent.trim() : `MLO ${index + 1}`;
+            tocList.innerHTML += `
+                <li><a href="#${section.id || `mlo-section-${index}`}" class="floating-toc-link" onclick="scrollToSection('${section.id || `mlo-section-${index}`}')">
+                    <i class="fas fa-graduation-cap"></i> ${mloText}
+                </a></li>
+            `;
+        });
+    } else {
+        // Show default navigation
+        tocList.innerHTML = `
+            <li><a href="#course-selection-section" class="floating-toc-link" onclick="scrollToSection('course-selection-section')">
+                <i class="fas fa-book"></i> Course Selection
+            </a></li>
+            <li><a href="#clo-management-section" class="floating-toc-link" onclick="scrollToSection('clo-management-section')">
+                <i class="fas fa-edit"></i> CLO Management
+            </a></li>
+        `;
+    }
+}
+
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+        // Close TOC on mobile after navigation
+        if (window.innerWidth <= 768) {
+            setTimeout(() => toggleFloatingTOC(), 300);
+        }
+    }
+}
+
+// Setup floating action buttons
+function setupFloatingButtons() {
+    const homeBtn = document.getElementById('home-btn-float');
+    const backToTopBtn = document.getElementById('back-to-top');
+    const tocToggle = document.getElementById('floating-toc-toggle');
+    
+    if (homeBtn) {
+        homeBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
+    
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    
+    if (tocToggle) {
+        tocToggle.addEventListener('click', toggleFloatingTOC);
+    }
+    
+    // Show/hide back to top button based on scroll
+    window.addEventListener('scroll', () => {
+        if (backToTopBtn) {
+            if (window.scrollY > 300) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Show methodology section when analysis starts
+function showMethodologySection() {
+    const methodologySection = document.getElementById('methodology');
+    if (methodologySection) {
+        methodologySection.style.display = 'block';
+        updateFloatingTOC();
+    }
+}
+
+// Initialize floating components
+document.addEventListener('DOMContentLoaded', () => {
+    setupFloatingButtons();
+    
+    // Setup initial back to top button state
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        backToTopBtn.style.display = 'none';
+    }
+});
 
