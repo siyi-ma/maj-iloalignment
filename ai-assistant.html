@@ -10,7 +10,13 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg,                 <div class="form-group">
+                    <label for="plo-select">🎯 Programme Learning Outcome (PLO)</label>
+                    <select id="plo-select" onchange="loadSelectedPLO()" required>
+                        <option value="">Select a programme first...</option>
+                    </select>
+                    <textarea id="plo-text" rows="3" placeholder="PLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
+                </div>eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
         
@@ -53,6 +59,49 @@
         .quota-info {
             font-size: 14px;
             color: #666;
+        }
+
+        .token-usage-display {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 300px;
+        }
+
+        .usage-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .usage-stats span {
+            padding: 4px 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .usage-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .usage-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #ffc107 70%, #dc3545 100%);
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .usage-progress.warning {
+            background: linear-gradient(90deg, #ffc107 0%, #dc3545 100%);
+        }
+
+        .usage-progress.danger {
+            background: #dc3545;
         }
         
         .prompt-section {
@@ -122,6 +171,30 @@
             outline: none;
             border-color: #aa1352;
         }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+            background: white;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #aa1352;
+        }
+        
+        .form-hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
         
         .advanced-options {
             background: #fff;
@@ -165,7 +238,7 @@
         }
         
         .btn {
-            padding: 12px 24px;
+            padding: 8px 24px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -210,6 +283,11 @@
         
         .result-error {
             border-color: #dc3545;
+        }
+        
+        .result-info {
+            border-color: #17a2b8;
+            background: #f0f8ff;
         }
         
         .result-loading {
@@ -273,7 +351,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 AI Assistant for Education</h1>
+            <h1>🤖 AI Assistant for ILO alignment</h1>
             <p>Powered by Gemini 1.5 Flash • Custom Prompts & PLO-MLO Analysis</p>
         </div>
 
@@ -282,8 +360,15 @@
                 <span id="status-indicator">🔄 Initializing...</span>
                 <span id="status-text">Connecting to AI service...</span>
             </div>
-            <div class="quota-info">
-                <small>Free: 15 req/min • 1M tokens/day • 1.5K req/day</small>
+            <div class="token-usage-display">
+                <div class="usage-stats">
+                    <span id="daily-usage">Daily: 0/1500 tokens</span>
+                    <span id="session-requests">Requests: 0</span>
+                    <span id="estimated-cost">Cost: $0.00</span>
+                </div>
+                <div class="usage-bar">
+                    <div id="usage-progress" class="usage-progress" style="width: 0%"></div>
+                </div>
             </div>
         </div>
 
@@ -346,35 +431,101 @@ Examples:
             <!-- PLO-MLO Analysis Tab -->
             <div id="plo-mlo-tab" class="tab-content">
                 <div class="form-group">
-                    <label for="plo-text">🎓 Programme Learning Outcome (PLO)</label>
-                    <textarea id="plo-text" rows="3" placeholder="Enter the Programme Learning Outcome to analyze..."></textarea>
+                    <label for="programme-select">🏛️ Select Study Programme</label>
+                    <select id="programme-select" onchange="loadProgrammeData()" required>
+                        <option value="">Loading programmes...</option>
+                    </select>
+                    <small class="form-hint">📚 Choose from available programmes in the database</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="plo-select">🎯 Programme Learning Outcome (PLO)</label>
+                    <select id="plo-select" onchange="loadSelectedPLO()" required>
+                        <option value="">Select a programme first...</option>
+                    </select>
+                    <textarea id="plo-text" rows="3" placeholder="PLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="mlo-text">📖 Module Learning Outcome (MLO)</label>
-                    <textarea id="mlo-text" rows="3" placeholder="Enter the Module Learning Outcome to compare..."></textarea>
+                    <label for="mlo-select">📖 Module Learning Outcome (MLO)</label>
+                    <select id="mlo-select" onchange="loadSelectedMLO()" required>
+                        <option value="">Select a programme first...</option>
+                    </select>
+                    <textarea id="mlo-text" rows="3" placeholder="MLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="current-score">📊 Current Alignment Score (1-5)</label>
-                    <input type="number" id="current-score" min="1" max="5" value="3" placeholder="Rate current alignment">
+                    <label for="custom-analysis-request">� Custom Analysis Request</label>
+                    <textarea id="custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the PLO-MLO alignment...
+
+Examples:
+• How can I improve the alignment between these outcomes?
+• What assessment methods would work best for these outcomes?
+• Are there any gaps in the learning progression?
+• How do these outcomes compare to industry standards?"></textarea>
+                    <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
                 </div>
             </div>
 
             <!-- Course Analysis Tab -->
             <div id="course-tab" class="tab-content">
                 <div class="form-group">
-                    <label for="course-description">📚 Course Description</label>
-                    <textarea id="course-description" rows="4" placeholder="Enter the course description or content to analyze..."></textarea>
+                    <label for="course-programme-select">🏛️ Select Study Programme</label>
+                    <select id="course-programme-select" onchange="onCourseAnalysisProgrammeChange()" required>
+                        <option value="">Loading programmes...</option>
+                    </select>
+                    <small class="form-hint">📚 Choose from available programmes in the database</small>
                 </div>
                 <div class="form-group">
-                    <label for="learning-outcomes">🎯 Learning Outcomes (one per line)</label>
-                    <textarea id="learning-outcomes" rows="5" placeholder="Enter learning outcomes, one per line:
-1. Students will be able to...
-2. Upon completion, learners can...
-3. At the end of this course..."></textarea>
+                    <label for="course-select">📚 Select Course</label>
+                    <select id="course-select" onchange="onCourseSelectionChange()" required>
+                        <option value="">Select a programme first...</option>
+                    </select>
+                    <textarea id="course-info-display" rows="2" placeholder="Course information will appear here..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="course-description">� Course Description</label>
+
+                </div>
+                <div class="form-group">
+                    <label for="course-mlo-select">🎯 Module Learning Outcome (MLO)</label>
+                    <select id="course-mlo-select" onchange="loadSelectedCourseMLO()" required>
+                        <option value="">Select a programme first...</option>
+                    </select>
+                    <textarea id="module-learning-outcomes" rows="3" placeholder="MLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="clo-selection">📖 Course Learning Outcomes (CLO)</label>
+                    <div id="clo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa;">
+                        <p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>
+                    </div>
+                    <textarea id="course-learning-outcomes" rows="5" placeholder="Selected CLOs will appear here..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
+                    <small class="form-hint">⚠️ Select up to 5 CLOs for optimal analysis (token efficiency)</small>
+                </div>
+                <div class="form-group">
+                    <label for="course-custom-analysis-request">💭 Custom Analysis Request</label>
+                    <textarea id="course-custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the course structure...
+
+Examples:
+• How can I improve the MLO-CLO alignment?
+• What assessment methods would work best for these outcomes?
+• Are the CLOs appropriate for the course credits?
+• How does this course fit within the programme structure?"></textarea>
+                    <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
                 </div>
             </div>
 
             <div class="action-buttons">
+                <div id="token-estimation" class="token-estimation" style="margin-bottom: 15px; padding: 12px; background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border-radius: 8px; border-left: 4px solid #2196f3;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <span style="font-size: 18px;">🔢</span>
+                        <strong>Estimated Token Usage</strong>
+                    </div>
+                    <div id="token-breakdown" style="font-size: 0.9em; color: #555;">
+                        <div>📝 Input tokens: <span id="input-tokens">0</span></div>
+                        <div>🤖 Expected output tokens: <span id="output-tokens">~2000</span></div>
+                        <div style="margin-top: 5px; font-weight: bold; color: #1976d2;">💰 Total estimated: <span id="total-tokens">~2000</span> tokens</div>
+                    </div>
+                    <small style="color: #666; font-style: italic;">💡 Estimation updates automatically as you fill in the form</small>
+                </div>
                 <button id="analyze-btn" class="btn btn-primary" onclick="runAnalysis()">
                     🚀 Analyze with AI
                 </button>
@@ -385,6 +536,17 @@ Examples:
         </div>
 
         <div id="results-section" class="results-section">
+            <div class="ai-disclaimer" style="margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: 8px; border-left: 4px solid #ff9800;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <span style="font-size: 20px;">⚠️</span>
+                    <strong style="color: #f57c00;">AI-Generated Content Disclaimer</strong>
+                </div>
+                <div style="font-size: 0.9em; color: #555; line-height: 1.4;">
+                    <p style="margin: 0 0 8px 0;">🤖 <strong>This content was generated by AI</strong> and should be used as a starting point for educational analysis.</p>
+                    <p style="margin: 0 0 8px 0;">✅ <strong>Please verify all recommendations</strong> with educational experts, institutional policies, and accreditation requirements.</p>
+                    <p style="margin: 0;">📚 <strong>Human review is essential</strong> before implementing any suggested changes to curricula or learning outcomes.</p>
+                </div>
+            </div>
             <h3>💡 AI Analysis Results</h3>
             <div id="result-content" class="result-content">
                 Results will appear here after you run an analysis...
@@ -401,6 +563,7 @@ Examples:
     <script src="js/personal-api-config.js"></script>
     <script src="js/secure-api-config.js"></script>
     <script src="js/enhanced-ai-features.js"></script>
+    <script src="js/programme-data-loader.js"></script>
 
     <script>
         let currentTab = 'custom';
@@ -409,11 +572,28 @@ Examples:
         async function initApp() {
             console.log('🚀 Initializing AI Assistant...');
             
+            // Show detailed initial statistics
+            showInitialStatistics();
+            
+            // Initialize token usage display
+            updateTokenUsageDisplay();
+            
+            // Load programme data and populate dropdowns
+            try {
+                await populateProgrammeDropdowns();
+                // Also populate Course Analysis dropdowns
+                populateCourseAnalysisDropdowns();
+            } catch (error) {
+                console.error('Failed to load programme data:', error);
+            }
+            
             // Wait for AI features to initialize
             let attempts = 0;
             while (attempts < 10) {
                 if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
                     updateStatus('✅ Ready', 'AI Assistant connected and ready to help!');
+                    updateTokenUsageDisplay(); // Update again after connection
+                    updateTokenEstimation(); // Initialize token estimation
                     break;
                 }
                 
@@ -422,14 +602,121 @@ Examples:
                 attempts++;
             }
             
+            // Add event listeners for token estimation updates
+            document.addEventListener('change', updateTokenEstimation);
+            document.addEventListener('input', updateTokenEstimation);
+            
             if (attempts >= 10) {
                 updateStatus('❌ Connection Failed', 'Unable to connect to AI service. Check configuration.');
+            }
+        }
+
+        function showInitialStatistics() {
+            if (window.secureAPIConfig) {
+                const stats = window.secureAPIConfig.getUsageStats();
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+                
+                const resetTime = tomorrow.toLocaleString();
+                const timeUntilReset = Math.ceil((tomorrow - today) / (1000 * 60 * 60)); // hours
+                
+                let welcomeMessage = `📊 **Today's Usage Statistics** (${today.toDateString()})\n\n`;
+                welcomeMessage += `🔥 **Requests Made:** ${stats.totalRequests || 0}\n`;
+                welcomeMessage += `🎯 **Tokens Used:** ${stats.dailyTokens || 0}/${stats.dailyLimit}\n`;
+                welcomeMessage += `💰 **Estimated Cost:** $${(stats.estimatedCostUSD || 0).toFixed(4)}\n`;
+                welcomeMessage += `⏰ **Quota Resets:** ${resetTime} (in ${timeUntilReset}h)\n\n`;
+                
+                if (stats.remainingDaily > 0) {
+                    welcomeMessage += `✅ **Available Today:** ${stats.remainingDaily} tokens\n`;
+                    welcomeMessage += `📈 **Usage Level:** ${stats.usagePercentage}% used\n\n`;
+                } else {
+                    welcomeMessage += `🚫 **Daily limit reached!** Please wait for reset.\n\n`;
+                }
+                
+                if (stats.requestHistory && stats.requestHistory.length > 0) {
+                    const lastRequest = stats.requestHistory[0];
+                    welcomeMessage += `🕐 **Last Request:** ${new Date(lastRequest.timestamp).toLocaleTimeString()}\n`;
+                    welcomeMessage += `📊 **Last Usage:** ${lastRequest.totalTokens} tokens ($${lastRequest.cost.toFixed(6)})\n\n`;
+                }
+                
+                welcomeMessage += `💡 **Tips:**\n`;
+                welcomeMessage += `• Use shorter prompts to save tokens\n`;
+                welcomeMessage += `• Each request uses ~100-500 tokens on average\n`;
+                welcomeMessage += `• Complex analyses may use 500-1000 tokens\n`;
+                
+                // Display in result area temporarily
+                const resultContent = document.getElementById('result-content');
+                const resultsSection = document.getElementById('results-section');
+                
+                if (resultContent && resultsSection) {
+                    resultsSection.className = 'results-section result-info';
+                    resultContent.textContent = welcomeMessage;
+                    resultsSection.style.display = 'block';
+                }
             }
         }
 
         function updateStatus(indicator, text) {
             document.getElementById('status-indicator').textContent = indicator;
             document.getElementById('status-text').textContent = text;
+        }
+
+        function updateTokenUsageDisplay() {
+            if (window.secureAPIConfig) {
+                const stats = window.secureAPIConfig.getUsageStats();
+                
+                // Update usage statistics
+                document.getElementById('daily-usage').textContent = 
+                    `Daily: ${stats.dailyTokens || 0}/${stats.dailyLimit} tokens`;
+                document.getElementById('session-requests').textContent = 
+                    `Requests: ${stats.totalRequests || 0}`;
+                document.getElementById('estimated-cost').textContent = 
+                    `Cost: $${(stats.estimatedCostUSD || 0).toFixed(4)}`;
+                
+                // Update progress bar
+                const progressBar = document.getElementById('usage-progress');
+                const percentage = parseFloat(stats.usagePercentage || 0);
+                progressBar.style.width = `${Math.min(100, percentage)}%`;
+                
+                // Update progress bar color based on usage
+                progressBar.className = 'usage-progress';
+                if (percentage >= 90) {
+                    progressBar.classList.add('danger');
+                } else if (percentage >= 70) {
+                    progressBar.classList.add('warning');
+                }
+                
+                // Check if daily quota is reached and update status
+                if (percentage >= 100 || (stats.dailyTokens >= stats.dailyLimit)) {
+                    updateStatus('🚫 Not Available', 'Daily quota reached. Service unavailable until tomorrow.');
+                    // Disable analyze button
+                    const analyzeBtn = document.getElementById('analyze-btn');
+                    if (analyzeBtn) {
+                        analyzeBtn.disabled = true;
+                        analyzeBtn.style.opacity = '0.5';
+                        analyzeBtn.style.cursor = 'not-allowed';
+                    }
+                } else if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
+                    // Re-enable if quota is available and AI is ready
+                    updateStatus('✅ Ready', 'AI Assistant connected and ready to help!');
+                    const analyzeBtn = document.getElementById('analyze-btn');
+                    if (analyzeBtn) {
+                        analyzeBtn.disabled = false;
+                        analyzeBtn.style.opacity = '1';
+                        analyzeBtn.style.cursor = 'pointer';
+                    }
+                }
+                
+                // Update tooltip with detailed info
+                const usageDisplay = document.querySelector('.token-usage-display');
+                usageDisplay.title = 
+                    `Remaining today: ${stats.remainingDaily} tokens\n` +
+                    `Total tokens used: ${(stats.totalTokens || 0).toLocaleString()}\n` +
+                    `Input tokens: ${(stats.totalInputTokens || 0).toLocaleString()}\n` +
+                    `Output tokens: ${(stats.totalOutputTokens || 0).toLocaleString()}`;
+            }
         }
 
         function switchTab(tabName) {
@@ -442,6 +729,9 @@ Examples:
             document.getElementById(tabName + '-tab').classList.add('active');
             
             currentTab = tabName;
+            
+            // Update token estimation when switching tabs
+            updateTokenEstimation();
         }
 
         function updateRangeValue(rangeName) {
@@ -493,27 +783,122 @@ Examples:
                     result = await window.enhancedAIFeatures.executeCustomPrompt(prompt, {}, options);
                     
                 } else if (currentTab === 'plo-mlo') {
-                    // PLO-MLO analysis
+                    // PLO-MLO analysis with program context
+                    const programmeCode = document.getElementById('programme-select').value;
                     const ploText = document.getElementById('plo-text').value;
                     const mloText = document.getElementById('mlo-text').value;
-                    const score = parseInt(document.getElementById('current-score').value);
+                    const customRequest = document.getElementById('custom-analysis-request').value;
                     
-                    if (!ploText.trim() || !mloText.trim()) {
-                        throw new Error('Please enter both PLO and MLO text');
+                    if (!programmeCode || !ploText.trim() || !mloText.trim()) {
+                        throw new Error('Please complete all selections: Programme, PLO, and MLO');
                     }
                     
-                    result = await window.enhancedAIFeatures.generateImprovementSuggestions(ploText, mloText, score);
+                    // Get programme info for context
+                    const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
+                    
+                    // Create context-enhanced analysis
+                    let contextualPrompt = `
+EDUCATIONAL CONTEXT:
+Programme: ${programmeInfo.nameEn}
+Programme Code: ${programmeCode.toUpperCase()}
+
+Programme Learning Outcome: "${ploText}"
+Module Learning Outcome: "${mloText}"
+
+Please analyze the alignment between this PLO and MLO within the context of the ${programmeInfo.nameEn} programme. Consider:
+1. How well the MLO supports the PLO
+2. Specific improvement suggestions for better alignment
+3. Industry relevance for ${programmeInfo.nameEn} graduates
+4. Assessment strategies that would work for both outcomes`;
+
+                    // Add custom analysis request if provided
+                    if (customRequest.trim()) {
+                        contextualPrompt += `
+
+SPECIFIC ANALYSIS REQUEST:
+${customRequest}
+
+Please address the above specific request in addition to the general analysis.`;
+                    }
+
+                    contextualPrompt += `
+
+Provide detailed feedback and actionable recommendations.`;
+                    
+                    result = await window.enhancedAIFeatures.executeCustomPrompt(contextualPrompt, {}, {
+                        temperature: 0.7,
+                        maxTokens: 1500
+                    });
                     
                 } else if (currentTab === 'course') {
-                    // Course analysis
-                    const courseDesc = document.getElementById('course-description').value;
-                    const outcomes = document.getElementById('learning-outcomes').value.split('\n').filter(line => line.trim());
+                    // Enhanced course analysis with programme data
+                    const programmeCode = document.getElementById('course-programme-select').value;
+                    const courseCode = document.getElementById('course-select').value;
+                    const mloText = document.getElementById('module-learning-outcomes').value;
+                    const cloText = document.getElementById('course-learning-outcomes').value;
                     
-                    if (!courseDesc.trim() || outcomes.length === 0) {
-                        throw new Error('Please enter course description and learning outcomes');
+                    if (!programmeCode || !courseCode || !mloText.trim() || !cloText.trim()) {
+                        throw new Error('Please complete all selections: Programme, course, MLO, and CLOs');
                     }
                     
-                    result = await window.enhancedAIFeatures.analyzeCourseContent(courseDesc, outcomes);
+                    // Get course and programme info for context
+                    const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
+                    const courseInfo = window.programmeDataLoader.getCLOs(programmeCode, courseCode).courseInfo;
+                    
+                    // Validate CLO count (recommended limit: 5)
+                    const selectedCLOs = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
+                    if (selectedCLOs.length > 5) {
+                        const proceed = confirm(`You have ${selectedCLOs.length} Course Learning Outcomes selected. The recommended limit is 5 for optimal analysis. Continue?`);
+                        if (!proceed) return;
+                    }
+                    
+                    // Create enhanced course analysis prompt
+                    const customRequest = document.getElementById('course-custom-analysis-request').value.trim();
+                    const customAnalysisSection = customRequest ? `
+
+CUSTOM ANALYSIS REQUEST:
+${customRequest}
+
+Please address this specific request in addition to the standard analysis.
+` : '';
+                    
+                    const courseAnalysisPrompt = `
+COURSE ANALYSIS REQUEST:
+Programme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})
+Course: ${courseInfo.nameEn} (${courseInfo.code}) - ${courseInfo.credits} EAP
+
+MODULE LEARNING OUTCOME:
+${mloText}
+
+COURSE LEARNING OUTCOMES (${selectedCLOs.length} selected):
+${cloText}${customAnalysisSection}
+
+Please provide a comprehensive analysis of this course structure:
+
+1. ALIGNMENT ASSESSMENT:
+   - How well do the Course Learning Outcomes support the Module Learning Outcome?
+   - Identify any gaps or misalignments in the context of ${programmeInfo.nameEn}
+
+2. CLO QUALITY REVIEW:
+   - Assess each Course Learning Outcome for clarity and measurability
+   - Check for appropriate cognitive level and progression
+   - Evaluate if ${selectedCLOs.length} CLOs is optimal for this course
+
+3. IMPROVEMENT RECOMMENDATIONS:
+   - Suggest specific improvements for better MLO-CLO alignment
+   - Recommend any CLO consolidation or refinement
+   - Propose assessment strategies suitable for ${courseInfo.credits} EAP course
+
+4. PROGRAMME COHERENCE:
+   - How well does this course fit within the ${programmeInfo.nameEn} programme structure
+   - Industry relevance and practical application opportunities
+
+Provide detailed, actionable feedback for course improvement.`;
+                    
+                    result = await window.enhancedAIFeatures.executeCustomPrompt(courseAnalysisPrompt, {}, {
+                        temperature: 0.7,
+                        maxTokens: 2000
+                    });
                 }
                 
                 // Display results
@@ -529,6 +914,9 @@ Examples:
                         Time: ${new Date().toLocaleTimeString()}
                     `;
                     resultMeta.style.display = 'block';
+                    
+                    // Update token usage display
+                    updateTokenUsageDisplay();
                 } else {
                     throw new Error(result.error || 'Analysis failed');
                 }
@@ -556,6 +944,547 @@ Examples:
 
         // Initialize when page loads
         window.addEventListener('load', initApp);
+
+        // Programme data management functions
+        async function populateProgrammeDropdowns() {
+            try {
+                if (!window.programmeDataLoader.isDataLoaded()) {
+                    await window.programmeDataLoader.loadData();
+                }
+                
+                const programmes = window.programmeDataLoader.getProgrammes();
+                
+                // Populate PLO-MLO tab programme dropdown
+                const ploMloSelect = document.getElementById('programme-select');
+                const courseProgrammeSelect = document.getElementById('course-programme-select');
+                
+                [ploMloSelect, courseProgrammeSelect].forEach(select => {
+                    if (select) {
+                        select.innerHTML = '<option value="">Select a programme...</option>';
+                        programmes.forEach(programme => {
+                            const option = document.createElement('option');
+                            option.value = programme.code;
+                            option.textContent = `${programme.nameEn} (${programme.code.toUpperCase()})`;
+                            select.appendChild(option);
+                        });
+                    }
+                });
+                
+                console.log('✅ Programme dropdowns populated with', programmes.length, 'programmes');
+            } catch (error) {
+                console.error('❌ Error populating programme dropdowns:', error);
+            }
+        }
+
+        function loadProgrammeData() {
+            const programmeCode = document.getElementById('programme-select').value;
+            
+            if (!programmeCode) {
+                resetPloMloDropdowns();
+                return;
+            }
+            
+            try {
+                // Load PLOs
+                const plos = window.programmeDataLoader.getPLOs(programmeCode);
+                const ploSelect = document.getElementById('plo-select');
+                
+                if (ploSelect) {
+                    ploSelect.innerHTML = '<option value="">Select a PLO...</option>';
+                    
+                    plos.forEach((plo, index) => {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.textContent = `${plo.plokood}: ${plo.plosisuik.substring(0, 80)}...`;
+                        ploSelect.appendChild(option);
+                    });
+                }
+                
+                // Load MLOs
+                const mlos = window.programmeDataLoader.getMLOs(programmeCode);
+                const mloSelect = document.getElementById('mlo-select');
+                
+                if (mloSelect) {
+                    mloSelect.innerHTML = '<option value="">Select an MLO...</option>';
+                    
+                    mlos.forEach((mlo, index) => {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.textContent = `${mlo.mlokood}: ${mlo.mlosisuik.substring(0, 80)}...`;
+                        mloSelect.appendChild(option);
+                    });
+                }
+                
+                // Clear text areas
+                const ploText = document.getElementById('plo-text');
+                const mloText = document.getElementById('mlo-text');
+                if (ploText) ploText.value = '';
+                if (mloText) mloText.value = '';
+                
+            } catch (error) {
+                console.error('Error loading programme data:', error);
+                alert('Error loading programme data: ' + error.message);
+            }
+        }
+
+        function loadSelectedPLO() {
+            const programmeCode = document.getElementById('programme-select').value;
+            const ploIndex = document.getElementById('plo-select').value;
+            
+            if (!programmeCode || !ploIndex) return;
+            
+            try {
+                const plos = window.programmeDataLoader.getPLOs(programmeCode);
+                const selectedPlo = plos[parseInt(ploIndex)];
+                const ploText = document.getElementById('plo-text');
+                if (ploText && selectedPlo) {
+                    ploText.value = selectedPlo.plosisuik;
+                }
+            } catch (error) {
+                console.error('Error loading PLO:', error);
+            }
+        }
+
+        function loadSelectedMLO() {
+            const programmeCode = document.getElementById('programme-select').value;
+            const mloIndex = document.getElementById('mlo-select').value;
+            
+            if (!programmeCode || !mloIndex) return;
+            
+            try {
+                const mlos = window.programmeDataLoader.getMLOs(programmeCode);
+                const selectedMlo = mlos[parseInt(mloIndex)];
+                const mloText = document.getElementById('mlo-text');
+                if (mloText && selectedMlo) {
+                    mloText.value = selectedMlo.mlosisuik;
+                }
+            } catch (error) {
+                console.error('Error loading MLO:', error);
+            }
+        }
+
+        function loadCourseProgrammeData() {
+            const programmeCode = document.getElementById('course-programme-select').value;
+            
+            if (!programmeCode) {
+                resetCourseDropdowns();
+                return;
+            }
+            
+            try {
+                // Load courses
+                const courses = window.programmeDataLoader.getCourses(programmeCode);
+                const courseSelect = document.getElementById('course-select');
+                courseSelect.innerHTML = '<option value="">Select a course...</option>';
+                
+                courses.forEach((course, index) => {
+                    const option = document.createElement('option');
+                    option.value = course.ainekood;
+                    option.textContent = `${course.ainekood}: ${course.ainenimetusik}`;
+                    courseSelect.appendChild(option);
+                });
+                
+                // Load MLOs for course analysis
+                const mlos = window.programmeDataLoader.getMLOs(programmeCode);
+                const courseMloSelect = document.getElementById('course-mlo-select');
+                courseMloSelect.innerHTML = '<option value="">Select an MLO...</option>';
+                
+                mlos.forEach((mlo, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${mlo.mlokood}: ${mlo.mlosisuik.substring(0, 60)}...`;
+                    courseMloSelect.appendChild(option);
+                });
+                
+                // Clear displays
+                document.getElementById('course-info-display').value = '';
+                document.getElementById('module-learning-outcomes').value = '';
+                document.getElementById('course-learning-outcomes').value = '';
+                document.getElementById('clo-checkboxes').innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
+                
+            } catch (error) {
+                console.error('Error loading course programme data:', error);
+                alert('Error loading course programme data: ' + error.message);
+            }
+        }
+
+        function loadSelectedCourse() {
+            const programmeCode = document.getElementById('course-programme-select').value;
+            const courseCode = document.getElementById('course-select').value;
+            
+            if (!programmeCode || !courseCode) return;
+            
+            try {
+                const cloData = window.programmeDataLoader.getCLOs(programmeCode, courseCode);
+                
+                // Display course info
+                const courseInfo = `${cloData.courseInfo.nameEn} (${cloData.courseInfo.code}) - ${cloData.courseInfo.credits} EAP`;
+                document.getElementById('course-info-display').value = courseInfo;
+                
+                // Create CLO checkboxes
+                const cloContainer = document.getElementById('clo-checkboxes');
+                cloContainer.innerHTML = '';
+                
+                const closEn = cloData.closEn;
+                Object.keys(closEn).forEach(cloKey => {
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.style.marginBottom = '8px';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `clo-${cloKey}`;
+                    checkbox.value = closEn[cloKey];
+                    checkbox.onchange = updateSelectedCLOs;
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `clo-${cloKey}`;
+                    label.style.marginLeft = '8px';
+                    label.style.cursor = 'pointer';
+                    label.textContent = `${cloKey}: ${closEn[cloKey]}`;
+                    
+                    checkboxDiv.appendChild(checkbox);
+                    checkboxDiv.appendChild(label);
+                    cloContainer.appendChild(checkboxDiv);
+                });
+                
+            } catch (error) {
+                console.error('Error loading course CLOs:', error);
+                alert('Error loading course CLOs: ' + error.message);
+            }
+        }
+
+        function loadSelectedCourseMlo() {
+            const programmeCode = document.getElementById('course-programme-select').value;
+            const mloIndex = document.getElementById('course-mlo-select').value;
+            
+            if (!programmeCode || !mloIndex) return;
+            
+            try {
+                const mlos = window.programmeDataLoader.getMLOs(programmeCode);
+                const selectedMlo = mlos[parseInt(mloIndex)];
+                document.getElementById('module-learning-outcomes').value = selectedMlo.mlosisuik;
+            } catch (error) {
+                console.error('Error loading course MLO:', error);
+            }
+        }
+
+        function updateSelectedCLOs() {
+            const selectedCLOs = [];
+            const checkboxes = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
+            
+            // Limit to 5 CLOs
+            if (checkboxes.length > 5) {
+                alert('Maximum 5 CLOs can be selected for optimal token efficiency.');
+                event.target.checked = false;
+                return;
+            }
+            
+            checkboxes.forEach(checkbox => {
+                selectedCLOs.push(checkbox.value);
+            });
+            
+            document.getElementById('course-learning-outcomes').value = selectedCLOs.join('\n\n');
+        }
+
+        function resetPloMloDropdowns() {
+            const ploSelect = document.getElementById('plo-select');
+            const mloSelect = document.getElementById('mlo-select');
+            const ploText = document.getElementById('plo-text');
+            const mloText = document.getElementById('mlo-text');
+            
+            if (ploSelect) ploSelect.innerHTML = '<option value="">Select a programme first...</option>';
+            if (mloSelect) mloSelect.innerHTML = '<option value="">Select a programme first...</option>';
+            if (ploText) ploText.value = '';
+            if (mloText) mloText.value = '';
+        }
+
+        // Enhanced Course Analysis functions for new dropdown structure
+        function populateCourseAnalysisDropdowns() {
+            console.log('Populating Course Analysis dropdowns...');
+            const programmes = window.programmeDataLoader.getProgrammes();
+            console.log('Available programmes:', programmes.length);
+            
+            const dropdown = document.getElementById('course-programme-select');
+            if (dropdown) {
+                dropdown.innerHTML = '<option value="">Select a Study Programme...</option>';
+                programmes.forEach(programme => {
+                    const option = document.createElement('option');
+                    option.value = programme.code;
+                    option.textContent = `${programme.code} - ${programme.nameEn}`;
+                    dropdown.appendChild(option);
+                });
+                console.log('Course Analysis programme dropdown populated');
+            }
+        }
+
+        function onCourseAnalysisProgrammeChange() {
+            const dropdown = document.getElementById('course-programme-select');
+            const selectedCode = dropdown ? dropdown.value : '';
+            
+            console.log('Course Analysis programme changed to:', selectedCode);
+            
+            // Reset course dropdown
+            const courseDropdown = document.getElementById('course-select');
+            if (courseDropdown) {
+                courseDropdown.innerHTML = '<option value="">Select a course...</option>';
+                if (selectedCode && selectedCode !== '') {
+                    try {
+                        const courses = window.programmeDataLoader.getCourses(selectedCode);
+                        courses.forEach(course => {
+                            const option = document.createElement('option');
+                            option.value = course.ainekood;
+                            option.textContent = `${course.ainekood} - ${course.ainenimetusik}`;
+                            courseDropdown.appendChild(option);
+                        });
+                    } catch (error) {
+                        console.error('Error loading courses:', error);
+                        courseDropdown.innerHTML = '<option value="">Error loading courses</option>';
+                    }
+                }
+            }
+            
+            // Reset MLO dropdown
+            const mloDropdown = document.getElementById('course-mlo-select');
+            if (mloDropdown) {
+                mloDropdown.innerHTML = '<option value="">Select a course first...</option>';
+            }
+            
+            // Reset CLO checkboxes
+            resetCLOCheckboxes();
+        }
+
+        function onCourseSelectionChange() {
+            const programmeDropdown = document.getElementById('course-programme-select');
+            const courseDropdown = document.getElementById('course-select');
+            
+            const selectedProgramme = programmeDropdown ? programmeDropdown.value : '';
+            const selectedCourse = courseDropdown ? courseDropdown.value : '';
+            
+            console.log('Course selection changed to:', selectedCourse);
+            
+            // Update MLO dropdown
+            const mloDropdown = document.getElementById('course-mlo-select');
+            if (mloDropdown) {
+                mloDropdown.innerHTML = '<option value="">Select an MLO...</option>';
+                if (selectedProgramme && selectedProgramme !== '' && selectedCourse && selectedCourse !== '') {
+                    try {
+                        const mlos = window.programmeDataLoader.getMLOs(selectedProgramme);
+                        mlos.forEach((mlo, index) => {
+                            const option = document.createElement('option');
+                            option.value = index;
+                            // Handle both string and object MLO formats
+                            const mloCode = typeof mlo === 'object' ? mlo.mlokood : `MLO${index + 1}`;
+                            const mloText = typeof mlo === 'string' ? mlo : (mlo.mlosisuik || mlo.toString());
+                            option.textContent = `${mloCode}: ${mloText.substring(0, 60)}...`;
+                            mloDropdown.appendChild(option);
+                        });
+                    } catch (error) {
+                        console.error('Error loading MLOs:', error);
+                        mloDropdown.innerHTML = '<option value="">Error loading MLOs</option>';
+                    }
+                }
+            }
+            
+            // Update CLO checkboxes
+            updateCLOCheckboxes(selectedProgramme, selectedCourse);
+        }
+
+        function updateCLOCheckboxes(programmeCode, courseCode) {
+            const container = document.getElementById('clo-checkboxes');
+            if (!container) return;
+            
+            if (!programmeCode || programmeCode === '' || !courseCode || courseCode === '') {
+                container.innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
+                return;
+            }
+            
+            try {
+                const cloData = window.programmeDataLoader.getCLOs(programmeCode, courseCode);
+                const clos = Object.values(cloData.closEn || {});
+                
+                if (clos.length === 0) {
+                    container.innerHTML = '<p style="color: #999;">No CLOs found for this course.</p>';
+                    return;
+                }
+                
+                container.innerHTML = '';
+                clos.forEach((clo, index) => {
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.style.marginBottom = '8px';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `clo-${index}`;
+                    checkbox.value = index;
+                    checkbox.onchange = updateSelectedCLOs;
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `clo-${index}`;
+                    label.style.marginLeft = '8px';
+                    label.style.cursor = 'pointer';
+                    label.textContent = `CLO ${index + 1}: ${clo.substring(0, 80)}${clo.length > 80 ? '...' : ''}`;
+                    
+                    checkboxDiv.appendChild(checkbox);
+                    checkboxDiv.appendChild(label);
+                    container.appendChild(checkboxDiv);
+                });
+            } catch (error) {
+                console.error('Error loading CLOs:', error);
+                container.innerHTML = '<p style="color: #ff6b6b;">Error loading CLOs for this course.</p>';
+            }
+        }
+
+        function resetCLOCheckboxes() {
+            const container = document.getElementById('clo-checkboxes');
+            if (container) {
+                container.innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
+            }
+            
+            const textarea = document.getElementById('course-learning-outcomes');
+            if (textarea) {
+                textarea.value = '';
+            }
+        }
+
+        function updateSelectedCLOs() {
+            const programmeDropdown = document.getElementById('course-programme-select');
+            const courseDropdown = document.getElementById('course-select');
+            const textarea = document.getElementById('course-learning-outcomes');
+            
+            if (!programmeDropdown || !courseDropdown || !textarea) return;
+            
+            const selectedProgramme = programmeDropdown.value;
+            const selectedCourse = courseDropdown.value;
+            
+            if (!selectedProgramme || selectedProgramme === '' || !selectedCourse || selectedCourse === '') return;
+            
+            try {
+                const cloData = window.programmeDataLoader.getCLOs(selectedProgramme, selectedCourse);
+                const clos = Object.values(cloData.closEn || {});
+                const selectedCLOs = [];
+                
+                // Get checked CLOs
+                const checkboxes = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
+                
+                // Limit to 5 CLOs
+                if (checkboxes.length > 5) {
+                    alert('Please select maximum 5 CLOs for optimal analysis.');
+                    // Uncheck the last checked item
+                    checkboxes[checkboxes.length - 1].checked = false;
+                    return;
+                }
+                
+                checkboxes.forEach(checkbox => {
+                    const index = parseInt(checkbox.value);
+                    if (index < clos.length) {
+                        selectedCLOs.push(`CLO ${index + 1}: ${clos[index]}`);
+                    }
+                });
+                
+                textarea.value = selectedCLOs.join('\n\n');
+            } catch (error) {
+                console.error('Error updating selected CLOs:', error);
+                textarea.value = 'Error loading selected CLOs';
+            }
+        }
+
+        function loadSelectedCourseMLO() {
+            const dropdown = document.getElementById('course-mlo-select');
+            const textarea = document.getElementById('module-learning-outcomes');
+            
+            if (!dropdown || !textarea) return;
+            
+            const selectedIndex = dropdown.value;
+            if (selectedIndex === '' || selectedIndex === undefined) {
+                textarea.value = '';
+                return;
+            }
+            
+            const programmeDropdown = document.getElementById('course-programme-select');
+            if (!programmeDropdown) return;
+            
+            const selectedProgramme = programmeDropdown.value;
+            if (!selectedProgramme || selectedProgramme === '') return;
+            
+            try {
+                const mlos = window.programmeDataLoader.getMLOs(selectedProgramme);
+                const selectedMLO = mlos[parseInt(selectedIndex)];
+                
+                if (selectedMLO) {
+                    // Handle both string and object MLO formats
+                    const mloCode = typeof selectedMLO === 'object' ? selectedMLO.mlokood : `MLO${parseInt(selectedIndex) + 1}`;
+                    const mloText = typeof selectedMLO === 'string' ? selectedMLO : (selectedMLO.mlosisuik || selectedMLO.toString());
+                    textarea.value = `${mloCode}: ${mloText}`;
+                }
+            } catch (error) {
+                console.error('Error loading selected MLO:', error);
+                textarea.value = 'Error loading MLO content';
+            }
+        }
+
+        // Token estimation functions
+        function estimateTokens(text) {
+            // Rough token estimation: ~1 token per 4 characters for English text
+            // This is an approximation as actual tokenization depends on the model
+            return Math.ceil(text.length / 4);
+        }
+
+        function updateTokenEstimation() {
+            try {
+                let totalInputTokens = 0;
+                const outputTokens = 2000; // Expected output tokens for analysis
+                
+                if (currentTab === 'plo-mlo') {
+                    // PLO-MLO tab estimation
+                    const programmeText = document.getElementById('programme-select')?.options[document.getElementById('programme-select')?.selectedIndex]?.text || '';
+                    const ploText = document.getElementById('plo-text')?.value || '';
+                    const mloText = document.getElementById('mlo-text')?.value || '';
+                    const customRequest = document.getElementById('custom-analysis-request')?.value || '';
+                    
+                    totalInputTokens = estimateTokens(programmeText + ploText + mloText + customRequest + 
+                        'PLO-MLO alignment analysis request with structured output format'); // Base prompt
+                    
+                } else if (currentTab === 'course') {
+                    // Course Analysis tab estimation
+                    const programmeText = document.getElementById('course-programme-select')?.options[document.getElementById('course-programme-select')?.selectedIndex]?.text || '';
+                    const courseText = document.getElementById('course-select')?.options[document.getElementById('course-select')?.selectedIndex]?.text || '';
+                    const mloText = document.getElementById('module-learning-outcomes')?.value || '';
+                    const cloText = document.getElementById('course-learning-outcomes')?.value || '';
+                    const customRequest = document.getElementById('course-custom-analysis-request')?.value || '';
+                    
+                    totalInputTokens = estimateTokens(programmeText + courseText + mloText + cloText + customRequest + 
+                        'Course analysis request with comprehensive evaluation format'); // Base prompt
+                        
+                } else {
+                    // Custom tab estimation
+                    const customPrompt = document.getElementById('custom-prompt')?.value || '';
+                    totalInputTokens = estimateTokens(customPrompt);
+                }
+                
+                const totalTokens = totalInputTokens + outputTokens;
+                
+                // Update display
+                const inputTokensElement = document.getElementById('input-tokens');
+                const outputTokensElement = document.getElementById('output-tokens');
+                const totalTokensElement = document.getElementById('total-tokens');
+                
+                if (inputTokensElement) inputTokensElement.textContent = totalInputTokens.toLocaleString();
+                if (outputTokensElement) outputTokensElement.textContent = `~${outputTokens.toLocaleString()}`;
+                if (totalTokensElement) totalTokensElement.textContent = `~${totalTokens.toLocaleString()}`;
+                
+            } catch (error) {
+                console.error('Error updating token estimation:', error);
+            }
+        }
+
+        function resetCourseDropdowns() {
+            document.getElementById('course-select').innerHTML = '<option value="">Select a programme first...</option>';
+            document.getElementById('course-mlo-select').innerHTML = '<option value="">Select a programme first...</option>';
+            document.getElementById('course-info-display').value = '';
+            document.getElementById('module-learning-outcomes').value = '';
+            document.getElementById('course-learning-outcomes').value = '';
+            document.getElementById('clo-checkboxes').innerHTML = '<p style="color: #666; font-style: italic;">Select a programme first...</p>';
+        }
     </script>
 </body>
 </html>

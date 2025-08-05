@@ -6,6 +6,20 @@ class SecureAPIConfig {
         this.apiKey = null;
         this.endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
         this.initialized = false;
+        
+        // Token usage tracking
+        this.tokenUsage = {
+            totalRequests: 0,
+            totalInputTokens: 0,
+            totalOutputTokens: 0,
+            totalTokens: 0,
+            requestHistory: [],
+            dailyLimit: 1500, // Conservative estimate for free tier
+            estimatedCostUSD: 0
+        };
+        
+        // Load usage data from localStorage
+        this.loadTokenUsage();
     }
 
     // Initialize API configuration
@@ -140,6 +154,7 @@ class SecureAPIConfig {
                 // Parse the error for more specific feedback
                 let errorMessage = `Gemini API error: ${response.status} ${response.statusText}`;
                 let isQuotaError = false;
+                let isRetryableError = false;
                 
                 try {
                     const errorData = JSON.parse(errorText);
@@ -151,9 +166,22 @@ class SecureAPIConfig {
                         isQuotaError = quotaKeywords.some(keyword => 
                             errorMessage.toLowerCase().includes(keyword)
                         );
+                        
+                        // Check for retryable errors (503 Service Unavailable, etc.)
+                        const retryableKeywords = ['overloaded', 'unavailable', 'try again later'];
+                        isRetryableError = response.status === 503 || 
+                                         retryableKeywords.some(keyword => 
+                                             errorMessage.toLowerCase().includes(keyword)
+                                         );
                     }
                 } catch (e) {
-                    // Fallback to generic error
+                    // If it's a 5xx error, assume retryable
+                    isRetryableError = response.status >= 500 && response.status < 600;
+                }
+                
+                // If it's a retryable error, provide helpful guidance
+                if (isRetryableError) {
+                    errorMessage += '\n\n💡 The Gemini API is temporarily overloaded. This usually resolves in a few moments. Try again shortly.';
                 }
                 
                 // If it's a quota error, provide helpful guidance
@@ -170,6 +198,14 @@ class SecureAPIConfig {
             
             if (data.candidates && data.candidates[0] && data.candidates[0].content) {
                 const result = data.candidates[0].content.parts[0].text;
+                
+                // Track token usage
+                const usageMetadata = data.usageMetadata;
+                this.updateTokenUsage(prompt, result, usageMetadata);
+                
+                // Show current usage status
+                this.showUsageStatus();
+                
                 console.log('✅ API call successful');
                 return result;
             } else {
@@ -185,6 +221,190 @@ class SecureAPIConfig {
     // Utility method to check if API is ready
     isReady() {
         return this.initialized && this.apiKey !== null;
+    }
+
+    // Token usage tracking methods
+    loadTokenUsage() {
+        try {
+            const saved = localStorage.getItem('gemini_token_usage');
+            if (saved) {
+                const data = JSON.parse(saved);
+                // Reset daily usage if it's a new day
+                const today = new Date().toDateString();
+                const lastUsageDate = data.lastUsageDate || '';
+                
+                if (lastUsageDate !== today) {
+                    // Reset daily counters
+                    data.dailyRequests = 0;
+                    data.dailyTokens = 0;
+                    data.lastUsageDate = today;
+                }
+                
+                this.tokenUsage = { ...this.tokenUsage, ...data };
+            }
+        } catch (error) {
+            console.warn('Failed to load token usage data:', error);
+        }
+    }
+
+    saveTokenUsage() {
+        try {
+            this.tokenUsage.lastUsageDate = new Date().toDateString();
+            localStorage.setItem('gemini_token_usage', JSON.stringify(this.tokenUsage));
+        } catch (error) {
+            console.warn('Failed to save token usage data:', error);
+        }
+    }
+
+    estimateTokens(text) {
+        // Rough estimation: ~4 characters per token for English text
+        return Math.ceil(text.length / 4);
+    }
+
+    updateTokenUsage(inputText, outputText, actualUsage = null) {
+        const inputTokens = actualUsage?.promptTokenCount || this.estimateTokens(inputText);
+        const outputTokens = actualUsage?.candidatesTokenCount || this.estimateTokens(outputText);
+        const totalTokens = inputTokens + outputTokens;
+
+        this.tokenUsage.totalRequests++;
+        this.tokenUsage.totalInputTokens += inputTokens;
+        this.tokenUsage.totalOutputTokens += outputTokens;
+        this.tokenUsage.totalTokens += totalTokens;
+        
+        // Daily tracking
+        this.tokenUsage.dailyRequests = (this.tokenUsage.dailyRequests || 0) + 1;
+        this.tokenUsage.dailyTokens = (this.tokenUsage.dailyTokens || 0) + totalTokens;
+
+        // Cost estimation (Gemini 1.5 Flash pricing)
+        const inputCost = (inputTokens / 1000000) * 0.075; // $0.075 per 1M input tokens
+        const outputCost = (outputTokens / 1000000) * 0.30; // $0.30 per 1M output tokens
+        this.tokenUsage.estimatedCostUSD += inputCost + outputCost;
+
+        // Add to request history (keep last 50)
+        this.tokenUsage.requestHistory.unshift({
+            timestamp: new Date().toISOString(),
+            inputTokens,
+            outputTokens,
+            totalTokens,
+            cost: inputCost + outputCost
+        });
+        
+        if (this.tokenUsage.requestHistory.length > 50) {
+            this.tokenUsage.requestHistory = this.tokenUsage.requestHistory.slice(0, 50);
+        }
+
+        this.saveTokenUsage();
+        
+        // Log usage info
+        console.log(`📊 Token Usage - Input: ${inputTokens}, Output: ${outputTokens}, Total: ${totalTokens}`);
+        console.log(`💰 Estimated cost: $${(inputCost + outputCost).toFixed(6)}, Total: $${this.tokenUsage.estimatedCostUSD.toFixed(4)}`);
+        console.log(`📈 Daily usage: ${this.tokenUsage.dailyTokens}/${this.tokenUsage.dailyLimit} tokens`);
+    }
+
+    getUsageStats() {
+        const remainingDaily = Math.max(0, this.tokenUsage.dailyLimit - (this.tokenUsage.dailyTokens || 0));
+        const usagePercentage = ((this.tokenUsage.dailyTokens || 0) / this.tokenUsage.dailyLimit * 100).toFixed(1);
+        
+        return {
+            ...this.tokenUsage,
+            remainingDaily,
+            usagePercentage,
+            isNearLimit: usagePercentage > 80,
+            isOverLimit: usagePercentage >= 100
+        };
+    }
+
+    showUsageStatus() {
+        const stats = this.getUsageStats();
+        
+        console.group('📊 Gemini API Usage Statistics');
+        console.log(`Daily Usage: ${stats.dailyTokens}/${stats.dailyLimit} tokens (${stats.usagePercentage}%)`);
+        console.log(`Remaining Today: ${stats.remainingDaily} tokens`);
+        console.log(`Total Requests: ${stats.totalRequests}`);
+        console.log(`Total Tokens Used: ${stats.totalTokens.toLocaleString()}`);
+        console.log(`Estimated Cost: $${stats.estimatedCostUSD.toFixed(4)}`);
+        
+        if (stats.isNearLimit) {
+            console.warn('⚠️ Approaching daily limit!');
+        }
+        if (stats.isOverLimit) {
+            console.error('🚫 Daily limit exceeded!');
+        }
+        console.groupEnd();
+        
+        // Trigger UI update if function exists
+        if (typeof window.updateTokenUsageDisplay === 'function') {
+            window.updateTokenUsageDisplay();
+        }
+        
+        // Show user-friendly warnings
+        this.showUserWarnings(stats);
+        
+        return stats;
+    }
+
+    showUserWarnings(stats) {
+        if (stats.isOverLimit) {
+            // Show error notification
+            this.showNotification('🚫 Daily token limit exceeded! Please try again tomorrow or upgrade your plan.', 'error');
+        } else if (stats.isNearLimit) {
+            // Show warning notification
+            this.showNotification(`⚠️ Approaching daily limit: ${stats.dailyTokens}/${stats.dailyLimit} tokens used (${stats.usagePercentage}%)`, 'warning');
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        // Create or update notification
+        let notification = document.getElementById('token-notification');
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'token-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 16px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transition: all 0.3s ease;
+            `;
+            document.body.appendChild(notification);
+        }
+
+        // Set message and style based on type
+        notification.textContent = message;
+        
+        switch (type) {
+            case 'error':
+                notification.style.background = '#dc3545';
+                break;
+            case 'warning':
+                notification.style.background = '#ffc107';
+                notification.style.color = '#000';
+                break;
+            case 'success':
+                notification.style.background = '#28a745';
+                break;
+            default:
+                notification.style.background = '#007bff';
+        }
+
+        // Auto-hide after 5 seconds
+        clearTimeout(this.notificationTimeout);
+        this.notificationTimeout = setTimeout(() => {
+            if (notification && notification.parentNode) {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (notification && notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }, 5000);
     }
 }
 
