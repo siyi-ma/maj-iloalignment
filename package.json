@@ -1,0 +1,25 @@
+{
+  "name": "maj-iloalignment",
+  "version": "1.0.0",
+  "description": "CLO-MLO Alignment Analysis Tool for TalTech",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "test": "echo \"No tests specified yet\"",
+    "lint": "echo \"No linting configured yet\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siyi-ma/maj-iloalignment.git"
+  },
+  "keywords": [
+    "education",
+    "clo",
+    "mlo",
+    "alignment",
+    "analysis",
+    "taltech"
+  ],
+  "author": "Academic Analytics Team",
+  "license": "MIT"
+}
