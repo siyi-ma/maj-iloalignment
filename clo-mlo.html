@@ -1629,6 +1629,278 @@
         padding: 1rem;
     }
 }
+
+/* PLO-MLO Style Analysis Section */
+.analysis-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--tt-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+    border: 1px solid var(--tt-grey-2);
+}
+
+.analysis-section h4 {
+    color: var(--tt-burgundy);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    border-bottom: 2px solid var(--tt-burgundy);
+    padding-bottom: 0.5rem;
+}
+
+/* Score Distribution Chart */
+.score-distribution-chart {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--tt-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+}
+
+.chart-container {
+    display: flex;
+    align-items: end;
+    height: 200px;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 10px 0;
+    border-bottom: 2px solid var(--tt-grey-2);
+}
+
+.chart-bar {
+    flex: 1;
+    min-height: 20px;
+    background: linear-gradient(to top, var(--tt-burgundy), var(--tt-magenta));
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    transition: all 0.3s ease;
+    color: var(--tt-white);
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.chart-bar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(170, 19, 82, 0.3);
+}
+
+.chart-labels {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.chart-label {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    color: var(--tt-burgundy);
+}
+
+/* Detailed Analysis Table */
+.detailed-analysis-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.detailed-analysis-table th,
+.detailed-analysis-table td {
+    border: 1px solid var(--tt-grey-2);
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.detailed-analysis-table th {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    font-weight: bold;
+    text-align: center;
+}
+
+.detailed-analysis-table .mlo-group-header {
+    background: var(--tt-grey-2);
+    color: var(--tt-dark-blue);
+    font-weight: bold;
+    text-align: center;
+}
+
+.score-1 { background-color: #ffcdd2; text-align: center; }
+.score-2 { background-color: #ffecb3; text-align: center; }
+.score-3 { background-color: #fff9c4; text-align: center; }
+.score-4 { background-color: #c8e6c9; text-align: center; }
+.score-5 { background-color: #a5d6a7; text-align: center; }
+
+.improvement-suggestions {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.improvement-suggestions h5 {
+    color: var(--tt-burgundy);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.improvement-suggestions ul {
+    margin-left: 1rem;
+    margin-bottom: 0;
+}
+
+.improvement-suggestions li {
+    margin-bottom: 0.25rem;
+}
+
+/* Alignment Insights */
+.alignment-insights {
+    background: #f8f9fa;
+    border: 1px solid var(--tt-grey-2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.alignment-insights h3 {
+    color: var(--tt-burgundy);
+    margin-bottom: 1rem;
+}
+
+.alignment-insights ul {
+    list-style: none;
+    padding: 0;
+}
+
+.alignment-insights li {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: var(--tt-white);
+    border-radius: 6px;
+    border-left: 4px solid var(--tt-magenta);
+}
+
+.alignment-insights strong {
+    color: var(--tt-dark-blue);
+}
+
+/* PDF Preview Modal */
+.pdf-preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.pdf-preview-content {
+    background: var(--tt-white);
+    border-radius: 12px;
+    width: 90%;
+    height: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.pdf-preview-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--tt-grey-2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    border-radius: 12px 12px 0 0;
+}
+
+.pdf-preview-header h3 {
+    margin: 0;
+    color: var(--tt-white);
+}
+
+.pdf-preview-close {
+    background: none;
+    border: none;
+    color: var(--tt-white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.pdf-preview-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.pdf-preview-body {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+}
+
+.pdf-preview-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.pdf-preview-actions {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--tt-grey-2);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+}
+
+.pdf-action-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pdf-save-btn {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+}
+
+.pdf-save-btn:hover {
+    background: var(--tt-magenta);
+    transform: translateY(-1px);
+}
+
+.pdf-cancel-btn {
+    background: var(--tt-grey-2);
+    color: var(--tt-dark-blue);
+}
+
+.pdf-cancel-btn:hover {
+    background: var(--tt-grey-1);
+    transform: translateY(-1px);
+}
     </style>
 </head>
 <body>
@@ -1659,7 +1931,7 @@
             </section>
             <!-- New Course Button (hidden by default, shown after selection) -->
             <div id="new-course-btn-container" class="form-actions" style="display:none; justify-content:flex-end;">
-                <button id="new-course-btn" class="btn btn-secondary"><i class="fas fa-plus"></i> New Course</button>
+                <button id="new-course-btn" class="btn btn-secondary"><i class="fas fa-plus"></i> Start Another Course</button>
             </div>
 
             <!-- Course Information Section -->
@@ -1710,13 +1982,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="info-card full-width">
-                    <h4>Existing Course Learning Outcomes (CLOs)</h4>
-                    <div id="info-existing-clos" class="existing-clos-content">
-                        Select a course to view CLOs...
-                    </div>
-                </div>
             </section>
 
             <!-- CLO Management Section -->
@@ -1728,6 +1993,17 @@
                 </div>
                 <div id="module-content-list" style="display:block; margin-top:1rem;"></div>
             </section>
+
+            <!-- Existing Course Learning Outcomes Section -->
+            <section id="existing-clos-section" class="hidden">
+                <h2><i class="fas fa-list-check"></i> Existing Course Learning Outcomes</h2>
+                <div class="info-card full-width">
+                    <div id="info-existing-clos" class="existing-clos-content">
+                        Select a course to view CLOs...
+                    </div>
+                </div>
+            </section>
+
             <section id="clo-management-section" class="hidden">
                 <h2><i class="fas fa-cogs"></i> CLO Management</h2>
                 
@@ -1813,99 +2089,43 @@
             <!-- Analysis Results Section -->
             <section id="analysis-results-section" class="content-section hidden">
                 <div class="section-header">
-                    <h3>CLO-MLO Alignment Analysis</h3>
-                    <p class="section-description">Analysis results showing how well course learning outcomes align with module learning outcomes.</p>
-                </div>
-
-                <div class="analysis-controls">
-                    <div class="control-group">
-                        <button id="preview-report-btn" class="btn btn-primary">
-                            <i class="fas fa-file-alt"></i> Preview Report
-                        </button>
-                    </div>
-                </div>
-
-                <div id="alignment-summary" class="alignment-summary">
-                    <!-- Summary statistics will be populated here -->
-                </div>
-
-                <div id="alignment-matrix-container" class="matrix-container">
-                    <!-- Alignment matrix will be populated here -->
-                </div>
-
-                <!-- Score Distribution Chart -->
-                <div id="score-distribution-chart-container" class="matrix-container" style="margin-top:2rem;">
-                    <h4>Score Distribution</h4>
-                    <canvas id="score-distribution-chart" height="120"></canvas>
-                </div>
-
-                <div class="result-actions">
-                    <button id="back-to-clo-management" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to CLO Management
-                    </button>
-                </div>
-            </section>
-            <section id="analysis-results-section" class="hidden">
-                <h3><i class="fas fa-chart-bar"></i> CLO-MLO Alignment Analysis</h3>
-                
-                <!-- Summary Statistics -->
-                <div id="analysis-summary" class="analysis-summary">
-                    <div class="summary-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Average Score</span>
-                            <span id="average-score" class="stat-value">0.0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Strong Alignments</span>
-                            <span id="strong-alignments" class="stat-value">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Coverage</span>
-                            <span id="coverage-score" class="stat-value">0%</span>
+                    <h3><i class="fas fa-chart-bar"></i> CLO-MLO Alignment Analysis Results</h3>
+                    <p class="section-description">Comprehensive analysis showing how well course learning outcomes align with module learning outcomes.</p>
+                    
+                    <div class="analysis-controls">
+                        <div class="control-group">
+                            <button id="download-report-btn" class="btn btn-primary">
+                                <i class="fas fa-file-pdf"></i> Download CLO-MLO Report
+                            </button>
+                            <button id="back-to-clo-management" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to CLO Management
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Alignment Matrix -->
-                <div class="matrix-container">
-                    <h4>Alignment Matrix</h4>
-                    <div class="matrix-controls">
-                        <button id="toggle-clo-scores" class="btn btn-secondary">Toggle Scores</button>
-                        <button id="export-clo-btn" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Export CSV
-                        </button>
-                    </div>
-                    <table id="clo-alignment-matrix" class="alignment-matrix">
-                        <thead>
-                            <tr>
-                                <th>CLO/MLO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Legend -->
-                <div class="legend">
-                    <h4>Scoring Legend (Advanced Methodology)</h4>
-                    <div class="legend-items">
-                        <span class="legend-item score-5">5 - Excellent: Full, direct, and explicit alignment in all dimensions</span>
-                        <span class="legend-item score-4">4 - Very Strong: Strong alignment, minor gaps, nearly full match</span>
-                        <span class="legend-item score-3">3 - Moderate: Partial alignment, some key elements present</span>
-                        <span class="legend-item score-2">2 - Weak: Minimal alignment, only a few elements match</span>
-                        <span class="legend-item score-1">1 - Very Weak: Barely any alignment, mostly unrelated</span>
-                        <span class="legend-item score-0">0 - No Alignment: No meaningful connection</span>
+                <!-- Summary Section -->
+                <div id="summary-section" class="analysis-section">
+                    <h4><i class="fas fa-chart-pie"></i> Analysis Summary</h4>
+                    <div id="summary-content" class="summary-content">
+                        <!-- Summary statistics and charts will be populated here -->
                     </div>
                 </div>
 
-                <div class="form-actions">
-                    <button id="analyze-alignment-btn" class="btn btn-primary">
-                        <i class="fas fa-chart-line"></i> Analyze Alignment
-                    </button>
-                    <button id="back-to-clo-management" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to CLO Management
-                    </button>
+                <!-- Detailed Analysis Section -->
+                <div id="detailed-analysis-section" class="analysis-section">
+                    <h4><i class="fas fa-table"></i> Detailed Analysis by MLO</h4>
+                    <div id="detailed-analysis-content" class="detailed-content">
+                        <!-- Detailed analysis grouped by MLO will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Alignment Matrix Section -->
+                <div id="matrix-section" class="analysis-section">
+                    <h4><i class="fas fa-th"></i> Alignment Matrix</h4>
+                    <div id="alignment-matrix-container" class="matrix-container">
+                        <!-- Alignment matrix will be populated here -->
+                    </div>
                 </div>
             </section>
 
@@ -2020,7 +2240,7 @@
     <script src="js/secure-api-config.js"></script>
     <script src="js/enhanced-ai-features.js"></script>
     <script src="js/alignment-engine.js"></script>
-    <script src="js/clo-mlo.js"></script>
+    <script src="js/clo-mlo.js?v=2.0"></script>
     
     <script>
         // Open AI Assistant in new window/tab
@@ -2059,6 +2279,7 @@
                 const courseSection = document.getElementById('course-selection-section');
                 const infoSection = document.getElementById('course-information-section');
                 const moduleSection = document.getElementById('module-content-section');
+                const existingCLOsSection = document.getElementById('existing-clos-section');
                 const cloSection = document.getElementById('clo-management-section');
                 const newCourseBtnContainer = document.getElementById('new-course-btn-container');
                 const newCourseBtn = document.getElementById('new-course-btn');
@@ -2068,12 +2289,15 @@
                             courseSection.style.display = 'none';
                             infoSection.classList.remove('hidden');
                             moduleSection.classList.remove('hidden');
+                            existingCLOsSection.classList.remove('hidden');
                             cloSection.classList.remove('hidden');
                             newCourseBtnContainer.style.display = 'flex';
                         } else {
                             courseSection.style.display = '';
                             infoSection.classList.add('hidden');
                             moduleSection.classList.add('hidden');
+                            existingCLOsSection.classList.add('hidden');
+                            existingCLOsSection.classList.add('hidden');
                             cloSection.classList.add('hidden');
                             newCourseBtnContainer.style.display = 'none';
                         }
@@ -2085,6 +2309,7 @@
                         courseSection.style.display = '';
                         infoSection.classList.add('hidden');
                         moduleSection.classList.add('hidden');
+                        existingCLOsSection.classList.add('hidden');
                         cloSection.classList.add('hidden');
                         newCourseBtnContainer.style.display = 'none';
                     };
@@ -2125,6 +2350,29 @@
     <!-- Floating home button (single instance, fixed) -->
     <div class="floating-home" id="floating-home" title="Return to Home">
         <i class="fas fa-home"></i>
+    </div>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdf-preview-modal" class="pdf-preview-modal">
+        <div class="pdf-preview-content">
+            <div class="pdf-preview-header">
+                <h3><i class="fas fa-file-pdf"></i> CLO-MLO Analysis Report Preview</h3>
+                <button class="pdf-preview-close" onclick="closePdfPreview()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="pdf-preview-body">
+                <iframe id="pdf-preview-iframe" class="pdf-preview-iframe"></iframe>
+            </div>
+            <div class="pdf-preview-actions">
+                <button class="pdf-action-btn pdf-cancel-btn" onclick="closePdfPreview()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="pdf-action-btn pdf-save-btn" onclick="savePdfReport()">
+                    <i class="fas fa-download"></i> Save as PDF
+                </button>
+            </div>
+        </div>
     </div>
 
 </body>
