@@ -1,0 +1,125 @@
+/* 
+ * Standardized Score Color System
+ * TalTech ILO Alignment Analysis Methodology
+ * Consistent across all HTML files
+ */
+
+:root {
+    /* Score Color Variables */
+    --score-poor: #dc3545;        /* Poor (1.0-1.4) - Red */
+    --score-weak: #fd7e14;        /* Weak (1.5-2.4) - Orange */
+    --score-moderate: #ffc107;    /* Moderate (2.5-3.4) - Yellow */
+    --score-good: #28a745;        /* Good (3.5-4.4) - Green */
+    --score-excellent: #007bff;   /* Excellent (4.5-5.0) - Blue */
+    
+    /* Score Background Colors (lighter versions) */
+    --score-poor-bg: #ffebee;
+    --score-weak-bg: #fff3e0;
+    --score-moderate-bg: #fff9c4;
+    --score-good-bg: #e8f5e8;
+    --score-excellent-bg: #e3f2fd;
+}
+
+/* Score Classes for Data Display */
+.score-1 { 
+    background-color: var(--score-poor-bg); 
+    color: var(--score-poor); 
+}
+
+.score-2 { 
+    background-color: var(--score-weak-bg); 
+    color: var(--score-weak); 
+}
+
+.score-3 { 
+    background-color: var(--score-moderate-bg); 
+    color: var(--score-moderate); 
+}
+
+.score-4 { 
+    background-color: var(--score-good-bg); 
+    color: var(--score-good); 
+}
+
+.score-5 { 
+    background-color: var(--score-excellent-bg); 
+    color: var(--score-excellent); 
+}
+
+/* Legend Score Classes */
+.legend-score-1 { 
+    background-color: var(--score-poor-bg); 
+    color: var(--score-poor); 
+}
+
+.legend-score-2 { 
+    background-color: var(--score-weak-bg); 
+    color: var(--score-weak); 
+}
+
+.legend-score-3 { 
+    background-color: var(--score-moderate-bg); 
+    color: var(--score-moderate); 
+}
+
+.legend-score-4 { 
+    background-color: var(--score-good-bg); 
+    color: var(--score-good); 
+}
+
+.legend-score-5 { 
+    background-color: var(--score-excellent-bg); 
+    color: var(--score-excellent); 
+}
+
+/* Text-only color classes */
+.text-score-poor { color: var(--score-poor); }
+.text-score-weak { color: var(--score-weak); }
+.text-score-moderate { color: var(--score-moderate); }
+.text-score-good { color: var(--score-good); }
+.text-score-excellent { color: var(--score-excellent); }
+
+/* Badge classes for inline score indicators */
+.score-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+}
+
+.score-badge-1 { 
+    background-color: var(--score-poor); 
+    color: white; 
+}
+
+.score-badge-2 { 
+    background-color: var(--score-weak); 
+    color: white; 
+}
+
+.score-badge-3 { 
+    background-color: var(--score-moderate); 
+    color: black; 
+}
+
+.score-badge-4 { 
+    background-color: var(--score-good); 
+    color: white; 
+}
+
+.score-badge-5 { 
+    background-color: var(--score-excellent); 
+    color: white; 
+}
+
+/* Progress bar colors */
+.progress-bar-poor { background-color: var(--score-poor); }
+.progress-bar-weak { background-color: var(--score-weak); }
+.progress-bar-moderate { background-color: var(--score-moderate); }
+.progress-bar-good { background-color: var(--score-good); }
+.progress-bar-excellent { background-color: var(--score-excellent); }

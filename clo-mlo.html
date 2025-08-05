@@ -81,43 +81,48 @@
             text-transform: none;
             margin-bottom: 0.5rem;
         }
-
-        /* AI Assistant Section */
-        .ai-assistant-section {
-            text-align: center;
-            margin: 1.5rem 0;
-            padding: 1rem;
-            background: linear-gradient(135deg, rgba(170, 19, 82, 0.05), rgba(228, 6, 126, 0.05));
-            border-radius: 8px;
-            border: 1px solid var(--tt-grey-2);
+        
+        /* Header Links Positioning */
+        .header-links {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
-
-        .ai-assistant-btn {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+        
+        /* Methodology and Home Link Buttons */
+        .methodology-link-btn, .home-link-btn {
+            background: rgba(255, 255, 255, 0.2);
             color: var(--tt-white);
-            padding: 0.8rem 2rem;
+            padding: 10px 20px;
             border-radius: 25px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        .ai-assistant-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
-            background: linear-gradient(135deg, var(--tt-magenta), var(--tt-burgundy));
-        }
-
-        .ai-assistant-btn i {
-            font-size: 1.1rem;
+            gap: 8px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
         }
         
+        .methodology-link-btn:hover, .home-link-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: var(--tt-white);
+            text-decoration: none;
+        }
+        
+        .methodology-link-btn i, .home-link-btn i {
+            font-size: 16px;
+        }
+
+        /* Header controls and navigation */
         .header-controls {
             display: flex;
             gap: 1rem;
@@ -605,61 +610,7 @@
             box-shadow: 0 4px 8px rgba(170, 19, 82, 0.3);
         }
 
-        /* AI Enhancement Styles */
-        .ai-badge {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
-            font-weight: bold;
-            margin-left: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
 
-        .ai-model-info {
-            display: block;
-            color: var(--tt-grey-1);
-            font-style: italic;
-            margin-top: 0.3rem;
-            font-size: 0.8rem;
-        }
-
-        .ai-enhanced-btn {
-            background: linear-gradient(135deg, #6a4c93, #9d50bb);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ai-enhanced-btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .ai-enhanced-btn:hover:before {
-            left: 100%;
-        }
-
-        #ai-generate-clos {
-            border: 2px solid #6a4c93;
-            background: linear-gradient(135deg, rgba(106, 76, 147, 0.05), rgba(157, 80, 187, 0.05));
-        }
-
-        #ai-generate-clos:hover {
-            border-color: #9d50bb;
-            box-shadow: 0 4px 15px rgba(106, 76, 147, 0.3);
-        }
-
-        #ai-generate-clos .option-icon {
-            color: #6a4c93;
-        }
 
         /* CLO Editor */
         .clo-editor-item {
@@ -2537,6 +2488,16 @@
 
         <!-- Page Header -->
         <header class="page-header">
+            <div class="header-links">
+                <a href="methodology.html" class="methodology-link-btn" target="_blank">
+                    <i class="fas fa-book"></i>
+                    View Methodology
+                </a>
+                <a href="index.html" class="home-link-btn">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
             <h1 id="page-title"><i class="fas fa-clipboard-list"></i> CLO-MLO Alignment</h1>
             <p>Course Learning Outcomes to Module Learning Outcomes Analysis</p>
         </header>
@@ -2599,13 +2560,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- AI Assistant Button -->
-        <div class="ai-assistant-section">
-            <button id="ai-assistant-btn" class="ai-assistant-btn" onclick="openAIAssistant()" title="Open AI Assistant for custom prompts and analysis">
-                <i class="fas fa-robot"></i> AI Assistant
-            </button>
-        </div>
 
         <main>
             <!-- Course Selection Section -->
@@ -2719,17 +2673,6 @@
                         <button class="option-btn">Manual Entry</button>
                     </div>
 
-                    <div class="option-card" id="ai-generate-clos">
-                        <div class="option-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="option-content">
-                            <h3>AI Generation <span class="ai-badge">Enhanced</span></h3>
-                            <p>Generate contextual CLOs using course data and programme alignment</p>
-                            <small class="ai-model-info">Powered by Gemini 1.5 Flash</small>
-                        </div>
-                        <button class="option-btn ai-enhanced-btn">Generate with AI</button>
-                    </div>
                 </div>
             </section>
 
@@ -2923,26 +2866,11 @@
     <script src="js/data-manager.js"></script>
     <script src="js/personal-api-config.js"></script>
     <script src="js/secure-api-config.js"></script>
-    <script src="js/enhanced-ai-features.js"></script>
+    <script src="js/enhanced-alignment-engine.js"></script>
     <script src="js/alignment-engine.js"></script>
     <script src="js/clo-mlo.js?v=2.0"></script>
     
     <script>
-        // Open AI Assistant in new window/tab
-        function openAIAssistant() {
-            // Open AI Assistant with context from current page
-            const currentContext = {
-                page: 'CLO-MLO Alignment',
-                language: 'english' // You can make this dynamic if needed
-            };
-            
-            // Store context for AI assistant
-            sessionStorage.setItem('aiAssistantContext', JSON.stringify(currentContext));
-            
-            // Open in new tab
-            window.open('ai-assistant.html', '_blank');
-        }
-
         // Initialize page and workflow enhancements
         document.addEventListener('DOMContentLoaded', async function() {
             try {

@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILO Alignment Analysis Methodology | TalTech</title>
+    
+    <!-- TalTech CVI Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* TalTech CVI Color Palette - Simplified */
+        :root {
+            --tt-primary: #aa1352;        /* Primary - KIRSIPUNANE */
+            --tt-secondary: #342b60;      /* Secondary - TUMESININE */
+            --tt-light-grey: #f8f9fa;     /* Light background */
+            --tt-medium-grey: #e9ecef;    /* Medium background */
+            --tt-text: #212529;           /* Text color */
+            --tt-white: #ffffff;          /* VALGE */
+            
+            /* Standardized Score Colors */
+            --score-poor: #dc3545;        /* Poor (1.0-1.4) - Red */
+            --score-weak: #fd7e14;        /* Weak (1.5-2.4) - Orange */
+            --score-moderate: #ffc107;    /* Moderate (2.5-3.4) - Yellow */
+            --score-good: #28a745;        /* Good (3.5-4.4) - Green */
+            --score-excellent: #007bff;   /* Excellent (4.5-5.0) - Blue */
+        }
+        
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Proxima Nova', Verdana, sans-serif;
+            background-color: var(--tt-white);
+            color: var(--tt-text);
+            line-height: 1.6;
+            letter-spacing: -0.02em;
+        }
+        
+        /* Typography following CVI rules */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Proxima Nova', Verdana, sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--tt-secondary);
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+        
+        h1 { font-size: 2.5rem; color: var(--tt-primary); }
+        h2 { font-size: 2rem; color: var(--tt-secondary); }
+        h3 { font-size: 1.5rem; color: var(--tt-primary); }
+        h4 { font-size: 1.25rem; color: var(--tt-secondary); }
+        
+        .methodology-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Header with TalTech gradient */
+        .methodology-header {
+            background: linear-gradient(135deg, var(--tt-primary) 50%, var(--tt-secondary) 100%);
+            color: var(--tt-white);
+            padding: 40px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.2);
+        }
+        
+        .methodology-header h1 {
+            color: var(--tt-white);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        
+        .methodology-header p {
+            color: var(--tt-light-grey);
+            text-transform: none;
+            font-size: 1.1rem;
+        }
+        
+        /* Navigation with TalTech styling - Horizontal Layout */
+        .methodology-nav {
+            background: var(--tt-light-grey);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-primary);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .methodology-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .methodology-nav a {
+            color: var(--tt-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .methodology-nav a:hover, .methodology-nav a.active {
+            background: var(--tt-primary);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-primary);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+        
+        /* Section styling */
+        .section {
+            background: var(--tt-white);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(170, 19, 82, 0.1);
+            border-left: 4px solid var(--tt-primary);
+        }
+        
+        .component-card {
+            background: var(--tt-light-grey);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid var(--tt-secondary);
+        }
+        
+        .formula-box {
+            background: var(--tt-secondary);
+            color: var(--tt-white);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .example-box {
+            background: var(--tt-light-grey);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--tt-primary);
+            margin: 15px 0;
+        }
+        
+        .reference-item {
+            background: var(--tt-white);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 3px solid var(--tt-primary);
+            box-shadow: 0 1px 3px rgba(170, 19, 82, 0.1);
+        }
+        
+        .reference-item a {
+            color: var(--tt-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .reference-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .ai-reference-box {
+            background: linear-gradient(135deg, rgba(170, 19, 82, 0.1), rgba(52, 43, 96, 0.1));
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--tt-primary);
+        }
+        
+        /* Up Caret Button */
+        .up-caret {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--tt-primary);
+            color: var(--tt-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+            transition: all 0.3s ease;
+            z-index: 999;
+            border: none;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .up-caret.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .up-caret:hover {
+            background: var(--tt-secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(52, 43, 96, 0.4);
+        }
+        
+        /* Go Back to Analysis Button */
+        .back-to-analysis {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--tt-secondary);
+            color: var(--tt-white);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .back-to-analysis:hover {
+            background: var(--tt-dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 43, 96, 0.4);
+            color: var(--tt-white);
+        }
+        
+        .back-to-analysis i {
+            font-size: 1rem;
+        }
+        
+        /* Keywords highlighting styles */
+        .keyword-highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .calculation-step {
+            background: var(--tt-light-grey);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 3px solid var(--tt-secondary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .component-score {
+            background: var(--tt-white);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--tt-light-grey);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .methodology-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .methodology-container {
+                padding: 10px;
+            }
+            
+            .back-to-analysis {
+                bottom: 20px;
+                left: 20px;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+            
+            .up-caret {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="methodology-container">
+        <!-- Go Back to Analysis Button -->
+        <a href="plo-mlo.html" class="back-to-analysis">
+            <i class="fas fa-arrow-left"></i>
+            Back to Analysis
+        </a>
+        
+        <!-- Up Caret Button -->
+        <button class="up-caret" id="up-caret" onclick="scrollToTop()">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+
+        <!-- Page Header -->
+        <header class="methodology-header">
+            <h1><i class="fas fa-microscope"></i> ILO Alignment Analysis Methodology</h1>
+            <p>Comprehensive Framework for Programme and Module Learning Outcome Alignment Assessment</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="methodology-nav">
+            <ul>
+                <li><a href="#overview"><i class="fas fa-eye"></i> Overview</a></li>
+                <li><a href="#mathematical-framework"><i class="fas fa-calculator"></i> Mathematical Framework</a></li>
+                <li><a href="#component-analysis"><i class="fas fa-cogs"></i> Component Analysis</a></li>
+                <li><a href="#calculation-methods"><i class="fas fa-chart-line"></i> Calculation Methods</a></li>
+                <li><a href="#improvement-suggestions"><i class="fas fa-lightbulb"></i> Improvement Suggestions</a></li>
+                <li><a href="#validation-examples"><i class="fas fa-check-circle"></i> Validation Examples</a></li>
+                <li><a href="#academic-references"><i class="fas fa-book"></i> Academic References</a></li>
+                <li><a href="#ai-guidance"><i class="fas fa-robot"></i> AI Guidance</a></li>
+            </ul>
+        </nav>
+
+        <!-- Overview Section -->
+        <section id="overview" class="section">
+            <h2><i class="fas fa-eye"></i> Overview</h2>
+            <p>
+                The Enhanced ILO Alignment Analysis methodology provides a <strong>transparent, data-driven approach</strong> 
+                to evaluating how well Module Learning Outcomes (MLOs) align with Programme Learning Outcomes (PLOs). 
+                The system combines five research-based analytical dimensions to produce quantifiable alignment scores 
+                with detailed justifications.
+            </p>
+            
+            <div class="formula-box">
+Final Score (1.0-5.0) = Weighted Sum of:
+├── Semantic Similarity     × 35%  [0-5.0 scale]
+├── Competency Alignment    × 25%  [0-5.0 scale]  
+├── Cognitive Progression   × 20%  [0-5.0 scale]
+├── Contextual Relevance    × 15%  [0-5.0 scale]
+└── Learning Progression    × 5%   [0-5.0 scale]
+            </div>
+
+            <h3><i class="fas fa-star"></i> Quality Thresholds</h3>
+            <div class="component-card">
+                <ul style="list-style: none; padding: 0;">
+                    <li><strong style="color: var(--score-poor);">Poor (1.0-1.4):</strong> Fundamental restructuring needed</li>
+                    <li><strong style="color: var(--score-weak);">Weak (1.5-2.4):</strong> Significant enhancement required</li>
+                    <li><strong style="color: var(--score-moderate);">Moderate (2.5-3.4):</strong> Targeted improvements needed</li>
+                    <li><strong style="color: var(--score-good);">Good (3.5-4.4):</strong> Minor gaps to address</li>
+                    <li><strong style="color: var(--score-excellent);">Excellent (4.5-5.0):</strong> Optimal alignment achieved</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Mathematical Framework Section -->
+        <section id="mathematical-framework" class="section">
+            <h2><i class="fas fa-calculator"></i> Mathematical Framework</h2>
+            
+            <h3><i class="fas fa-function"></i> Normalization Functions</h3>
+            <p>All component scores are normalized to a 0-5.0 scale before weighted combination:</p>
+            
+            <div class="formula-box">
+// Semantic Score Normalization
+semanticNormalized = min(5.0, overlapPercentage / 4.0)
+// Where 20% overlap = 5.0 maximum
+
+// Competency Score Normalization  
+competencyNormalized = min(5.0, totalWeight × 1.5)
+// Where weight 3.33 = 5.0 maximum
+
+// Cognitive Score (already 0-1.0)
+cognitiveNormalized = progressionScore × 5.0
+
+// Contextual Score Normalization
+contextualNormalized = min(5.0, relevanceScore)
+// Direct mapping up to 5.0
+
+// Progression Score (already 0-1.0)
+progressionNormalized = buildingScore × 5.0
+            </div>
+
+            <h3><i class="fas fa-equals"></i> Final Score Calculation</h3>
+            <div class="formula-box">
+finalScore = (semantic × 0.35) + 
+             (competency × 0.25) + 
+             (cognitive × 0.20) + 
+             (contextual × 0.15) + 
+             (progression × 0.05)
+
+// Clamped to valid range
+result = max(1.0, min(5.0, finalScore))
+            </div>
+        </section>
+
+        <!-- Component Analysis Section -->
+        <section id="component-analysis" class="section">
+            <h2><i class="fas fa-cogs"></i> Component Analysis</h2>
+            
+            <!-- Semantic Analysis -->
+            <div class="component-card">
+                <h3><i class="fas fa-language"></i> 1. Semantic Similarity Analysis (35% Weight)</h3>
+                <p><strong>Purpose:</strong> Measures vocabulary overlap between PLO and MLO texts.</p>
+                
+                <div class="formula-box">
+function analyzeSemantics(ploText, mloText) {
+    // Extract meaningful words (3+ chars, no stop words)
+    ploWords = extractWords(ploText)
+    mloWords = extractWords(mloText)
+    
+    // Find exact matches
+    exactMatches = ploWords ∩ mloWords
+    
+    // Find partial matches (substring inclusion)
+    partialMatches = ploWords.filter(word => 
+        mloWords.some(mloWord => 
+            mloWord.includes(word) || word.includes(mloWord)
+        )
+    )
+    
+    // Calculate overlap percentage
+    totalMatches = unique(exactMatches ∪ partialMatches)
+    overlapPercentage = (totalMatches.length / ploWords.length) × 100
+    
+    return { overlapPercentage, matchingKeywords, semanticDensity }
+}
+                </div>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from TVTB Programme</h4>
+                    <p><strong>PLO:</strong> "Synthesizes wide-ranging knowledge and skills to overcome challenges in international organizations"</p>
+                    <p><strong>MLO:</strong> "Analyses the international business environment, constructs business ideas"</p>
+                    <p><strong>Shared terms:</strong> ["international", "business"] = 2 words</p>
+                    <p><strong>PLO word count:</strong> 12 words</p>
+                    <p><strong>Overlap:</strong> 2/12 = 16.7%</p>
+                    <p><strong>Normalized score:</strong> 16.7/4 = <strong>4.2/5.0</strong></p>
+                </div>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from MAJB Programme</h4>
+                    <p><strong>PLO:</strong> "Designs and critically evaluates sustainable business models taking into account the principles of responsible business and ethics"</p>
+                    <p><strong>MLO:</strong> "Knows the basic principles of the circular economy and its constituent elements"</p>
+                    <p><strong>Shared terms:</strong> ["principles", "business"] = 2 words</p>
+                    <p><strong>PLO word count:</strong> 16 words</p>
+                    <p><strong>Overlap:</strong> 2/16 = 12.5%</p>
+                    <p><strong>Normalized score:</strong> 12.5/4 = <strong>3.1/5.0</strong></p>
+                </div>
+            </div>
+
+            <!-- Competency Analysis -->
+            <div class="component-card">
+                <h3><i class="fas fa-brain"></i> 2. Competency Framework Analysis (25% Weight)</h3>
+                <p><strong>Purpose:</strong> Evaluates alignment with European Qualifications Framework (EQF) competency categories.</p>
+                
+                <div class="formula-box">
+const COMPETENCY_FRAMEWORK = {
+    analytical: {
+        keywords: ['analyze', 'evaluate', 'assess', 'critical', 'examine'],
+        weight: 1.3, // Higher weight for critical thinking
+        source: 'EQF Level 6-8 Descriptors'
+    },
+    application: {
+        keywords: ['apply', 'implement', 'use', 'practice', 'execute'],
+        weight: 1.1,
+        source: 'Bloom\'s Taxonomy Application Level'
+    },
+    creative: {
+        keywords: ['create', 'design', 'develop', 'innovate', 'generate'],
+        weight: 1.4,
+        source: 'EQF Creative Competencies'
+    }
+    // ... 7 more categories
+}
+                </div>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from TVTB Programme</h4>
+                    <p><strong>Combined text:</strong> "synthesizes knowledge challenges international analyses business"</p>
+                    <p><strong>Analytical:</strong> ["analyses"] = 1/5 keywords × 1.3 weight = 0.26</p>
+                    <p><strong>Business:</strong> ["business", "international"] = 2/5 keywords × 1.2 weight = 0.48</p>  
+                    <p><strong>Total weight:</strong> 0.74</p>
+                    <p><strong>Normalized score:</strong> 0.74 × 1.5 = <strong>1.1/5.0</strong></p>
+                </div>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from MAKM Programme</h4>
+                    <p><strong>Combined text:</strong> "analyzes integrates economic social environmental decision-making supporting sustainable solutions management organization"</p>
+                    <p><strong>Analytical:</strong> ["analyzes"] = 1/5 keywords × 1.3 weight = 0.26</p>
+                    <p><strong>Management:</strong> ["management", "organization", "solutions"] = 3/5 keywords × 1.2 weight = 0.72</p>
+                    <p><strong>Strategic:</strong> ["supporting", "integrates"] = 2/5 keywords × 1.3 weight = 0.52</p>
+                    <p><strong>Total weight:</strong> 1.50</p>
+                    <p><strong>Normalized score:</strong> 1.50 × 1.5 = <strong>2.3/5.0</strong></p>
+                </div>
+            </div>
+
+            <!-- Cognitive Analysis -->
+            <div class="component-card">
+                <h3><i class="fas fa-stairs"></i> 3. Cognitive Progression Analysis (20% Weight)</h3>
+                <p><strong>Purpose:</strong> Evaluates <a href="https://en.wikipedia.org/wiki/Bloom%27s_taxonomy" target="_blank">Bloom's Taxonomy progression</a> appropriateness using Krathwohl (2002) revision.</p>
+                
+                <div class="formula-box">
+const BLOOMS_LEVELS = {
+    remember:   { weight: 1, verbs: ['recall', 'identify', 'define', 'list'] },
+    understand: { weight: 2, verbs: ['explain', 'summarize', 'interpret'] },
+    apply:      { weight: 3, verbs: ['apply', 'implement', 'execute', 'solve'] },
+    analyze:    { weight: 4, verbs: ['analyze', 'examine', 'investigate'] },
+    evaluate:   { weight: 5, verbs: ['evaluate', 'judge', 'critique', 'assess'] },
+    create:     { weight: 6, verbs: ['create', 'design', 'develop', 'construct'] }
+}
+                </div>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from TVTB Programme</h4>
+                    <p><strong>PLO:</strong> "Synthesizes wide-ranging knowledge" → <strong>Create (Level 6)</strong></p>
+                    <p><strong>MLO:</strong> "Analyses the international business environment" → <strong>Analyze (Level 4)</strong></p>
+                    <p><strong>Level gap:</strong> |6-4| = 2</p>
+                    <p><strong>Progressive:</strong> 4 ≤ 6 = ✓</p>
+                    <p><strong>Appropriate gap:</strong> 2 ≤ 2 = ✓</p>
+                    <p><strong>Progression score:</strong> 1.0 - (2 × 0.2) = <strong>0.6</strong></p>
+                    <p><strong>Normalized score:</strong> 0.6 × 5 = <strong>3.0/5.0</strong></p>
+                </div>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from MAJB Programme</h4>
+                    <p><strong>PLO:</strong> "Designs and critically evaluates sustainable business models" → <strong>Create (Level 6)</strong></p>
+                    <p><strong>MLO:</strong> "Knows the basic principles of the circular economy" → <strong>Remember (Level 1)</strong></p>
+                    <p><strong>Level gap:</strong> |6-1| = 5</p>
+                    <p><strong>Progressive:</strong> 1 ≤ 6 = ✓</p>
+                    <p><strong>Appropriate gap:</strong> 5 > 2 = ✗ (Large gap)</p>
+                    <p><strong>Progression score:</strong> 0.5 (progressive but large gap)</p>
+                    <p><strong>Normalized score:</strong> 0.5 × 5 = <strong>2.5/5.0</strong></p>
+                </div>
+            </div>
+
+            <!-- Contextual Analysis -->
+            <div class="component-card">
+                <h3><i class="fas fa-crosshairs"></i> 4. Contextual Relevance Analysis (15% Weight)</h3>
+                <p><strong>Purpose:</strong> Measures domain-specific terminology alignment with programme context.</p>
+                
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from TVTB Programme</h4>
+                    <p><strong>Combined text:</strong> "synthesizes knowledge international organizations analyses business environment"</p>
+                    <p><strong>Business domain:</strong> 
+                        <br>Core: ["business", "organizations"] = 2 × 1.0 × 1.5 = 3.0
+                    </p>
+                    <p><strong>International domain:</strong> 
+                        <br>Core: ["international"] = 1 × 1.0 × 1.3 = 1.3
+                    </p>
+                    <p><strong>Total relevance score:</strong> 3.0 + 1.3 = <strong>4.3/5.0</strong></p>
+                </div>
+
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from MAKM Programme</h4>
+                    <p><strong>Combined text:</strong> "analyzes integrates economic social environmental decision-making supporting sustainable solutions management organization"</p>
+                    <p><strong>Management domain:</strong> 
+                        <br>Core: ["management", "organization", "decision-making"] = 3 × 1.0 × 1.5 = 4.5
+                    </p>
+                    <p><strong>Sustainability domain:</strong> 
+                        <br>Advanced: ["sustainable", "environmental"] = 2 × 1.5 × 1.4 = 4.2
+                    </p>
+                    <p><strong>Total relevance score:</strong> 4.5 + 4.2 = 8.7</p>
+                    <p><strong>Normalized score:</strong> min(5.0, 8.7) = <strong>5.0/5.0</strong></p>
+                </div>
+            </div>
+
+            <!-- Progression Analysis -->
+            <div class="component-card">
+                <h3><i class="fas fa-chart-line"></i> 5. Learning Progression Analysis (5% Weight)</h3>
+                <p><strong>Purpose:</strong> Evaluates sequential building patterns within programme structure.</p>
+                
+                <div class="example-box">
+                    <h4><i class="fas fa-lightbulb"></i> Real Example from TVTB Programme</h4>
+                    <p><strong>Module:</strong> E1 Ettevõtlus ja turundus (Entrepreneurship and Marketing)</p>
+                    <p><strong>Prerequisites:</strong> P1, P2 modules completed</p>
+                    <p><strong>Direct PLO alignment:</strong> 0.8</p>
+                    <p><strong>Prerequisite building:</strong> 0.6</p>  
+                    <p><strong>Year appropriate:</strong> 1.0</p>
+                    <p><strong>Building score:</strong> (0.8×0.6 + 0.6×0.3 + 1.0×0.1) = <strong>0.76</strong></p>
+                    <p><strong>Normalized score:</strong> 0.76 × 5 = <strong>3.8/5.0</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculation Methods Section -->
+        <section id="calculation-methods" class="section">
+            <h2><i class="fas fa-chart-line"></i> Complete Calculation Example</h2>
+            
+            <div class="example-box">
+                <h3><i class="fas fa-calculator"></i> Real TVTB Programme Example</h3>
+                <p><strong>PLO:</strong> "Synthesizes wide-ranging knowledge and skills to overcome challenges in international organizations"</p>
+                <p><strong>MLO:</strong> "Analyses the international business environment, constructs business ideas"</p>
+                
+                <h4>Step-by-Step Calculation:</h4>
+                
+                <div class="formula-box">
+Step 1: Semantic Analysis
+PLO words: [synthesizes, wide-ranging, knowledge, skills, overcome, challenges, international, organizations]
+MLO words: [analyses, international, business, environment, constructs, business, ideas]
+Shared: [international, business/organizations (partial)] = 2/8 = 25%
+Semantic score: 25/4 = 5.0 (capped)
+
+Step 2: Competency Analysis
+Combined: "synthesizes knowledge skills challenges international organizations analyses business environment constructs ideas"
+Analytical: [analyses] = 1/5 × 1.3 = 0.26
+Business: [business, organizations, international] = 3/5 × 1.2 = 0.72
+Creative: [constructs] = 1/5 × 1.4 = 0.28
+Total weight: 1.26
+Competency score: 1.26 × 1.5 = 1.89
+
+Step 3: Cognitive Analysis
+PLO level: "synthesizes" → Create (6)
+MLO level: "analyses" → Analyze (4)  
+Gap: |6-4| = 2, Progressive: 4 ≤ 6 ✓, Appropriate: 2 ≤ 2 ✓
+Progression score: 1.0 - (2 × 0.2) = 0.6
+Cognitive score: 0.6 × 5 = 3.0
+
+Step 4: Contextual Analysis
+Business core: [business, organizations] = 2 × 1.0 × 1.5 = 3.0
+International core: [international] = 1 × 1.0 × 1.3 = 1.3
+Total relevance: 4.3
+Contextual score: min(5.0, 4.3) = 4.3
+
+Step 5: Progression Analysis  
+Module level: Advanced (E1)
+Prerequisites: 2 found (P1, P2)
+Building score: 0.76
+Progression score: 0.76 × 5 = 3.8
+                </div>
+
+                <div class="formula-box">
+Final Calculation:
+Final = (5.0×0.35) + (1.89×0.25) + (3.0×0.20) + (4.3×0.15) + (3.8×0.05)
+      = 1.75 + 0.47 + 0.60 + 0.65 + 0.19
+      = 3.66/5.0
+
+Result: 3.7/5.0 - Good Alignment
+                </div>
+            </div>
+        </section>
+
+        <!-- Improvement Suggestions Section -->
+        <section id="improvement-suggestions" class="section">
+            <h2><i class="fas fa-lightbulb"></i> Improvement Suggestions Framework</h2>
+            
+            <h3><i class="fas fa-flag"></i> Trigger Conditions</h3>
+            <p>Improvement suggestions are generated when:</p>
+            <ul>
+                <li><strong>Overall score &lt; 3.5</strong> (below "Good" threshold)</li>
+                <li><strong>Any component score &lt; 2.5</strong> (below "Moderate" threshold)</li>
+            </ul>
+
+            <div class="component-card">
+                <h3><i class="fas fa-cogs"></i> Enhancement Categories</h3>
+                
+                <h4>1. Semantic Enhancement</h4>
+                <div class="formula-box">
+if (semanticScore < 2.5) {
+    if (overlapPercentage < 10) {
+        suggestion = "Consider using domain-specific vocabulary from PLO context"
+        examples = ["technical terms", "action verbs", "field concepts"]
+    } else if (overlapPercentage < 25) {
+        suggestion = `Build on existing shared terms (${keywords}) and add related vocabulary`
+    } else {
+        suggestion = "Incorporate more specific terminology bridging MLO-PLO contexts"
+    }
+}
+                </div>
+
+                <h4>2. Competency Enhancement</h4>
+                <div class="formula-box">
+if (competencyScore < 2.5) {
+    missingCompetencies = ["analytical", "application", "communication"].filter(
+        comp => !currentCompetencies.includes(comp)
+    )
+    
+    if (totalCategories == 0) {
+        suggestion = "Incorporate action-oriented language: 'analyze data', 'solve problems'"
+    } else {
+        suggestion = `Add ${missingCompetencies[0]} elements: 'critically evaluate', 'systematically approach'`
+    }
+}
+                </div>
+
+                <h4>3. Cognitive Enhancement</h4>
+                <div class="formula-box">
+if (cognitiveScore < 2.5) {
+    if (mloLevel > ploLevel) {
+        targetVerbs = getVerbsForLevel(ploLevel)
+        suggestion = `MLO level exceeds PLO. Use ${ploLevel} verbs: ${targetVerbs.slice(0,3)}`
+    } else if (levelGap > 2) {
+        bridgeLevel = (mloLevel + ploLevel) / 2
+        suggestion = `Large gap detected. Consider intermediate ${bridgeLevel} activities`
+    } else if (mloLevel == ploLevel) {
+        suggestion = "Both at same level. Make MLO slightly lower for progressive learning"
+    }
+}
+                </div>
+            </div>
+        </section>
+
+        <!-- Validation Examples Section -->
+        <section id="validation-examples" class="section">
+            <h2><i class="fas fa-check-circle"></i> Validation Examples</h2>
+            
+            <div class="example-box">
+                <h3><i class="fas fa-exclamation-triangle"></i> Example 1: Poor Alignment (Score: 1.8)</h3>
+                <p><strong>Programme:</strong> MAJB - Sustainable Entrepreneurship and Circular Economy</p>
+                <p><strong>PLO:</strong> "<span class="keyword-highlight">Designs</span> and critically <span class="keyword-highlight">evaluates</span> sustainable <span class="keyword-highlight">business</span> models taking into account the <span class="keyword-highlight">principles</span> of responsible business and ethics"</p>
+                <p><strong>MLO:</strong> "Understands the content of the specialty and its application possibilities"</p>
+                
+                <h4>Detailed Score Calculation:</h4>
+                <div class="score-breakdown">
+                    <div class="component-score">
+                        <strong>Semantic Analysis (35%)</strong>
+                        <div class="calculation-step">
+                            Shared terms: ["principles"] = 1 word
+                            PLO words: 16 total
+                            Overlap: 1/16 = 6.25%
+                            Score: 6.25/4 = 1.6 → <strong>1.6/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Competency Analysis (25%)</strong>
+                        <div class="calculation-step">
+                            PLO: ["designs", "evaluates"] = Creative + Analytical
+                            MLO: ["understands"] = Basic comprehension
+                            Total weight: 0.2
+                            Score: 0.2 × 1.5 = <strong>0.3/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Cognitive Analysis (20%)</strong>
+                        <div class="calculation-step">
+                            PLO: "Designs" → Create (Level 6)
+                            MLO: "Understands" → Understand (Level 2)
+                            Gap: |6-2| = 4 (exceeds threshold)
+                            Progressive: 2 ≤ 6 ✓, but gap too large
+                            Score: 0.5 → <strong>2.5/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Contextual Analysis (15%)</strong>
+                        <div class="calculation-step">
+                            Business domain: ["business", "principles"] = 2 terms
+                            Domain score: 2 × 1.0 × 1.5 = 3.0
+                            Sustainability: Limited relevance
+                            Total: <strong>3.0/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Progression Analysis (5%)</strong>
+                        <div class="calculation-step">
+                            Module: Foundational level
+                            Prerequisites: Appropriate
+                            Building pattern: Weak connection to PLO
+                            Score: <strong>2.0/5.0</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculation-step">
+                    <strong>Final Calculation:</strong><br>
+                    Final = (1.6×0.35) + (0.3×0.25) + (2.5×0.20) + (3.0×0.15) + (2.0×0.05)<br>
+                    Final = 0.56 + 0.08 + 0.50 + 0.45 + 0.10 = <strong style="color: var(--score-poor);">1.69/5.0 → 1.7 (Poor)</strong>
+                </div>
+                
+                <h4>Generated Suggestions:</h4>
+                <ol>
+                    <li><strong>Semantic:</strong> "Add design, sustainability, evaluation terminology to increase vocabulary overlap"</li>
+                    <li><strong>Competency:</strong> "Include creative and business analysis language elements"</li>
+                    <li><strong>Cognitive:</strong> "Large gap between Understand and Design. Consider intermediate activities like 'analyze existing models' or 'compare design approaches'"</li>
+                    <li><strong>Contextual:</strong> "Strengthen sustainability and business model terminology"</li>
+                </ol>
+            </div>
+
+            <div class="example-box">
+                <h3><i class="fas fa-check"></i> Example 2: Good Alignment (Score: 4.1)</h3>
+                <p><strong>Programme:</strong> TVTB - International Business Administration</p>
+                <p><strong>PLO:</strong> "Critically <span class="keyword-highlight">evaluates</span> main concepts of <span class="keyword-highlight">business</span> <span class="keyword-highlight">administration</span> and relevant social and legal aspects"</p>
+                <p><strong>MLO:</strong> "Demonstrates broad fundamental <span class="keyword-highlight">knowledge</span> and skills across <span class="keyword-highlight">marketing</span>, <span class="keyword-highlight">entrepreneurship</span> and <span class="keyword-highlight">management</span>"</p>
+                
+                <h4>Detailed Score Calculation:</h4>
+                <div class="score-breakdown">
+                    <div class="component-score">
+                        <strong>Semantic Analysis (35%)</strong>
+                        <div class="calculation-step">
+                            Shared terms: ["business", "management", "concepts"] = 3 words
+                            PLO words: 12 total
+                            Overlap: 3/12 = 25%
+                            Score: 25/4 = 6.25 → <strong>5.0/5.0</strong> (capped)
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Competency Analysis (25%)</strong>
+                        <div class="calculation-step">
+                            Business: ["business", "management", "marketing"] = 3/5 × 1.2 = 0.72
+                            Analytical: ["evaluates"] = 1/5 × 1.3 = 0.26
+                            Total weight: 0.98
+                            Score: 0.98 × 1.5 = <strong>1.47/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Cognitive Analysis (20%)</strong>
+                        <div class="calculation-step">
+                            PLO: "Evaluates" → Evaluate (Level 5)
+                            MLO: "Demonstrates" → Apply (Level 3)
+                            Gap: |5-3| = 2 (appropriate)
+                            Progressive: 3 ≤ 5 ✓
+                            Score: 1.0 - (2 × 0.2) = 0.6 → <strong>3.0/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Contextual Analysis (15%)</strong>
+                        <div class="calculation-step">
+                            Business: ["business", "administration", "management", "marketing"] = 4 × 1.0 × 1.5 = 6.0
+                            Entrepreneurship: ["entrepreneurship"] = 1 × 1.5 × 1.3 = 1.95
+                            Total: 7.95 → <strong>5.0/5.0</strong> (capped)
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Progression Analysis (5%)</strong>
+                        <div class="calculation-step">
+                            Module: Advanced business module
+                            Prerequisites: Multiple foundational courses
+                            Building pattern: Strong foundation → advanced concepts
+                            Score: <strong>4.0/5.0</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculation-step">
+                    <strong>Final Calculation:</strong><br>
+                    Final = (5.0×0.35) + (1.47×0.25) + (3.0×0.20) + (5.0×0.15) + (4.0×0.05)<br>
+                    Final = 1.75 + 0.37 + 0.60 + 0.75 + 0.20 = <strong style="color: var(--score-good);">3.67/5.0 → 3.7 (Good)</strong>
+                </div>
+                
+                <h4>Result:</h4>
+                <p><strong style="color: var(--score-good);">No suggestions needed</strong> (score > 3.5 threshold). This represents good alignment with minor improvement opportunities in competency language.</p>
+            </div>
+
+            <div class="example-box">
+                <h3><i class="fas fa-balance-scale"></i> Example 3: Moderate Alignment (Score: 3.2)</h3>
+                <p><strong>Programme:</strong> MAKM - Sustainability Management</p>
+                <p><strong>PLO:</strong> "Is capable of <span class="keyword-highlight">shaping</span> the <span class="keyword-highlight">organization's</span> long-term <span class="keyword-highlight">strategy</span>, considering the complex challenges in the field of <span class="keyword-highlight">sustainability</span>"</p>
+                <p><strong>MLO:</strong> "Links the <span class="keyword-highlight">principles</span> of <span class="keyword-highlight">sustainable</span> <span class="keyword-highlight">management</span> within ESG frameworks, demonstrating the ability to <span class="keyword-highlight">analyze</span> and <span class="keyword-highlight">apply</span> these principles"</p>
+                
+                <h4>Detailed Score Calculation:</h4>
+                <div class="score-breakdown">
+                    <div class="component-score">
+                        <strong>Semantic Analysis (35%)</strong>
+                        <div class="calculation-step">
+                            Shared terms: ["sustainability/sustainable", "management", "strategy", "principles"] = 4 words
+                            PLO words: 16 total
+                            Overlap: 4/16 = 25%
+                            Score: 25/4 = 6.25 → <strong>5.0/5.0</strong> (capped)
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Competency Analysis (25%)</strong>
+                        <div class="calculation-step">
+                            Strategic: ["shaping", "strategy"] = 2/5 × 1.3 = 0.52
+                            Analytical: ["analyze"] = 1/5 × 1.3 = 0.26
+                            Application: ["apply"] = 1/5 × 1.1 = 0.22
+                            Management: ["management"] = 1/5 × 1.2 = 0.24
+                            Total: 1.24 × 1.5 = <strong>1.86/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Cognitive Analysis (20%)</strong>
+                        <div class="calculation-step">
+                            PLO: "Shaping" → Create (Level 6)
+                            MLO: "Apply" → Apply (Level 3)
+                            Gap: |6-3| = 3 (large gap)
+                            Progressive: 3 ≤ 6 ✓, but gap exceeds threshold
+                            Score: 0.5 → <strong>2.5/5.0</strong>
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Contextual Analysis (15%)</strong>
+                        <div class="calculation-step">
+                            Sustainability: ["sustainability", "sustainable", "ESG"] = 3 × 1.5 × 1.4 = 6.3
+                            Management: ["management", "organization"] = 2 × 1.0 × 1.5 = 3.0
+                            Total: 9.3 → <strong>5.0/5.0</strong> (capped)
+                        </div>
+                    </div>
+                    <div class="component-score">
+                        <strong>Progression Analysis (5%)</strong>
+                        <div class="calculation-step">
+                            Module: Advanced master's level
+                            Prerequisites: ESG foundation courses
+                            Building pattern: Theory → application → strategic implementation
+                            Score: <strong>3.5/5.0</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculation-step">
+                    <strong>Final Calculation:</strong><br>
+                    Final = (5.0×0.35) + (1.86×0.25) + (2.5×0.20) + (5.0×0.15) + (3.5×0.05)<br>
+                    Final = 1.75 + 0.47 + 0.50 + 0.75 + 0.18 = <strong style="color: var(--score-moderate);">3.65/5.0 → 3.7 (Good)</strong>
+                </div>
+                
+                <h4>Generated Suggestions:</h4>
+                <ol>
+                    <li><strong>Competency:</strong> "Add strategic planning and organizational development terminology to strengthen competency alignment"</li>
+                    <li><strong>Cognitive:</strong> "Consider intermediate strategic planning activities to bridge Apply→Create gap: 'evaluate strategic options', 'design implementation frameworks'"</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Academic References Section -->
+        <section id="academic-references" class="section">
+            <h2><i class="fas fa-book"></i> Academic References</h2>
+            
+            <div class="reference-item">
+                <p><strong>Krathwohl, D. R. (2002).</strong> A revision of Bloom's taxonomy: An overview. <em>Theory into Practice, 41</em>(4), 212-218.</p>
+                <p><a href="https://www.bloomstaxonomy.org/" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Bloom's Taxonomy Resources
+                </a></p>
+            </div>
+
+            <div class="reference-item">
+                <p><strong>European Qualifications Framework (2017).</strong> Council Recommendation on the European Qualifications Framework for lifelong learning. <em>Official Journal of the European Union</em>.</p>
+                <p><a href="https://europa.eu/europass/en/european-qualifications-framework-eqf" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> European Qualifications Framework
+                </a></p>
+            </div>
+
+            <div class="reference-item">
+                <p><strong>González, J., & Wagenaar, R. (Eds.) (2003).</strong> Tuning Educational Structures in Europe. <em>University of Deusto and University of Groningen</em>.</p>
+                <p><a href="https://www.unideusto.org/tuningeu/" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Tuning Educational Structures
+                </a></p>
+            </div>
+
+            <div class="reference-item">
+                <p><strong>Anderson, L. W., & Krathwohl, D. R. (Eds.) (2001).</strong> A taxonomy for learning, teaching, and assessing: A revision of Bloom's taxonomy of educational objectives. <em>Longman</em>.</p>
+            </div>
+
+            <div class="reference-item">
+                <p><strong>Biggs, J., & Tang, C. (2011).</strong> Teaching for Quality Learning at University. <em>McGraw-Hill Education</em>.</p>
+            </div>
+
+            <div class="reference-item">
+                <p><strong>Kennedy, D., Hyland, Á., & Ryan, N. (2006).</strong> Writing and using learning outcomes: A practical guide. <em>Quality Promotion Unit, University College Cork</em>.</p>
+            </div>
+        </section>
+
+        <!-- AI Assistant Guidance -->
+        <section id="ai-guidance" class="section">
+            <div class="ai-reference-box">
+                <h2><i class="fas fa-robot"></i> AI Assistant Guidance & Reference Framework</h2>
+                <p>
+                    When using AI assistants for PLO-MLO alignment analysis, ensure they follow this methodology to maintain consistency 
+                    and academic rigor. This framework should be referenced in AI prompts and analysis requests.
+                </p>
+                
+                <h3><i class="fas fa-clipboard-list"></i> AI Analysis Instructions</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <h4>Core Requirements for AI Analysis:</h4>
+                    <ol>
+                        <li><strong>Component Coverage:</strong> All five components must be evaluated (Semantic, Competency, Cognitive, Contextual, Progression)</li>
+                        <li><strong>Scoring Precision:</strong> Use exact mathematical formulas documented in this methodology</li>
+                        <li><strong>Weight Application:</strong> Apply precise weightings: Semantic(35%), Competency(25%), Cognitive(20%), Contextual(15%), Progression(5%)</li>
+                        <li><strong>Reference Standards:</strong> Base analysis on documented academic frameworks (EQF, Bloom's Taxonomy, Tuning Project)</li>
+                        <li><strong>Transparent Justification:</strong> Provide mathematical breakdown showing component calculations</li>
+                        <li><strong>Improvement Suggestions:</strong> Generate targeted suggestions when component scores < 2.5 or overall score < 3.5</li>
+                    </ol>
+                </div>
+                
+                <h3><i class="fas fa-code"></i> AI Prompt Template</h3>
+                <div style="background: #2c3e50; color: white; padding: 15px; border-radius: 8px; font-family: monospace; margin: 15px 0;">
+When analyzing PLO-MLO alignment, follow the TalTech Enhanced Alignment Methodology:
+
+1. SEMANTIC ANALYSIS (35%): Calculate vocabulary overlap percentage
+   Formula: min(5.0, overlapPercentage / 4.0)
+
+2. COMPETENCY ANALYSIS (25%): Check EQF competency categories
+   Formula: min(5.0, totalWeight × 1.5)
+
+3. COGNITIVE ANALYSIS (20%): Evaluate Bloom's Taxonomy progression
+   Formula: progressionScore × 5.0
+
+4. CONTEXTUAL ANALYSIS (15%): Assess domain-specific terminology
+   Formula: min(5.0, relevanceScore)
+
+5. PROGRESSION ANALYSIS (5%): Check sequential building patterns
+   Formula: buildingScore × 5.0
+
+FINAL SCORE = (semantic×0.35) + (competency×0.25) + (cognitive×0.20) + (contextual×0.15) + (progression×0.05)
+
+Provide mathematical breakdown and suggestions for components < 2.5
+Reference: TalTech ILO Alignment Analysis Methodology v1.0
+                </div>
+                
+                <h3><i class="fas fa-exclamation-triangle"></i> Quality Assurance Checks</h3>
+                <ul>
+                    <li><strong>Score Validation:</strong> Final scores must be 1.0-5.0 range</li>
+                    <li><strong>Component Completeness:</strong> All five components analyzed and justified</li>
+                    <li><strong>Academic Grounding:</strong> References to established frameworks required</li>
+                    <li><strong>Improvement Actionability:</strong> Suggestions must be specific and implementable</li>
+                    <li><strong>Consistency Check:</strong> Results should align with documented examples</li>
+                </ul>
+                
+                <p style="margin-top: 20px; font-weight: bold; text-align: center;">
+                    <i class="fas fa-shield-alt"></i> This methodology ensures AI-generated analysis maintains academic standards and consistency with manual evaluations.
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div style="background: var(--tt-light-grey); padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center; border-top: 3px solid var(--tt-primary);">
+            <p><strong>TalTech | Majandusteaduskond</strong></p>
+            <p>ILO Alignment Analysis Methodology v1.0 | August 2025 | Siyi Ma</p>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: var(--tt-secondary);">
+                <strong>Standardized Score Colors:</strong> 
+                <span style="color: var(--score-poor);">■ Poor (1.0-1.4)</span> | 
+                <span style="color: var(--score-weak);">■ Weak (1.5-2.4)</span> | 
+                <span style="color: var(--score-moderate);">■ Moderate (2.5-3.4)</span> | 
+                <span style="color: var(--score-good);">■ Good (3.5-4.4)</span> | 
+                <span style="color: var(--score-excellent);">■ Excellent (4.5-5.0)</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide up caret based on scroll position
+        window.addEventListener('scroll', function() {
+            const upCaret = document.getElementById('up-caret');
+            const scrollPosition = window.pageYOffset;
+            
+            if (scrollPosition > 300) {
+                upCaret.classList.add('visible');
+            } else {
+                upCaret.classList.remove('visible');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section in navigation
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.methodology-nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

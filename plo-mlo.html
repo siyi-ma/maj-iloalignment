@@ -20,6 +20,13 @@
             --tt-black: #000000;
             --tt-white: #ffffff;
             --font-primary: 'Proxima Nova', 'Verdana', sans-serif;
+            
+            /* Score Color Variables */
+            --score-poor: #ffcdd2;
+            --score-weak: #ffecb3;
+            --score-moderate: #fff9c4;
+            --score-good: #c8e6c9;
+            --score-excellent: #a5d6a7;
         }
 
         /* Matrix table styles */
@@ -127,11 +134,19 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
-        .score-1 { background-color: #ffcdd2; color: #000000; }
-        .score-2 { background-color: #ffecb3; color: #000000; }
-        .score-3 { background-color: #fff9c4; color: #000000; }
-        .score-4 { background-color: #c8e6c9; color: #000000; }
-        .score-5 { background-color: #a5d6a7; color: #000000; }
+        /* Score color classes for matrix - Updated to use CSS variables */
+        .score-1 { background-color: var(--score-poor); color: #000000; }
+        .score-2 { background-color: var(--score-weak); color: #000000; }
+        .score-3 { background-color: var(--score-moderate); color: #000000; }
+        .score-4 { background-color: var(--score-good); color: #000000; }
+        .score-5 { background-color: var(--score-excellent); color: #000000; }
+        
+        /* Score range classes for matrix (new system based on ranges) */
+        .score-poor { background-color: var(--score-poor); color: #000000; }
+        .score-weak { background-color: var(--score-weak); color: #000000; }
+        .score-moderate { background-color: var(--score-moderate); color: #000000; }
+        .score-good { background-color: var(--score-good); color: #000000; }
+        .score-excellent { background-color: var(--score-excellent); color: #000000; }
         
         .outcome-item {
             margin-bottom: 15px;
@@ -431,11 +446,37 @@
             font-weight: 500;
         }
         
-        .legend-score-1 { background-color: #ffebee; color: #c62828; }
-        .legend-score-2 { background-color: #fff3e0; color: #ef6c00; }
-        .legend-score-3 { background-color: #fff9c4; color: #f57f17; }
-        .legend-score-4 { background-color: #e8f5e8; color: #2e7d32; }
-        .legend-score-5 { background-color: #e3f2fd; color: #1565c0; }
+        /* Legend color classes - Updated to use consistent score colors */
+        .legend-score-1 { background-color: var(--score-poor); color: #000000; }
+        .legend-score-2 { background-color: var(--score-weak); color: #000000; }
+        .legend-score-3 { background-color: var(--score-moderate); color: #000000; }
+        .legend-score-4 { background-color: var(--score-good); color: #000000; }
+        .legend-score-5 { background-color: var(--score-excellent); color: #000000; }
+        
+        /* Formula Display Styles */
+        .formula-display {
+            background: var(--tt-white);
+            border: 2px solid var(--tt-burgundy);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .formula-display code {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            line-height: 1.4;
+        }
+        
+        .methodology-details {
+            background: var(--tt-grey-5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
         
         /* Bilingual Table Styles */
         .mlo-table, .plo-table {
@@ -630,6 +671,36 @@
             margin-bottom: 0.5rem;
         }
         
+        /* Methodology and Home Link Buttons */
+        .methodology-link-btn, .home-link-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--tt-white);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .methodology-link-btn:hover, .home-link-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: var(--tt-white);
+            text-decoration: none;
+        }
+        
+        .methodology-link-btn i, .home-link-btn i {
+            font-size: 16px;
+        }
+        
         .header-controls {
             display: flex;
             gap: 1rem;
@@ -821,6 +892,40 @@
             
             .detailed-section {
                 padding: 10px;
+            }
+            
+            /* Chart responsiveness */
+            .score-distribution-chart {
+                padding: 15px;
+            }
+            
+            .chart-container {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .chart-bar {
+                min-width: 60px;
+                font-size: 0.8rem;
+                padding: 5px;
+            }
+            
+            .category-row {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .category-bars {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            
+            .category-bar {
+                min-width: 40px !important;
+                font-size: 0.75rem;
             }
         }
         
@@ -1020,6 +1125,29 @@
             color: #000000;
             position: relative;
         }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
 
         .category-info {
             min-width: 120px;
@@ -1027,6 +1155,8 @@
             color: var(--tt-dark-blue);
             text-align: right;
         }
+
+
 
         /* PDF Preview Modal Styles */
         .pdf-preview-modal {
@@ -1142,18 +1272,144 @@
             background: var(--tt-grey-1);
             color: var(--tt-white);
         }
+
+        /* Sticky Navigation Styles - Following methodology.html pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* PLO-specific navigation items */
+        .analysis-nav li[data-plo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-plo-link] a:hover,
+        .analysis-nav li[data-plo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+            
+            /* Show PLO links in a more compact way on mobile */
+            .analysis-nav li[data-plo-link] {
+                width: calc(50% - 5px);
+            }
+            
+            .analysis-nav li[data-plo-link] a {
+                font-size: 0.75rem;
+                padding: 6px 10px;
+                width: 100%;
+            }
+        }
+
+        /* Additional styling for many PLO links */
+        @media (min-width: 769px) {
+            .analysis-nav ul {
+                max-height: 150px;
+                overflow-y: auto;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+            
+            /* Scrollbar styling for navigation */
+            .analysis-nav ul::-webkit-scrollbar {
+                height: 6px;
+                width: 6px;
+            }
+            
+            .analysis-nav ul::-webkit-scrollbar-track {
+                background: rgba(170, 19, 82, 0.1);
+                border-radius: 3px;
+            }
+            
+            .analysis-nav ul::-webkit-scrollbar-thumb {
+                background: var(--tt-burgundy);
+                border-radius: 3px;
+            }
+            
+            .analysis-nav ul::-webkit-scrollbar-thumb:hover {
+                background: var(--tt-magenta);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Page Header -->
         <header class="page-header">
-            <div class="header-controls">
-                <button id="ai-assistant-btn" class="header-btn" onclick="openAIAssistant()" title="Open AI Assistant for custom prompts and analysis">
-                    <i class="fas fa-robot"></i> AI Assistant
-                </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div>
+                    <h1 id="page-title"><i class="fas fa-graduation-cap"></i> PLO-MLO Alignment Analysis</h1>
+                    <p class="page-subtitle">Research-Based Transparent Methodology</p>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="methodology.html" target="_blank" class="methodology-link-btn" title="View detailed methodology and academic references">
+                        <i class="fas fa-microscope"></i> Methodology
+                    </a>
+                    <a href="index.html" class="home-link-btn" title="Go to Home">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </div>
             </div>
-            <h1 id="page-title"><i class="fas fa-graduation-cap"></i> PLO-MLO Alignment</h1>
         </header>
 
         <main>
@@ -1167,52 +1423,79 @@
                 <span class="language-label" id="eng-label">ENG</span>
             </div>
 
+            <!-- Sticky Navigation -->
+            <nav class="analysis-nav">
+                <ul>
+                    <li><a href="#methodology"><i class="fas fa-cogs"></i> Methodology</a></li>
+                    <li><a href="#alignment-summary"><i class="fas fa-chart-bar"></i> Summary</a></li>
+                    <li><a href="#plo-section"><i class="fas fa-graduation-cap"></i> PLOs</a></li>
+                    <li><a href="#mlo-section"><i class="fas fa-book"></i> MLOs</a></li>
+                    <li><a href="#matrix-section"><i class="fas fa-table"></i> Matrix</a></li>
+                    <li><a href="#detailed-analysis"><i class="fas fa-list-alt"></i> Analysis</a></li>
+                </ul>
+            </nav>
+
             <!-- Methodology Section -->
             <section id="methodology" class="analysis-summary">
                 <h2><i class="fas fa-cogs"></i> Methodology</h2>
                 <div class="summary-content">
-                    <h4>Advanced PLO-MLO Alignment Assessment:</h4>
-                    <p>Our sophisticated alignment analysis employs a multi-dimensional approach combining semantic analysis, cognitive taxonomy mapping, and competency framework evaluation:</p>
+                    <h4>PLO-MLO Alignment Assessment:</h4>
+                    <p>This alignment analysis employs a research-based multi-dimensional approach with transparent mathematical scoring:</p>
                     
                     <h4><i class="fas fa-brain"></i> Analysis Components:</h4>
                     <ul>
-                        <li><strong>Keyword Semantic Matching:</strong> Advanced text analysis identifying shared vocabulary and conceptual overlap between PLO and MLO texts with highlighting of matching terms</li>
-                        <li><strong>Bloom's Taxonomy Cognitive Level Mapping:</strong> Assessment of cognitive complexity progression from basic knowledge through comprehension, application, analysis, synthesis, to evaluation levels</li>
-                        <li><strong>Competency Framework Alignment:</strong> Evaluation across 10 specialized competency categories including analytical, creative, management, communication, research, and technical skills</li>
-                        <li><strong>Learning Progression Analysis:</strong> Assessment of how modules build sequential understanding toward programme-level achievement</li>
-                        <li><strong>Contextual Relevance Scoring:</strong> Domain-specific terminology matching and thematic coherence evaluation</li>
+                        <li><strong>Semantic Analysis (35% weight):</strong> Quantitative text analysis measuring vocabulary overlap and conceptual alignment between PLO and MLO texts with keyword highlighting</li>
+                        <li><strong>Competency Framework (25% weight):</strong> Evidence-based evaluation across 10 competency categories derived from EQF Level 6-8 descriptors and Tuning Educational Structures</li>
+                        <li><strong>Bloom's Taxonomy Mapping (20% weight):</strong> Systematic cognitive level assessment using Krathwohl's 2002 revision with progression compatibility scoring</li>
+                        <li><strong>Contextual Relevance (15% weight):</strong> Domain-specific terminology analysis with weighted business education vocabulary and thematic coherence evaluation</li>
+                        <li><strong>Learning Progression (5% weight):</strong> Sequential building pattern assessment analyzing prerequisite relationships and modular learning pathways</li>
                     </ul>
                     
-                    <h4><i class="fas fa-calculator"></i> Scoring Algorithm:</h4>
+                    <h4><i class="fas fa-calculator"></i> Mathematical Scoring Algorithm:</h4>
                     <div class="methodology-details">
-                        <p><strong>Multi-tier Scoring System:</strong></p>
+                        <p><strong>Composite Score Formula:</strong></p>
+                        <div class="formula-display">
+                            <code>Score = (Semantic × 0.35) + (Competency × 0.25) + (Cognitive × 0.20) + (Contextual × 0.15) + (Progression × 0.05)</code>
+                        </div>
+                        
+                        <p><strong>Component Normalization:</strong></p>
                         <ul>
-                            <li><strong>Tier 1:</strong> Keyword overlap percentage (shared terms / total PLO terms × 100)</li>
-                            <li><strong>Tier 2:</strong> Bloom's taxonomy level compatibility and progression mapping</li>
-                            <li><strong>Tier 3:</strong> Competency category matches across specialized skill domains</li>
+                            <li><strong>Semantic:</strong> Keyword overlap % / 4 (20% overlap = 5.0 points)</li>
+                            <li><strong>Competency:</strong> Weighted category matches × 1.5 (max 3.33 weight = 5.0 points)</li>
+                            <li><strong>Cognitive:</strong> Bloom's progression compatibility (0-1) × 5</li>
+                            <li><strong>Contextual:</strong> Domain relevance score (direct 0-5 mapping)</li>
+                            <li><strong>Progression:</strong> Building pattern strength (0-1) × 5</li>
                         </ul>
                         
-                        <p><strong>Scoring Criteria (5-point scale):</strong></p>
+                        <p><strong>Research-Based Thresholds:</strong></p>
                         <ul>
-                            <li><strong>Score 5 (Excellent):</strong> ≥15% keyword overlap + ≥3 competency matches + compatible Bloom's levels</li>
-                            <li><strong>Score 4 (Strong):</strong> ≥10% keyword overlap + ≥2 competency matches + progressive Bloom's alignment</li>
-                            <li><strong>Score 3 (Moderate):</strong> ≥5% keyword overlap + ≥1 competency match + related cognitive levels</li>
-                            <li><strong>Score 2 (Partial):</strong> ≥2% keyword overlap OR ≥1 competency match with limited cognitive alignment</li>
-                            <li><strong>Score 1 (Minimal):</strong> <2% keyword overlap + 0 competency matches + misaligned cognitive levels</li>
+                            <li><strong>4.5-5.0 (Excellent):</strong> Strong alignment across all dimensions with clear progression</li>
+                            <li><strong>3.5-4.4 (Good):</strong> Solid alignment with minor gaps in 1-2 dimensions</li>
+                            <li><strong>2.5-3.4 (Moderate):</strong> Adequate alignment requiring targeted improvements</li>
+                            <li><strong>1.5-2.4 (Weak):</strong> Limited alignment needing significant enhancement</li>
+                            <li><strong>1.0-1.4 (Poor):</strong> Minimal alignment requiring fundamental restructuring</li>
                         </ul>
                     </div>
                     
-                    <h4><i class="fas fa-tags"></i> Keyword Highlighting:</h4>
-                    <p>Matching keywords and phrases are highlighted in both PLO and MLO texts to provide visual evidence of semantic alignment and facilitate expert review of automated assessments.</p>
+                    <h4><i class="fas fa-tags"></i> Keyword Highlighting & Evidence:</h4>
+                    <p>Matching keywords and phrases are highlighted in both PLO and MLO texts to provide visual evidence of semantic alignment. All scoring components include quantifiable evidence and mathematical justification.</p>
+                    
+                    <h4><i class="fas fa-book-open"></i> Methodology Sources:</h4>
+                    <ul>
+                        <li>Krathwohl, D.R. (2002). A revision of Bloom's taxonomy</li>
+                        <li>European Qualifications Framework (EQF) Level 6-8 Descriptors</li>
+                        <li>Tuning Educational Structures in Europe</li>
+                        <li>Learning Progression Theory (Heritage, 2008)</li>
+                    </ul>
                     
                     <div class="score-legend">
-                        <h3>Alignment Score Legend:</h3>
+                        <h3>Enhanced Alignment Score Legend:</h3>
                         <div class="legend-items">
-                            <div class="legend-item legend-score-1">1: Minimal alignment</div>
-                            <div class="legend-item legend-score-2">2: Partial alignment</div>
-                            <div class="legend-item legend-score-3">3: Moderate alignment</div>
-                            <div class="legend-item legend-score-4">4: Strong alignment</div>
-                            <div class="legend-item legend-score-5">5: Excellent alignment</div>
+                            <div class="legend-item legend-score-1">1.0-1.4: Poor alignment - Fundamental restructuring needed</div>
+                            <div class="legend-item legend-score-2">1.5-2.4: Weak alignment - Significant enhancement required</div>
+                            <div class="legend-item legend-score-3">2.5-3.4: Moderate alignment - Targeted improvements needed</div>
+                            <div class="legend-item legend-score-4">3.5-4.4: Good alignment - Minor gaps to address</div>
+                            <div class="legend-item legend-score-5">4.5-5.0: Excellent alignment - Strong across all dimensions</div>
                         </div>
                     </div>
                 </div>
@@ -1282,9 +1565,7 @@
 
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
-    <script src="js/personal-api-config.js"></script>
-    <script src="js/secure-api-config.js"></script>
-    <script src="js/enhanced-ai-features.js"></script>
+    <script src="js/enhanced-alignment-engine.js"></script>
     <script>
         // Global state
         let currentLanguage = 'english';
@@ -1293,28 +1574,50 @@
         let currentMLOs = [];
         let alignmentResults = [];
         let currentView = 'plo'; // 'plo' or 'mlo'
+        let alignmentEngine = null;
 
-        // Open AI Assistant in new window/tab
-        function openAIAssistant() {
-            // Open AI Assistant with context from current page
-            const currentContext = {
-                page: 'PLO-MLO Alignment',
-                programme: currentProgramme ? currentProgramme.name : null,
-                ploCount: currentPLOs.length,
-                mloCount: currentMLOs.length,
-                language: currentLanguage
-            };
+        // Function to highlight keywords in text
+        function highlightKeywords(text, keywords) {
+            if (!keywords || keywords.length === 0) {
+                return text;
+            }
             
-            // Store context for AI assistant
-            sessionStorage.setItem('aiAssistantContext', JSON.stringify(currentContext));
+            // Stop words to exclude from highlighting
+            const stopWords = new Set([
+                'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'must', 'shall',
+                'this', 'that', 'these', 'those', 'they', 'them', 'their', 'there', 'where', 'when', 'what', 'who', 'why', 'how', 'which', 'whose', 'whom',
+                'a', 'an', 'some', 'any', 'many', 'much', 'more', 'most', 'all', 'each', 'every', 'other', 'another', 'such', 'same', 'different'
+            ]);
             
-            // Open in new tab
-            window.open('ai-assistant.html', '_blank');
+            let highlightedText = text;
+            // Filter meaningful keywords only
+            const meaningfulKeywords = keywords.filter(keyword => 
+                keyword && 
+                keyword.trim().length >= 3 && 
+                !stopWords.has(keyword.toLowerCase()) &&
+                !/^\d+$/.test(keyword)
+            );
+            
+            meaningfulKeywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                highlightedText = highlightedText.replace(regex, `<mark class="keyword-highlight">$&</mark>`);
+            });
+            
+            return highlightedText;
+        }
+
+        // Initialize the enhanced alignment engine
+        function initializeAlignmentEngine() {
+            alignmentEngine = new EnhancedAlignmentEngine();
+            console.log('Enhanced Alignment Engine initialized');
         }
 
         // Initialize the application
         async function init() {
             try {
+                // Initialize enhanced alignment engine
+                initializeAlignmentEngine();
+                
                 // Check if data manager is available
                 if (!window.dataManager) {
                     console.error('Data manager not available');
@@ -1377,6 +1680,11 @@
                 renderMatrix();
                 renderDetailedAnalysis();
 
+                // Update navigation with individual PLO links (only in PLO view)
+                if (currentView === 'plo') {
+                    updateNavigationWithPLOs();
+                }
+
                 // Setup event listeners
                 setupEventListeners();
                 
@@ -1430,299 +1738,69 @@
 
         async function performAlignment() {
             try {
-                console.log('Starting alignment analysis...');
+                console.log('Starting enhanced alignment analysis...');
                 console.log('Current PLOs:', currentPLOs ? currentPLOs.length : 'undefined');
                 console.log('Current MLOs:', currentMLOs ? currentMLOs.length : 'undefined');
                 
-                // Create alignment results based on our methodology
+                // Create alignment results using enhanced engine
                 alignmentResults = [];
                 
-                if (!currentPLOs || !currentMLOs) {
-                    console.error('PLOs or MLOs not available');
+                if (!currentPLOs || !currentMLOs || !alignmentEngine) {
+                    console.error('PLOs, MLOs, or alignment engine not available');
                     return;
                 }
                 
+                // Analyze each PLO-MLO pair
                 currentPLOs.forEach(plo => {
                     currentMLOs.forEach(mlo => {
                         try {
-                            const keywordAnalysis = analyzeKeywords(plo, mlo);
-                            const score = calculateAlignmentScore(keywordAnalysis);
-                            const justification = generateJustification(score, keywordAnalysis);
+                            const analysisResult = alignmentEngine.analyzeAlignment(
+                                plo, 
+                                mlo, 
+                                currentMLOs, 
+                                { 
+                                    programmeType: 'business',
+                                    level: 'bachelor' 
+                                }
+                            );
                             
-                            alignmentResults.push({
-                                plo: plo,
-                                mlo: mlo,
-                                score: score,
-                                justification: justification,
-                                ...keywordAnalysis
-                            });
+                            alignmentResults.push(analysisResult);
                         } catch (error) {
                             console.error('Error processing PLO-MLO pair:', plo.plokood, mlo.mlokood, error);
                         }
                     });
                 });
                 
-                console.log('Alignment analysis completed:', alignmentResults);
+                console.log('Enhanced alignment analysis completed:', alignmentResults);
             } catch (error) {
-                console.error('Alignment analysis failed:', error);
+                console.error('Enhanced alignment analysis failed:', error);
                 // Fallback to basic analysis
                 alignmentResults = generateBasicAlignment();
             }
         }
 
-        // Calculate score based on our stated methodology
-        function calculateAlignmentScore(analysis) {
-            const { keywordOverlap, competencyMatches } = analysis;
-            const competencyCount = competencyMatches ? competencyMatches.length : 0;
-            
-            // Apply methodology exactly as stated:
-            // Score 5: ≥15% keyword overlap + ≥3 competency matches
-            if (keywordOverlap >= 15 && competencyCount >= 3) {
-                return 5;
-            }
-            
-            // Score 4: ≥10% keyword overlap + ≥2 competency matches  
-            if (keywordOverlap >= 10 && competencyCount >= 2) {
-                return 4;
-            }
-            
-            // Score 3: ≥5% keyword overlap + ≥1 competency match
-            if (keywordOverlap >= 5 && competencyCount >= 1) {
-                return 3;
-            }
-            
-            // Score 2: ≥2% keyword overlap OR ≥1 competency match
-            if (keywordOverlap >= 2 || competencyCount >= 1) {
-                return 2;
-            }
-            
-            // Score 1: <2% keyword overlap + 0 competency matches
-            return 1;
-        }
-
-        // Generate justification that matches the score with quantifiable reasoning
-        function generateJustification(score, analysis) {
-            const { keywordOverlap, competencyMatches, matchingKeywords } = analysis;
-            const competencyCount = competencyMatches ? competencyMatches.length : 0;
-            const competencyNames = competencyMatches ? competencyMatches.map(m => m.category).join(', ') : 'none';
-            
-            // Generate quantifiable reasoning
-            const quantifiableAnalysis = {
-                keywordOverlap: keywordOverlap.toFixed(1),
-                competencyMatches: competencyCount,
-                competencyCategories: competencyNames,
-                bloomsLevel: 'Progressive',
-                keywordCount: matchingKeywords ? matchingKeywords.length : 0
-            };
-            
-            switch(score) {
-                case 5:
-                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
-                
-                case 4:
-                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
-                
-                case 3:
-                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
-                
-                case 2:
-                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
-                
-                case 1:
-                default:
-                    return `Keyword Overlap: ${quantifiableAnalysis.keywordOverlap}% (${quantifiableAnalysis.keywordCount} matches) | Competency Matches: ${quantifiableAnalysis.competencyMatches} categories (${quantifiableAnalysis.competencyCategories}) | Bloom's Level: ${quantifiableAnalysis.bloomsLevel}`;
-            }
-        }
-
-        // Fallback function for basic alignment when needed
+        // Fallback function for basic alignment when enhanced engine fails
         function generateBasicAlignment() {
             const basicResults = [];
             currentPLOs.forEach(plo => {
                 currentMLOs.forEach(mlo => {
-                    const keywordAnalysis = analyzeKeywords(plo, mlo);
-                    const score = calculateAlignmentScore(keywordAnalysis);
-                    const justification = generateJustification(score, keywordAnalysis);
-                    
+                    // Create a basic analysis result that matches the enhanced engine format
                     basicResults.push({
                         plo: plo,
                         mlo: mlo,
-                        score: score,
-                        justification: justification,
-                        ...keywordAnalysis
+                        score: 3.0, // Default moderate score
+                        justification: {
+                            summary: 'Basic alignment analysis (enhanced engine unavailable)',
+                            components: ['Fallback analysis applied'],
+                            methodology: 'Simple text comparison',
+                            evidence: ['Basic keyword matching']
+                        },
+                        highlightedPLO: alignmentEngine ? alignmentEngine.extractText(plo, currentLanguage) : '',
+                        highlightedMLO: alignmentEngine ? alignmentEngine.extractText(mlo, currentLanguage) : ''
                     });
                 });
             });
             return basicResults;
-        }
-
-        // Keyword analysis and highlighting function
-        function analyzeKeywords(plo, mlo) {
-            const ploText = (currentLanguage === 'english' ? (plo.plosisuik || plo.plosisu) : (plo.plosisuek || plo.plosisu)) || '';
-            const mloText = (currentLanguage === 'english' ? (mlo.mlosisuik || mlo.mlosisu) : (mlo.mlosisuek || mlo.mlosisu)) || '';
-            
-            // Extract meaningful words (longer than 3 characters)
-            const ploWords = extractWords(ploText);
-            const mloWords = extractWords(mloText);
-            
-            // Find matching keywords
-            const matchingKeywords = ploWords.filter(word => 
-                mloWords.some(mloWord => 
-                    word.toLowerCase() === mloWord.toLowerCase() ||
-                    word.toLowerCase().includes(mloWord.toLowerCase()) ||
-                    mloWord.toLowerCase().includes(word.toLowerCase())
-                )
-            );
-            
-            // Calculate overlap percentage
-            const overlapPercentage = ploWords.length > 0 ? 
-                (matchingKeywords.length / ploWords.length) * 100 : 0;
-            
-            // Competency categories
-            const competencyCategories = {
-                analytical: ['analyze', 'evaluate', 'assess', 'critical', 'examine', 'interpret', 'compare', 'contrast'],
-                application: ['apply', 'implement', 'use', 'utilize', 'practice', 'execute', 'operate', 'employ'],
-                creative: ['create', 'design', 'develop', 'innovate', 'generate', 'construct', 'produce', 'invent'],
-                management: ['manage', 'lead', 'coordinate', 'organize', 'plan', 'direct', 'supervise', 'control'],
-                communication: ['communicate', 'present', 'explain', 'discuss', 'report', 'articulate', 'express'],
-                collaboration: ['collaborate', 'teamwork', 'cooperate', 'work together', 'team', 'group'],
-                research: ['research', 'investigate', 'study', 'explore', 'examine', 'inquiry', 'analysis'],
-                technical: ['technical', 'programming', 'software', 'data', 'system', 'technology', 'digital'],
-                business: ['business', 'commercial', 'enterprise', 'market', 'economic', 'financial'],
-                international: ['international', 'global', 'cross-cultural', 'multicultural', 'worldwide']
-            };
-            
-            // Find competency matches
-            const competencyMatches = [];
-            const combinedText = (ploText + ' ' + mloText).toLowerCase();
-            
-            Object.entries(competencyCategories).forEach(([category, keywords]) => {
-                const matches = keywords.filter(keyword => combinedText.includes(keyword));
-                if (matches.length > 0) {
-                    competencyMatches.push({category, matches});
-                }
-            });
-            
-            return {
-                keywordOverlap: overlapPercentage,
-                matchingKeywords,
-                competencyMatches,
-                highlightedPLO: highlightKeywords(ploText, matchingKeywords),
-                highlightedMLO: highlightKeywords(mloText, matchingKeywords)
-            };
-        }
-        
-        function extractWords(text) {
-            return text.match(/\b\w{4,}\b/g) || [];
-        }
-        
-        function highlightKeywords(text, keywords) {
-            let highlightedText = text;
-            keywords.forEach(keyword => {
-                const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-                highlightedText = highlightedText.replace(regex, `<span class="keyword-highlight">${keyword}</span>`);
-            });
-            return highlightedText;
-        }
-        
-        function generateImprovementSuggestions(score, competencyMatches, keywordOverlap, mloText, ploText) {
-            if (score >= 3) return null; // Only suggest improvements for low scores
-            
-            const suggestions = [];
-            const mloWords = extractWords(mloText || '');
-            const ploWords = extractWords(ploText || '');
-            
-            // Bloom's Taxonomy analysis
-            const bloomsLevels = {
-                remember: ['remember', 'recall', 'identify', 'define', 'list', 'name', 'state', 'describe'],
-                understand: ['understand', 'explain', 'summarize', 'interpret', 'classify', 'compare', 'discuss'],
-                apply: ['apply', 'use', 'implement', 'execute', 'carry out', 'practice', 'employ', 'demonstrate'],
-                analyze: ['analyze', 'examine', 'evaluate', 'assess', 'investigate', 'differentiate', 'break down'],
-                evaluate: ['evaluate', 'judge', 'critique', 'assess', 'justify', 'validate', 'defend', 'argue'],
-                create: ['create', 'design', 'develop', 'construct', 'generate', 'produce', 'formulate', 'synthesize']
-            };
-            
-            // Detect cognitive levels in PLO and MLO
-            let ploBloomsLevel = 'remember';
-            let mloBloomsLevel = 'remember';
-            
-            Object.entries(bloomsLevels).forEach(([level, verbs]) => {
-                if (verbs.some(verb => ploText.toLowerCase().includes(verb))) {
-                    ploBloomsLevel = level;
-                }
-                if (verbs.some(verb => mloText.toLowerCase().includes(verb))) {
-                    mloBloomsLevel = level;
-                }
-            });
-            
-            // Level progression mapping
-            const levelHierarchy = ['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create'];
-            const ploLevelIndex = levelHierarchy.indexOf(ploBloomsLevel);
-            const mloLevelIndex = levelHierarchy.indexOf(mloBloomsLevel);
-            
-            // Analyze specific content gaps
-            const missingCompetencies = [];
-            const competencyCategories = {
-                analytical: ['analyze', 'evaluate', 'assess', 'critical', 'examine', 'interpret'],
-                application: ['apply', 'implement', 'use', 'utilize', 'practice', 'execute'],
-                creative: ['create', 'design', 'develop', 'innovate', 'generate', 'construct'],
-                management: ['manage', 'lead', 'coordinate', 'organize', 'plan', 'direct'],
-                communication: ['communicate', 'present', 'explain', 'discuss', 'report'],
-                research: ['research', 'investigate', 'study', 'explore', 'examine'],
-                technical: ['technical', 'programming', 'software', 'data', 'system'],
-                business: ['business', 'commercial', 'enterprise', 'market', 'economic']
-            };
-            
-            // Check for missing competency keywords in PLO that could be added to MLO
-            Object.entries(competencyCategories).forEach(([category, keywords]) => {
-                const ploHasCategory = keywords.some(keyword => ploText.toLowerCase().includes(keyword));
-                const mloHasCategory = keywords.some(keyword => mloText.toLowerCase().includes(keyword));
-                
-                if (ploHasCategory && !mloHasCategory) {
-                    const relevantKeywords = keywords.filter(keyword => ploText.toLowerCase().includes(keyword));
-                    missingCompetencies.push({category, keywords: relevantKeywords});
-                }
-            });
-            
-            // Bloom's taxonomy specific suggestions
-            if (ploLevelIndex > mloLevelIndex) {
-                const targetLevel = levelHierarchy[ploLevelIndex];
-                const suggestedVerbs = bloomsLevels[targetLevel].slice(0, 3);
-                suggestions.push(`Elevate cognitive level from "${mloBloomsLevel}" to "${targetLevel}" by using action verbs like: "${suggestedVerbs.join('", "')}"`);
-            }
-            
-            // Content-specific recommendations based on actual PLO text
-            const ploKeyTerms = ploWords.filter(word => 
-                word.length > 4 && 
-                !['student', 'students', 'learning', 'knowledge', 'skills', 'ability', 'capable'].includes(word.toLowerCase())
-            ).slice(0, 3);
-            
-            if (keywordOverlap < 10 && ploKeyTerms.length > 0) {
-                suggestions.push(`Incorporate specific PLO terminology: "${ploKeyTerms.join('", "')}" to strengthen semantic alignment with programme outcomes.`);
-            }
-            
-            if (missingCompetencies.length > 0) {
-                const primaryMissing = missingCompetencies[0];
-                suggestions.push(`Address missing ${primaryMissing.category} competency by incorporating "${primaryMissing.keywords.slice(0, 2).join('" and "')}" in learning activities.`);
-            }
-            
-            // Specific score-based recommendations
-            if (score === 1) {
-                suggestions.push(`Critical misalignment detected. Restructure MLO to directly address PLO core competencies. Consider explicit mapping to programme learning outcomes.`);
-            } else if (score === 2) {
-                suggestions.push(`Partial alignment present. Enhance MLO by adding specific assessment methods and learning activities that demonstrate PLO achievement.`);
-            }
-            
-            // Content depth and specificity suggestions
-            if (mloText.length < 50) {
-                suggestions.push(`Expand MLO description to include specific learning objectives, skills development, and measurable outcomes that align with PLO requirements.`);
-            }
-            
-            // Assessment and demonstration suggestions
-            if (!mloText.toLowerCase().includes('assess') && !mloText.toLowerCase().includes('demonstrat')) {
-                suggestions.push(`Add explicit assessment criteria or demonstration methods to show how students will achieve the stated PLO competencies.`);
-            }
-            
-            return suggestions.length > 0 ? suggestions : null;
         }
 
         function renderSummary() {
@@ -1736,12 +1814,13 @@
             const totalAlignments = alignmentResults.length;
             const averageScore = (alignmentResults.reduce((sum, result) => sum + result.score, 0) / totalAlignments).toFixed(2);
             
+            // Update score distribution to handle enhanced alignment scoring with new legend
             const scoreDistribution = {
-                1: alignmentResults.filter(r => r.score === 1).length,
-                2: alignmentResults.filter(r => r.score === 2).length,
-                3: alignmentResults.filter(r => r.score === 3).length,
-                4: alignmentResults.filter(r => r.score === 4).length,
-                5: alignmentResults.filter(r => r.score === 5).length
+                'Poor': alignmentResults.filter(r => r.score >= 1.0 && r.score <= 1.4).length,
+                'Weak': alignmentResults.filter(r => r.score >= 1.5 && r.score <= 2.4).length,
+                'Moderate': alignmentResults.filter(r => r.score >= 2.5 && r.score <= 3.4).length,
+                'Good': alignmentResults.filter(r => r.score >= 3.5 && r.score <= 4.4).length,
+                'Excellent': alignmentResults.filter(r => r.score >= 4.5 && r.score <= 5.0).length
             };
 
             // Calculate MLO category distribution based on mlokood prefix
@@ -1754,14 +1833,23 @@
                     mlokood.substring(0, 2).toUpperCase() || 'OTHER';
                     
                 if (!mloCategories[category]) {
-                    mloCategories[category] = { total: 0, scores: {1:0, 2:0, 3:0, 4:0, 5:0} };
+                    mloCategories[category] = { total: 0, scores: {'Poor':0, 'Weak':0, 'Moderate':0, 'Good':0, 'Excellent':0} };
                 }
                 mloCategories[category].total++;
-                mloCategories[category].scores[result.score]++;
+                
+                // Map decimal scores to enhanced categories
+                let scoreCategory = 'Poor';
+                if (result.score >= 4.5) scoreCategory = 'Excellent';
+                else if (result.score >= 3.5) scoreCategory = 'Good';
+                else if (result.score >= 2.5) scoreCategory = 'Moderate';
+                else if (result.score >= 1.5) scoreCategory = 'Weak';
+                else scoreCategory = 'Poor';
+                
+                mloCategories[category].scores[scoreCategory]++;
             });
 
-            const strongAlignments = scoreDistribution[4] + scoreDistribution[5];
-            const weakAlignments = scoreDistribution[1] + scoreDistribution[2];
+            const strongAlignments = scoreDistribution['Good'] + scoreDistribution['Excellent'];
+            const weakAlignments = scoreDistribution['Poor'] + scoreDistribution['Weak'];
             const coveragePercentage = (strongAlignments / totalAlignments * 100).toFixed(1);
             
             // Calculate max height for chart scaling
@@ -1776,31 +1864,53 @@
                 <div class="score-distribution-chart">
                     <h3><i class="fas fa-chart-column"></i> Score Distribution Analysis</h3>
                     <div class="chart-container">
-                        ${Object.entries(scoreDistribution).map(([score, count]) => {
+                        ${Object.entries(scoreDistribution).map(([scoreLabel, count]) => {
                             const percentage = totalAlignments > 0 ? ((count / totalAlignments) * 100).toFixed(1) : 0;
                             const scoreColors = {
-                                1: '#ffcdd2', 2: '#ffecb3', 3: '#fff9c4', 4: '#c8e6c9', 5: '#a5d6a7'
+                                'Poor': 'var(--score-poor)', 
+                                'Weak': 'var(--score-weak)', 
+                                'Moderate': 'var(--score-moderate)', 
+                                'Good': 'var(--score-good)', 
+                                'Excellent': 'var(--score-excellent)'
                             };
+                            const scoreRanges = {
+                                'Poor': '1.0-1.4', 
+                                'Weak': '1.5-2.4', 
+                                'Moderate': '2.5-3.4', 
+                                'Good': '3.5-4.4', 
+                                'Excellent': '4.5-5.0'
+                            };
+                            
+                            // Show all columns, including 0 count ones
+                            const isZero = count === 0;
+                            const barHeight = maxCount > 0 ? (count / maxCount * 160) + 20 : 20;
+                            const backgroundColor = isZero ? 'transparent' : scoreColors[scoreLabel];
+                            const textColor = isZero ? 'transparent' : 'black';
+                            const borderStyle = isZero ? 'none' : '2px solid #ddd';
+                            
                             return `
                                 <div class="chart-bar" 
-                                     style="height: ${maxCount > 0 ? (count / maxCount * 160) + 20 : 20}px; 
-                                            background: ${scoreColors[score]}; 
-                                            color: #000000;" 
-                                     title="Score ${score}: ${count} (${percentage}%)">
-                                    ${count} (${percentage}%)
+                                     style="height: ${barHeight}px; 
+                                            background: ${backgroundColor}; 
+                                            color: ${textColor}; 
+                                            font-weight: bold;
+                                            border: ${borderStyle};
+                                            border-radius: 4px;" 
+                                     title="${scoreLabel} (${scoreRanges[scoreLabel]}): ${count} alignments (${percentage}%)">
+                                    ${isZero ? '' : `${count} (${percentage}%)`}
                                 </div>
                             `;
                         }).join('')}
                     </div>
                     <div class="chart-labels">
-                        <div class="chart-label">Minimal<br><small>Score 1</small></div>
-                        <div class="chart-label">Partial<br><small>Score 2</small></div>
-                        <div class="chart-label">Moderate<br><small>Score 3</small></div>
-                        <div class="chart-label">Strong<br><small>Score 4</small></div>
-                        <div class="chart-label">Excellent<br><small>Score 5</small></div>
+                        <div class="chart-label">Poor<br><small>1.0-1.4</small></div>
+                        <div class="chart-label">Weak<br><small>1.5-2.4</small></div>
+                        <div class="chart-label">Moderate<br><small>2.5-3.4</small></div>
+                        <div class="chart-label">Good<br><small>3.5-4.4</small></div>
+                        <div class="chart-label">Excellent<br><small>4.5-5.0</small></div>
                     </div>
                     <div style="text-align: center; margin-top: 15px; color: var(--tt-burgundy); font-weight: bold;">
-                        Average Score: ${averageScore} | Strong Alignments: ${coveragePercentage}%
+                        Average Score: ${averageScore} | Strong Alignments (Good+Excellent): ${coveragePercentage}%
                     </div>
                 </div>
                 
@@ -1817,48 +1927,85 @@
                             ${(() => {
                                 // Define category order
                                 const categoryOrder = ['YL', 'P1', 'P2', 'E1', 'E2', 'GD', 'VB', 'MN'];
-                                const scoreColors = {
-                                    1: '#ffcdd2', 2: '#ffecb3', 3: '#fff9c4', 4: '#c8e6c9', 5: '#a5d6a7'
+                                
+                                // Enhanced score legend with colors matching chart
+                                const enhancedScoreColors = {
+                                    'Poor': 'var(--score-poor)',
+                                    'Weak': 'var(--score-weak)', 
+                                    'Moderate': 'var(--score-moderate)',
+                                    'Good': 'var(--score-good)',
+                                    'Excellent': 'var(--score-excellent)'
                                 };
-                                const scoreLabels = {
-                                    1: 'Minimal', 2: 'Partial', 3: 'Moderate', 4: 'Strong', 5: 'Excellent'
-                                };
+                                
+                                // Map numeric scores to enhanced categories
+                                function getScoreCategory(score) {
+                                    const numScore = parseFloat(score);
+                                    if (numScore >= 1.0 && numScore <= 1.4) return 'Poor';
+                                    if (numScore >= 1.5 && numScore <= 2.4) return 'Weak';
+                                    if (numScore >= 2.5 && numScore <= 3.4) return 'Moderate';
+                                    if (numScore >= 3.5 && numScore <= 4.4) return 'Good';
+                                    if (numScore >= 4.5 && numScore <= 5.0) return 'Excellent';
+                                    return 'Poor'; // fallback
+                                }
+                                
+                                // mloCategories already contains the correct score format, no conversion needed
+                                const enhancedMloCategories = mloCategories;
                                 
                                 // Sort categories by defined order, then add any others
                                 const sortedCategories = [];
                                 categoryOrder.forEach(cat => {
-                                    if (mloCategories[cat]) {
-                                        sortedCategories.push([cat, mloCategories[cat]]);
+                                    if (enhancedMloCategories[cat]) {
+                                        sortedCategories.push([cat, enhancedMloCategories[cat]]);
                                     }
                                 });
                                 
                                 // Add any remaining categories not in the predefined order
-                                Object.entries(mloCategories).forEach(([cat, data]) => {
+                                Object.entries(enhancedMloCategories).forEach(([cat, data]) => {
                                     if (!categoryOrder.includes(cat)) {
                                         sortedCategories.push([cat, data]);
                                     }
                                 });
                                 
-                                // Calculate max count for width scaling
-                                const maxCount = Math.max(...sortedCategories.flatMap(([cat, data]) => Object.values(data.scores)));
+                                // Calculate max count for width scaling - use total count for better scaling
+                                const maxCount = Math.max(...sortedCategories.map(([cat, data]) => data.total));
                                 
                                 return sortedCategories.map(([category, data]) => {
-                                    const averageScore = data.total > 0 ? 
-                                        (Object.entries(data.scores).reduce((sum, [score, count]) => sum + (parseInt(score) * count), 0) / data.total).toFixed(1) : 0;
+                                    // Calculate average score for category
+                                    let totalWeightedScore = 0;
+                                    let totalCount = 0;
+                                    
+                                    Object.entries(data.scores).forEach(([scoreCategory, count]) => {
+                                        // Map back to numeric for average calculation
+                                        let midpoint;
+                                        switch(scoreCategory) {
+                                            case 'Poor': midpoint = 0.7; break;
+                                            case 'Weak': midpoint = 1.95; break;
+                                            case 'Moderate': midpoint = 2.95; break;
+                                            case 'Good': midpoint = 3.95; break;
+                                            case 'Excellent': midpoint = 4.75; break;
+                                        }
+                                        totalWeightedScore += midpoint * count;
+                                        totalCount += count;
+                                    });
+                                    
+                                    const averageScore = totalCount > 0 ? (totalWeightedScore / totalCount).toFixed(1) : '0.0';
                                     
                                     return `
                                         <div class="category-row">
                                             <div class="category-name">${category}</div>
                                             <div class="category-bars">
-                                                ${Object.entries(data.scores).filter(([score, count]) => count > 0).map(([score, count]) => {
+                                                ${Object.entries(data.scores).filter(([scoreCategory, count]) => count > 0).map(([scoreCategory, count]) => {
                                                     const percentage = data.total > 0 ? ((count / data.total) * 100).toFixed(1) : 0;
-                                                    const barWidth = maxCount > 0 ? Math.max((count / maxCount * 200), 25) : 25;
+                                                    // Calculate proportional width based on total count and available space (expanded by 70%)
+                                                    const totalBarWidth = maxCount > 0 ? Math.max((data.total / maxCount * 680), 102) : 102;
+                                                    const scoreBarWidth = (count / data.total) * totalBarWidth;
                                                     return `
-                                                        <div class="category-bar" 
-                                                             style="width: ${barWidth}px; 
-                                                                    background: ${scoreColors[score]};" 
-                                                             title="${category} - ${scoreLabels[score]}: ${count} alignment pairs (${percentage}%)">
-                                                            ${count}
+                                                        <div class="category-bar score-breakdown-bar" 
+                                                             style="width: ${scoreBarWidth}px; 
+                                                                    background: ${enhancedScoreColors[scoreCategory]};" 
+                                                             title="${category} - ${scoreCategory}: ${count} alignment pairs (${percentage}%)">
+                                                            <span class="score-count">${count}</span>
+                                                            <span class="score-label">(${percentage}%)</span>
                                                         </div>
                                                     `;
                                                 }).join('')}
@@ -1873,30 +2020,33 @@
                             })()}
                         </div>
                     </div>
-                </div>
-                
-                <div class="alignment-insights">
-                    <h3><i class="fas fa-lightbulb"></i> Action-Based Key Findings:</h3>
-                    <ul>
-                        ${weakAlignments > 0 ? `
-                            <li><strong>Immediate Action Required:</strong> ${weakAlignments} alignments scored ≤2. Focus on strengthening ${lowScorePLOs.length > 0 ? 'PLOs ' + lowScorePLOs.slice(0, 3).join(', ') : 'these weak alignments'} through curriculum revision.</li>
-                        ` : ''}
-                        ${strongAlignments > totalAlignments * 0.6 ? `
-                            <li><strong>Leverage Strength:</strong> ${highScoreModules.length > 0 ? 'Modules ' + highScoreModules.slice(0, 3).join(', ') : 'Strong performing modules'} demonstrate excellent alignment patterns. Use these as templates for improving weaker areas.</li>
-                        ` : `
-                            <li><strong>Strategic Enhancement Needed:</strong> Only ${coveragePercentage}% of alignments are strong. Implement systematic review of module learning outcomes to improve programme coherence.</li>
-                        `}
-                        ${improvableMLOs.length > 0 ? `
-                            <li><strong>Module Optimization:</strong> Review and enhance MLOs ${improvableMLOs.slice(0, 3).join(', ')}${improvableMLOs.length > 3 ? ' and ' + (improvableMLOs.length - 3) + ' others' : ''} to better support programme outcomes.</li>
-                        ` : ''}
-                        ${averageScore >= 4 ? `
-                            <li><strong>Quality Assurance:</strong> Maintain current high standards through regular monitoring and stakeholder feedback collection.</li>
-                        ` : averageScore >= 3 ? `
-                            <li><strong>Incremental Improvement:</strong> Implement targeted enhancements in lowest-scoring alignments to achieve excellence benchmark.</li>
-                        ` : `
-                            <li><strong>Comprehensive Review Required:</strong> Conduct systematic curriculum mapping workshop to fundamentally improve PLO-MLO alignment quality.</li>
-                        `}
-                    </ul>
+                    
+                    <!-- Enhanced Score Legend for Category Charts -->
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--tt-burgundy);">
+                        <h4 style="margin: 0 0 10px 0; color: var(--tt-burgundy);"><i class="fas fa-palette"></i> Score Color Legend:</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px;">
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-poor); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Poor</strong> (1.0-1.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-weak); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Weak</strong> (1.5-2.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-moderate); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Moderate</strong> (2.5-3.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-good); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Good</strong> (3.5-4.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-excellent); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Excellent</strong> (4.5-5.0)</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
         }
@@ -2076,8 +2226,14 @@
         function renderPLOView(container) {
             let html = '';
             
-            currentPLOs.forEach(plo => {
-                const ploResults = alignmentResults.filter(r => r.plo.plokood === plo.plokood);
+            currentPLOs.forEach((plo, index) => {
+                const ploCode = plo.plokood || `PLO${index + 1}`;
+                // Use original PLO code for filtering results, fallback for display only
+                const originalPloCode = plo.plokood || ploCode;
+                const ploResults = alignmentResults.filter(r => {
+                    const resultPloCode = r.plo.plokood || r.plo.code || `PLO${index + 1}`;
+                    return resultPloCode === originalPloCode;
+                });
                 const averageScore = ploResults.length > 0 ? 
                     (ploResults.reduce((sum, r) => sum + r.score, 0) / ploResults.length).toFixed(2) : 0;
 
@@ -2087,9 +2243,9 @@
                 const highlightedPLOText = highlightKeywords(ploText, allMatchingKeywords);
 
                 html += `
-                    <div class="plo-analysis-section">
+                    <div class="plo-analysis-section" id="plo-${ploCode}">
                         <div class="plo-header-section">
-                            <h3>${plo.plokood}: Average Alignment Score: ${averageScore}</h3>
+                            <h3>${ploCode}: Average Alignment Score: ${averageScore}</h3>
                             <div class="plo-text">
                                 ${highlightedPLOText}
                             </div>
@@ -2111,14 +2267,6 @@
                     const ploText = (currentLanguage === 'english' ? (result.plo.plosisuik || result.plo.plosisu) : (result.plo.plosisuek || result.plo.plosisu)) || '';
                     const mloText = (currentLanguage === 'english' ? (result.mlo.mlosisuik || result.mlo.mlosisu) : (result.mlo.mlosisuek || result.mlo.mlosisu)) || '';
                     
-                    const improvementSuggestions = generateImprovementSuggestions(
-                        result.score, 
-                        result.competencyMatches || [], 
-                        result.keywordOverlap || 0,
-                        mloText,
-                        ploText
-                    );
-                    
                     html += `
                         <tr>
                             <td class="mlo-code-cell">${result.mlo.mlokood}</td>
@@ -2126,26 +2274,31 @@
                                 ${result.highlightedMLO || mloText}
                             </td>
                             <td class="alignment-score-cell">
-                                <span class="alignment-score score-${result.score}">${result.score}</span>
+                                <span class="alignment-score score-${Math.round(result.score)}">${result.score}</span>
                             </td>
                             <td class="justification-cell">
                                 <div style="font-size: 0.9em;">
-                                    <div><strong>Keyword overlap:</strong> ${(result.keywordOverlap || 0).toFixed(1)}% 
-                                    ${result.matchingKeywords && result.matchingKeywords.length > 0 ? 
-                                        `(${result.matchingKeywords.slice(0, 3).join(', ')}${result.matchingKeywords.length > 3 ? '...' : ''})` : '(none)'}
-                                    </div>
-                                    <div style="margin-top: 4px;"><strong>Competency matches:</strong> ${result.competencyMatches && result.competencyMatches.length > 0 ? 
-                                        `${result.competencyMatches.length} found (${result.competencyMatches.map(m => m.category).join(', ')})` : 'none detected'}
-                                    </div>
-                                    ${result.bloomsAlignment ? `<div style="margin-top: 4px;"><strong>Bloom's level:</strong> ${result.bloomsAlignment}</div>` : ''}
-                                    ${improvementSuggestions && improvementSuggestions.length > 0 ? `
-                                        <div style="margin-top: 8px; padding: 6px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
-                                            <strong><i class="fas fa-lightbulb" style="color: #856404;"></i> Improvement Suggestions:</strong>
-                                            <ul style="margin: 4px 0 0 0; padding-left: 16px;">
-                                                ${improvementSuggestions.map(suggestion => `<li style="margin-bottom: 2px;">${suggestion}</li>`).join('')}
-                                            </ul>
-                                        </div>
-                                    ` : ''}
+                                    ${result.justification && typeof result.justification === 'object' ? `
+                                        <div style="margin-bottom: 6px;"><strong>Components:</strong></div>
+                                        <ul style="margin: 2px 0; padding-left: 16px; font-size: 0.85em;">
+                                            ${result.justification.components.map(comp => `<li>${comp}</li>`).join('')}
+                                        </ul>
+                                        ${result.justification.calculation ? `
+                                            <div style="margin-top: 6px; font-size: 0.8em; color: #555; font-family: monospace;">
+                                                ${result.justification.calculation}
+                                            </div>
+                                        ` : ''}
+                                        ${result.justification.suggestions && result.justification.suggestions.length > 0 ? `
+                                            <div style="margin-top: 8px; padding: 6px; background-color: #f8f9fa; border-left: 3px solid #ffc107; font-size: 0.8em;">
+                                                <strong style="color: #856404;">💡 Improvement Suggestions:</strong>
+                                                <ul style="margin: 4px 0; padding-left: 16px;">
+                                                    ${result.justification.suggestions.map(sugg => `<li style="margin-bottom: 4px;">${sugg}</li>`).join('')}
+                                                </ul>
+                                            </div>
+                                        ` : ''}
+                                    ` : `
+                                        <div>${result.justification || 'No detailed justification available'}</div>
+                                    `}
                                 </div>
                             </td>
                         </tr>
@@ -2238,24 +2391,29 @@
                                     <span class="alignment-score score-${result.score}">${result.score}</span>
                                 </td>
                                 <td class="justification-cell">
-                                    <div class="alignment-justification">${result.justification}</div>
-                                    <div style="margin-top: 8px;">
-                                        <small><strong>Keyword overlap:</strong> ${(result.keywordOverlap || 0).toFixed(1)}% 
-                                        ${result.matchingKeywords && result.matchingKeywords.length > 0 ? 
-                                            `(${result.matchingKeywords.slice(0, 3).join(', ')}${result.matchingKeywords.length > 3 ? '...' : ''})` : '(none)'}
-                                        </small><br>
-                                        <small><strong>Competency matches:</strong> ${result.competencyMatches && result.competencyMatches.length > 0 ? 
-                                            `${result.competencyMatches.length} found (${result.competencyMatches.map(m => m.category).join(', ')})` : 'none detected'}
-                                        </small>
-                                    </div>
-                                    ${improvementSuggestions && improvementSuggestions.length > 0 ? `
-                                        <div style="margin-top: 8px; padding: 6px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
-                                            <strong><i class="fas fa-lightbulb" style="color: #856404;"></i> Improvement Suggestions:</strong>
-                                            <ul style="margin: 4px 0 0 0; padding-left: 16px;">
-                                                ${improvementSuggestions.map(suggestion => `<li style="margin-bottom: 2px;">${suggestion}</li>`).join('')}
+                                    <div style="font-size: 0.9em;">
+                                        ${result.justification && typeof result.justification === 'object' ? `
+                                            <div style="margin-bottom: 6px;"><strong>Components:</strong></div>
+                                            <ul style="margin: 2px 0; padding-left: 16px; font-size: 0.85em;">
+                                                ${result.justification.components.map(comp => `<li>${comp}</li>`).join('')}
                                             </ul>
-                                        </div>
-                                    ` : ''}
+                                            ${result.justification.calculation ? `
+                                                <div style="margin-top: 6px; font-size: 0.8em; color: #555; font-family: monospace;">
+                                                    ${result.justification.calculation}
+                                                </div>
+                                            ` : ''}
+                                            ${result.justification.suggestions && result.justification.suggestions.length > 0 ? `
+                                                <div style="margin-top: 8px; padding: 6px; background-color: #f8f9fa; border-left: 3px solid #ffc107; font-size: 0.8em;">
+                                                    <strong style="color: #856404;">💡 Improvement Suggestions:</strong>
+                                                    <ul style="margin: 4px 0; padding-left: 16px;">
+                                                        ${result.justification.suggestions.map(sugg => `<li style="margin-bottom: 4px;">${sugg}</li>`).join('')}
+                                                    </ul>
+                                                </div>
+                                            ` : ''}
+                                        ` : `
+                                            <div>${result.justification || 'No detailed justification available'}</div>
+                                        `}
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -2315,6 +2473,18 @@
                     '<i class="fas fa-exchange-alt"></i> Switch to MLO View' : 
                     '<i class="fas fa-exchange-alt"></i> Switch to PLO View';
                 renderDetailedAnalysis();
+                
+                // Update navigation based on current view
+                if (currentView === 'plo') {
+                    updateNavigationWithPLOs();
+                } else {
+                    // Remove PLO navigation links in MLO view
+                    const analysisNav = document.querySelector('.analysis-nav ul');
+                    if (analysisNav) {
+                        const existingPLOLinks = analysisNav.querySelectorAll('li[data-plo-link]');
+                        existingPLOLinks.forEach(link => link.remove());
+                    }
+                }
             });
 
             // Back to top
@@ -2334,6 +2504,141 @@
             // Export buttons
             document.getElementById('export-excel-btn').addEventListener('click', exportToExcel);
             document.getElementById('export-plo-mlo-btn').addEventListener('click', exportReport);
+            
+            // Setup sticky navigation
+            setupStickyNavigation();
+        }
+
+        // Setup sticky navigation functionality
+        function setupStickyNavigation() {
+            try {
+                const navLinks = document.querySelectorAll('.analysis-nav a');
+                const sections = document.querySelectorAll('section[id], .plo-analysis-section[id]');
+                
+                if (navLinks.length === 0) {
+                    console.warn('No navigation links found for sticky navigation');
+                    return;
+                }
+                
+                // Add click event listeners for smooth scrolling
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            // Account for sticky nav height
+                            const navElement = document.querySelector('.analysis-nav');
+                            const navHeight = navElement ? navElement.offsetHeight : 60;
+                            const elementPosition = targetElement.offsetTop - navHeight - 10;
+                            
+                            window.scrollTo({
+                                top: elementPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                });
+                
+                // Add scroll event listener for active section highlighting
+                function updateActiveNavLink() {
+                    try {
+                        const navElement = document.querySelector('.analysis-nav');
+                        const navHeight = navElement ? navElement.offsetHeight : 60;
+                        const scrollPosition = window.scrollY + navHeight + 50;
+                        
+                        let currentActiveLink = null;
+                        
+                        sections.forEach(section => {
+                            const sectionTop = section.offsetTop;
+                            const sectionBottom = sectionTop + section.offsetHeight;
+                            
+                            if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+                                currentActiveLink = section.id;
+                            }
+                        });
+                        
+                        // Update active states
+                        navLinks.forEach(link => {
+                            const linkTarget = link.getAttribute('href').substring(1);
+                            if (linkTarget === currentActiveLink) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error updating active nav link:', error);
+                    }
+                }
+                
+                // Initial call and scroll listener
+                updateActiveNavLink();
+                window.addEventListener('scroll', updateActiveNavLink);
+                
+                console.log('Sticky navigation setup completed successfully');
+            } catch (error) {
+                console.error('Error setting up sticky navigation:', error);
+            }
+        }
+
+        function updateNavigationWithPLOs() {
+            try {
+                const analysisNav = document.querySelector('.analysis-nav ul');
+                if (!analysisNav || !currentPLOs || currentPLOs.length === 0) {
+                    return;
+                }
+
+                // Remove existing PLO navigation items (if any)
+                const existingPLOLinks = analysisNav.querySelectorAll('li[data-plo-link]');
+                existingPLOLinks.forEach(link => link.remove());
+
+                // Find the position to insert PLO links (after detailed-analysis)
+                const detailedAnalysisLink = analysisNav.querySelector('a[href="#detailed-analysis"]');
+                const insertPosition = detailedAnalysisLink ? detailedAnalysisLink.parentElement : null;
+
+                if (insertPosition) {
+                    // Create PLO navigation items
+                    currentPLOs.forEach((plo, index) => {
+                        const ploCode = plo.plokood || `PLO${index + 1}`;
+                        const ploNavItem = document.createElement('li');
+                        ploNavItem.setAttribute('data-plo-link', 'true');
+                        
+                        const ploLink = document.createElement('a');
+                        ploLink.href = `#plo-${ploCode}`;
+                        ploLink.innerHTML = `<i class="fas fa-graduation-cap"></i> ${ploCode}`;
+                        
+                        // Add click event listener for smooth scrolling
+                        ploLink.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const targetId = this.getAttribute('href').substring(1);
+                            const targetElement = document.getElementById(targetId);
+                            
+                            if (targetElement) {
+                                // Account for sticky nav height
+                                const navElement = document.querySelector('.analysis-nav');
+                                const navHeight = navElement ? navElement.offsetHeight : 60;
+                                const elementPosition = targetElement.offsetTop - navHeight - 10;
+                                
+                                window.scrollTo({
+                                    top: elementPosition,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                        
+                        ploNavItem.appendChild(ploLink);
+                        
+                        // Insert after the detailed analysis link
+                        insertPosition.parentNode.insertBefore(ploNavItem, insertPosition.nextSibling);
+                    });
+
+                    console.log(`Added ${currentPLOs.length} PLO navigation links with event listeners`);
+                }
+            } catch (error) {
+                console.error('Error updating navigation with PLOs:', error);
+            }
         }
 
         function showAlignmentDetail(ploCode, mloCode) {
@@ -2586,11 +2891,11 @@
             color: white; 
             font-weight: bold;
         }
-        .score-1 { background-color: #ffcdd2; }
-        .score-2 { background-color: #ffecb3; }
-        .score-3 { background-color: #fff9c4; }
-        .score-4 { background-color: #c8e6c9; }
-        .score-5 { background-color: #a5d6a7; }
+        .score-1 { background-color: var(--score-poor); }
+        .score-2 { background-color: var(--score-weak); }
+        .score-3 { background-color: var(--score-moderate); }
+        .score-4 { background-color: var(--score-strong); }
+        .score-5 { background-color: var(--score-excellent); }
         .plo-header { 
             background: #f8f9fa !important; 
             color: #aa1352 !important;
