@@ -8,8 +8,8 @@ This document describes the major cleanup and security improvements performed on
 ### Critical Security Issue
 - **Issue**: Exposed Google Gemini API keys found in repository files
 - **Affected Keys**: 
-  - `AIzaSyBoe-E3rqWXPyC2IJrHrcow3jEg3SNd5ZU` (in `.env.example`)
-  - `AIzaSyC8UZ6N5Q9hX7vY2nF1wB3kM4pR8sT6nL9` (in documentation)
+  - `********` (in `.env.example`)
+  - `********` (in documentation)
 - **Discovery**: GitHub security alerts detected exposed credentials
 
 ### Resolution Actions
