@@ -107,11 +107,9 @@ class ProgrammeDataLoader {
     getCLOs(programmeCode, courseCode) {
         const courses = this.getCourses(programmeCode);
         const course = courses.find(c => c.ainekood === courseCode);
-        
         if (!course) {
             throw new Error(`Course ${courseCode} not found in programme ${programmeCode}`);
         }
-
         return {
             courseInfo: {
                 code: course.ainekood,
@@ -126,19 +124,35 @@ class ProgrammeDataLoader {
     }
 
     /**
-     * Search courses by name or code
+     * Get MLOs related to a specific course
+     * Returns an array of MLOs that are linked to the course (by code or mapping)
      */
-    searchCourses(programmeCode, searchTerm) {
-        const courses = this.getCourses(programmeCode);
-        const term = searchTerm.toLowerCase();
-        
-        return courses.filter(course => 
-            course.ainekood.toLowerCase().includes(term) ||
-            course.ainenimetusik.toLowerCase().includes(term) ||
-            course.ainenimetusek.toLowerCase().includes(term)
-        );
+    getRelatedMLOs(programmeCode, courseCode) {
+        if (!this.isLoaded) {
+            throw new Error('Data not loaded. Call loadData() first.');
+        }
+        const programme = this.data[programmeCode];
+        if (!programme) {
+            throw new Error(`Programme ${programmeCode} not found`);
+        }
+        // Find the course
+        const course = (programme.courses || []).find(c => c.ainekood === courseCode);
+        if (!course) {
+            throw new Error(`Course ${courseCode} not found in programme ${programmeCode}`);
+        }
+        // If course.mlos exists and is an array of codes:
+        // - If empty, return [] (no MLOs mapped)
+        // - If populated, filter programme.mlos by mapped codes
+        if (Array.isArray(course.mlos)) {
+            if (course.mlos.length === 0) {
+                // Explicitly mapped to no MLOs
+                return [];
+            }
+            return (programme.mlos || []).filter(mlo => course.mlos.includes(mlo.mlokood));
+        }
+        // Fallback: return all MLOs (if no mapping property)
+        return programme.mlos || [];
     }
-
     /**
      * Get programme info
      */

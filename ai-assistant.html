@@ -1291,6 +1291,22 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         }
 
+        // Add missing function to populate Course Analysis programme dropdown
+        function populateCourseAnalysisDropdowns() {
+            const dropdown = document.getElementById('course-programme-select');
+            if (!dropdown) return;
+            dropdown.innerHTML = '<option value="">Select a Study Programme...</option>';
+            if (window.programmeDataLoader && window.programmeDataLoader.isDataLoaded()) {
+                const programmes = window.programmeDataLoader.getProgrammes();
+                programmes.forEach(programme => {
+                    const option = document.createElement('option');
+                    option.value = programme.code;
+                    option.textContent = `${programme.code} - ${programme.nameEn}`;
+                    dropdown.appendChild(option);
+                });
+            }
+        }
+
         function loadProgrammeData() {
             const programmeCode = document.getElementById('programme-select').value;
             
@@ -1340,6 +1356,38 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 console.error('Error loading programme data:', error);
                 alert('Error loading programme data: ' + error.message);
             }
+        }
+
+        // Add missing function to handle programme change in Course Analysis tab
+        function onCourseAnalysisProgrammeChange() {
+            const dropdown = document.getElementById('course-programme-select');
+            const selectedCode = dropdown ? dropdown.value : '';
+            // Reset course dropdown
+            const courseDropdown = document.getElementById('course-select');
+            if (courseDropdown) {
+                courseDropdown.innerHTML = '<option value="">Select a course...</option>';
+                if (selectedCode && selectedCode !== '') {
+                    try {
+                        const courses = window.programmeDataLoader.getCourses(selectedCode);
+                        courses.forEach(course => {
+                            const option = document.createElement('option');
+                            option.value = course.ainekood;
+                            option.textContent = `${course.ainekood} - ${course.ainenimetusik}`;
+                            courseDropdown.appendChild(option);
+                        });
+                    } catch (error) {
+                        console.error('Error loading courses:', error);
+                        courseDropdown.innerHTML = '<option value="">Error loading courses</option>';
+                    }
+                }
+            }
+            // Reset MLO dropdown
+            const mloDropdown = document.getElementById('course-mlo-select');
+            if (mloDropdown) {
+                mloDropdown.innerHTML = '<option value="">Select a course first...</option>';
+            }
+            // Reset CLO checkboxes
+            resetCLOCheckboxes();
         }
 
         function loadSelectedPLO() {
@@ -1468,268 +1516,28 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         }
 
-        function loadSelectedCourseMlo() {
-            const programmeCode = document.getElementById('course-programme-select').value;
-            const mloIndex = document.getElementById('course-mlo-select').value;
-            
-            if (!programmeCode || !mloIndex) return;
-            
-            try {
-                const mlos = window.programmeDataLoader.getMLOs(programmeCode);
-                const selectedMlo = mlos[parseInt(mloIndex)];
-                document.getElementById('module-learning-outcomes').value = selectedMlo.mlosisuik;
-            } catch (error) {
-                console.error('Error loading course MLO:', error);
-            }
-        }
-
-        function updateSelectedCLOs() {
-            const selectedCLOs = [];
-            const checkboxes = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
-            
-            // Limit to 5 CLOs
-            if (checkboxes.length > 5) {
-                alert('Maximum 5 CLOs can be selected for optimal token efficiency.');
-                event.target.checked = false;
-                return;
-            }
-            
-            checkboxes.forEach(checkbox => {
-                selectedCLOs.push(checkbox.value);
-            });
-            
-            document.getElementById('course-learning-outcomes').value = selectedCLOs.join('\n\n');
-        }
-
-        function resetPloMloDropdowns() {
-            const ploSelect = document.getElementById('plo-select');
-            const mloSelect = document.getElementById('mlo-select');
-            const ploText = document.getElementById('plo-text');
-            const mloText = document.getElementById('mlo-text');
-            
-            if (ploSelect) ploSelect.innerHTML = '<option value="">Select a programme first...</option>';
-            if (mloSelect) mloSelect.innerHTML = '<option value="">Select a programme first...</option>';
-            if (ploText) ploText.value = '';
-            if (mloText) mloText.value = '';
-        }
-
-        // Enhanced Course Analysis functions for new dropdown structure
-        function populateCourseAnalysisDropdowns() {
-            console.log('Populating Course Analysis dropdowns...');
-            const programmes = window.programmeDataLoader.getProgrammes();
-            console.log('Available programmes:', programmes.length);
-            
-            const dropdown = document.getElementById('course-programme-select');
-            if (dropdown) {
-                dropdown.innerHTML = '<option value="">Select a Study Programme...</option>';
-                programmes.forEach(programme => {
-                    const option = document.createElement('option');
-                    option.value = programme.code;
-                    option.textContent = `${programme.code} - ${programme.nameEn}`;
-                    dropdown.appendChild(option);
-                });
-                console.log('Course Analysis programme dropdown populated');
-            }
-        }
-
-        function onCourseAnalysisProgrammeChange() {
-            const dropdown = document.getElementById('course-programme-select');
-            const selectedCode = dropdown ? dropdown.value : '';
-            
-            console.log('Course Analysis programme changed to:', selectedCode);
-            
-            // Reset course dropdown
-            const courseDropdown = document.getElementById('course-select');
-            if (courseDropdown) {
-                courseDropdown.innerHTML = '<option value="">Select a course...</option>';
-                if (selectedCode && selectedCode !== '') {
-                    try {
-                        const courses = window.programmeDataLoader.getCourses(selectedCode);
-                        courses.forEach(course => {
-                            const option = document.createElement('option');
-                            option.value = course.ainekood;
-                            option.textContent = `${course.ainekood} - ${course.ainenimetusik}`;
-                            courseDropdown.appendChild(option);
-                        });
-                    } catch (error) {
-                        console.error('Error loading courses:', error);
-                        courseDropdown.innerHTML = '<option value="">Error loading courses</option>';
-                    }
-                }
-            }
-            
-            // Reset MLO dropdown
-            const mloDropdown = document.getElementById('course-mlo-select');
-            if (mloDropdown) {
-                mloDropdown.innerHTML = '<option value="">Select a course first...</option>';
-            }
-            
-            // Reset CLO checkboxes
-            resetCLOCheckboxes();
-        }
-
-        function onCourseSelectionChange() {
-            const programmeDropdown = document.getElementById('course-programme-select');
-            const courseDropdown = document.getElementById('course-select');
-            
-            const selectedProgramme = programmeDropdown ? programmeDropdown.value : '';
-            const selectedCourse = courseDropdown ? courseDropdown.value : '';
-            
-            console.log('Course selection changed to:', selectedCourse);
-            
-            // Update MLO dropdown
-            const mloDropdown = document.getElementById('course-mlo-select');
-            if (mloDropdown) {
-                mloDropdown.innerHTML = '<option value="">Select an MLO...</option>';
-                if (selectedProgramme && selectedProgramme !== '' && selectedCourse && selectedCourse !== '') {
-                    try {
-                        const mlos = window.programmeDataLoader.getMLOs(selectedProgramme);
-                        mlos.forEach((mlo, index) => {
-                            const option = document.createElement('option');
-                            option.value = index;
-                            // Handle both string and object MLO formats
-                            const mloCode = typeof mlo === 'object' ? mlo.mlokood : `MLO${index + 1}`;
-                            const mloText = typeof mlo === 'string' ? mlo : (mlo.mlosisuik || mlo.toString());
-                            option.textContent = `${mloCode}: ${mloText.substring(0, 60)}...`;
-                            mloDropdown.appendChild(option);
-                        });
-                    } catch (error) {
-                        console.error('Error loading MLOs:', error);
-                        mloDropdown.innerHTML = '<option value="">Error loading MLOs</option>';
-                    }
-                }
-            }
-            
-            // Update CLO checkboxes
-            updateCLOCheckboxes(selectedProgramme, selectedCourse);
-        }
-
-        function updateCLOCheckboxes(programmeCode, courseCode) {
-            const container = document.getElementById('clo-checkboxes');
-            if (!container) return;
-            
-            if (!programmeCode || programmeCode === '' || !courseCode || courseCode === '') {
-                container.innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
-                return;
-            }
-            
-            try {
-                const cloData = window.programmeDataLoader.getCLOs(programmeCode, courseCode);
-                const clos = Object.values(cloData.closEn || {});
-                
-                if (clos.length === 0) {
-                    container.innerHTML = '<p style="color: #999;">No CLOs found for this course.</p>';
-                    return;
-                }
-                
-                container.innerHTML = '';
-                clos.forEach((clo, index) => {
-                    const checkboxDiv = document.createElement('div');
-                    checkboxDiv.style.marginBottom = '8px';
-                    
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = `clo-${index}`;
-                    checkbox.value = index;
-                    checkbox.onchange = updateSelectedCLOs;
-                    
-                    const label = document.createElement('label');
-                    label.htmlFor = `clo-${index}`;
-                    label.style.marginLeft = '8px';
-                    label.style.cursor = 'pointer';
-                    label.textContent = `CLO ${index + 1}: ${clo.substring(0, 80)}${clo.length > 80 ? '...' : ''}`;
-                    
-                    checkboxDiv.appendChild(checkbox);
-                    checkboxDiv.appendChild(label);
-                    container.appendChild(checkboxDiv);
-                });
-            } catch (error) {
-                console.error('Error loading CLOs:', error);
-                container.innerHTML = '<p style="color: #ff6b6b;">Error loading CLOs for this course.</p>';
-            }
-        }
-
-        function resetCLOCheckboxes() {
-            const container = document.getElementById('clo-checkboxes');
-            if (container) {
-                container.innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
-            }
-            
-            const textarea = document.getElementById('course-learning-outcomes');
-            if (textarea) {
-                textarea.value = '';
-            }
-        }
-
-        function updateSelectedCLOs() {
-            const programmeDropdown = document.getElementById('course-programme-select');
-            const courseDropdown = document.getElementById('course-select');
-            const textarea = document.getElementById('course-learning-outcomes');
-            
-            if (!programmeDropdown || !courseDropdown || !textarea) return;
-            
-            const selectedProgramme = programmeDropdown.value;
-            const selectedCourse = courseDropdown.value;
-            
-            if (!selectedProgramme || selectedProgramme === '' || !selectedCourse || selectedCourse === '') return;
-            
-            try {
-                const cloData = window.programmeDataLoader.getCLOs(selectedProgramme, selectedCourse);
-                const clos = Object.values(cloData.closEn || {});
-                const selectedCLOs = [];
-                
-                // Get checked CLOs
-                const checkboxes = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
-                
-                // Limit to 5 CLOs
-                if (checkboxes.length > 5) {
-                    alert('Please select maximum 5 CLOs for optimal analysis.');
-                    // Uncheck the last checked item
-                    checkboxes[checkboxes.length - 1].checked = false;
-                    return;
-                }
-                
-                checkboxes.forEach(checkbox => {
-                    const index = parseInt(checkbox.value);
-                    if (index < clos.length) {
-                        selectedCLOs.push(`CLO ${index + 1}: ${clos[index]}`);
-                    }
-                });
-                
-                textarea.value = selectedCLOs.join('\n\n');
-            } catch (error) {
-                console.error('Error updating selected CLOs:', error);
-                textarea.value = 'Error loading selected CLOs';
-            }
-        }
-
         function loadSelectedCourseMLO() {
             const dropdown = document.getElementById('course-mlo-select');
             const textarea = document.getElementById('module-learning-outcomes');
-            
-            if (!dropdown || !textarea) return;
-            
+            const programmeDropdown = document.getElementById('course-programme-select');
+            const courseDropdown = document.getElementById('course-select');
+            if (!dropdown || !textarea || !programmeDropdown || !courseDropdown) return;
+            const selectedProgramme = programmeDropdown.value;
+            const selectedCourse = courseDropdown.value;
             const selectedIndex = dropdown.value;
-            if (selectedIndex === '' || selectedIndex === undefined) {
+            if (!selectedProgramme || !selectedCourse || selectedIndex === '' || selectedIndex === undefined) {
                 textarea.value = '';
                 return;
             }
-            
-            const programmeDropdown = document.getElementById('course-programme-select');
-            if (!programmeDropdown) return;
-            
-            const selectedProgramme = programmeDropdown.value;
-            if (!selectedProgramme || selectedProgramme === '') return;
-            
             try {
-                const mlos = window.programmeDataLoader.getMLOs(selectedProgramme);
+                const programme = window.programmeDataLoader.data[selectedProgramme];
+                const course = (programme.courses || []).find(c => c.ainekood === selectedCourse);
+                if (!course || !programme) throw new Error('Course or programme not found');
+                const moduleCode = course.moodulikood;
+                const mlos = (programme.mlos || []).filter(mlo => mlo.mlokood.startsWith(moduleCode));
                 const selectedMLO = mlos[parseInt(selectedIndex)];
-                
                 if (selectedMLO) {
-                    // Handle both string and object MLO formats
-                    const mloCode = typeof selectedMLO === 'object' ? selectedMLO.mlokood : `MLO${parseInt(selectedIndex) + 1}`;
-                    const mloText = typeof selectedMLO === 'string' ? selectedMLO : (selectedMLO.mlosisuik || selectedMLO.toString());
-                    textarea.value = `${mloCode}: ${mloText}`;
+                    textarea.value = `${selectedMLO.mlokood}: ${selectedMLO.mlosisuik}`;
                 }
             } catch (error) {
                 console.error('Error loading selected MLO:', error);
@@ -1811,6 +1619,120 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 document.getElementById('nav-plo-mlo').href = `plo-mlo.html?kavakood=${programmeCode}`;
                 document.getElementById('nav-clo-mlo').href = `clo-mlo.html?kavakood=${programmeCode}`;
             }
+        }
+
+        // Add missing function to reset CLO checkboxes
+        function resetCLOCheckboxes() {
+            const container = document.getElementById('clo-checkboxes');
+            if (container) {
+                container.innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
+            }
+            const textarea = document.getElementById('course-learning-outcomes');
+            if (textarea) {
+                textarea.value = '';
+            }
+        }
+
+        // Add missing function to handle course selection change
+        function onCourseSelectionChange() {
+            const programmeDropdown = document.getElementById('course-programme-select');
+            const courseDropdown = document.getElementById('course-select');
+            const selectedProgramme = programmeDropdown ? programmeDropdown.value : '';
+            const selectedCourse = courseDropdown ? courseDropdown.value : '';
+            // Update MLO dropdown using module code filtering (like clo-mlo.html)
+            const mloDropdown = document.getElementById('course-mlo-select');
+            if (mloDropdown) {
+                mloDropdown.innerHTML = '<option value="">Select an MLO...</option>';
+                let debugInfo = '';
+                let mlos = [];
+                if (selectedProgramme && selectedProgramme !== '' && selectedCourse && selectedCourse !== '') {
+                    try {
+                        const programme = window.programmeDataLoader.data[selectedProgramme];
+                        const course = (programme.courses || []).find(c => c.ainekood === selectedCourse);
+                        if (!course || !programme) throw new Error('Course or programme not found');
+                        const moduleCode = course.moodulikood;
+                        mlos = (programme.mlos || []).filter(mlo => mlo.mlokood.startsWith(moduleCode));
+                mlos.forEach(function(mlo, index) {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = mlo.mlokood + ': ' + mlo.mlonimetusik + ' - ' + mlo.mlosisuik;
+                    mloDropdown.appendChild(option);
+                });
+                debugInfo = '<div id="related-mlo-debug" style="margin-top:8px; font-size:13px; color:#aa1352; background:#f8f9fa; border-radius:4px; padding:8px;">Related MLOs for <b>' + selectedCourse + '</b> (module: <b>' + moduleCode + '</b>): <br>' + (mlos.length === 0 ? '<span style="color:#dc3545">No related MLOs found.</span>' : mlos.map(function(mlo) { return '<span style="display:inline-block;margin-right:8px;">' + mlo.mlokood + '</span>'; }).join('')) + '</div>';
+                // Update course info textarea
+                const courseInfoTextarea = document.getElementById('course-info-display');
+                if (courseInfoTextarea) {
+                    courseInfoTextarea.value = course.ainenimetusik + ' (' + course.ainekood + ') - ' + course.eap + ' EAP\nAssessment: ' + course.kontrollivorm;
+                }
+                // Clear MLO textarea when course changes
+                const mloTextArea = document.getElementById('module-learning-outcomes');
+                if (mloTextArea) mloTextArea.value = '';
+            } catch (error) {
+                console.error('Error filtering MLOs by module code:', error);
+                mloDropdown.innerHTML = '<option value="">Error loading MLOs</option>';
+                debugInfo = '<div id="related-mlo-debug" style="margin-top:8px; font-size:13px; color:#dc3545;">Error filtering MLOs by module code.</div>';
+            }
+                }
+                // Insert debug info after dropdown
+                let debugBox = document.getElementById('related-mlo-debug');
+                if (debugBox) {
+                    debugBox.outerHTML = debugInfo;
+                } else if (mloDropdown.parentNode) {
+                    mloDropdown.insertAdjacentHTML('afterend', debugInfo);
+                }
+            }
+            // Update CLO checkboxes
+            updateCLOCheckboxes(selectedProgramme, selectedCourse);
+        }
+
+        // Add missing function to update CLO checkboxes
+        function updateCLOCheckboxes(selectedProgramme, selectedCourse) {
+            const cloContainer = document.getElementById('clo-checkboxes');
+            if (!cloContainer) return;
+            cloContainer.innerHTML = '';
+            if (!selectedProgramme || !selectedCourse) {
+                cloContainer.innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
+                return;
+            }
+            try {
+                const cloData = window.programmeDataLoader.getCLOs(selectedProgramme, selectedCourse);
+                const closEn = cloData.closEn;
+                Object.keys(closEn).forEach(function(cloKey) {
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.style.marginBottom = '8px';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = 'clo-' + cloKey;
+                    checkbox.value = closEn[cloKey];
+                    checkbox.onchange = updateSelectedCLOs;
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = 'clo-' + cloKey;
+                    label.style.marginLeft = '8px';
+                    label.style.cursor = 'pointer';
+                    label.textContent = cloKey + ': ' + closEn[cloKey];
+                    
+                    checkboxDiv.appendChild(checkbox);
+                    checkboxDiv.appendChild(label);
+                    cloContainer.appendChild(checkboxDiv);
+                });
+            } catch (error) {
+                cloContainer.innerHTML = '<p style="color: #dc3545;">Error loading CLOs.</p>';
+                console.error('Error updating CLO checkboxes:', error);
+            }
+        }
+
+        // Add missing function to update selected CLOs textarea
+        function updateSelectedCLOs() {
+            const cloContainer = document.getElementById('clo-checkboxes');
+            const textarea = document.getElementById('course-learning-outcomes');
+            if (!cloContainer || !textarea) return;
+            const checked = cloContainer.querySelectorAll('input[type="checkbox"]:checked');
+            const selected = Array.from(checked).map(function(cb) {
+                return cb.value;
+            });
+            textarea.value = selected.join('\n');
         }
     </script>
 </body>
