@@ -3,10 +3,8 @@
 
 class SecureAPIConfig {
     constructor() {
-        this.apiKey = null;
-        this.endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+        this.endpoint = '/.netlify/functions/gemini-proxy';
         this.initialized = false;
-        
         // Token usage tracking
         this.tokenUsage = {
             totalRequests: 0,
@@ -14,53 +12,17 @@ class SecureAPIConfig {
             totalOutputTokens: 0,
             totalTokens: 0,
             requestHistory: [],
-            dailyLimit: 30000, // Increased to 30,000 tokens for paid tier (20x increase)
+            dailyLimit: 30000,
             estimatedCostUSD: 0
         };
-        
-        // Load usage data from localStorage
         this.loadTokenUsage();
     }
 
     // Initialize API configuration
     async init() {
-        try {
-            // First try to get from personal API config (your actual key)
-            if (window.personalAPIConfig && window.personalAPIConfig.getApiKey()) {
-                this.apiKey = window.personalAPIConfig.getApiKey();
-                this.endpoint = window.personalAPIConfig.getEndpoint('gemini-1.5-flash'); // Use working model
-                console.log('✅ Using personal API configuration with gemini-1.5-flash');
-            }
-            
-            // Try to load from environment variables (for local development)
-            else if (typeof process !== 'undefined' && process.env) {
-                this.apiKey = process.env.GEMINI_API_KEY || process.env.LANGEXTRACT_API_KEY;
-                console.log('✅ Using environment variable API key');
-            }
-
-            // Fallback: Try to load from a secure configuration endpoint
-            else if (!this.apiKey) {
-                await this.loadFromSecureEndpoint();
-            }
-
-            // Last resort: Use a hardcoded key (NOT RECOMMENDED for production)
-            else if (!this.apiKey) {
-                console.warn('No API key found. Using fallback configuration.');
-                this.apiKey = this.getSecureKey();
-            }
-
-            if (!this.apiKey) {
-                throw new Error('No API key available from any source');
-            }
-
-            this.initialized = true;
-            console.log('✅ API configuration initialized successfully');
-            console.log('API Key present:', this.apiKey ? 'Yes' : 'No');
-            console.log('API Key length:', this.apiKey ? this.apiKey.length : 0);
-        } catch (error) {
-            console.error('❌ Failed to initialize API configuration:', error);
-            this.initialized = false;
-        }
+        // No API key needed in frontend; always ready
+        this.initialized = true;
+        console.log('✅ API configuration initialized for Netlify proxy.');
     }
 
     // Load API key from a secure backend endpoint (recommended for production)
@@ -111,19 +73,11 @@ class SecureAPIConfig {
         if (!this.initialized) {
             throw new Error('API configuration not initialized. Call init() first.');
         }
-
-        if (!this.apiKey) {
-            throw new Error('No API key available. Check your personal-api-config.js file.');
-        }
-
-        console.log('🚀 Making API call to Gemini...');
+        console.log('🚀 Making API call to Gemini via Netlify function...');
         console.log('Prompt:', prompt.substring(0, 100) + '...');
-
         const requestBody = {
             contents: [{
-                parts: [{
-                    text: prompt
-                }]
+                parts: [{ text: prompt }]
             }],
             generationConfig: {
                 temperature: options.temperature || 0.7,
@@ -132,80 +86,47 @@ class SecureAPIConfig {
                 maxOutputTokens: options.maxOutputTokens || 2048,
             }
         };
-
         try {
-            const url = `${this.endpoint}?key=${this.apiKey}`;
-            console.log('📡 API Endpoint:', this.endpoint);
-            
-            const response = await fetch(url, {
+            const response = await fetch(this.endpoint, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody)
             });
-
             console.log('📥 Response status:', response.status, response.statusText);
-
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error('❌ API Error Response:', errorText);
-                
-                // Parse the error for more specific feedback
                 let errorMessage = `Gemini API error: ${response.status} ${response.statusText}`;
                 let isQuotaError = false;
                 let isRetryableError = false;
-                
                 try {
                     const errorData = JSON.parse(errorText);
                     if (errorData.error && errorData.error.message) {
                         errorMessage = errorData.error.message;
-                        
-                        // Check for quota-related errors
                         const quotaKeywords = ['quota', 'limit', 'exceeded', 'rate limit', 'billing'];
-                        isQuotaError = quotaKeywords.some(keyword => 
-                            errorMessage.toLowerCase().includes(keyword)
-                        );
-                        
-                        // Check for retryable errors (503 Service Unavailable, etc.)
+                        isQuotaError = quotaKeywords.some(keyword => errorMessage.toLowerCase().includes(keyword));
                         const retryableKeywords = ['overloaded', 'unavailable', 'try again later'];
-                        isRetryableError = response.status === 503 || 
-                                         retryableKeywords.some(keyword => 
-                                             errorMessage.toLowerCase().includes(keyword)
-                                         );
+                        isRetryableError = response.status === 503 || retryableKeywords.some(keyword => errorMessage.toLowerCase().includes(keyword));
                     }
                 } catch (e) {
-                    // If it's a 5xx error, assume retryable
                     isRetryableError = response.status >= 500 && response.status < 600;
                 }
-                
-                // If it's a retryable error, provide helpful guidance
                 if (isRetryableError) {
                     errorMessage += '\n\n💡 The Gemini API is temporarily overloaded. This usually resolves in a few moments. Try again shortly.';
                 }
-                
-                // If it's a quota error, provide helpful guidance
                 if (isQuotaError) {
                     console.warn('🚨 Quota limit reached, fallback system should activate');
                     errorMessage += '\n\nTip: The system will automatically fall back to local CLO generation.';
                 }
-                
                 throw new Error(errorMessage);
             }
-
             const data = await response.json();
             console.log('📋 API Response received:', data);
-            
             if (data.candidates && data.candidates[0] && data.candidates[0].content) {
                 const result = data.candidates[0].content.parts[0].text;
-                
-                // Track token usage
                 const usageMetadata = data.usageMetadata;
                 this.updateTokenUsage(prompt, result, usageMetadata);
-                
-                // Show current usage status
                 this.showUsageStatus();
-                
                 console.log('✅ API call successful');
                 return result;
             } else {
@@ -220,7 +141,7 @@ class SecureAPIConfig {
 
     // Utility method to check if API is ready
     isReady() {
-        return this.initialized && this.apiKey !== null;
+        return this.initialized;
     }
 
     // Token usage tracking methods
