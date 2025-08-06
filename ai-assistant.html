@@ -10,13 +10,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background: linear-gradient(135deg,                 <div class="form-group">
-                    <label for="plo-select">🎯 Programme Learning Outcome (PLO)</label>
-                    <select id="plo-select" onchange="loadSelectedPLO()" required>
-                        <option value="">Select a programme first...</option>
-                    </select>
-                    <textarea id="plo-text" rows="3" placeholder="PLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
-                </div>eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
         
@@ -331,7 +325,52 @@
             background: #bbdefb;
             transform: translateY(-1px);
         }
-        
+
+        /* Navigation header */
+        .nav-header {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -350,9 +389,31 @@
 </head>
 <body>
     <div class="container">
+        <!-- Navigation Header -->
+        <div class="nav-header">
+            <div class="nav-title">
+                <i class="fas fa-robot"></i>
+                AI Assistant
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" id="nav-home">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="plo-mlo.html" class="nav-link" id="nav-plo-mlo">
+                    <i class="fas fa-graduation-cap"></i>
+                    PLO-MLO
+                </a>
+                <a href="clo-mlo.html" class="nav-link" id="nav-clo-mlo">
+                    <i class="fas fa-clipboard-list"></i>
+                    CLO-MLO
+                </a>
+            </div>
+        </div>
+
         <div class="header">
             <h1>🤖 AI Assistant for ILO alignment</h1>
-            <p>Powered by Gemini 1.5 Flash • Custom Prompts & PLO-MLO Analysis</p>
+            <p>Powered by Gemini 1.5 Flash • Custom Prompts, PLO-MLO and Course Analysis</p>
         </div>
 
         <div class="status-bar">
@@ -362,7 +423,7 @@
             </div>
             <div class="token-usage-display">
                 <div class="usage-stats">
-                    <span id="daily-usage">Daily: 0/1500 tokens</span>
+                    <span id="daily-usage">Daily: 0/30000 tokens</span>
                     <span id="session-requests">Requests: 0</span>
                     <span id="estimated-cost">Cost: $0.00</span>
                 </div>
@@ -583,6 +644,29 @@ Examples:
                 await populateProgrammeDropdowns();
                 // Also populate Course Analysis dropdowns
                 populateCourseAnalysisDropdowns();
+                
+                // Handle URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const programmeCode = urlParams.get('kavakood');
+                if (programmeCode) {
+                    // Pre-select programme in dropdowns
+                    const programmeSelects = document.querySelectorAll('select[id*="programme"]');
+                    programmeSelects.forEach(select => {
+                        if (select.options) {
+                            for (let option of select.options) {
+                                if (option.value === programmeCode) {
+                                    select.value = programmeCode;
+                                    // Trigger change event to populate dependent dropdowns
+                                    select.dispatchEvent(new Event('change'));
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // Update navigation links with current programme
+                updateNavigationLinks();
             } catch (error) {
                 console.error('Failed to load programme data:', error);
             }
@@ -663,62 +747,6 @@ Examples:
             document.getElementById('status-text').textContent = text;
         }
 
-        function updateTokenUsageDisplay() {
-            if (window.secureAPIConfig) {
-                const stats = window.secureAPIConfig.getUsageStats();
-                
-                // Update usage statistics
-                document.getElementById('daily-usage').textContent = 
-                    `Daily: ${stats.dailyTokens || 0}/${stats.dailyLimit} tokens`;
-                document.getElementById('session-requests').textContent = 
-                    `Requests: ${stats.totalRequests || 0}`;
-                document.getElementById('estimated-cost').textContent = 
-                    `Cost: $${(stats.estimatedCostUSD || 0).toFixed(4)}`;
-                
-                // Update progress bar
-                const progressBar = document.getElementById('usage-progress');
-                const percentage = parseFloat(stats.usagePercentage || 0);
-                progressBar.style.width = `${Math.min(100, percentage)}%`;
-                
-                // Update progress bar color based on usage
-                progressBar.className = 'usage-progress';
-                if (percentage >= 90) {
-                    progressBar.classList.add('danger');
-                } else if (percentage >= 70) {
-                    progressBar.classList.add('warning');
-                }
-                
-                // Check if daily quota is reached and update status
-                if (percentage >= 100 || (stats.dailyTokens >= stats.dailyLimit)) {
-                    updateStatus('🚫 Not Available', 'Daily quota reached. Service unavailable until tomorrow.');
-                    // Disable analyze button
-                    const analyzeBtn = document.getElementById('analyze-btn');
-                    if (analyzeBtn) {
-                        analyzeBtn.disabled = true;
-                        analyzeBtn.style.opacity = '0.5';
-                        analyzeBtn.style.cursor = 'not-allowed';
-                    }
-                } else if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
-                    // Re-enable if quota is available and AI is ready
-                    updateStatus('✅ Ready', 'AI Assistant connected and ready to help!');
-                    const analyzeBtn = document.getElementById('analyze-btn');
-                    if (analyzeBtn) {
-                        analyzeBtn.disabled = false;
-                        analyzeBtn.style.opacity = '1';
-                        analyzeBtn.style.cursor = 'pointer';
-                    }
-                }
-                
-                // Update tooltip with detailed info
-                const usageDisplay = document.querySelector('.token-usage-display');
-                usageDisplay.title = 
-                    `Remaining today: ${stats.remainingDaily} tokens\n` +
-                    `Total tokens used: ${(stats.totalTokens || 0).toLocaleString()}\n` +
-                    `Input tokens: ${(stats.totalInputTokens || 0).toLocaleString()}\n` +
-                    `Output tokens: ${(stats.totalOutputTokens || 0).toLocaleString()}`;
-            }
-        }
-
         function switchTab(tabName) {
             // Update tab buttons
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -783,7 +811,7 @@ Examples:
                     result = await window.enhancedAIFeatures.executeCustomPrompt(prompt, {}, options);
                     
                 } else if (currentTab === 'plo-mlo') {
-                    // PLO-MLO analysis with program context
+                    // PLO-MLO analysis with TalTech methodology
                     const programmeCode = document.getElementById('programme-select').value;
                     const ploText = document.getElementById('plo-text').value;
                     const mloText = document.getElementById('mlo-text').value;
@@ -796,42 +824,84 @@ Examples:
                     // Get programme info for context
                     const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
                     
-                    // Create context-enhanced analysis
-                    let contextualPrompt = `
-EDUCATIONAL CONTEXT:
-Programme: ${programmeInfo.nameEn}
-Programme Code: ${programmeCode.toUpperCase()}
+                    // Create methodology-based analysis prompt
+                    let methodologyPrompt = `
+You are an educational assessment expert following the TalTech Enhanced ILO Alignment Analysis Methodology v1.0. 
 
-Programme Learning Outcome: "${ploText}"
-Module Learning Outcome: "${mloText}"
+ANALYSIS CONTEXT:
+Programme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})
+Programme Learning Outcome (PLO): "${ploText}"
+Module Learning Outcome (MLO): "${mloText}"
 
-Please analyze the alignment between this PLO and MLO within the context of the ${programmeInfo.nameEn} programme. Consider:
-1. How well the MLO supports the PLO
-2. Specific improvement suggestions for better alignment
-3. Industry relevance for ${programmeInfo.nameEn} graduates
-4. Assessment strategies that would work for both outcomes`;
+REQUIRED ANALYSIS METHOD:
+Follow the TalTech Enhanced Alignment Methodology with precise mathematical calculations:
+
+1. SEMANTIC ANALYSIS (35% weight):
+   - Extract meaningful words (3+ chars, no stop words) from both PLO and MLO
+   - Calculate exact overlap percentage: (shared words / PLO words) × 100
+   - Normalize: min(5.0, overlapPercentage / 4.0)
+   - Show calculation: "X shared words / Y total PLO words = Z% overlap → normalized score"
+
+2. COMPETENCY ANALYSIS (25% weight):
+   - Map words to EQF competency categories (analytical, creative, application, etc.)
+   - Apply category weights: analytical(1.3), creative(1.4), application(1.1), etc.
+   - Calculate: (matched keywords / total keywords) × category weight
+   - Normalize: min(5.0, totalWeight × 1.5)
+
+3. COGNITIVE ANALYSIS (20% weight):
+   - Identify Bloom's Taxonomy levels: Remember(1), Understand(2), Apply(3), Analyze(4), Evaluate(5), Create(6)
+   - Calculate level gap: |PLO_level - MLO_level|
+   - Check progression: MLO_level ≤ PLO_level
+   - Score: progressive ? (1.0 - gap × 0.2) : 0.3
+   - Normalize: score × 5.0
+
+4. CONTEXTUAL ANALYSIS (15% weight):
+   - Identify domain-specific terms for ${programmeInfo.nameEn}
+   - Apply domain relevance multipliers
+   - Calculate total relevance score
+   - Normalize: min(5.0, relevanceScore)
+
+5. PROGRESSION ANALYSIS (5% weight):
+   - Assess sequential building patterns
+   - Consider module prerequisites and year level
+   - Calculate building score (0-1.0)
+   - Normalize: buildingScore × 5.0
+
+FINAL CALCULATION:
+Final Score = (semantic×0.35) + (competency×0.25) + (cognitive×0.20) + (contextual×0.15) + (progression×0.05)
+
+REQUIRED OUTPUT FORMAT:
+1. **Detailed Mathematical Breakdown** (show all calculations with numbers)
+2. **Component Scores** (each with justification)
+3. **Final Score** (X.X/5.0) with quality level (Poor/Weak/Moderate/Good/Excellent)
+4. **Improvement Suggestions** (if score < 3.5 or any component < 2.5)
+5. **Academic Justification** (reference to EQF, Bloom's Taxonomy, etc.)
+
+QUALITY ASSURANCE:
+- All scores must be 1.0-5.0 range
+- Show mathematical work for transparency
+- Base analysis on established frameworks
+- Provide actionable improvement suggestions
+
+Reference: TalTech ILO Alignment Analysis Methodology v1.0`;
 
                     // Add custom analysis request if provided
                     if (customRequest.trim()) {
-                        contextualPrompt += `
+                        methodologyPrompt += `
 
-SPECIFIC ANALYSIS REQUEST:
+ADDITIONAL ANALYSIS REQUEST:
 ${customRequest}
 
-Please address the above specific request in addition to the general analysis.`;
+Please address this specific request while maintaining the methodology framework above.`;
                     }
-
-                    contextualPrompt += `
-
-Provide detailed feedback and actionable recommendations.`;
                     
-                    result = await window.enhancedAIFeatures.executeCustomPrompt(contextualPrompt, {}, {
+                    result = await window.enhancedAIFeatures.executeCustomPrompt(methodologyPrompt, {}, {
                         temperature: 0.7,
-                        maxTokens: 1500
+                        maxTokens: 4000 // Increased for detailed methodology analysis
                     });
                     
                 } else if (currentTab === 'course') {
-                    // Enhanced course analysis with programme data
+                    // Enhanced course analysis with methodology alignment
                     const programmeCode = document.getElementById('course-programme-select').value;
                     const courseCode = document.getElementById('course-select').value;
                     const mloText = document.getElementById('module-learning-outcomes').value;
@@ -852,18 +922,20 @@ Provide detailed feedback and actionable recommendations.`;
                         if (!proceed) return;
                     }
                     
-                    // Create enhanced course analysis prompt
+                    // Create methodology-based course analysis prompt
                     const customRequest = document.getElementById('course-custom-analysis-request').value.trim();
                     const customAnalysisSection = customRequest ? `
 
-CUSTOM ANALYSIS REQUEST:
+ADDITIONAL ANALYSIS REQUEST:
 ${customRequest}
 
-Please address this specific request in addition to the standard analysis.
+Please address this specific request while maintaining the methodology framework.
 ` : '';
                     
                     const courseAnalysisPrompt = `
-COURSE ANALYSIS REQUEST:
+You are an educational assessment expert applying TalTech methodology principles to course-level analysis.
+
+COURSE ANALYSIS CONTEXT:
 Programme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})
 Course: ${courseInfo.nameEn} (${courseInfo.code}) - ${courseInfo.credits} EAP
 
@@ -873,45 +945,97 @@ ${mloText}
 COURSE LEARNING OUTCOMES (${selectedCLOs.length} selected):
 ${cloText}${customAnalysisSection}
 
-Please provide a comprehensive analysis of this course structure:
+ANALYSIS FRAMEWORK:
+Apply TalTech methodology principles adapted for MLO-CLO alignment:
 
-1. ALIGNMENT ASSESSMENT:
-   - How well do the Course Learning Outcomes support the Module Learning Outcome?
-   - Identify any gaps or misalignments in the context of ${programmeInfo.nameEn}
+1. **SEMANTIC COHERENCE ANALYSIS:**
+   - Analyze vocabulary alignment between MLO and CLOs
+   - Calculate semantic overlap for each CLO with MLO
+   - Identify gaps in terminology progression
 
-2. CLO QUALITY REVIEW:
-   - Assess each Course Learning Outcome for clarity and measurability
-   - Check for appropriate cognitive level and progression
-   - Evaluate if ${selectedCLOs.length} CLOs is optimal for this course
+2. **COMPETENCY FRAMEWORK ALIGNMENT:**
+   - Map CLOs to EQF competency categories
+   - Assess if CLOs collectively support MLO competencies
+   - Check for competency gaps or redundancies
 
-3. IMPROVEMENT RECOMMENDATIONS:
-   - Suggest specific improvements for better MLO-CLO alignment
-   - Recommend any CLO consolidation or refinement
-   - Propose assessment strategies suitable for ${courseInfo.credits} EAP course
+3. **COGNITIVE PROGRESSION ASSESSMENT:**
+   - Apply Bloom's Taxonomy to all outcomes
+   - Verify appropriate cognitive progression from CLOs to MLO
+   - Identify cognitive level gaps or inappropriate jumps
 
-4. PROGRAMME COHERENCE:
-   - How well does this course fit within the ${programmeInfo.nameEn} programme structure
-   - Industry relevance and practical application opportunities
+4. **CONTEXTUAL RELEVANCE EVALUATION:**
+   - Assess domain-specific terminology consistency
+   - Check industry relevance for ${programmeInfo.nameEn}
+   - Evaluate practical application alignment
 
-Provide detailed, actionable feedback for course improvement.`;
+5. **LEARNING PROGRESSION ANALYSIS:**
+   - Assess if ${selectedCLOs.length} CLOs provide adequate coverage
+   - Check sequential building patterns within course
+   - Evaluate appropriateness for ${courseInfo.credits} EAP course
+
+REQUIRED OUTPUT:
+1. **Individual CLO-MLO Analysis** (brief assessment of each CLO's contribution)
+2. **Collective Alignment Assessment** (how well CLOs support MLO as a group)
+3. **Cognitive Progression Evaluation** (Bloom's levels appropriateness)
+4. **Gap Analysis** (missing elements or redundancies)
+5. **Improvement Recommendations** (specific, actionable suggestions)
+6. **Course Structure Assessment** (optimal number of CLOs, credit alignment)
+
+QUALITY STANDARDS:
+- Reference established educational frameworks (EQF, Bloom's Taxonomy)
+- Provide evidence-based recommendations
+- Consider programme-level coherence
+- Ensure industry relevance for ${programmeInfo.nameEn} graduates
+
+Provide comprehensive, actionable analysis for course improvement.`;
                     
                     result = await window.enhancedAIFeatures.executeCustomPrompt(courseAnalysisPrompt, {}, {
                         temperature: 0.7,
-                        maxTokens: 2000
+                        maxTokens: 4000 // Increased for comprehensive analysis
                     });
                 }
                 
-                // Display results
+                // Display results with feedback option
                 if (result.success) {
                     resultsSection.className = 'results-section result-success';
                     resultContent.textContent = result.response;
                     
-                    // Show metadata
+                    // Show metadata with feedback option
                     resultMeta.innerHTML = `
-                        <strong>Analysis Complete:</strong> 
-                        Tokens used: ~${result.tokensUsed || 'Unknown'} • 
-                        Model: Gemini 1.5 Flash • 
-                        Time: ${new Date().toLocaleTimeString()}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div>
+                                <strong>Analysis Complete:</strong> 
+                                Tokens used: ~${result.tokensUsed || 'Unknown'} • 
+                                Model: Gemini 1.5 Flash • 
+                                Time: ${new Date().toLocaleTimeString()}
+                            </div>
+                            <button onclick="showFeedbackModal()" class="btn" style="padding: 6px 12px; font-size: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                📝 Provide Feedback
+                            </button>
+                        </div>
+                        <div id="feedback-modal" style="display: none;">
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
+                                <h4 style="margin: 0 0 10px 0; color: #495057;">📋 Analysis Feedback</h4>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">How helpful was this analysis?</label>
+                                    <div style="display: flex; gap: 10px;">
+                                        <label><input type="radio" name="feedback-rating" value="1"> 1 - Not helpful</label>
+                                        <label><input type="radio" name="feedback-rating" value="2"> 2 - Somewhat helpful</label>
+                                        <label><input type="radio" name="feedback-rating" value="3"> 3 - Helpful</label>
+                                        <label><input type="radio" name="feedback-rating" value="4"> 4 - Very helpful</label>
+                                        <label><input type="radio" name="feedback-rating" value="5"> 5 - Extremely helpful</label>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Comments (optional):</label>
+                                    <textarea id="feedback-comments" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Any suggestions for improvement or specific feedback..."></textarea>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button onclick="submitFeedback()" class="btn" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Submit Feedback</button>
+                                    <button onclick="closeFeedbackModal()" class="btn" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
                     `;
                     resultMeta.style.display = 'block';
                     
@@ -942,8 +1066,199 @@ Provide detailed, actionable feedback for course improvement.`;
             resultMeta.style.display = 'none';
         }
 
+        // Feedback system functions
+        function showFeedbackModal() {
+            const modal = document.getElementById('feedback-modal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        function closeFeedbackModal() {
+            const modal = document.getElementById('feedback-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Clear form
+                document.querySelectorAll('input[name="feedback-rating"]').forEach(radio => radio.checked = false);
+                document.getElementById('feedback-comments').value = '';
+            }
+        }
+
+        async function submitFeedback() {
+            const selectedRating = document.querySelector('input[name="feedback-rating"]:checked');
+            const comments = document.getElementById('feedback-comments').value;
+            
+            if (!selectedRating) {
+                alert('Please select a rating before submitting.');
+                return;
+            }
+            
+            const feedbackData = {
+                timestamp: new Date().toISOString(),
+                rating: parseInt(selectedRating.value),
+                comments: comments.trim(),
+                analysisType: currentTab,
+                programmeCode: getCurrentProgrammeCode(),
+                sessionId: generateSessionId(),
+                userAgent: navigator.userAgent,
+                url: window.location.href
+            };
+            
+            try {
+                // Store feedback in localStorage for collection
+                const existingFeedback = JSON.parse(localStorage.getItem('aiAssistantFeedback') || '[]');
+                existingFeedback.push(feedbackData);
+                
+                // Keep only last 100 feedback entries to prevent storage bloat
+                if (existingFeedback.length > 100) {
+                    existingFeedback.splice(0, existingFeedback.length - 100);
+                }
+                
+                localStorage.setItem('aiAssistantFeedback', JSON.stringify(existingFeedback));
+                
+                // Show success message
+                alert('Thank you for your feedback! Your input helps us improve the AI Assistant.');
+                
+                // Close modal
+                closeFeedbackModal();
+                
+                console.log('📝 Feedback submitted:', feedbackData);
+                
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Error submitting feedback. Please try again.');
+            }
+        }
+
+        function getCurrentProgrammeCode() {
+            // Get programme code from current tab
+            if (currentTab === 'plo-mlo') {
+                return document.getElementById('programme-select').value;
+            } else if (currentTab === 'course') {
+                return document.getElementById('course-programme-select').value;
+            }
+            return null;
+        }
+
+        function generateSessionId() {
+            // Generate or retrieve session ID
+            let sessionId = sessionStorage.getItem('aiAssistantSessionId');
+            if (!sessionId) {
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem('aiAssistantSessionId', sessionId);
+            }
+            return sessionId;
+        }
+
+        // Function to retrieve feedback data (for admin/analysis purposes)
+        function getFeedbackData() {
+            return JSON.parse(localStorage.getItem('aiAssistantFeedback') || '[]');
+        }
+
+        // Function to export feedback data
+        function exportFeedbackData() {
+            const feedback = getFeedbackData();
+            const dataStr = JSON.stringify(feedback, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `ai_assistant_feedback_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // Enhanced token usage display with daily request tracking
+        function updateTokenUsageDisplay() {
+            if (window.secureAPIConfig) {
+                const stats = window.secureAPIConfig.getUsageStats();
+                
+                // Update usage statistics with daily requests
+                document.getElementById('daily-usage').textContent = 
+                    `Daily: ${stats.dailyTokens || 0}/${stats.dailyLimit} tokens`;
+                document.getElementById('session-requests').textContent = 
+                    `Requests: ${stats.totalRequests || 0}/30`;
+                document.getElementById('estimated-cost').textContent = 
+                    `Cost: $${(stats.estimatedCostUSD || 0).toFixed(4)}`;
+                
+                // Update progress bar
+                const progressBar = document.getElementById('usage-progress');
+                const percentage = parseFloat(stats.usagePercentage || 0);
+                progressBar.style.width = `${Math.min(100, percentage)}%`;
+                
+                // Update progress bar color based on usage
+                progressBar.className = 'usage-progress';
+                if (percentage >= 90) {
+                    progressBar.classList.add('danger');
+                } else if (percentage >= 70) {
+                    progressBar.classList.add('warning');
+                }
+                
+                // Check quota limits and update status
+                const requestsUsed = stats.totalRequests || 0;
+                const requestLimit = 30;
+                const tokenLimitReached = percentage >= 100 || (stats.dailyTokens >= stats.dailyLimit);
+                const requestLimitReached = requestsUsed >= requestLimit;
+                
+                if (tokenLimitReached || requestLimitReached) {
+                    const limitType = tokenLimitReached ? 'token' : 'request';
+                    updateStatus('🚫 Not Available', `Daily ${limitType} quota reached. Service unavailable until tomorrow.`);
+                    // Disable analyze button
+                    const analyzeBtn = document.getElementById('analyze-btn');
+                    if (analyzeBtn) {
+                        analyzeBtn.disabled = true;
+                        analyzeBtn.style.opacity = '0.5';
+                        analyzeBtn.style.cursor = 'not-allowed';
+                    }
+                } else if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
+                    // Re-enable if quota is available and AI is ready
+                    updateStatus('✅ Ready', 'AI Assistant connected and ready to help!');
+                    const analyzeBtn = document.getElementById('analyze-btn');
+                    if (analyzeBtn) {
+                        analyzeBtn.disabled = false;
+                        analyzeBtn.style.opacity = '1';
+                        analyzeBtn.style.cursor = 'pointer';
+                    }
+                }
+                
+                // Update tooltip with detailed info
+                const usageDisplay = document.querySelector('.token-usage-display');
+                usageDisplay.title = 
+                    `Token usage: ${stats.remainingDaily} tokens remaining today\n` +
+                    `Request usage: ${requestsUsed}/${requestLimit} requests used\n` +
+                    `Total tokens used: ${(stats.totalTokens || 0).toLocaleString()}\n` +
+                    `Input tokens: ${(stats.totalInputTokens || 0).toLocaleString()}\n` +
+                    `Output tokens: ${(stats.totalOutputTokens || 0).toLocaleString()}`;
+            }
+        }
+
         // Initialize when page loads
         window.addEventListener('load', initApp);
+
+        // Global functions for admin/debugging
+        window.aiAssistantAdmin = {
+            getFeedbackData,
+            exportFeedbackData,
+            clearFeedbackData: () => {
+                if (confirm('Are you sure you want to clear all feedback data?')) {
+                    localStorage.removeItem('aiAssistantFeedback');
+                    console.log('Feedback data cleared.');
+                }
+            },
+            showFeedbackStats: () => {
+                const feedback = getFeedbackData();
+                console.log('📊 Feedback Statistics:');
+                console.log(`Total feedback entries: ${feedback.length}`);
+                if (feedback.length > 0) {
+                    const ratings = feedback.map(f => f.rating);
+                    const avgRating = (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2);
+                    console.log(`Average rating: ${avgRating}/5`);
+                    console.log('Rating distribution:', ratings.reduce((acc, rating) => {
+                        acc[rating] = (acc[rating] || 0) + 1;
+                        return acc;
+                    }, {}));
+                }
+            }
+        };
 
         // Programme data management functions
         async function populateProgrammeDropdowns() {
@@ -1484,6 +1799,18 @@ Provide detailed, actionable feedback for course improvement.`;
             document.getElementById('module-learning-outcomes').value = '';
             document.getElementById('course-learning-outcomes').value = '';
             document.getElementById('clo-checkboxes').innerHTML = '<p style="color: #666; font-style: italic;">Select a programme first...</p>';
+        }
+
+        // Update navigation links to include programme parameter
+        function updateNavigationLinks() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const programmeCode = urlParams.get('kavakood');
+            
+            if (programmeCode) {
+                document.getElementById('nav-home').href = `index.html?kavakood=${programmeCode}`;
+                document.getElementById('nav-plo-mlo').href = `plo-mlo.html?kavakood=${programmeCode}`;
+                document.getElementById('nav-clo-mlo').href = `clo-mlo.html?kavakood=${programmeCode}`;
+            }
         }
     </script>
 </body>

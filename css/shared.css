@@ -22,6 +22,14 @@
     --border-radius: 8px;
     --box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     --transition: all 0.3s ease;
+    
+    /* Standardized Score Color Variables - Used Across All Alignment Reports */
+    /* Using Pastel Color Scheme for Better Readability and Consistency */
+    --score-poor: #ffcdd2;       /* Light Red - Poor (1.0-1.4) */
+    --score-weak: #ffecb3;       /* Light Orange - Weak (1.5-2.4) */
+    --score-moderate: #fff9c4;   /* Light Yellow - Moderate (2.5-3.4) */
+    --score-good: #c8e6c9;       /* Light Green - Good (3.5-4.4) */
+    --score-excellent: #a5d6a7;  /* Medium Green - Excellent (4.5-5.0) */
 }
 
 /* Base Styles */
@@ -269,4 +277,87 @@ header {
     
     h1 { font-size: 1.75rem; }
     h2 { font-size: 1.5rem; }
+}
+
+/* ===============================
+   Standardized Score Color Classes
+   Used Across All Alignment Reports
+   =============================== */
+
+/* Score Background Colors */
+.score-1 { 
+    background-color: var(--score-poor); 
+    color: black; 
+    font-weight: 600; 
+}
+
+.score-2 { 
+    background-color: var(--score-weak); 
+    color: black; 
+    font-weight: 600; 
+}
+
+.score-3 { 
+    background-color: var(--score-moderate); 
+    color: black; 
+    font-weight: 600; 
+}
+
+.score-4 { 
+    background-color: var(--score-good); 
+    color: black; 
+    font-weight: 600; 
+}
+
+.score-5 { 
+    background-color: var(--score-excellent); 
+    color: black; 
+    font-weight: 600; 
+}
+
+/* Score Text Colors (for when only text color is needed) */
+.score-text-1 { color: var(--score-poor); }
+.score-text-2 { color: var(--score-weak); }
+.score-text-3 { color: var(--score-moderate); }
+.score-text-4 { color: var(--score-good); }
+.score-text-5 { color: var(--score-excellent); }
+
+/* Score Border Colors */
+.score-border-1 { border-color: var(--score-poor); }
+.score-border-2 { border-color: var(--score-weak); }
+.score-border-3 { border-color: var(--score-moderate); }
+.score-border-4 { border-color: var(--score-good); }
+.score-border-5 { border-color: var(--score-excellent); }
+
+/* Score Legend Component */
+.score-legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.score-legend h4 {
+    width: 100%;
+    margin: 0 0 10px 0;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.score-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.1);
 }

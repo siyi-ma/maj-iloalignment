@@ -726,9 +726,6 @@ class CLOMLOController {
         this.hideCLOManagementSection();
         this.showAnalysisResultsSection();
         
-        // Generate Table of Contents (removed)
-        this.renderTableOfContents();
-        
         // Generate summary content
         this.renderSummary(results, clos, mlos);
         
@@ -738,15 +735,8 @@ class CLOMLOController {
         // Generate alignment matrix (moved after detailed analysis)
         this.renderAlignmentMatrix(results, clos, mlos);
         
-        // Update floating TOC
-        updateFloatingTOC();
-        
         // Setup event handlers
         this.setupAnalysisEventHandlers();
-    }
-
-    renderTableOfContents() {
-        // TOC elements removed per user request
     }
 
     hideCLOManagementSection() {
@@ -1419,84 +1409,6 @@ function attachFloatingHomeHandler() {
     }
 }
 
-// Floating TOC functionality
-function toggleFloatingTOC() {
-    const toc = document.getElementById('floating-toc');
-    const toggle = document.getElementById('floating-toc-toggle');
-    
-    if (!toc || !toggle) return;
-    
-    const isVisible = toc.classList.contains('visible');
-    
-    if (isVisible) {
-        toc.classList.remove('visible');
-        toggle.innerHTML = '<i class="fas fa-list"></i>';
-        toggle.title = 'Show Table of Contents';
-    } else {
-        toc.classList.add('visible');
-        toggle.innerHTML = '<i class="fas fa-times"></i>';
-        toggle.title = 'Hide Table of Contents';
-        updateFloatingTOC();
-    }
-}
-
-function updateFloatingTOC() {
-    const tocList = document.getElementById('floating-toc-list');
-    if (!tocList) return;
-    
-    // Clear existing TOC items
-    tocList.innerHTML = '';
-    
-    // Check if analysis results are visible
-    const analysisSection = document.getElementById('analysis-results-section');
-    if (analysisSection && analysisSection.style.display !== 'none') {
-        // Add methodology section
-        const methodologySection = document.getElementById('methodology');
-        if (methodologySection && methodologySection.style.display !== 'none') {
-            tocList.innerHTML += `
-                <li><a href="#methodology" class="floating-toc-link" onclick="scrollToSection('methodology')">
-                    <i class="fas fa-cogs"></i> Methodology
-                </a></li>
-            `;
-        }
-        
-        // Add analysis sections
-        tocList.innerHTML += `
-            <li><a href="#summary-section" class="floating-toc-link" onclick="scrollToSection('summary-section')">
-                <i class="fas fa-chart-pie"></i> Analysis Summary
-            </a></li>
-            <li><a href="#matrix-section" class="floating-toc-link" onclick="scrollToSection('matrix-section')">
-                <i class="fas fa-th"></i> Alignment Matrix
-            </a></li>
-            <li><a href="#detailed-analysis-section" class="floating-toc-link" onclick="scrollToSection('detailed-analysis-section')">
-                <i class="fas fa-table"></i> Detailed Analysis
-            </a></li>
-        `;
-        
-        // Add MLO sections
-        const mloSections = document.querySelectorAll('.mlo-section');
-        mloSections.forEach((section, index) => {
-            const mloHeader = section.querySelector('.mlo-header');
-            const mloText = mloHeader ? mloHeader.textContent.trim() : `MLO ${index + 1}`;
-            tocList.innerHTML += `
-                <li><a href="#${section.id || `mlo-section-${index}`}" class="floating-toc-link" onclick="scrollToSection('${section.id || `mlo-section-${index}`}')">
-                    <i class="fas fa-graduation-cap"></i> ${mloText}
-                </a></li>
-            `;
-        });
-    } else {
-        // Show default navigation
-        tocList.innerHTML = `
-            <li><a href="#course-selection-section" class="floating-toc-link" onclick="scrollToSection('course-selection-section')">
-                <i class="fas fa-book"></i> Course Selection
-            </a></li>
-            <li><a href="#clo-management-section" class="floating-toc-link" onclick="scrollToSection('clo-management-section')">
-                <i class="fas fa-edit"></i> CLO Management
-            </a></li>
-        `;
-    }
-}
-
 function scrollToSection(sectionId) {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -1504,10 +1416,6 @@ function scrollToSection(sectionId) {
             behavior: 'smooth', 
             block: 'start' 
         });
-        // Close TOC on mobile after navigation
-        if (window.innerWidth <= 768) {
-            setTimeout(() => toggleFloatingTOC(), 300);
-        }
     }
 }
 
@@ -1515,7 +1423,6 @@ function scrollToSection(sectionId) {
 function setupFloatingButtons() {
     const homeBtn = document.getElementById('home-btn-float');
     const backToTopBtn = document.getElementById('back-to-top');
-    const tocToggle = document.getElementById('floating-toc-toggle');
     
     if (homeBtn) {
         homeBtn.addEventListener('click', () => {
@@ -1527,10 +1434,6 @@ function setupFloatingButtons() {
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-    }
-    
-    if (tocToggle) {
-        tocToggle.addEventListener('click', toggleFloatingTOC);
     }
     
     // Show/hide back to top button based on scroll
@@ -1550,7 +1453,6 @@ function showMethodologySection() {
     const methodologySection = document.getElementById('methodology');
     if (methodologySection) {
         methodologySection.style.display = 'block';
-        updateFloatingTOC();
     }
 }
 

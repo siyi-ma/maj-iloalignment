@@ -51,7 +51,7 @@ class EnhancedAIFeatures {
             // Set default options for Gemini 1.5 Flash
             const aiOptions = {
                 temperature: options.temperature || 0.7,
-                maxOutputTokens: options.maxTokens || 2048,
+                maxOutputTokens: options.maxTokens || 4096, // Increased default for paid tier
                 topP: options.topP || 0.8,
                 topK: options.topK || 40,
                 ...options
@@ -188,15 +188,15 @@ Provide:
         // This is informational - actual quota tracking would need server-side implementation
         return {
             model: 'Gemini 1.5 Flash',
-            freeQuota: {
-                requestsPerMinute: 15,
+            paidQuota: {
+                requestsPerMinute: 50,
                 tokensPerDay: 1000000,
-                requestsPerDay: 1500
+                requestsPerDay: 30 // Increased to 30 daily requests for paid tier
             },
             recommendations: [
                 'Monitor your usage in Google AI Studio console',
-                'Consider upgrading to paid tier for higher limits',
-                'Use shorter prompts when possible to conserve tokens'
+                'Paid tier provides higher limits for extensive usage',
+                'Use detailed prompts for comprehensive analysis'
             ]
         };
     }

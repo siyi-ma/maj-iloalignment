@@ -7,6 +7,7 @@ class DataManager {
     constructor() {
         this.programmes = null;
         this.currentProgramme = null;
+        this.currentCourse = null;
         this.isLoaded = false;
     }
 
@@ -160,11 +161,59 @@ class DataManager {
     }
 
     /**
+     * Set current course by code
+     */
+    setCurrentCourse(courseCode) {
+        if (!courseCode) {
+            this.currentCourse = null;
+            sessionStorage.removeItem('currentCourse');
+            return null;
+        }
+        
+        const course = this.getCourseByCode(courseCode);
+        if (course) {
+            this.currentCourse = course;
+            sessionStorage.setItem('currentCourse', courseCode);
+            return course;
+        } else {
+            console.warn(`Course with code ${courseCode} not found`);
+            return null;
+        }
+    }
+
+    /**
+     * Get current selected course
+     */
+    getCurrentCourse() {
+        if (this.currentCourse) {
+            return this.currentCourse;
+        }
+        
+        // Try to restore from session storage
+        const savedCourseCode = sessionStorage.getItem('currentCourse');
+        if (savedCourseCode) {
+            return this.setCurrentCourse(savedCourseCode);
+        }
+        
+        return null;
+    }
+
+    /**
+     * Clear current course selection
+     */
+    clearCurrentCourse() {
+        this.currentCourse = null;
+        sessionStorage.removeItem('currentCourse');
+    }
+
+    /**
      * Clear current programme selection
      */
     clearCurrentProgramme() {
         this.currentProgramme = null;
+        this.currentCourse = null; // Clear course when programme changes
         sessionStorage.removeItem('currentProgramme');
+        sessionStorage.removeItem('currentCourse');
     }
 
     /**

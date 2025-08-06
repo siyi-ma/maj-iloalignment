@@ -14,7 +14,7 @@ class SecureAPIConfig {
             totalOutputTokens: 0,
             totalTokens: 0,
             requestHistory: [],
-            dailyLimit: 1500, // Conservative estimate for free tier
+            dailyLimit: 30000, // Increased to 30,000 tokens for paid tier (20x increase)
             estimatedCostUSD: 0
         };
         

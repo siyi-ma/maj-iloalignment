@@ -44,8 +44,7 @@
 
                 <div class="section-header">
                     <h2><i class="fas fa-project-diagram"></i> Programme-Module Alignment Analysis</h2>
-                    <p>View the comprehensive alignment between Programme Learning Outcomes and Module Learning Outcomes</p>
-                    <div class="analysis-action">
+                        <div class="analysis-action">
                         <div class="analysis-description">
                             <p><i class="fas fa-list"></i> Analyze how well different module learning outcomes align with overall programme learning outcomes</p>
                         </div>
@@ -57,13 +56,24 @@
 
                 <div class="section-header">
                     <h2><i class="fas fa-search"></i> Course-Module Alignment</h2>
-                    <p>Analyze how Course Learning Outcomes align with Module Learning Outcomes</p>
                     <div class="analysis-action">
                         <div class="analysis-description">
-                            <p><i class="fas fa-clipboard-list"></i> Generate and analyze Course Learning Outcomes with AI-powered tools</p>
+                            <p><i class="fas fa-clipboard-list"></i> Generate and analyze Course Learning Outcomes alignment score with module learning outcomes</p>
                         </div>
-                        <button class="access-btn" id="access-mlo-clo">
-                            <i class="fas fa-external-link-alt"></i> Access MLO-CLO Analysis
+                        <button class="access-btn" id="access-clo-mlo">
+                            <i class="fas fa-external-link-alt"></i> Access CLO-MLO Analysis
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h2><i class="fas fa-robot"></i> AI Assistant</h2>
+                    <div class="analysis-action">
+                        <div class="analysis-description">
+                            <p><i class="fas fa-magic"></i> Get AI-powered assistance for learning outcomes analysis and alignment tasks</p>
+                        </div>
+                        <button class="access-btn" id="access-ai-assistant">
+                            <i class="fas fa-external-link-alt"></i> Access AI Assistant
                         </button>
                     </div>
                 </div>
@@ -166,10 +176,17 @@
                     window.location.href = url;
                 });
 
-                // Access MLO-CLO Analysis button
-                document.getElementById('access-mlo-clo')?.addEventListener('click', () => {
+                // Access CLO-MLO Analysis button
+                document.getElementById('access-clo-mlo')?.addEventListener('click', () => {
                     const currentProgramme = window.dataManager.getCurrentProgramme();
                     const url = currentProgramme ? `clo-mlo.html?kavakood=${currentProgramme.code}` : 'clo-mlo.html';
+                    window.location.href = url;
+                });
+
+                // Access AI Assistant button
+                document.getElementById('access-ai-assistant')?.addEventListener('click', () => {
+                    const currentProgramme = window.dataManager.getCurrentProgramme();
+                    const url = currentProgramme ? `ai-assistant.html?kavakood=${currentProgramme.code}` : 'ai-assistant.html';
                     window.location.href = url;
                 });
 

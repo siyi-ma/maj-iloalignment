@@ -20,6 +20,13 @@
             --tt-grey-2: #dadae4;         /* HELEHALL */
             --tt-black: #000000;          /* MUST */
             --tt-white: #ffffff;          /* VALGE */
+            
+            /* Score Color Variables */
+            --score-poor: #ffcdd2;
+            --score-weak: #ffecb3;
+            --score-moderate: #fff9c4;
+            --score-good: #c8e6c9;
+            --score-excellent: #a5d6a7;
         }
         
         /* Reset and base styles */
@@ -84,12 +91,40 @@
         
         /* Header Links Positioning */
         .header-links {
+            display: none; /* Hide header links as requested */
+        }
+        
+        /* AI Assistant Button */
+        .ai-assistant-btn {
             position: absolute;
             top: 2rem;
             right: 2rem;
-            display: flex;
-            gap: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--tt-white);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
             align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .ai-assistant-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: var(--tt-white);
+            text-decoration: none;
+        }
+        
+        .ai-assistant-btn i {
+            font-size: 16px;
         }
         
         /* Methodology and Home Link Buttons */
@@ -436,12 +471,6 @@
             transition: all 0.3s ease;
         }
         
-        .score-5 { background: #28a745; color: white; }
-        .score-4 { background: #6c757d; color: white; }
-        .score-3 { background: #ffc107; color: black; }
-        .score-2 { background: #fd7e14; color: white; }
-        .score-1 { background: #dc3545; color: white; }
-        .score-0 { background: #f8f9fa; color: black; }
         
         /* Legend */
         .legend {
@@ -1957,92 +1986,6 @@
             line-height: 1.4;
         }
 
-        /* Table of Contents Styling */
-        .analysis-toc {
-            background: var(--tt-white);
-            border: 2px solid var(--tt-grey-2);
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            box-shadow: 0 2px 8px rgba(170, 19, 82, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .analysis-toc.collapsed .toc-content {
-            display: none;
-        }
-
-        .toc-header {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 1rem 1.5rem;
-            border-radius: 6px 6px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .toc-header h4 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1rem;
-        }
-
-        .toc-toggle {
-            background: none;
-            border: none;
-            color: var(--tt-white);
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .toc-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .analysis-toc.collapsed .toc-toggle i {
-            transform: rotate(180deg);
-        }
-
-        .toc-content {
-            padding: 1.5rem;
-        }
-
-        .toc-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .toc-list li {
-            margin-bottom: 0.75rem;
-        }
-
-        .toc-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            padding: 0.5rem 0.75rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .toc-link:hover {
-            background: linear-gradient(135deg, rgba(170, 19, 82, 0.1), rgba(228, 6, 126, 0.1));
-            color: var(--tt-burgundy);
-            text-decoration: none;
-            transform: translateX(5px);
-        }
-
-        .toc-link i {
-            width: 1.2rem;
-            text-align: center;
-            color: var(--tt-light-blue);
-        }
-
         /* Enhanced styling for CLO editing form */
         .clo-editing-form {
             background: var(--tt-white);
@@ -2139,14 +2082,6 @@
 
         /* Responsive design */
         @media (max-width: 768px) {
-            .analysis-toc {
-                margin: 1rem 0;
-            }
-            
-            .toc-content {
-                padding: 1rem;
-            }
-            
             .detailed-analysis-table {
                 font-size: 0.85rem;
             }
@@ -2163,112 +2098,6 @@
             .clo-editing-form {
                 padding: 1rem;
             }
-        }
-
-        /* Floating TOC Styles */
-        .floating-toc {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 225px;
-            background: var(--tt-white);
-            border: 2px solid var(--tt-burgundy);
-            border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.2);
-            z-index: 10001;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        .floating-toc.visible {
-            transform: translateX(0);
-        }
-
-        .floating-toc-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-            z-index: 1001;
-            transition: all 0.3s ease;
-        }
-
-        .floating-toc-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(170, 19, 82, 0.4);
-        }
-
-        .floating-toc-header {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 1rem;
-            border-radius: 6px 6px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .floating-toc-header h4 {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        .floating-toc-close {
-            background: none;
-            border: none;
-            color: var(--tt-white);
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .floating-toc-content {
-            padding: 1rem;
-        }
-
-        .floating-toc-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .floating-toc-list li {
-            margin-bottom: 0.5rem;
-        }
-
-        .floating-toc-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .floating-toc-link:hover {
-            background: linear-gradient(135deg, rgba(170, 19, 82, 0.1), rgba(228, 6, 126, 0.1));
-            color: var(--tt-burgundy);
-            text-decoration: none;
-            transform: translateX(5px);
-        }
-
-        .floating-toc-link i {
-            width: 1rem;
-            text-align: center;
-            color: var(--tt-light-blue);
         }
 
         /* Methodology Section Styles */
@@ -2449,11 +2278,6 @@
         }
 
         @media (max-width: 768px) {
-            .floating-toc {
-                width: 90vw;
-                right: 5vw;
-            }
-            
             .methodology-section {
                 padding: 1rem;
             }
@@ -2462,30 +2286,383 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Detailed Analysis Table Styles (matching PLO-MLO) */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .detailed-breakdown-table th {
+            background: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .detailed-breakdown-table td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+
+        .mlo-code-cell {
+            font-weight: bold;
+            text-align: center;
+            background: #f8f9fa;
+            width: 80px;
+        }
+
+        .mlo-content-cell {
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .alignment-score-cell {
+            text-align: center;
+            width: 80px;
+        }
+
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score-cell .alignment-score {
+            color: #000000 !important;
+            font-weight: bold;
+        }
+        
+        .justification-cell {
+            line-height: 1.4;
+            width: auto;
+            min-width: 350px;
+        }
+        
+        .improvement-suggestions {
+            background-color: #fff3cd;
+            border-left: 3px solid #ffc107;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+        
+        .keyword-highlight {
+            background-color: #ffeb3b;
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .analysis-header {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Floating TOC Toggle -->
-        <button id="floating-toc-toggle" class="floating-toc-toggle" title="Toggle Table of Contents">
-            <i class="fas fa-list"></i>
-        </button>
-
-        <!-- Floating TOC -->
-        <div id="floating-toc" class="floating-toc">
-            <div class="floating-toc-header">
-                <h4><i class="fas fa-list"></i> Table of Contents</h4>
-                <button class="floating-toc-close" onclick="toggleFloatingTOC()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="floating-toc-content">
-                <ul class="floating-toc-list" id="floating-toc-list">
-                    <!-- TOC items will be dynamically populated -->
-                </ul>
-            </div>
-        </div>
-
         <!-- Page Header -->
         <header class="page-header">
             <div class="header-links">
@@ -2498,6 +2675,10 @@
                     Home
                 </a>
             </div>
+            <a href="ai-assistant.html" class="ai-assistant-btn">
+                <i class="fas fa-robot"></i>
+                AI Assistant
+            </a>
             <h1 id="page-title"><i class="fas fa-clipboard-list"></i> CLO-MLO Alignment</h1>
             <p>Course Learning Outcomes to Module Learning Outcomes Analysis</p>
         </header>
@@ -2506,57 +2687,64 @@
         <section id="methodology" class="methodology-section" style="display: none;">
             <div class="methodology-header">
                 <i class="fas fa-cogs"></i>
-                <h2>Advanced CLO-MLO Alignment Assessment</h2>
+                <h2>CLO-MLO Alignment Assessment</h2>
             </div>
             <div class="methodology-content">
-                <p>Our sophisticated alignment analysis employs a multi-dimensional approach combining semantic analysis, cognitive taxonomy mapping, and competency framework evaluation:</p>
+                <p>This alignment analysis employs a research-based multi-dimensional approach with transparent mathematical scoring:</p>
                 
                 <h4><i class="fas fa-brain"></i> Analysis Components:</h4>
                 <ul>
-                    <li><strong>Keyword Semantic Matching:</strong> Advanced text analysis identifying shared vocabulary and conceptual overlap between CLO and MLO texts with highlighting of matching terms</li>
-                    <li><strong>Bloom's Taxonomy Cognitive Level Mapping:</strong> Assessment of cognitive complexity progression from basic knowledge through comprehension, application, analysis, synthesis, to evaluation levels</li>
-                    <li><strong>Competency Framework Alignment:</strong> Evaluation across 10 specialized competency categories including analytical, creative, management, communication, research, and technical skills</li>
-                    <li><strong>Learning Progression Analysis:</strong> Assessment of how modules build sequential understanding toward course-level achievement</li>
-                    <li><strong>Contextual Relevance Scoring:</strong> Domain-specific terminology matching and thematic coherence evaluation</li>
+                    <li><strong>Semantic Analysis (35% weight):</strong> Quantitative text analysis measuring vocabulary overlap and conceptual alignment between CLO and MLO texts with keyword highlighting</li>
+                    <li><strong>Competency Framework (25% weight):</strong> Evidence-based evaluation across 10 competency categories derived from EQF Level 6-8 descriptors and Tuning Educational Structures</li>
+                    <li><strong>Bloom's Taxonomy Mapping (20% weight):</strong> Systematic cognitive level assessment using Krathwohl's 2002 revision with progression compatibility scoring</li>
+                    <li><strong>Contextual Relevance (15% weight):</strong> Domain-specific terminology analysis with weighted business education vocabulary and thematic coherence evaluation</li>
+                    <li><strong>Learning Progression (5% weight):</strong> Sequential building pattern assessment analyzing prerequisite relationships and modular learning pathways</li>
                 </ul>
                 
-                <h4><i class="fas fa-calculator"></i> Scoring Algorithm:</h4>
+                <h4><i class="fas fa-calculator"></i> Mathematical Scoring Algorithm:</h4>
                 <div class="methodology-details">
-                    <p><strong>Multi-tier Scoring System:</strong></p>
+                    <p><strong>Composite Score Formula:</strong></p>
+                    <div class="formula-display">
+                        <code>Score = (Semantic × 0.35) + (Competency × 0.25) + (Cognitive × 0.20) + (Contextual × 0.15) + (Progression × 0.05)</code>
+                    </div>
+                    
+                    <p><strong>Component Normalization:</strong></p>
                     <ul>
-                        <li><strong>Tier 1:</strong> Keyword overlap percentage (shared terms / total CLO terms × 100)</li>
-                        <li><strong>Tier 2:</strong> Bloom's taxonomy level compatibility and progression mapping</li>
-                        <li><strong>Tier 3:</strong> Competency category matches across specialized skill domains</li>
+                        <li><strong>Semantic:</strong> Keyword overlap % / 4 (20% overlap = 5.0 points)</li>
+                        <li><strong>Competency:</strong> Weighted category matches × 1.5 (max 3.33 weight = 5.0 points)</li>
+                        <li><strong>Cognitive:</strong> Bloom's progression compatibility (0-1) × 5</li>
+                        <li><strong>Contextual:</strong> Domain relevance score (direct 0-5 mapping)</li>
+                        <li><strong>Progression:</strong> Building pattern strength (0-1) × 5</li>
                     </ul>
                     
-                    <p><strong>Scoring Criteria (5-point scale):</strong></p>
-                    <div class="scoring-criteria">
-                        <div class="criteria-card">
-                            <div class="criteria-score">Score 5 (Excellent):</div>
-                            ≥15% keyword overlap + ≥3 competency matches + compatible Bloom's levels
-                        </div>
-                        <div class="criteria-card">
-                            <div class="criteria-score">Score 4 (Strong):</div>
-                            ≥10% keyword overlap + ≥2 competency matches + progressive Bloom's alignment
-                        </div>
-                        <div class="criteria-card">
-                            <div class="criteria-score">Score 3 (Moderate):</div>
-                            ≥5% keyword overlap + ≥1 competency match + related cognitive levels
-                        </div>
-                        <div class="criteria-card">
-                            <div class="criteria-score">Score 2 (Partial):</div>
-                            ≥2% keyword overlap OR ≥1 competency match with limited cognitive alignment
-                        </div>
-                        <div class="criteria-card">
-                            <div class="criteria-score">Score 1 (Minimal):</div>
-                            &lt;2% keyword overlap + 0 competency matches + misaligned cognitive levels
-                        </div>
-                    </div>
+                    <p><strong>Research-Based Thresholds:</strong></p>
+                    <ul>
+                        <li><strong>4.5-5.0 (Excellent):</strong> Strong alignment across all dimensions with clear progression</li>
+                        <li><strong>3.5-4.4 (Good):</strong> Solid alignment with minor gaps in 1-2 dimensions</li>
+                        <li><strong>2.5-3.4 (Moderate):</strong> Adequate alignment requiring targeted improvements</li>
+                        <li><strong>1.5-2.4 (Weak):</strong> Limited alignment needing significant enhancement</li>
+                        <li><strong>1.0-1.4 (Poor):</strong> Minimal alignment requiring fundamental restructuring</li>
+                    </ul>
                 </div>
                 
-                <h4><i class="fas fa-tags"></i> Keyword Highlighting:</h4>
-                <div class="keyword-highlighting">
-                    <p>Matching keywords and phrases are highlighted in both CLO and MLO texts to provide visual evidence of semantic alignment and facilitate expert review of automated assessments.</p>
+                <h4><i class="fas fa-tags"></i> Keyword Highlighting & Evidence:</h4>
+                <p>Matching keywords and phrases are highlighted in both CLO and MLO texts to provide visual evidence of semantic alignment. All scoring components include quantifiable evidence and mathematical justification.</p>
+                
+                <h4><i class="fas fa-book-open"></i> Methodology Sources:</h4>
+                <ul>
+                    <li>Krathwohl, D.R. (2002). A revision of Bloom's taxonomy</li>
+                    <li>European Qualifications Framework (EQF) Level 6-8 Descriptors</li>
+                    <li>Tuning Educational Structures in Europe</li>
+                    <li>Learning Progression Theory (Heritage, 2008)</li>
+                </ul>
+                
+                <div class="score-legend">
+                    <h4>Score Range & Quality Thresholds:</h4>
+                    <div class="score-item"><span class="score-color score-1"></span> Poor (1.0-1.4)</div>
+                    <div class="score-item"><span class="score-color score-2"></span> Weak (1.5-2.4)</div>
+                    <div class="score-item"><span class="score-color score-3"></span> Moderate (2.5-3.4)</div>
+                    <div class="score-item"><span class="score-color score-4"></span> Good (3.5-4.4)</div>
+                    <div class="score-item"><span class="score-color score-5"></span> Excellent (4.5-5.0)</div>
                 </div>
             </div>
         </section>
@@ -2645,6 +2833,14 @@
                         Select a course to view CLOs...
                     </div>
                 </div>
+                
+                <!-- Main CLO-MLO Analysis Button -->
+                <div id="main-analysis-button-container" class="form-actions" style="display:none; justify-content:center; margin-top: 20px;">
+                    <button id="main-analysis-btn" class="btn btn-primary btn-large" onclick="performAlignment()" 
+                            style="display: none; background: linear-gradient(135deg, #aa1352, #e4067e); border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+                        <i class="fas fa-chart-line"></i> Analyse CLO-MLO Alignment
+                    </button>
+                </div>
             </section>
 
             <section id="clo-management-section" class="hidden">
@@ -2689,7 +2885,7 @@
                     </div>
                     
                     <div class="clo-editor-actions">
-                        <button id="add-clo-field-btn" class="btn btn-secondary" onclick="cloController.addNewCLOField()">
+                        <button id="add-clo-field-btn" class="btn btn-secondary" onclick="addNewCLOField()">
                             <i class="fas fa-plus"></i> Add CLO
                         </button>
                         <div class="button-group">
@@ -2721,17 +2917,72 @@
             <!-- Analysis Results Section -->
             <section id="analysis-results-section" class="content-section hidden">
                 <div class="section-header">
-                    <h3><i class="fas fa-chart-bar"></i> CLO-MLO Alignment Analysis Results</h3>
+                    <h3><i class="fas fa-chart-bar"></i> CLO-MLO Alignment Analysis Report</h3>
                     <p class="section-description">Comprehensive analysis showing how well course learning outcomes align with module learning outcomes.</p>
                     
                     <div class="analysis-controls">
                         <div class="control-group">
+                            <button id="ai-analysis-btn" class="btn btn-primary" onclick="performAlignment()" style="display: none;">
+                                <i class="fas fa-robot"></i> TalTech AI Analysis
+                            </button>
                             <button id="download-report-btn" class="btn btn-primary">
                                 <i class="fas fa-file-pdf"></i> Download CLO-MLO Report
                             </button>
                             <button id="back-to-clo-management" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Back to CLO Management
                             </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky Navigation -->
+                <nav class="analysis-nav" id="analysis-nav">
+                    <ul>
+                        <li><a href="#methodology-info"><i class="fas fa-cogs"></i> Methodology</a></li>
+                        <li><a href="#summary-section"><i class="fas fa-chart-bar"></i> Summary</a></li>
+                        <li><a href="#matrix-section"><i class="fas fa-table"></i> Matrix</a></li>
+                        <li><a href="#detailed-breakdown-section"><i class="fas fa-list-alt"></i> Detailed Breakdown</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Methodology Information Section -->
+                <div id="methodology-info" class="analysis-section">
+                    <h4><i class="fas fa-cogs"></i> CLO-MLO Alignment Methodology</h4>
+                    <div class="methodology-content">
+                        <p>This alignment analysis employs a research-based multi-dimensional approach with transparent mathematical scoring:</p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                            <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid var(--tt-burgundy); border-radius: 4px;">
+                                <h5><i class="fas fa-brain"></i> Semantic Analysis (35%)</h5>
+                                <p style="font-size: 0.9em; margin: 0;">Vocabulary overlap and conceptual alignment between CLO and MLO texts</p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid var(--tt-magenta); border-radius: 4px;">
+                                <h5><i class="fas fa-graduation-cap"></i> Competency Framework (25%)</h5>
+                                <p style="font-size: 0.9em; margin: 0;">EQF-based skill mapping and competency analysis</p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid var(--tt-light-blue); border-radius: 4px;">
+                                <h5><i class="fas fa-layer-group"></i> Cognitive Progression (20%)</h5>
+                                <p style="font-size: 0.9em; margin: 0;">Bloom's Taxonomy level assessment and progression logic</p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid var(--tt-dark-blue); border-radius: 4px;">
+                                <h5><i class="fas fa-tags"></i> Contextual Relevance (15%)</h5>
+                                <p style="font-size: 0.9em; margin: 0;">Domain-specific terminology and programme alignment</p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid var(--tt-grey-1); border-radius: 4px;">
+                                <h5><i class="fas fa-arrow-up"></i> Learning Progression (5%)</h5>
+                                <p style="font-size: 0.9em; margin: 0;">Sequential building patterns and prerequisite relationships</p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px; border-radius: 8px; margin: 20px 0;">
+                            <h5><i class="fas fa-calculator"></i> Score Range & Quality Thresholds:</h5>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                                <span style="padding: 4px 8px; background: #dc3545; color: white; border-radius: 3px; font-size: 0.85em;">Poor (1.0-1.4)</span>
+                                <span style="padding: 4px 8px; background: #fd7e14; color: white; border-radius: 3px; font-size: 0.85em;">Weak (1.5-2.4)</span>
+                                <span style="padding: 4px 8px; background: #ffc107; color: black; border-radius: 3px; font-size: 0.85em;">Moderate (2.5-3.4)</span>
+                                <span style="padding: 4px 8px; background: #20c997; color: white; border-radius: 3px; font-size: 0.85em;">Good (3.5-4.4)</span>
+                                <span style="padding: 4px 8px; background: #28a745; color: white; border-radius: 3px; font-size: 0.85em;">Excellent (4.5-5.0)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2752,11 +3003,20 @@
                     </div>
                 </div>
 
-                <!-- Detailed Analysis Section -->
-                <div id="detailed-analysis-section" class="analysis-section">
-                    <h4><i class="fas fa-table"></i> Detailed Analysis by MLO</h4>
-                    <div id="detailed-analysis-content" class="detailed-content">
-                        <!-- Detailed analysis grouped by MLO will be populated here -->
+                <!-- Detailed Breakdown Section -->
+                <div id="detailed-breakdown-section" class="analysis-section">
+                    <h4>
+                        <i class="fas fa-list-alt"></i> Detailed Breakdown
+                        <button class="methodology-trigger" onclick="scrollToMethodology()" title="View detailed scoring methodology" style="background: var(--tt-magenta); color: var(--tt-white); border: none; border-radius: 50%; width: 30px; height: 30px; margin-left: 10px; cursor: pointer; font-size: 14px; transition: all 0.3s ease;">
+                            <i class="fas fa-info"></i>
+                        </button>
+                    </h4>
+                    <button class="view-toggle" id="view-toggle-btn" style="background: linear-gradient(135deg, var(--tt-dark-blue), var(--tt-burgundy)); color: var(--tt-white); border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin: 10px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; transition: all 0.3s ease;">
+                        <i class="fas fa-exchange-alt"></i> Switch to CLO View
+                    </button>
+                    <div id="breakdown-header" class="analysis-header"></div>
+                    <div id="detailed-breakdown-content" class="detailed-content">
+                        <!-- Detailed breakdown grouped by MLO/CLO will be populated here -->
                     </div>
                 </div>
             </section>
@@ -2770,45 +3030,6 @@
                 </div>
             </section>
         </main>
-
-        <!-- API Configuration Modal -->
-        <div id="api-config-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-cog"></i> Gemini API Configuration</h3>
-                    <button class="close-modal" id="close-api-config">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="gemini-api-key">Gemini API Key</label>
-                        <input type="password" id="gemini-api-key" class="form-input" 
-                               placeholder="Enter your Gemini API key">
-                        <small style="color: #666; font-size: 0.85rem;">
-                            Get your API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
-                        </small>
-                    </div>
-                    
-                    <div class="api-status" style="margin: 1rem 0;">
-                        <div id="api-status" class="status-indicator">
-                            <i class="fas fa-circle" style="color: #ccc;"></i>
-                            <span id="api-status-text">Not configured</span>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button id="save-api-key" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save
-                        </button>
-                        <button id="test-api-key" class="btn btn-secondary">
-                            <i class="fas fa-flask"></i> Test
-                        </button>
-                        <button id="clear-api-key" class="btn btn-secondary">
-                            <i class="fas fa-trash"></i> Clear
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Detail Modal -->
         <div id="detail-modal" class="modal-overlay">
@@ -2864,13 +3085,16 @@
 
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
-    <script src="js/personal-api-config.js"></script>
-    <script src="js/secure-api-config.js"></script>
     <script src="js/enhanced-alignment-engine.js"></script>
     <script src="js/alignment-engine.js"></script>
-    <script src="js/clo-mlo.js?v=2.0"></script>
     
     <script>
+        // Global state
+        let currentBreakdownView = 'mlo'; // 'mlo' or 'clo'
+        let currentAlignmentResults = null;
+        let currentCLOs = [];
+        let currentMLOs = [];
+
         // Initialize page and workflow enhancements
         document.addEventListener('DOMContentLoaded', async function() {
             try {
@@ -2882,55 +3106,2114 @@
                     await window.dataManager.loadProgrammes();
                     currentProgramme = window.dataManager.setCurrentProgramme(kavakood);
                 }
-                if (currentProgramme) updatePageHeader(currentProgramme);
+                if (currentProgramme) {
+                    updatePageHeader(currentProgramme);
+                    // Populate course dropdown when programme is available
+                    populateCourseDropdown();
+                } else {
+                    // Even if no programme selected, try to populate dropdown with helpful message
+                    populateCourseDropdown();
+                }
                 // Floating home button
                 const homeBtnFloat = document.getElementById('home-btn-float');
                 if (homeBtnFloat) homeBtnFloat.onclick = () => window.location.href = 'index.html';
 
-                // Course selection workflow
-                const courseSelector = document.getElementById('course-selector');
-                const courseSection = document.getElementById('course-selection-section');
-                const infoSection = document.getElementById('course-information-section');
+                // Initialize course workflow
+                initializeCourseWorkflow();
+                
+                // Initialize alignment engine
+                initializeAlignmentEngine();
+            } catch (error) {
+                console.error('Page initialization error:', error);
+            }
+        });
+
+        // Function to show the analysis button when user starts working with CLOs
+        function showAnalysisButton() {
+            // Only show if user is not in editing mode
+            const editorSection = document.getElementById('clo-editor-section');
+            const isEditing = editorSection && !editorSection.classList.contains('hidden');
+            
+            if (!isEditing) {
+                const analysisBtn = document.getElementById('main-analysis-btn');
+                const analysisContainer = document.getElementById('main-analysis-button-container');
+                if (analysisBtn && analysisContainer) {
+                    analysisContainer.style.display = 'flex';
+                    analysisBtn.style.display = 'inline-flex';
+                    console.log('Main analysis button shown - user can now analyze CLO-MLO alignment');
+                }
+            }
+        }
+
+        // TalTech Enhanced Analysis Function
+        async function performAlignment() {
+            // Hide CLO management section when analysis starts
+            const cloManagementSection = document.getElementById('clo-management-section');
+            if (cloManagementSection) {
+                cloManagementSection.classList.add('hidden');
+            }
+            
+            const aiButton = document.getElementById('ai-analysis-btn');
+            const breakdownSection = document.getElementById('detailed-breakdown-section');
+            const breakdownContent = document.getElementById('detailed-breakdown-content');
+            
+            // Get current programme and course data
+            const currentProgramme = window.dataManager ? window.dataManager.getCurrentProgramme() : null;
+            if (!currentProgramme) {
+                alert('Please select a programme first.');
+                return;
+            }
+
+            // Get selected course and MLOs/CLOs
+            const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
+            if (!selectedCourse) {
+                alert('Please select a course first.');
+                return;
+            }
+
+            // Get CLOs from the form
+            const cloInputs = document.querySelectorAll('.clo-textarea');
+            if (cloInputs.length === 0) {
+                alert('Please add some Course Learning Outcomes (CLOs) first.');
+                return;
+            }
+
+            const clos = Array.from(cloInputs).map((textarea, index) => ({
+                plokood: `CLO${index + 1}`, // Use PLO structure for compatibility
+                plosisuik: textarea.value.trim()
+            })).filter(clo => clo.plosisuik.length > 0);
+
+            // DEBUG: Log CLO data extraction
+            console.log('CLO Inputs found:', cloInputs.length);
+            console.log('CLOs after processing:', clos);
+            console.log('CLOs count:', clos.length);
+            
+            if (clos.length > 0) {
+                console.log('Sample CLO structure:', clos[0]);
+                console.log('CLO fields available:', Object.keys(clos[0]));
+            }
+
+            if (clos.length === 0) {
+                alert('Please enter some Course Learning Outcomes (CLOs) first.');
+                return;
+            }
+
+            // Get MLOs for the selected course
+            const programmeMlos = currentProgramme.mlos || [];
+            
+            // DEBUG: Log MLO data extraction
+            console.log('=== CLO-MLO ALIGNMENT DEBUG ===');
+            console.log('Current Programme:', currentProgramme);
+            console.log('Programme MLOs raw:', programmeMlos);
+            console.log('MLOs count:', programmeMlos.length);
+            
+            if (programmeMlos.length > 0) {
+                console.log('Sample MLO structure:', programmeMlos[0]);
+                console.log('MLO fields available:', Object.keys(programmeMlos[0]));
+            }
+            
+            if (!programmeMlos || programmeMlos.length === 0) {
+                alert('No MLOs found for this programme.');
+                return;
+            }
+
+            // Check if enhanced alignment engine is available
+            if (typeof EnhancedAlignmentEngine === 'undefined') {
+                alert('Enhanced alignment engine is not available. Please reload the page.');
+                return;
+            }
+
+            // Disable button and show loading
+            if (aiButton) {
+                aiButton.disabled = true;
+                aiButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            }
+            
+            if (breakdownContent) {
+                breakdownContent.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> TalTech methodology analyzing CLO-MLO alignment... This may take a few seconds.</div>';
+            }
+
+            try {
+                // Initialize enhanced alignment engine
+                const alignmentEngine = new EnhancedAlignmentEngine();
+                const alignmentResults = [];
+
+                // Analyze each CLO-MLO pair using TalTech methodology
+                console.log('Starting CLO-MLO analysis with Enhanced Alignment Engine...');
+                
+                clos.forEach(clo => {
+                    programmeMlos.forEach(mlo => {
+                        try {
+                            // DEBUG: Log each pair being analyzed
+                            console.log('--- Analyzing CLO-MLO Pair ---');
+                            console.log('CLO:', {
+                                code: clo.plokood,
+                                text: clo.plosisuik,
+                                fullObject: clo
+                            });
+                            console.log('MLO:', {
+                                code: mlo.mlokood,
+                                textIK: mlo.mlosisuik,
+                                textEK: mlo.mlosisuek,
+                                fullObject: mlo
+                            });
+                            
+                            const analysisResult = alignmentEngine.analyzeAlignment(
+                                clo, // CLO treated as PLO for compatibility
+                                mlo, 
+                                programmeMlos, 
+                                { 
+                                    programmeType: 'business',
+                                    level: 'bachelor'
+                                }
+                            );
+                            
+                            // DEBUG: Log analysis result
+                            console.log('Analysis Result:', {
+                                score: analysisResult.score,
+                                hasSemanticAnalysis: !!analysisResult.semanticAnalysis,
+                                hasCompetencyAnalysis: !!analysisResult.competencyAnalysis,
+                                hasBloomsAnalysis: !!analysisResult.bloomsAnalysis,
+                                hasContextualAnalysis: !!analysisResult.contextualAnalysis,
+                                hasProgressionAnalysis: !!analysisResult.progressionAnalysis,
+                                fullResult: analysisResult
+                            });
+                            
+                            alignmentResults.push(analysisResult);
+                        } catch (error) {
+                            console.error('Error processing CLO-MLO pair:', clo.plokood, mlo.mlokood, error);
+                        }
+                    });
+                });
+
+                // DEBUG: Final analysis summary
+                console.log('=== ANALYSIS COMPLETE ===');
+                console.log('Total alignment results:', alignmentResults.length);
+                console.log('Score distribution:', alignmentResults.map(r => r.score));
+                console.log('Average score:', alignmentResults.length > 0 ? 
+                    (alignmentResults.reduce((sum, r) => sum + r.score, 0) / alignmentResults.length).toFixed(2) : 'N/A');
+                console.log('Enhanced engine features detected:', {
+                    hasSemanticAnalysis: alignmentResults.some(r => r.semanticAnalysis),
+                    hasCompetencyAnalysis: alignmentResults.some(r => r.competencyAnalysis), 
+                    hasBloomsAnalysis: alignmentResults.some(r => r.bloomsAnalysis),
+                    hasContextualAnalysis: alignmentResults.some(r => r.contextualAnalysis),
+                    hasProgressionAnalysis: alignmentResults.some(r => r.progressionAnalysis)
+                });
+
+                // DEBUG: Check justification structure
+                if (alignmentResults.length > 0) {
+                    console.log('Sample result structure:', alignmentResults[0]);
+                    console.log('Sample justification:', alignmentResults[0].justification);
+                    console.log('Justification type:', typeof alignmentResults[0].justification);
+                    if (alignmentResults[0].justification && typeof alignmentResults[0].justification === 'object') {
+                        console.log('Justification keys:', Object.keys(alignmentResults[0].justification));
+                    }
+                }
+
+                // Generate comprehensive analysis report (optional - for debugging)
+                const analysisReport = generateCLOMLOAnalysisReport(clos, programmeMlos, alignmentResults, selectedCourse, currentProgramme);
+
+                // Show the main analysis results section
+                const analysisResultsSection = document.getElementById('analysis-results-section');
+                if (analysisResultsSection) {
+                    analysisResultsSection.classList.remove('hidden');
+                    console.log('Analysis results section shown');
+                    
+                    // Setup and show sticky navigation
+                    setupStickyNavigation();
+                    showAnalysisNavigation();
+                }
+                
+                // Populate analysis sections
+                populateAnalysisSummary(clos, programmeMlos, alignmentResults);
+                populateAlignmentMatrix(clos, programmeMlos, alignmentResults);
+                populateDetailedBreakdown(clos, programmeMlos, alignmentResults);
+                
+                // Analysis complete - data is now available in breakdown section
+                console.log('TalTech Enhanced ILO Alignment Analysis Complete');
+                console.log(`CLOs Analyzed: ${clos.length}, MLOs Referenced: ${programmeMlos.length}, Total Alignments: ${alignmentResults.length}`);
+
+            } catch (error) {
+                console.error('TalTech Enhanced Analysis error:', error);
+                if (breakdownContent) {
+                    breakdownContent.innerHTML = `
+                        <div style="color: #dc3545; padding: 20px; border: 1px solid #dc3545; border-radius: 8px; background: #f8d7da;">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Analysis Error</h4>
+                            <p><strong>Error:</strong> ${error.message}</p>
+                            <p>Please check the enhanced alignment engine configuration and try again.</p>
+                        </div>
+                    `;
+                }
+            } finally {
+                // Re-enable button
+                if (aiButton) {
+                    aiButton.disabled = false;
+                    aiButton.innerHTML = '<i class="fas fa-robot"></i> TalTech Enhanced Analysis';
+                }
+            }
+        }
+
+        // Populate analysis summary section
+        function populateAnalysisSummary(clos, mlos, alignmentResults) {
+            const summaryContainer = document.getElementById('summary-content');
+            if (!summaryContainer) return;
+
+            const totalAlignments = alignmentResults.length;
+            const averageScore = totalAlignments > 0 ? 
+                (alignmentResults.reduce((sum, result) => sum + result.score, 0) / totalAlignments).toFixed(2) : '0.00';
+
+            // Score distribution
+            const scoreDistribution = {
+                'Excellent (4.5-5.0)': alignmentResults.filter(r => r.score >= 4.5).length,
+                'Good (3.5-4.4)': alignmentResults.filter(r => r.score >= 3.5 && r.score < 4.5).length,
+                'Moderate (2.5-3.4)': alignmentResults.filter(r => r.score >= 2.5 && r.score < 3.5).length,
+                'Weak (1.5-2.4)': alignmentResults.filter(r => r.score >= 1.5 && r.score < 2.5).length,
+                'Poor (1.0-1.4)': alignmentResults.filter(r => r.score < 1.5).length
+            };
+
+            let summaryHTML = `
+                <div class="summary-stats" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: #aa1352; margin: 0 0 15px 0;"><i class="fas fa-chart-line"></i> Analysis Summary</h4>
+                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div class="stat-item" style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #aa1352;">${clos.length}</div>
+                            <div style="font-size: 14px; color: #666;">CLOs Analyzed</div>
+                        </div>
+                        <div class="stat-item" style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #aa1352;">${mlos.length}</div>
+                            <div style="font-size: 14px; color: #666;">MLOs Referenced</div>
+                        </div>
+                        <div class="stat-item" style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #aa1352;">${totalAlignments}</div>
+                            <div style="font-size: 14px; color: #666;">Total Alignments</div>
+                        </div>
+                        <div class="stat-item" style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #aa1352;">${averageScore}</div>
+                            <div style="font-size: 14px; color: #666;">Average Score</div>
+                        </div>
+                    </div>
+                    
+                    <h5 style="color: #aa1352; margin: 20px 0 10px 0;">Score Distribution:</h5>
+                    <div class="score-distribution">
+            `;
+
+            Object.entries(scoreDistribution).forEach(([label, count]) => {
+                const percentage = totalAlignments > 0 ? ((count / totalAlignments) * 100).toFixed(1) : '0.0';
+                summaryHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                        <span>${label}</span>
+                        <span style="font-weight: bold;">${count} (${percentage}%)</span>
+                    </div>
+                `;
+            });
+
+            summaryHTML += `
+                    </div>
+                </div>
+            `;
+
+            summaryContainer.innerHTML = summaryHTML;
+        }
+
+        // Populate alignment matrix section
+        function populateAlignmentMatrix(clos, mlos, alignmentResults) {
+            const matrixContainer = document.getElementById('alignment-matrix-container');
+            if (!matrixContainer) return;
+
+            let matrixHTML = `
+                <div class="matrix-table" style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <thead>
+                            <tr style="background: #aa1352; color: white;">
+                                <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">CLO</th>
+            `;
+
+            // Add MLO headers
+            mlos.forEach(mlo => {
+                matrixHTML += `<th style="padding: 12px; border: 1px solid #ddd; text-align: center; writing-mode: vertical-rl; text-orientation: mixed;">${mlo.mlokood}</th>`;
+            });
+
+            matrixHTML += `
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            // Add CLO rows with alignment scores
+            clos.forEach(clo => {
+                matrixHTML += `<tr>`;
+                matrixHTML += `<td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; background: #f8f9fa;">${clo.plokood}</td>`;
+                
+                mlos.forEach(mlo => {
+                    const alignment = alignmentResults.find(result => 
+                        result.plo.plokood === clo.plokood && result.mlo.mlokood === mlo.mlokood
+                    );
+                    
+                    if (alignment) {
+                        const score = alignment.score.toFixed(1);
+                        const color = getScoreColor(score);
+                        matrixHTML += `
+                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center; background-color: ${color}; color: white; font-weight: bold; cursor: pointer;" 
+                                onclick="showAlignmentDetail('${clo.plokood}', '${mlo.mlokood}')">${score}</td>
+                        `;
+                    } else {
+                        matrixHTML += `<td style="padding: 12px; border: 1px solid #ddd; text-align: center; background: #f8f9fa;">-</td>`;
+                    }
+                });
+                
+                matrixHTML += `</tr>`;
+            });
+
+            matrixHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            matrixContainer.innerHTML = matrixHTML;
+        }
+
+        // Populate detailed analysis section
+        function populateDetailedAnalysis(clos, mlos, alignmentResults) {
+            const detailedContainer = document.getElementById('detailed-analysis-content');
+            if (!detailedContainer) return;
+
+            let detailedHTML = '';
+
+            mlos.forEach(mlo => {
+                const mloAlignments = alignmentResults.filter(result => result.mlo.mlokood === mlo.mlokood);
+                
+                if (mloAlignments.length > 0) {
+                    const avgScore = (mloAlignments.reduce((sum, alignment) => sum + alignment.score, 0) / mloAlignments.length).toFixed(2);
+                    
+                    detailedHTML += `
+                        <div class="mlo-analysis" style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                            <h5 style="color: #aa1352; margin: 0 0 10px 0;">
+                                <i class="fas fa-cube"></i> ${mlo.mlokood} 
+                                <span style="font-size: 14px; color: #666; font-weight: normal;">(Avg: ${avgScore})</span>
+                            </h5>
+                            <p style="font-size: 14px; color: #666; margin: 0 0 15px 0; font-style: italic;">
+                                ${mlo.mlosisuik || mlo.mlosisuek || 'No description available'}
+                            </p>
+                            
+                            <div class="clo-alignments">
+                    `;
+                    
+                    mloAlignments.forEach(alignment => {
+                        const scoreColor = getScoreColor(alignment.score);
+                        detailedHTML += `
+                            <div class="alignment-item" style="background: #f8f9fa; border-left: 4px solid ${scoreColor}; padding: 15px; margin: 10px 0; border-radius: 0 6px 6px 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <strong style="color: #aa1352;">${alignment.plo.plokood}</strong>
+                                    <span style="background: ${scoreColor}; color: white; padding: 4px 8px; border-radius: 3px; font-weight: bold;">
+                                        ${alignment.score.toFixed(1)}
+                                    </span>
+                                </div>
+                                <div style="font-size: 14px; color: #333; margin-bottom: 10px;">
+                                    ${alignment.plo.plosisuik}
+                                </div>
+                        `;
+                        
+                        if (alignment.justification) {
+                            // Handle different justification formats
+                            let justificationText = '';
+                            if (typeof alignment.justification === 'string') {
+                                justificationText = alignment.justification;
+                            } else if (alignment.justification.summary) {
+                                justificationText = alignment.justification.summary;
+                            } else if (alignment.justification.text) {
+                                justificationText = alignment.justification.text;
+                            } else {
+                                justificationText = JSON.stringify(alignment.justification);
+                            }
+                            
+                            detailedHTML += `
+                                <div style="font-size: 12px; color: #666; font-style: italic;">
+                                    <strong>Analysis:</strong> ${justificationText.substring(0, 200)}${justificationText.length > 200 ? '...' : ''}
+                                </div>
+                            `;
+                        }
+                        
+                        detailedHTML += `</div>`;
+                    });
+                    
+                    detailedHTML += `
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            detailedContainer.innerHTML = detailedHTML;
+        }
+
+        // Helper function to get color based on score
+        function getScoreColor(score) {
+            // Map score to class name for pastel color system
+            const numScore = parseFloat(score);
+            if (numScore >= 4.5) return 'score-5';
+            if (numScore >= 3.5) return 'score-4';
+            if (numScore >= 2.5) return 'score-3';
+            if (numScore >= 1.5) return 'score-2';
+            return 'score-1';
+        }
+
+        // New function to populate detailed breakdown with table view and toggle functionality
+        function populateDetailedBreakdown(clos, mlos, alignmentResults) {
+            // Store global state for view toggle functionality
+            currentCLOs = clos;
+            currentMLOs = mlos;
+            currentAlignmentResults = alignmentResults;
+
+            const breakdownContainer = document.getElementById('detailed-breakdown-content');
+            if (!breakdownContainer) return;
+
+            renderDetailedBreakdown();
+        }
+
+        // Render detailed breakdown based on current view (MLO or CLO)
+        function renderDetailedBreakdown() {
+            const breakdownContainer = document.getElementById('detailed-breakdown-content');
+            const headerContainer = document.getElementById('breakdown-header');
+            
+            if (!breakdownContainer || !currentAlignmentResults) return;
+
+            // Update header based on current view
+            if (headerContainer) {
+                const viewText = currentBreakdownView === 'mlo' ? 'Module Learning Outcomes (MLO)' : 'Course Learning Outcomes (CLO)';
+                headerContainer.innerHTML = `<i class="fas fa-table"></i> Breakdown grouped by ${viewText}`;
+            }
+
+            let tableHTML = '';
+
+            if (currentBreakdownView === 'mlo') {
+                // Group by MLO - show CLO details in rows
+                tableHTML = `
+                    <table class="detailed-breakdown-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 120px;">CLO Code</th>
+                                <th style="width: 400px;">CLO Content</th>
+                                <th style="width: 60px;">Score</th>
+                                <th>Justification & Analysis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                currentMLOs.forEach(mlo => {
+                    const mloAlignments = currentAlignmentResults.filter(result => result.mlo.mlokood === mlo.mlokood);
+                    
+                    if (mloAlignments.length > 0) {
+                        const avgScore = (mloAlignments.reduce((sum, alignment) => sum + alignment.score, 0) / mloAlignments.length);
+                        
+                        // MLO header row
+                        tableHTML += `
+                            <tr style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); font-weight: bold;">
+                                <td colspan="4" style="padding: 15px; border: 2px solid var(--tt-burgundy); color: var(--tt-burgundy);">
+                                    <i class="fas fa-cube"></i> ${mlo.mlokood}: ${mlo.mlosisuik || mlo.mlosisuek || 'No description available'}
+                                    <span style="float: right; background: var(--tt-burgundy); color: white; padding: 4px 8px; border-radius: 3px; font-size: 0.9em;">
+                                        Avg Score: ${avgScore.toFixed(1)}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                        
+                        // CLO alignment rows
+                        mloAlignments.forEach((alignment, index) => {
+                            const scoreClass = getScoreColor(alignment.score);
+                            const needsImprovement = alignment.score < 3.5;
+                            tableHTML += `
+                                <tr>
+                                    <td class="clo-code-cell">${alignment.plo.plokood}</td>
+                                    <td class="clo-content-cell">${alignment.plo.plosisuik}</td>
+                                    <td class="alignment-score-cell">
+                                        <span class="alignment-score ${scoreClass}" style="padding: 4px 8px; border-radius: 3px; font-weight: bold;">
+                                            ${alignment.score.toFixed(1)}
+                                        </span>
+                                    </td>
+                                    <td class="justification-cell">
+                                        ${getJustificationText(alignment)}
+                                        ${needsImprovement ? getImprovementSuggestions(alignment, 'mlo') : ''}
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                });
+            } else {
+                // Group by CLO - show MLO details in rows
+                tableHTML = `
+                    <table class="detailed-breakdown-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 120px;">MLO Code</th>
+                                <th style="width: 400px;">MLO Content</th>
+                                <th style="width: 60px;">Score</th>
+                                <th>Justification & Analysis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                currentCLOs.forEach(clo => {
+                    const cloAlignments = currentAlignmentResults.filter(result => result.plo.plokood === clo.plokood);
+                    
+                    if (cloAlignments.length > 0) {
+                        const avgScore = (cloAlignments.reduce((sum, alignment) => sum + alignment.score, 0) / cloAlignments.length);
+                        
+                        // CLO header row
+                        tableHTML += `
+                            <tr style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); font-weight: bold;">
+                                <td colspan="4" style="padding: 15px; border: 2px solid var(--tt-burgundy); color: var(--tt-burgundy);">
+                                    <i class="fas fa-graduation-cap"></i> ${clo.plokood}: ${clo.plosisuik}
+                                    <span style="float: right; background: var(--tt-burgundy); color: white; padding: 4px 8px; border-radius: 3px; font-size: 0.9em;">
+                                        Avg Score: ${avgScore.toFixed(1)}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                        
+                        // MLO alignment rows
+                        cloAlignments.forEach((alignment, index) => {
+                            const scoreClass = getScoreColor(alignment.score);
+                            const needsImprovement = alignment.score < 3.5;
+                            tableHTML += `
+                                <tr>
+                                    <td class="mlo-code-cell">${alignment.mlo.mlokood}</td>
+                                    <td class="mlo-content-cell">${alignment.mlo.mlosisuik || alignment.mlo.mlosisuek || 'No description'}</td>
+                                    <td class="alignment-score-cell">
+                                        <span class="alignment-score ${scoreClass}" style="padding: 4px 8px; border-radius: 3px; font-weight: bold;">
+                                            ${alignment.score.toFixed(1)}
+                                        </span>
+                                    </td>
+                                    <td class="justification-cell">
+                                        ${getJustificationText(alignment)}
+                                        ${needsImprovement ? getImprovementSuggestions(alignment, 'clo') : ''}
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                });
+            }
+
+            tableHTML += `
+                        </tbody>
+                    </table>
+            `;
+
+            breakdownContainer.innerHTML = tableHTML;
+        }
+
+        // Helper function to extract justification text
+        function getJustificationText(alignment) {
+            if (!alignment.justification) return '<em>No justification available</em>';
+            
+            let justificationText = '';
+            if (typeof alignment.justification === 'string') {
+                justificationText = alignment.justification;
+            } else if (alignment.justification.summary) {
+                justificationText = alignment.justification.summary;
+            } else if (alignment.justification.text) {
+                justificationText = alignment.justification.text;
+            } else {
+                justificationText = JSON.stringify(alignment.justification);
+            }
+            
+            return `<div style="font-size: 0.9em; color: #555; line-height: 1.4;">${justificationText}</div>`;
+        }
+
+        // Helper function to generate improvement suggestions for poor-performing components
+        function getImprovementSuggestions(alignment, viewType) {
+            const score = alignment.score;
+            let suggestions = [];
+            
+            if (score < 2.0) {
+                suggestions.push("Consider significant restructuring to improve alignment");
+                suggestions.push("Review core learning objectives and competency mapping");
+            } else if (score < 3.5) {
+                suggestions.push("Enhance semantic alignment through better keyword matching");
+                suggestions.push("Review cognitive complexity and Bloom's taxonomy levels");
+                suggestions.push("Strengthen competency framework connections");
+            }
+            
+            if (suggestions.length > 0) {
+                return `
+                    <div class="improvement-suggestions">
+                        <strong><i class="fas fa-lightbulb"></i> Improvement Suggestions:</strong>
+                        <ul style="margin: 5px 0 0 20px;">
+                            ${suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            return '';
+        }
+
+        // Generate CLO-MLO Analysis Report using TalTech methodology
+        function generateCLOMLOAnalysisReport(clos, mlos, alignmentResults, course, programme) {
+            // Score classification based on TalTech methodology (1-5 scale)
+            const getScoreClass = (score) => {
+                if (score >= 4.5) return 'excellent';
+                if (score >= 3.5) return 'good';
+                if (score >= 2.5) return 'moderate';
+                if (score >= 1.5) return 'weak';
+                return 'poor';
+            };
+
+            const getScoreLabel = (score) => {
+                if (score >= 4.5) return 'Excellent';
+                if (score >= 3.5) return 'Good';
+                if (score >= 2.5) return 'Moderate';
+                if (score >= 1.5) return 'Weak';
+                return 'Poor';
+            };
+
+            let html = `
+                <div class="taltech-analysis-report">
+                    <div class="analysis-header" style="background: linear-gradient(135deg, #aa1352, #e4067e); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h2 style="margin: 0; color: white;"><i class="fas fa-university"></i> TalTech Enhanced ILO Alignment Analysis</h2>
+                        <p style="margin: 8px 0 0 0; opacity: 0.9;">CLO-MLO Alignment Assessment for ${programme.nameEn} (${programme.code.toUpperCase()})</p>
+                        <p style="margin: 4px 0 0 0; font-size: 0.9em; opacity: 0.8;">Course: ${course.nameEn} (${course.code}) - ${course.credits} EAP</p>
+                    </div>
+
+                    <div class="methodology-info" style="background: #f8f9fa; padding: 15px; border-left: 4px solid #aa1352; margin-bottom: 20px;">
+                        <h4 style="margin: 0 0 10px 0; color: #aa1352;"><i class="fas fa-flask"></i> Analysis Methodology</h4>
+                        <p style="margin: 0; font-size: 0.9em;"><strong>TalTech Enhanced ILO Alignment Analysis v1.0</strong> - Multi-component scoring framework:</p>
+                        <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 0.85em;">
+                            <li><strong>Semantic Coherence (35%):</strong> Vocabulary overlap and terminology alignment</li>
+                            <li><strong>Competency Framework (25%):</strong> EQF-based skill mapping and competency analysis</li>
+                            <li><strong>Cognitive Progression (20%):</strong> Bloom's Taxonomy level assessment and progression logic</li>
+                            <li><strong>Contextual Relevance (15%):</strong> Domain-specific terminology and programme alignment</li>
+                            <li><strong>Learning Progression (5%):</strong> Sequential building patterns and prerequisite relationships</li>
+                        </ul>
+                        <p style="margin: 8px 0 0 0; font-size: 0.8em; color: #666;"><strong>Score Range:</strong> 1.0-5.0 | <strong>Quality Thresholds:</strong> Poor (1.0-1.4), Weak (1.5-2.4), Moderate (2.5-3.4), Good (3.5-4.4), Excellent (4.5-5.0)</p>
+                    </div>
+            `;
+
+            // Overall Statistics
+            const overallStats = calculateOverallStatistics(alignmentResults);
+            html += `
+                <div class="overall-statistics" style="background: white; padding: 15px; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 15px 0; color: #aa1352;"><i class="fas fa-chart-bar"></i> Overall Alignment Statistics</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #aa1352;">${overallStats.averageScore.toFixed(2)}</div>
+                            <div style="font-size: 0.9em; color: #666;">Average Alignment Score</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #aa1352;">${overallStats.excellentCount}</div>
+                            <div style="font-size: 0.9em; color: #666;">Excellent Alignments (≥4.5)</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #aa1352;">${overallStats.goodCount}</div>
+                            <div style="font-size: 0.9em; color: #666;">Good Alignments (3.5-4.4)</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #aa1352;">${overallStats.weakCount}</div>
+                            <div style="font-size: 0.9em; color: #666;">Weak Alignments (≤2.4)</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // CLO-based Analysis
+            html += `<div class="clo-analysis-section">`;
+            html += `<h4 style="color: #aa1352; margin: 20px 0 15px 0;"><i class="fas fa-graduation-cap"></i> Individual CLO Analysis</h4>`;
+            
+            clos.forEach((clo, index) => {
+                const cloResults = alignmentResults.filter(r => r.plo.plokood === clo.plokood);
+                const avgScore = cloResults.length > 0 ? 
+                    (cloResults.reduce((sum, r) => sum + r.score, 0) / cloResults.length) : 0;
+                
+                html += `
+                    <div class="clo-analysis-card" style="background: white; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 15px; overflow: hidden;">
+                        <div class="clo-header" style="background: linear-gradient(90deg, #aa1352, #e4067e); color: white; padding: 12px 15px;">
+                            <h5 style="margin: 0; font-size: 1.1em;">${clo.plokood}: Average Score ${avgScore.toFixed(2)} (${getScoreLabel(avgScore)})</h5>
+                        </div>
+                        <div class="clo-content" style="padding: 15px;">
+                            <div class="clo-text" style="background: #f8f9fa; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-style: italic;">
+                                "${clo.plosisuik}"
+                            </div>
+                            <div class="mlo-alignments">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa;">
+                                            <th style="padding: 8px; border: 1px solid #dee2e6; text-align: left;">MLO</th>
+                                            <th style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">Score</th>
+                                            <th style="padding: 8px; border: 1px solid #dee2e6; text-align: left;">TalTech Analysis Components</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                `;
+                
+                cloResults.forEach(result => {
+                    const scoreClass = getScoreClass(result.score);
+                    html += `
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #dee2e6; vertical-align: top;">
+                                <strong>${result.mlo.mlokood}</strong><br>
+                                <span style="font-size: 0.85em; color: #666;">${result.mlo.mlosisuik || result.mlo.mlosisu}</span>
+                            </td>
+                            <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center; vertical-align: top;">
+                                <span class="score-badge score-${scoreClass}" style="display: inline-block; padding: 4px 8px; border-radius: 12px; font-weight: bold; font-size: 0.9em; color: white; background: ${getScoreColor(scoreClass)};">${result.score}</span>
+                            </td>
+                            <td style="padding: 8px; border: 1px solid #dee2e6; vertical-align: top;">
+                                ${result.justification && result.justification.components && Array.isArray(result.justification.components) ? 
+                                    result.justification.components.map(comp => `<div style="margin-bottom: 3px; font-size: 0.8em;">${comp}</div>`).join('') :
+                                    'Analysis components not available'
+                                }
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+
+            // Recommendations Section
+            const recommendations = generateRecommendations(overallStats, clos, alignmentResults);
+            html += `
+                <div class="recommendations-section" style="background: #e8f4fd; border: 1px solid #bee5eb; border-radius: 8px; padding: 15px; margin-top: 20px;">
+                    <h4 style="margin: 0 0 15px 0; color: #0c5460;"><i class="fas fa-lightbulb"></i> TalTech Methodology Recommendations</h4>
+                    ${recommendations}
+                </div>
+            `;
+
+            html += `</div>`;
+            return html;
+        }
+
+        // Helper functions for analysis report
+        function calculateOverallStatistics(alignmentResults) {
+            const scores = alignmentResults.map(r => r.score);
+            const averageScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+            
+            return {
+                averageScore,
+                excellentCount: scores.filter(s => s >= 4.5).length,
+                goodCount: scores.filter(s => s >= 3.5 && s < 4.5).length,
+                moderateCount: scores.filter(s => s >= 2.5 && s < 3.5).length,
+                weakCount: scores.filter(s => s < 2.5).length,
+                totalAlignments: scores.length
+            };
+        }
+
+        function getScoreColor(scoreClass) {
+            const colors = {
+                'excellent': '#28a745',
+                'good': '#20c997',
+                'moderate': '#ffc107',
+                'weak': '#fd7e14',
+                'poor': '#dc3545'
+            };
+            return colors[scoreClass] || '#6c757d';
+        }
+
+        function generateRecommendations(stats, clos, alignmentResults) {
+            let recommendations = '';
+            
+            if (stats.averageScore >= 4.0) {
+                recommendations += '<div style="margin-bottom: 10px;"><strong>✅ Excellent Overall Alignment:</strong> CLOs demonstrate strong alignment with MLOs using TalTech methodology standards.</div>';
+            } else if (stats.averageScore >= 3.0) {
+                recommendations += '<div style="margin-bottom: 10px;"><strong>👍 Good Foundation:</strong> Solid alignment base with opportunities for refinement based on component analysis.</div>';
+            } else {
+                recommendations += '<div style="margin-bottom: 10px;"><strong>⚠️ Alignment Needs Improvement:</strong> Consider revising CLOs to better align with MLO competency frameworks.</div>';
+            }
+
+            if (stats.weakCount > 0) {
+                recommendations += `<div style="margin-bottom: 10px;"><strong>🔧 Focus Areas:</strong> ${stats.weakCount} CLO-MLO pairs scored below 2.5. Review semantic overlap and competency alignment for these pairs.</div>`;
+            }
+
+            recommendations += '<div style="margin-bottom: 10px;"><strong>📊 TalTech Framework Insights:</strong> Analysis considers Bloom\'s Taxonomy progression, EQF competency mapping, and domain-specific terminology alignment.</div>';
+            
+            return recommendations;
+        }
+
+        // AI Feedback Functions
+        function showAIFeedbackModal() {
+            const modal = document.getElementById('ai-feedback-modal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        function closeAIFeedbackModal() {
+            const modal = document.getElementById('ai-feedback-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Clear form
+                document.querySelectorAll('input[name="ai-feedback-rating"]').forEach(radio => radio.checked = false);
+                document.getElementById('ai-feedback-comments').value = '';
+            }
+        }
+
+        async function submitAIFeedback() {
+            const selectedRating = document.querySelector('input[name="ai-feedback-rating"]:checked');
+            const comments = document.getElementById('ai-feedback-comments').value;
+            
+            if (!selectedRating) {
+                alert('Please select a rating before submitting.');
+                return;
+            }
+            
+            const currentProgramme = window.dataManager ? window.dataManager.getCurrentProgramme() : null;
+            const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
+            
+            const feedbackData = {
+                timestamp: new Date().toISOString(),
+                rating: parseInt(selectedRating.value),
+                comments: comments.trim(),
+                analysisType: 'clo-mlo-ai',
+                programmeCode: currentProgramme ? currentProgramme.code : null,
+                courseCode: selectedCourse ? selectedCourse.code : null,
+                page: 'clo-mlo.html',
+                methodology: 'TalTech Enhanced ILO Alignment Analysis v1.0',
+                sessionId: generateSessionId(),
+                userAgent: navigator.userAgent,
+                url: window.location.href
+            };
+            
+            try {
+                // Store feedback in localStorage for collection
+                const existingFeedback = JSON.parse(localStorage.getItem('aiAssistantFeedback') || '[]');
+                existingFeedback.push(feedbackData);
+                
+                // Keep only last 100 feedback entries to prevent storage bloat
+                if (existingFeedback.length > 100) {
+                    existingFeedback.splice(0, existingFeedback.length - 100);
+                }
+                
+                localStorage.setItem('aiAssistantFeedback', JSON.stringify(existingFeedback));
+                
+                // Show success message
+                alert('Thank you for your feedback! Your input helps us improve the TalTech AI Analysis.');
+                
+                // Close modal
+                closeAIFeedbackModal();
+                
+                console.log('📝 CLO-MLO AI Analysis feedback submitted:', feedbackData);
+                
+            } catch (error) {
+                console.error('Error submitting AI feedback:', error);
+                alert('Error submitting feedback. Please try again.');
+            }
+        }
+
+        function generateSessionId() {
+            // Generate or retrieve session ID
+            let sessionId = sessionStorage.getItem('aiAssistantSessionId');
+            if (!sessionId) {
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem('aiAssistantSessionId', sessionId);
+            }
+            return sessionId;
+        }
+
+        // Sticky Navigation Functions
+        function setupStickyNavigation() {
+            try {
+                const navLinks = document.querySelectorAll('.analysis-nav a');
+                if (navLinks.length === 0) {
+                    console.warn('No navigation links found for sticky navigation');
+                    return;
+                }
+
+                // Add click handlers for smooth scrolling
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            // Remove active class from all links
+                            navLinks.forEach(l => l.classList.remove('active'));
+                            // Add active class to clicked link
+                            this.classList.add('active');
+                            
+                            // Smooth scroll to target
+                            targetElement.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+
+                // Add scroll spy functionality
+                const sections = Array.from(navLinks).map(link => {
+                    const targetId = link.getAttribute('href').substring(1);
+                    return document.getElementById(targetId);
+                }).filter(section => section !== null);
+
+                function updateActiveNav() {
+                    const scrollPos = window.scrollY + 100; // Offset for sticky nav
+                    let activeSection = null;
+
+                    sections.forEach(section => {
+                        const top = section.offsetTop;
+                        const bottom = top + section.offsetHeight;
+                        
+                        if (scrollPos >= top && scrollPos < bottom) {
+                            activeSection = section;
+                        }
+                    });
+
+                    // Update active link
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    if (activeSection) {
+                        const activeLink = document.querySelector(`.analysis-nav a[href="#${activeSection.id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                }
+
+                // Add scroll listener
+                window.addEventListener('scroll', updateActiveNav);
+                
+                console.log('Sticky navigation setup completed successfully');
+            } catch (error) {
+                console.error('Error setting up sticky navigation:', error);
+            }
+        }
+
+        function showAnalysisNavigation() {
+            const analysisNav = document.getElementById('analysis-nav');
+            if (analysisNav) {
+                analysisNav.style.display = 'block';
+                console.log('Analysis navigation shown');
+            }
+        }
+
+        function updateNavigationWithCLOs() {
+            const navList = document.querySelector('.analysis-nav ul');
+            if (!navList) return;
+
+            // Remove existing CLO navigation items (if any)
+            const existingCLOItems = navList.querySelectorAll('[data-clo-link]');
+            existingCLOItems.forEach(item => item.remove());
+
+            // Get current CLOs and add navigation items
+            const cloInputs = document.querySelectorAll('.clo-textarea');
+            if (cloInputs.length > 0) {
+                cloInputs.forEach((textarea, index) => {
+                    if (textarea.value.trim()) {
+                        const cloCode = `CLO${index + 1}`;
+                        const li = document.createElement('li');
+                        li.setAttribute('data-clo-link', '');
+                        li.innerHTML = `<a href="#clo-${index + 1}"><i class="fas fa-graduation-cap"></i> ${cloCode}</a>`;
+                        navList.appendChild(li);
+                    }
+                });
+            }
+        }
+
+        // Enhanced CLO-MLO Alignment Analysis (similar to PLO-MLO)
+        let alignmentResults = [];
+        let alignmentEngine = null;
+
+        // Initialize the enhanced alignment engine
+        function initializeAlignmentEngine() {
+            if (typeof EnhancedAlignmentEngine !== 'undefined') {
+                alignmentEngine = new EnhancedAlignmentEngine();
+                console.log('Enhanced Alignment Engine initialized for CLO-MLO analysis');
+                return true;
+            } else {
+                console.error('Enhanced Alignment Engine not available');
+                return false;
+            }
+        }
+
+        // Get saved CLOs from localStorage or form inputs
+        function getSavedCLOs() {
+            // First try to get from localStorage
+            const currentProgramme = window.dataManager ? window.dataManager.getCurrentProgramme() : null;
+            const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
+            
+            if (currentProgramme && selectedCourse) {
+                const storageKey = `clos_${currentProgramme.code}_${selectedCourse.code}`;
+                const savedData = localStorage.getItem(storageKey);
+                if (savedData) {
+                    try {
+                        const clos = JSON.parse(savedData);
+                        if (clos && clos.length > 0) {
+                            console.log('Found saved CLOs in localStorage:', clos.length);
+                            return clos;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing saved CLOs:', error);
+                    }
+                }
+            }
+
+            // Check for existing CLOs in course data
+            if (selectedCourse) {
+                const courseCLOs = [];
+                
+                // Check both English and Estonian CLO fields
+                const cloFieldsEn = selectedCourse.cloik || {};
+                const cloFieldsEt = selectedCourse.cloek || {};
+                
+                // Try English CLOs first
+                if (Object.keys(cloFieldsEn).length > 0) {
+                    Object.entries(cloFieldsEn).forEach(([key, text]) => {
+                        if (text && text.trim()) {
+                            courseCLOs.push({
+                                text: text.trim(),
+                                code: key,
+                                language: 'en'
+                            });
+                        }
+                    });
+                } else if (Object.keys(cloFieldsEt).length > 0) {
+                    // Fallback to Estonian CLOs if no English CLOs
+                    Object.entries(cloFieldsEt).forEach(([key, text]) => {
+                        if (text && text.trim()) {
+                            courseCLOs.push({
+                                text: text.trim(),
+                                code: key,
+                                language: 'et'
+                            });
+                        }
+                    });
+                }
+                
+                if (courseCLOs.length > 0) {
+                    console.log('Found existing CLOs in course data:', courseCLOs.length);
+                    return courseCLOs;
+                }
+            }
+
+            // Fallback: try to get from form inputs
+            const cloInputs = document.querySelectorAll('.clo-textarea');
+            if (cloInputs.length > 0) {
+                const clos = Array.from(cloInputs).map(textarea => ({
+                    text: textarea.value.trim()
+                })).filter(clo => clo.text.length > 0);
+                
+                if (clos.length > 0) {
+                    console.log('Found CLOs in form inputs:', clos.length);
+                    return clos;
+                }
+            }
+
+            console.log('No CLOs found in any source');
+            return [];
+        }
+
+        // Render CLO-MLO summary (similar to PLO-MLO renderSummary)
+        function renderCLOMLOSummary() {
+            const container = document.getElementById('summary-content');
+            
+            if (!alignmentResults || alignmentResults.length === 0) {
+                container.innerHTML = '<p>No alignment data available.</p>';
+                return;
+            }
+
+            const totalAlignments = alignmentResults.length;
+            const averageScore = (alignmentResults.reduce((sum, result) => sum + result.score, 0) / totalAlignments).toFixed(2);
+            
+            // Update score distribution to handle enhanced alignment scoring with new legend
+            const scoreDistribution = {
+                'Poor': alignmentResults.filter(r => r.score >= 1.0 && r.score <= 1.4).length,
+                'Weak': alignmentResults.filter(r => r.score >= 1.5 && r.score <= 2.4).length,
+                'Moderate': alignmentResults.filter(r => r.score >= 2.5 && r.score <= 3.4).length,
+                'Good': alignmentResults.filter(r => r.score >= 3.5 && r.score <= 4.4).length,
+                'Excellent': alignmentResults.filter(r => r.score >= 4.5 && r.score <= 5.0).length
+            };
+
+            // Calculate MLO category distribution based on mlokood prefix
+            const mloCategories = {};
+            alignmentResults.forEach(result => {
+                // Extract category from mlokood prefix (e.g., "yl_mlo1" -> "YL")
+                const mlokood = result.mlo.mlokood || '';
+                const category = mlokood.includes('_') ? 
+                    mlokood.split('_')[0].toUpperCase() : 
+                    mlokood.substring(0, 2).toUpperCase() || 'OTHER';
+                    
+                if (!mloCategories[category]) {
+                    mloCategories[category] = { total: 0, scores: {'Poor':0, 'Weak':0, 'Moderate':0, 'Good':0, 'Excellent':0} };
+                }
+                mloCategories[category].total++;
+                
+                // Map decimal scores to enhanced categories
+                let scoreCategory = 'Poor';
+                if (result.score >= 4.5) scoreCategory = 'Excellent';
+                else if (result.score >= 3.5) scoreCategory = 'Good';
+                else if (result.score >= 2.5) scoreCategory = 'Moderate';
+                else if (result.score >= 1.5) scoreCategory = 'Weak';
+                else scoreCategory = 'Poor';
+                
+                mloCategories[category].scores[scoreCategory]++;
+            });
+
+            const strongAlignments = scoreDistribution['Good'] + scoreDistribution['Excellent'];
+            const weakAlignments = scoreDistribution['Poor'] + scoreDistribution['Weak'];
+            const coveragePercentage = (strongAlignments / totalAlignments * 100).toFixed(1);
+            
+            // Calculate max height for chart scaling
+            const maxCount = Math.max(...Object.values(scoreDistribution));
+            
+            // Generate action-based key findings
+            const lowScoreCLOs = [...new Set(alignmentResults.filter(r => r.score <= 2).map(r => r.plo.plokood))];
+            const highScoreModules = [...new Set(alignmentResults.filter(r => r.score >= 4).map(r => r.mlo.mlokood.split('_')[0]))];
+            const improvableMLOs = alignmentResults.filter(r => r.score <= 2).map(r => r.mlo.mlokood);
+
+            container.innerHTML = `
+                <div class="score-distribution-chart">
+                    <h3><i class="fas fa-chart-column"></i> Score Distribution Analysis</h3>
+                    <div class="chart-container">
+                        ${Object.entries(scoreDistribution).map(([scoreLabel, count]) => {
+                            const percentage = totalAlignments > 0 ? ((count / totalAlignments) * 100).toFixed(1) : 0;
+                            const scoreColors = {
+                                'Poor': 'var(--score-poor)', 
+                                'Weak': 'var(--score-weak)', 
+                                'Moderate': 'var(--score-moderate)', 
+                                'Good': 'var(--score-good)', 
+                                'Excellent': 'var(--score-excellent)'
+                            };
+                            const scoreRanges = {
+                                'Poor': '1.0-1.4', 
+                                'Weak': '1.5-2.4', 
+                                'Moderate': '2.5-3.4', 
+                                'Good': '3.5-4.4', 
+                                'Excellent': '4.5-5.0'
+                            };
+                            
+                            // Show all columns, including 0 count ones
+                            const isZero = count === 0;
+                            const barHeight = maxCount > 0 ? (count / maxCount * 160) + 20 : 20;
+                            const backgroundColor = isZero ? 'transparent' : scoreColors[scoreLabel];
+                            const textColor = isZero ? 'transparent' : 'black';
+                            const borderStyle = isZero ? 'none' : '2px solid #ddd';
+                            
+                            return `
+                                <div class="chart-bar" 
+                                     style="height: ${barHeight}px; 
+                                            background: ${backgroundColor}; 
+                                            color: ${textColor}; 
+                                            font-weight: bold;
+                                            border: ${borderStyle};
+                                            border-radius: 4px;" 
+                                     title="${scoreLabel} (${scoreRanges[scoreLabel]}): ${count} alignments (${percentage}%)">
+                                    ${isZero ? '' : `${count} (${percentage}%)`}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="chart-labels">
+                        <div class="chart-label">Poor<br><small>1.0-1.4</small></div>
+                        <div class="chart-label">Weak<br><small>1.5-2.4</small></div>
+                        <div class="chart-label">Moderate<br><small>2.5-3.4</small></div>
+                        <div class="chart-label">Good<br><small>3.5-4.4</small></div>
+                        <div class="chart-label">Excellent<br><small>4.5-5.0</small></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px; color: var(--tt-burgundy); font-weight: bold;">
+                        Average Score: ${averageScore} | Strong Alignments (Good+Excellent): ${coveragePercentage}%
+                    </div>
+                </div>
+                
+                <div class="score-distribution-chart">
+                    <h3><i class="fas fa-layer-group"></i> Score Distribution by MLO Category</h3>
+                    <p style="color: var(--tt-grey-1); font-style: italic; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle"></i> Each number represents the count of CLO-MLO alignment pairs. 
+                        For example, if a module has 1 MLO and the course has 6 CLOs, this creates 6 alignment pairs to be evaluated.
+                    </p>
+                    
+                    <!-- Category Score Distribution -->
+                    <div class="mlo-category-charts">
+                        <div class="mlo-stacked-chart-container">
+                            ${(() => {
+                                // Define category order
+                                const categoryOrder = ['YL', 'P1', 'P2', 'E1', 'E2', 'GD', 'VB', 'MN'];
+                                
+                                // Enhanced score legend with colors matching chart
+                                const enhancedScoreColors = {
+                                    'Poor': 'var(--score-poor)',
+                                    'Weak': 'var(--score-weak)', 
+                                    'Moderate': 'var(--score-moderate)',
+                                    'Good': 'var(--score-good)',
+                                    'Excellent': 'var(--score-excellent)'
+                                };
+                                
+                                // Map numeric scores to enhanced categories
+                                function getScoreCategory(score) {
+                                    const numScore = parseFloat(score);
+                                    if (numScore >= 1.0 && numScore <= 1.4) return 'Poor';
+                                    if (numScore >= 1.5 && numScore <= 2.4) return 'Weak';
+                                    if (numScore >= 2.5 && numScore <= 3.4) return 'Moderate';
+                                    if (numScore >= 3.5 && numScore <= 4.4) return 'Good';
+                                    if (numScore >= 4.5 && numScore <= 5.0) return 'Excellent';
+                                    return 'Poor'; // fallback
+                                }
+                                
+                                // mloCategories already contains the correct score format, no conversion needed
+                                const enhancedMloCategories = mloCategories;
+                                
+                                // Sort categories by defined order, then add any others
+                                const sortedCategories = [];
+                                categoryOrder.forEach(cat => {
+                                    if (enhancedMloCategories[cat]) {
+                                        sortedCategories.push([cat, enhancedMloCategories[cat]]);
+                                    }
+                                });
+                                
+                                // Add any remaining categories not in the predefined order
+                                Object.entries(enhancedMloCategories).forEach(([cat, data]) => {
+                                    if (!categoryOrder.includes(cat)) {
+                                        sortedCategories.push([cat, data]);
+                                    }
+                                });
+                                
+                                // Calculate max count for width scaling - use total count for better scaling
+                                const maxCount = Math.max(...sortedCategories.map(([cat, data]) => data.total));
+                                
+                                return sortedCategories.map(([category, data]) => {
+                                    // Calculate average score for category
+                                    let totalWeightedScore = 0;
+                                    let totalCount = 0;
+                                    
+                                    Object.entries(data.scores).forEach(([scoreCategory, count]) => {
+                                        // Map back to numeric for average calculation
+                                        let midpoint;
+                                        switch(scoreCategory) {
+                                            case 'Poor': midpoint = 0.7; break;
+                                            case 'Weak': midpoint = 1.95; break;
+                                            case 'Moderate': midpoint = 2.95; break;
+                                            case 'Good': midpoint = 3.95; break;
+                                            case 'Excellent': midpoint = 4.75; break;
+                                        }
+                                        totalWeightedScore += midpoint * count;
+                                        totalCount += count;
+                                    });
+                                    
+                                    const averageScore = totalCount > 0 ? (totalWeightedScore / totalCount).toFixed(1) : '0.0';
+                                    
+                                    return `
+                                        <div class="category-row">
+                                            <div class="category-name">${category}</div>
+                                            <div class="category-bars">
+                                                ${Object.entries(data.scores).filter(([scoreCategory, count]) => count > 0).map(([scoreCategory, count]) => {
+                                                    const percentage = data.total > 0 ? ((count / data.total) * 100).toFixed(1) : 0;
+                                                    // Calculate proportional width based on total count and available space (expanded by 70%)
+                                                    const totalBarWidth = maxCount > 0 ? Math.max((data.total / maxCount * 680), 102) : 102;
+                                                    const scoreBarWidth = (count / data.total) * totalBarWidth;
+                                                    return `
+                                                        <div class="category-bar score-breakdown-bar" 
+                                                             style="width: ${scoreBarWidth}px; 
+                                                                    background: ${enhancedScoreColors[scoreCategory]};" 
+                                                             title="${category} - ${scoreCategory}: ${count} alignment pairs (${percentage}%)">
+                                                            <span class="score-count">${count}</span>
+                                                            <span class="score-label">(${percentage}%)</span>
+                                                        </div>
+                                                    `;
+                                                }).join('')}
+                                            </div>
+                                            <div class="category-info">
+                                                ${data.total} pairs<br>
+                                                <small>Avg: ${averageScore}</small>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('');
+                            })()}
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Score Legend for Category Charts -->
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--tt-burgundy);">
+                        <h4 style="margin: 0 0 10px 0; color: var(--tt-burgundy);"><i class="fas fa-palette"></i> Score Color Legend:</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px;">
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-poor); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Poor</strong> (1.0-1.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-weak); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Weak</strong> (1.5-2.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-moderate); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Moderate</strong> (2.5-3.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-good); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Good</strong> (3.5-4.4)</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 20px; height: 15px; background: var(--score-excellent); border: 1px solid #ddd; border-radius: 3px;"></div>
+                                <span><strong>Excellent</strong> (4.5-5.0)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div style="text-align: center; margin-top: 15px; color: #aa1352; font-weight: bold;">
+                        TalTech Enhanced ILO Alignment Analysis | Average Score: ${averageScore} | Strong Alignments: ${coveragePercentage}%
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render CLO-MLO alignment matrix
+        function renderCLOMLOMatrix() {
+            const container = document.getElementById('alignment-matrix-container');
+            
+            if (!alignmentResults || alignmentResults.length === 0) {
+                container.innerHTML = '<p>No alignment data available.</p>';
+                return;
+            }
+
+            // Create matrix headers
+            const uniqueMLOs = [...new Set(alignmentResults.map(r => r.mlo.mlokood))];
+            const uniqueCLOs = [...new Set(alignmentResults.map(r => r.plo.plokood))];
+
+            let matrixHTML = `
+                <div class="matrix-table-container">
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th style="background: #aa1352; color: white;">CLO \\ MLO</th>
+                                ${uniqueMLOs.map(mloCode => `
+                                    <th class="mlo-header" style="background: #9396b0; color: white;">${mloCode}</th>
+                                `).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            uniqueCLOs.forEach(cloCode => {
+                matrixHTML += `<tr><td style="background: #aa1352; color: white; font-weight: bold;">${cloCode}</td>`;
+                uniqueMLOs.forEach(mloCode => {
+                    const result = alignmentResults.find(r => r.plo.plokood === cloCode && r.mlo.mlokood === mloCode);
+                    if (result) {
+                        const scoreClass = getScoreClass(result.score);
+                        const scoreColor = getScoreColor(scoreClass);
+                        matrixHTML += `
+                            <td style="background: ${scoreColor}; text-align: center; font-weight: bold; color: white;"
+                                title="CLO ${cloCode} - MLO ${mloCode}: Score ${result.score}">
+                                ${result.score}
+                            </td>
+                        `;
+                    } else {
+                        matrixHTML += '<td style="background: #f5f5f5; text-align: center;">-</td>';
+                    }
+                });
+                matrixHTML += '</tr>';
+            });
+
+            matrixHTML += '</tbody></table></div>';
+            container.innerHTML = matrixHTML;
+        }
+
+        // Render detailed CLO-MLO analysis (matching PLO-MLO format exactly)
+        function renderCLOMLODetailedAnalysis() {
+            const container = document.getElementById('detailed-analysis-content');
+            
+            if (!alignmentResults || alignmentResults.length === 0) {
+                container.innerHTML = '<p>No alignment data available.</p>';
+                return;
+            }
+
+            let html = '';
+            
+            // Group by CLO (same pattern as PLO-MLO renderPLOView)
+            currentCLOs.forEach((clo, index) => {
+                const cloCode = clo.plokood || `CLO${index + 1}`;
+                const cloResults = alignmentResults.filter(r => {
+                    const resultCloCode = r.plo.plokood || r.plo.code || `CLO${index + 1}`;
+                    return resultCloCode === cloCode;
+                });
+                const averageScore = cloResults.length > 0 ? 
+                    (cloResults.reduce((sum, r) => sum + r.score, 0) / cloResults.length).toFixed(2) : 0;
+
+                // Get all matching keywords for this CLO from all its MLO alignments
+                const allMatchingKeywords = [...new Set(cloResults.flatMap(r => r.matchingKeywords || []))];
+                const cloText = clo.plosisuik || clo.text || clo.description || clo;
+                const highlightedCLOText = highlightKeywords(cloText, allMatchingKeywords);
+
+                html += `
+                    <div class="clo-analysis-section" id="clo-${cloCode}">
+                        <div class="clo-header-section">
+                            <h3>${cloCode}: Average Alignment Score: ${averageScore}</h3>
+                            <div class="clo-text">
+                                ${highlightedCLOText}
+                            </div>
+                        </div>
+                        
+                        <table class="detailed-breakdown-table">
+                            <thead>
+                                <tr>
+                                    <th>MLO Code</th>
+                                    <th>MLO Content</th>
+                                    <th>Score</th>
+                                    <th>Justification & Analysis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                cloResults.forEach(result => {
+                    const mloText = result.mlo.mlosisuik || result.mlo.mlosisu || '';
+                    
+                    html += `
+                        <tr>
+                            <td class="mlo-code-cell">${result.mlo.mlokood}</td>
+                            <td class="mlo-content-cell">
+                                ${result.highlightedMLO || mloText}
+                            </td>
+                            <td class="alignment-score-cell">
+                                <span class="alignment-score score-${Math.round(result.score)}">${result.score}</span>
+                            </td>
+                            <td class="justification-cell">
+                                <div style="font-size: 0.9em;">
+                                    ${result.justification && typeof result.justification === 'object' && result.justification.components && Array.isArray(result.justification.components) ? `
+                                        <div style="margin-bottom: 6px;"><strong>Components:</strong></div>
+                                        <ul style="margin: 2px 0; padding-left: 16px; font-size: 0.85em;">
+                                            ${result.justification.components.map(comp => `<li>${comp}</li>`).join('')}
+                                        </ul>
+                                        ${result.justification.calculation ? `
+                                            <div style="margin-top: 6px; font-size: 0.8em; color: #555; font-family: monospace;">
+                                                ${result.justification.calculation}
+                                            </div>
+                                        ` : ''}
+                                        ${result.justification.suggestions && Array.isArray(result.justification.suggestions) && result.justification.suggestions.length > 0 ? `
+                                            <div style="margin-top: 8px; padding: 6px; background-color: #f8f9fa; border-left: 3px solid #ffc107; font-size: 0.8em;">
+                                                <strong style="color: #856404;">💡 Improvement Suggestions:</strong>
+                                                <ul style="margin: 4px 0; padding-left: 16px;">
+                                                    ${result.justification.suggestions.map(sugg => `<li style="margin-bottom: 4px;">${sugg}</li>`).join('')}
+                                                </ul>
+                                            </div>
+                                        ` : ''}
+                                    ` : `
+                                        <div>${result.justification || 'No detailed justification available'}</div>
+                                    `}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Generate enhanced analysis display from result
+        function generateEnhancedAnalysisDisplay(result) {
+            if (!result.justification || typeof result.justification !== 'object') {
+                return 'Enhanced analysis data not available';
+            }
+
+            let html = '<div style="font-size: 0.9em;">';
+            
+            if (result.justification && typeof result.justification === 'object' && result.justification.components && Array.isArray(result.justification.components) && result.justification.components.length > 0) {
+                html += '<div style="margin-bottom: 8px;"><strong>Analysis Components:</strong></div>';
+                html += '<ul style="margin: 4px 0; padding-left: 16px; font-size: 0.85em;">';
+                result.justification.components.forEach(comp => {
+                    html += `<li style="margin-bottom: 3px;">${comp}</li>`;
+                });
+                html += '</ul>';
+            }
+
+            if (result.justification && result.justification.calculation) {
+                html += `
+                    <div style="margin-top: 8px; font-size: 0.8em; color: #555; font-family: monospace; background: #f8f9fa; padding: 6px; border-radius: 4px;">
+                        <strong>Calculation:</strong> ${result.justification.calculation}
+                    </div>
+                `;
+            }
+
+            if (result.justification && result.justification.suggestions && Array.isArray(result.justification.suggestions) && result.justification.suggestions.length > 0) {
+                html += `
+                    <div style="margin-top: 10px; padding: 8px; background-color: #e8f4fd; border-left: 3px solid #007bff; font-size: 0.8em;">
+                        <strong style="color: #0056b3;">💡 Improvement Suggestions:</strong>
+                        <ul style="margin: 4px 0; padding-left: 16px;">
+                            ${result.justification.suggestions.map(sugg => `<li style="margin-bottom: 4px;">${sugg}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // Helper function to highlight keywords (reuse from PLO-MLO)
+        function highlightKeywords(text, keywords) {
+            if (!keywords || keywords.length === 0) {
+                return text;
+            }
+            
+            const stopWords = new Set([
+                'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'must', 'shall',
+                'a', 'an', 'some', 'any', 'many', 'much', 'more', 'most', 'all', 'each', 'every', 'other', 'another', 'such', 'same', 'different'
+            ]);
+            
+            let highlightedText = text;
+            const meaningfulKeywords = keywords.filter(keyword => 
+                keyword && keyword.length > 2 && !stopWords.has(keyword.toLowerCase())
+            );
+            
+            meaningfulKeywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                highlightedText = highlightedText.replace(regex, `<mark class="keyword-highlight" style="background: #ffeb3b; padding: 1px 2px; border-radius: 2px;">$&</mark>`);
+            });
+            
+            return highlightedText;
+        }
+
+        // Helper functions for scoring
+        function getScoreClass(score) {
+            if (score >= 4.5) return 'excellent';
+            if (score >= 3.5) return 'good';
+            if (score >= 2.5) return 'moderate';
+            if (score >= 1.5) return 'weak';
+            return 'poor';
+        }
+
+        function getScoreColor(scoreClass) {
+            const colors = {
+                'excellent': '#28a745',
+                'good': '#20c997',
+                'moderate': '#ffc107',
+                'weak': '#fd7e14',
+                'poor': '#dc3545'
+            };
+            return colors[scoreClass] || '#6c757d';
+        }
+
+        // Check for existing CLOs and display them with analysis button
+        function checkAndDisplayExistingCLOs() {
+            const existingCLOsContainer = document.getElementById('info-existing-clos');
+            const analysisButtonContainer = document.getElementById('main-analysis-button-container');
+            
+            if (!existingCLOsContainer || !analysisButtonContainer) {
+                console.error('Required elements not found');
+                return;
+            }
+
+            // Get saved CLOs
+            const savedCLOs = getSavedCLOs();
+            const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
+            
+            console.log('Checking and displaying existing CLOs for course:', selectedCourse?.ainekood);
+            console.log('Found CLOs:', savedCLOs);
+            
+            if (savedCLOs && savedCLOs.length > 0) {
+                // Display saved CLOs
+                let cloHTML = '<div class="saved-clos-display">';
+                
+                // Determine CLO source type
+                const cloSource = savedCLOs[0].language ? 'course data' : savedCLOs[0].text ? 'saved data' : 'form inputs';
+                const sourceIcon = cloSource === 'course data' ? 'fas fa-database' : 'fas fa-check-circle';
+                
+                cloHTML += `<h4 style="color: #aa1352; margin-bottom: 10px;"><i class="${sourceIcon}"></i> Course Learning Outcomes (from ${cloSource})</h4>`;
+                
+                savedCLOs.forEach((clo, index) => {
+                    const cloText = clo.text || clo.description || clo;
+                    const cloCode = clo.code || `CLO${index + 1}`;
+                    cloHTML += `
+                        <div class="saved-clo-item" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-bottom: 8px;">
+                            <div style="font-weight: 600; color: #aa1352; margin-bottom: 4px;">${cloCode.toUpperCase()}</div>
+                            <div style="font-size: 0.95em; line-height: 1.4;">${cloText}</div>
+                        </div>
+                    `;
+                });
+                
+                cloHTML += '</div>';
+                existingCLOsContainer.innerHTML = cloHTML;
+                
+                // Show analysis button
+                analysisButtonContainer.style.display = 'flex';
+                
+                console.log(`Found ${savedCLOs.length} CLOs from ${cloSource}, analysis button displayed`);
+            } else {
+                // No CLOs found - provide helpful guidance
+                const courseCode = selectedCourse?.ainekood || 'this course';
+                existingCLOsContainer.innerHTML = `
+                    <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; text-align: center;">
+                        <i class="fas fa-info-circle" style="color: #6c757d; font-size: 24px; margin-bottom: 10px;"></i>
+                        <p style="margin: 0; color: #666; font-style: italic;">
+                            No Course Learning Outcomes (CLOs) found for <strong>${courseCode}</strong>.
+                        </p>
+                        <p style="margin: 10px 0 0 0; color: #666; font-size: 0.9em;">
+                            Use <strong>CLO Management</strong> below to add or edit Course Learning Outcomes.
+                        </p>
+                    </div>
+                `;
+                
+                // Hide analysis button
+                analysisButtonContainer.style.display = 'none';
+                console.log('No CLOs found for course:', courseCode);
+            }
+        }
+
+        // Populate course dropdown with courses from current programme
+        function populateCourseDropdown() {
+            const courseSelector = document.getElementById('course-selector');
+            if (!courseSelector) return;
+
+            const currentProgramme = window.dataManager ? window.dataManager.getCurrentProgramme() : null;
+            if (!currentProgramme) {
+                courseSelector.innerHTML = '<option value="">Please visit index.html to select a programme first...</option>';
+                console.log('No programme selected - user needs to start from index.html');
+                return;
+            }
+
+            const courses = window.dataManager.getCurrentCourses();
+            console.log('Populating course dropdown with', courses.length, 'courses for programme', currentProgramme.code);
+
+            // Clear existing options except the default
+            courseSelector.innerHTML = '<option value="">Choose a course...</option>';
+
+            if (courses && courses.length > 0) {
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.ainekood;
+                    option.textContent = `${course.ainekood} - ${course.ainenimetusik}`;
+                    courseSelector.appendChild(option);
+                });
+                console.log(`Successfully populated course dropdown with ${courses.length} courses`);
+            } else {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = `Loading courses for ${currentProgramme.code}...`;
+                option.disabled = true;
+                courseSelector.appendChild(option);
+                
+                // Try to reload data if courses are empty
+                setTimeout(async () => {
+                    try {
+                        await window.dataManager.loadProgrammes();
+                        const retryProgramme = window.dataManager.setCurrentProgramme(currentProgramme.code);
+                        if (retryProgramme) {
+                            populateCourseDropdown(); // Retry populating
+                        }
+                    } catch (error) {
+                        console.error('Failed to reload programme data:', error);
+                        courseSelector.innerHTML = '<option value="">Error loading courses - please refresh page</option>';
+                    }
+                }, 1000);
+            }
+        }
+
+        // Display course information in the course details section
+        function displayCourseInformation() {
+            const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
+            if (!selectedCourse) {
+                console.log('No course selected for display');
+                return;
+            }
+
+            console.log('Displaying course information for:', selectedCourse.ainekood);
+
+            // Populate course details
+            document.getElementById('info-course-code').textContent = selectedCourse.ainekood || '-';
+            document.getElementById('info-course-name-en').textContent = selectedCourse.ainenimetusik || '-';
+            document.getElementById('info-course-name-et').textContent = selectedCourse.ainenimetusek || '-';
+            document.getElementById('info-course-eap').textContent = selectedCourse.eap || '-';
+            document.getElementById('info-course-modules').textContent = selectedCourse.moodulikood || '-';
+            document.getElementById('info-course-assessment').textContent = selectedCourse.kontrollivorm || '-';
+            document.getElementById('info-course-type').textContent = selectedCourse.KV || '-';
+            
+            // Course URL
+            const urlLink = document.getElementById('info-course-url');
+            if (selectedCourse.aineurl) {
+                urlLink.href = selectedCourse.aineurl;
+                urlLink.style.display = 'inline';
+            } else {
+                urlLink.style.display = 'none';
+            }
+
+            // Course aims
+            const aimsContent = document.getElementById('info-course-aims');
+            const aims = selectedCourse.eesmarkik || selectedCourse.eesmarkek || 'No course aims available.';
+            aimsContent.innerHTML = aims.replace(/\n/g, '<br>');
+        }
+
+        // Display module content (MLOs) for the selected course
+        function displayModuleContent() {
+            const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
+            const currentProgramme = window.dataManager ? window.dataManager.getCurrentProgramme() : null;
+            
+            if (!selectedCourse || !currentProgramme) {
+                console.log('Cannot display module content - missing course or programme');
+                return;
+            }
+
+            const moduleList = document.getElementById('module-content-list');
+            if (!moduleList) return;
+
+            // Find MLOs for this course's module
+            const moduleCode = selectedCourse.moodulikood;
+            const programmeMlos = currentProgramme.mlos || [];
+            const relatedMLOs = programmeMlos.filter(mlo => mlo.mlokood.startsWith(moduleCode));
+
+            console.log(`Found ${relatedMLOs.length} MLOs for module ${moduleCode}`);
+
+            if (relatedMLOs.length > 0) {
+                moduleList.innerHTML = relatedMLOs.map(mlo => 
+                    `<div class="mlo-item" style="margin-bottom: 10px; padding: 10px; border-left: 3px solid #aa1352; background: #f8f9fa;">
+                        <strong style="color: #aa1352;">[${mlo.mlokood}]</strong> 
+                        ${mlo.mlosisuik || mlo.mlosisuek || 'No MLO content available'}
+                    </div>`
+                ).join('');
+            } else {
+                moduleList.innerHTML = '<em style="color: #666;">No module learning outcomes found for this course.</em>';
+            }
+        }
+
+        // CLO Editor Functions
+        function showCLOEditor(mode) {
+            const editorSection = document.getElementById('clo-editor-section');
+            const cloManagementSection = document.getElementById('clo-management-section');
+            const editorTitle = document.getElementById('clo-editor-title');
+            const editorContainer = document.getElementById('clo-editor-container');
+
+            if (!editorSection || !cloManagementSection || !editorTitle || !editorContainer) {
+                console.error('Required CLO editor elements not found');
+                return;
+            }
+
+            // Hide analysis button while editing
+            const analysisBtn = document.getElementById('main-analysis-btn');
+            const analysisContainer = document.getElementById('main-analysis-button-container');
+            if (analysisBtn && analysisContainer) {
+                analysisContainer.style.display = 'none';
+                analysisBtn.style.display = 'none';
+            }
+
+            // Hide management section and show editor
+            cloManagementSection.classList.add('hidden');
+            editorSection.classList.remove('hidden');
+
+            // Set title based on mode
+            if (mode === 'edit') {
+                editorTitle.textContent = 'Edit Existing CLOs';
+                populateCLOEditorWithExisting();
+            } else if (mode === 'manual') {
+                editorTitle.textContent = 'Manual CLO Entry';
+                populateCLOEditorEmpty();
+            }
+
+            console.log('CLO editor shown in mode:', mode);
+        }
+
+        function hideCLOEditor() {
+            const editorSection = document.getElementById('clo-editor-section');
+            const cloManagementSection = document.getElementById('clo-management-section');
+
+            if (editorSection) editorSection.classList.add('hidden');
+            if (cloManagementSection) cloManagementSection.classList.remove('hidden');
+
+            console.log('CLO editor hidden');
+        }
+
+        function populateCLOEditorWithExisting() {
+            const existingCLOs = getSavedCLOs();
+            const editorContainer = document.getElementById('clo-editor-container');
+
+            if (!editorContainer) return;
+
+            editorContainer.innerHTML = '';
+
+            if (existingCLOs.length > 0) {
+                existingCLOs.forEach((clo, index) => {
+                    const cloText = clo.text || clo.description || clo;
+                    addCLOFieldToEditor(cloText, index + 1);
+                });
+            } else {
+                // If no existing CLOs, add some empty fields
+                for (let i = 1; i <= 4; i++) {
+                    addCLOFieldToEditor('', i);
+                }
+            }
+
+            console.log('CLO editor populated with existing CLOs:', existingCLOs.length);
+        }
+
+        function populateCLOEditorEmpty() {
+            const editorContainer = document.getElementById('clo-editor-container');
+
+            if (!editorContainer) return;
+
+            editorContainer.innerHTML = '';
+
+            // Add 4 empty CLO fields for manual entry
+            for (let i = 1; i <= 4; i++) {
+                addCLOFieldToEditor('', i);
+            }
+
+            console.log('CLO editor populated with empty fields');
+        }
+
+        function addCLOFieldToEditor(text = '', number = null) {
+            const editorContainer = document.getElementById('clo-editor-container');
+            if (!editorContainer) return;
+
+            const cloNumber = number || editorContainer.children.length + 1;
+            
+            const cloField = document.createElement('div');
+            cloField.className = 'clo-field';
+            cloField.style.cssText = 'margin-bottom: 15px; border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;';
+
+            cloField.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <label style="font-weight: 600; color: #aa1352; margin: 0;">CLO${cloNumber}</label>
+                    <button type="button" class="remove-clo-btn" onclick="removeCLOField(this)" 
+                            style="background: #dc3545; color: white; border: none; border-radius: 3px; padding: 5px 8px; font-size: 12px; cursor: pointer;">
+                        <i class="fas fa-times"></i> Remove
+                    </button>
+                </div>
+                <textarea class="clo-textarea" rows="3" placeholder="Enter course learning outcome..." 
+                          style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; resize: vertical; font-family: inherit;">${text}</textarea>
+            `;
+
+            editorContainer.appendChild(cloField);
+        }
+
+        function removeCLOField(button) {
+            const cloField = button.closest('.clo-field');
+            if (cloField) {
+                cloField.remove();
+                renumberCLOFields();
+            }
+        }
+
+        function renumberCLOFields() {
+            const cloFields = document.querySelectorAll('.clo-field');
+            cloFields.forEach((field, index) => {
+                const label = field.querySelector('label');
+                if (label) {
+                    label.textContent = `CLO${index + 1}`;
+                }
+            });
+        }
+
+        function addNewCLOField() {
+            addCLOFieldToEditor();
+            console.log('New CLO field added');
+        }
+
+        function saveCLOs() {
+            const currentProgramme = window.dataManager ? window.dataManager.getCurrentProgramme() : null;
+            const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
+
+            if (!currentProgramme || !selectedCourse) {
+                alert('Please select a programme and course first.');
+                return;
+            }
+
+            const cloTextareas = document.querySelectorAll('.clo-textarea');
+            const clos = [];
+
+            cloTextareas.forEach((textarea, index) => {
+                const text = textarea.value.trim();
+                if (text) {
+                    clos.push({
+                        text: text,
+                        code: `CLO${index + 1}`,
+                        created: new Date().toISOString()
+                    });
+                }
+            });
+
+            if (clos.length === 0) {
+                alert('Please enter at least one Course Learning Outcome.');
+                return;
+            }
+
+            // Save to localStorage
+            const storageKey = `clos_${currentProgramme.code}_${selectedCourse.code}`;
+            localStorage.setItem(storageKey, JSON.stringify(clos));
+
+            console.log('CLOs saved:', clos.length);
+            
+            // Hide editor and refresh existing CLOs display
+            hideCLOEditor();
+            checkAndDisplayExistingCLOs();
+            
+            // Show analysis button now that CLOs are saved
+            showAnalysisButton();
+        }
+
+        // Initialize course workflow functionality
+        function initializeCourseWorkflow() {
+            try {
                 const moduleSection = document.getElementById('module-content-section');
                 const existingCLOsSection = document.getElementById('existing-clos-section');
                 const cloSection = document.getElementById('clo-management-section');
                 const newCourseBtnContainer = document.getElementById('new-course-btn-container');
                 const newCourseBtn = document.getElementById('new-course-btn');
+                const courseSelector = document.getElementById('course-selector');
+                const courseSection = document.getElementById('course-selection-section');
+                const infoSection = document.getElementById('course-information-section');
+                
                 if (courseSelector) {
                     courseSelector.addEventListener('change', function() {
                         if (this.value) {
+                            // Set current course in DataManager
+                            if (window.dataManager) {
+                                window.dataManager.setCurrentCourse(this.value);
+                                console.log('Selected course:', this.value);
+                            }
+                            
                             courseSection.style.display = 'none';
                             infoSection.classList.remove('hidden');
                             moduleSection.classList.remove('hidden');
                             existingCLOsSection.classList.remove('hidden');
                             cloSection.classList.remove('hidden');
                             newCourseBtnContainer.style.display = 'flex';
+                            
+                            // Display course information
+                            displayCourseInformation();
+                            
+                            // Display module content  
+                            displayModuleContent();
+                            
+                            // Check for existing CLOs and show analysis button if available
+                            checkAndDisplayExistingCLOs();
                         } else {
+                            // Clear current course in DataManager
+                            if (window.dataManager) {
+                                window.dataManager.clearCurrentCourse();
+                            }
+                            
                             courseSection.style.display = '';
                             infoSection.classList.add('hidden');
                             moduleSection.classList.add('hidden');
                             existingCLOsSection.classList.add('hidden');
-                            existingCLOsSection.classList.add('hidden');
                             cloSection.classList.add('hidden');
                             newCourseBtnContainer.style.display = 'none';
+                            
+                            // Hide analysis button
+                            const analysisButtonContainer = document.getElementById('main-analysis-button-container');
+                            if (analysisButtonContainer) {
+                                analysisButtonContainer.style.display = 'none';
+                            }
                         }
                     });
                 }
+
                 if (newCourseBtn) {
-                    newCourseBtn.onclick = function() {
-                        courseSelector.value = '';
+                    newCourseBtn.addEventListener('click', function() {
                         courseSection.style.display = '';
                         infoSection.classList.add('hidden');
                         moduleSection.classList.add('hidden');
                         existingCLOsSection.classList.add('hidden');
                         cloSection.classList.add('hidden');
                         newCourseBtnContainer.style.display = 'none';
-                    };
+                        
+                        // Hide analysis button
+                        const analysisButtonContainer = document.getElementById('main-analysis-button-container');
+                        if (analysisButtonContainer) {
+                            analysisButtonContainer.style.display = 'none';
+                        }
+                    });
                 }
+
+                // Add event listeners for CLO management buttons
+                const editExistingCLOsBtn = document.getElementById('edit-existing-clos');
+                const manualEntryCLOsBtn = document.getElementById('manual-entry-clos');
+
+                if (editExistingCLOsBtn) {
+                    editExistingCLOsBtn.addEventListener('click', function() {
+                        console.log('Edit existing CLOs clicked');
+                        showCLOEditor('edit');
+                    });
+                }
+
+                if (manualEntryCLOsBtn) {
+                    manualEntryCLOsBtn.addEventListener('click', function() {
+                        console.log('Manual entry CLOs clicked');
+                        showCLOEditor('manual');
+                    });
+                }
+
+                // Add event listeners for CLO editor buttons
+                const saveCLOsBtn = document.getElementById('save-clos-btn');
+                const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+                if (saveCLOsBtn) {
+                    saveCLOsBtn.addEventListener('click', function() {
+                        console.log('Save CLOs clicked');
+                        saveCLOs();
+                    });
+                }
+
+                if (cancelEditBtn) {
+                    cancelEditBtn.addEventListener('click', function() {
+                        console.log('Cancel edit clicked');
+                        hideCLOEditor();
+                    });
+                }
+
+                // Add event listener for back to CLO management button
+                const backToCLOManagementBtn = document.getElementById('back-to-clo-management');
+                if (backToCLOManagementBtn) {
+                    backToCLOManagementBtn.addEventListener('click', function() {
+                        console.log('Back to CLO management clicked');
+                        // Hide analysis results section
+                        const analysisResultsSection = document.getElementById('analysis-results-section');
+                        if (analysisResultsSection) {
+                            analysisResultsSection.classList.add('hidden');
+                        }
+                        
+                        // Hide analysis navigation
+                        const analysisNav = document.getElementById('analysis-nav');
+                        if (analysisNav) {
+                            analysisNav.style.display = 'none';
+                        }
+                        
+                        // Show CLO management section
+                        const cloManagementSection = document.getElementById('clo-management-section');
+                        if (cloManagementSection) {
+                            cloManagementSection.classList.remove('hidden');
+                        }
+                    });
+                }
+
+                // Add event listener for view toggle button
+                const viewToggleBtn = document.getElementById('view-toggle-btn');
+                if (viewToggleBtn) {
+                    viewToggleBtn.addEventListener('click', function() {
+                        // Toggle view
+                        currentBreakdownView = currentBreakdownView === 'mlo' ? 'clo' : 'mlo';
+                        
+                        // Update button text
+                        this.innerHTML = currentBreakdownView === 'mlo' ? 
+                            '<i class="fas fa-exchange-alt"></i> Switch to CLO View' : 
+                            '<i class="fas fa-exchange-alt"></i> Switch to MLO View';
+                        
+                        // Re-render breakdown
+                        renderDetailedBreakdown();
+                    });
+                }
+
             } catch (error) {
-                console.error('Error initializing CLO-MLO page:', error);
+                console.error('Error initializing CLO-MLO course workflow:', error);
             }
-        });
+        }
+
+        // Course workflow functionality
+        // (Integrated into main DOMContentLoaded listener via initializeCourseWorkflow())
 
         // Module content caret toggle
         function toggleModuleContent() {
@@ -2942,6 +5225,14 @@
             } else {
                 list.style.display = 'none';
                 caret.className = 'fas fa-chevron-right';
+            }
+        }
+
+        // Scroll to methodology section
+        function scrollToMethodology() {
+            const methodologySection = document.getElementById('methodology-info');
+            if (methodologySection) {
+                methodologySection.scrollIntoView({ behavior: 'smooth' });
             }
         }
         
