@@ -40,20 +40,6 @@ class SecureAPIConfig {
         }
     }
 
-    // Secure key retrieval (use this method for your personal key)
-    getSecureKey() {
-        // OPTION 1: Base64 encoded (light obfuscation)
-        // Replace this with your actual API key encoded in base64
-        const encodedKey = 'QUl6YVN5Qm9lLUUzcnFXWFB5QzJJSnJIcmNvdzNqRWczU05kNVpV'; // This is just an example
-        
-        try {
-            return atob(encodedKey);
-        } catch (error) {
-            console.error('Failed to decode API key');
-            return null;
-        }
-    }
-
     // Get API key
     getApiKey() {
         if (!this.initialized) {
