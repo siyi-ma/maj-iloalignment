@@ -4143,7 +4143,7 @@ secure-api-config.js:106 Prompt: EDUCATIONAL CONTEXT:
 Programme Learning Outcomes: {
   "text": "PLO4:\tCan initiate and lead organisa...
 secure-api-config.js:124 📡 API Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
-generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC57dTwJ-RyUT93WFSTr4Gv06jHta6USLY:1   Failed to load resource: the server responded with a status of 503 ()
+generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=***:1   Failed to load resource: the server responded with a status of 503 ()
 secure-api-config.js:134 📥 Response status: 503 
 secure-api-config.js:138  ❌ API Error Response: {
   "error": {
@@ -4185,7 +4185,7 @@ secure-api-config.js:105 🚀 Making API call to Gemini...
 secure-api-config.js:106 Prompt: USER REQUEST:
 Analyze my learning outcomes using Bloom's Taxonomy. Are they appropriately distribute...
 secure-api-config.js:124 📡 API Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
-generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC57dTwJ-RyUT93WFSTr4Gv06jHta6USLY:1   Failed to load resource: the server responded with a status of 503 ()
+generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=*****:1   Failed to load resource: the server responded with a status of 503 ()
 secure-api-config.js:134 📥 Response status: 503 
 secure-api-config.js:138  ❌ API Error Response: {
   "error": {
