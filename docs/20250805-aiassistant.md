@@ -4089,7 +4089,7 @@ siyi-ma: When I try to use AI assitant, always got error:  ✅ Using personal AP
 Module Learning Outcomes: [
   "1. analyzes future trends in the business enviro...
  📡 API Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
-generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC57dTwJ-RyUT93WFSTr4Gv06jHta6USLY:1   Failed to load resource: the server responded with a status of 503 ()
+generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key= key:1   Failed to load resource: the server responded with a status of 503 ()
  📥 Response status: 503 
   ❌ API Error Response: {
   "error": {
