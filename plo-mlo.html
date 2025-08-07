@@ -1397,21 +1397,10 @@
     <div class="container">
         <!-- Page Header -->
         <header class="page-header">
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div style="display: flex; justify-content: flex-start; align-items: center; width: 100%;">
                 <div>
-                    <h1 id="page-title"><i class="fas fa-graduation-cap"></i> PLO-MLO Alignment Analysis</h1>
-                    <p class="page-subtitle">Research-Based Transparent Methodology</p>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <a href="ai-assistant.html" class="methodology-link-btn" title="Access AI Assistant">
-                        <i class="fas fa-robot"></i> AI Assistant
-                    </a>
-                    <a href="methodology.html" target="_blank" class="methodology-link-btn" title="View detailed methodology and academic references">
-                        <i class="fas fa-microscope"></i> Methodology
-                    </a>
-                    <a href="index.html" class="home-link-btn" title="Go to Home">
-                        <i class="fas fa-home"></i> Home
-                    </a>
+                    <h1 id="page-title"></h1>
+                    <p class="page-subtitle" id="page-subtitle"></p>
                 </div>
             </div>
         </header>
@@ -1726,22 +1715,20 @@
         }
 
         function updateHeader() {
-            if (currentProgramme) {
-                const programmeCode = currentProgramme.code || currentProgramme.kavakood || currentProgramme.programmeCode || '';
-                const programmeNameText = currentProgramme.kavanimetusik || currentProgramme.programmeNameEng || currentProgramme.programmeName || '';
-                
-                const pageTitle = document.getElementById('page-title');
-                const programmeNameElement = document.getElementById('current-programme-name');
-                
-                if (pageTitle && programmeCode && programmeNameText) {
-                    pageTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${programmeCode.toUpperCase()} ${programmeNameText} - PLO-MLO Alignment`;
-                }
-                
-                if (programmeNameElement && programmeCode && programmeNameText) {
-                    programmeNameElement.textContent = `${programmeCode.toUpperCase()} - ${programmeNameText}`;
-                } else if (programmeNameElement && programmeCode) {
-                    programmeNameElement.textContent = programmeCode.toUpperCase();
-                }
+            if (!currentProgramme) return;
+            // Always use kavakood from URL if present, else from currentProgramme
+            const urlParams = new URLSearchParams(window.location.search);
+            const kavakoodFromUrl = urlParams.get('kavakood');
+            const kavakood = (kavakoodFromUrl || currentProgramme.kavakood || currentProgramme.programmeCode || '').toUpperCase();
+            const kavanimetusek = currentProgramme.kavanimetusek || '';
+            const kavanimetusik = currentProgramme.kavanimetusik || '';
+            const pageTitle = document.getElementById('page-title');
+            const pageSubtitle = document.getElementById('page-subtitle');
+            if (pageTitle) {
+                pageTitle.textContent = `${kavakood} ${kavanimetusek}`.trim();
+            }
+            if (pageSubtitle) {
+                pageSubtitle.innerHTML = `${kavanimetusik ? kavanimetusik + '<br>' : ''}PLO-MLO Alignment Analysis`;
             }
         }
 
