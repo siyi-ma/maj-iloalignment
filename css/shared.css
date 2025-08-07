@@ -4,9 +4,9 @@
 
 /* Base Variables */
 :root {
-    --primary-color: #342b60;    /* TT Dark Blue */
-    --secondary-color: #AA1352;  /* TT Magenta */
-    --accent-color: #e4067e;     /* TT Bright Magenta */
+    --primary-color: #342b60;    /* TT DARK BLUE */
+    --secondary-color: #9396b0;  /* TT GREY 1 (TERASHALL) */
+    --accent-color: #AA1352;     /* TT Magenta */
     --light-bg: #f4f4f9;
     --white: #ffffff;
     --gray-100: #f8f9fa;
@@ -22,6 +22,11 @@
     --border-radius: 8px;
     --box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     --transition: all 0.3s ease;
+
+    /* TT Brand Colors */
+    --tt-light-blue: #4dbed2;   /* HELESININE - TT LIGHT BLUE, PANTONE® 631 C */
+    --tt-grey-1: #9396b0;       /* TERASHALL - TT GREY 1, PANTONE® 7544 C */
+    --tt-grey-2: #dadae4;       /* HELEHALL - TT GREY 2, PANTONE® 5305 C */
     
     /* Standardized Score Color Variables - Used Across All Alignment Reports */
     /* Using Pastel Color Scheme for Better Readability and Consistency */
@@ -159,26 +164,6 @@ header {
 }
 
 /* Home Button */
-.home-btn {
-    background-color: var(--secondary-color);
-    color: var(--white);
-    border: none;
-    padding: 12px 20px;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-}
-
-.home-btn:hover {
-    background-color: #8a0e42;
-    transform: translateY(-2px);
-}
 
 /* Grid Layouts */
 .grid {

@@ -370,11 +370,6 @@ main {
 }
 
 /* Score Color Coding */
-.score-5 { background-color: #28a745; color: white; }
-.score-4 { background-color: #20c997; color: white; }
-.score-3 { background-color: #ffc107; color: black; }
-.score-2 { background-color: #fd7e14; color: white; }
-.score-1 { background-color: #dc3545; color: white; }
 .score-0 { background-color: #6c757d; color: white; }
 
 .no-alignment {
