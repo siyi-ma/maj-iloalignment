@@ -41,5 +41,16 @@ This document serves as a reference and reminder for best practices in communica
 - Keeps both user and assistant aligned on goals
 - Improves quality and relevance of summaries and code changes
 
+At the end of each day or at the conclusion of a significant conversation, automatically generate a markdown summary document in the /docs directory.
+The summary must include:
+- Title: [YYYYMMDD]-[main-theme] (e.g., 20250807-ai-assistant-UI-debugging)
+- Mask all API keys and sensitive data.
+- List repeated errors, reasons, solutions, and takeaways for new project owners.
+- Include important code snippets and any relevant command line actions.
+- Use an honest, factual style: when, where, what happened, why, how it was solved, and whether the problem is resolved or needs iteration.
+- Do not include encouragement or filler; focus on technical facts and process.
+This summary file should be created as /docs/[YYYYMMDD]-[main-theme].md in the workspace.
+--- END SYSTEM PROMPT ---
+
 ---
 Feel free to edit or expand this document as your workflow evolves.
