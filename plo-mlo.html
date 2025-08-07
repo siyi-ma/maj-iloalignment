@@ -1396,25 +1396,25 @@
 <body>
     <div class="container">
         <!-- Page Header -->
-        <header class="page-header">
-            <div style="display: flex; justify-content: flex-start; align-items: center; width: 100%;">
+        <header class="page-header" style="position: relative;">
+            <div style="display: flex; justify-content: flex-start; align-items: center; width: 100%; position: relative;">
                 <div>
                     <h1 id="page-title"></h1>
                     <p class="page-subtitle" id="page-subtitle"></p>
+                </div>
+                <div class="language-toggle" style="position: absolute; right: 0; bottom: 0; margin: 0 8px 4px 0; background: transparent; height: 28px; display: flex; align-items: center; color: #000;">
+                    <span class="language-label" id="est-label" style="font-size: 0.92em; color: #000;">EST</span>
+                    <label class="toggle-switch" style="height: 20px; width: 40px; background: transparent; display: inline-flex; align-items: center; border: 1.5px solid #222; border-radius: 16px; padding: 0 2px; box-sizing: border-box;">
+                        <input type="checkbox" id="language-toggle" checked style="height: 20px; width: 20px;">
+                        <span class="toggle-slider" style="height: 20px; width: 36px; background: transparent;"></span>
+                    </label>
+                    <span class="language-label" id="eng-label" style="font-size: 0.92em; color: #000;">ENG</span>
                 </div>
             </div>
         </header>
 
         <main>
-            <!-- Language Toggle -->
-            <div class="language-toggle">
-                <span class="language-label" id="est-label">EST</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="language-toggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-                <span class="language-label" id="eng-label">ENG</span>
-            </div>
+            <!-- Language Toggle moved to header -->
 
             <!-- Sticky Navigation -->
             <nav class="analysis-nav">
@@ -1447,8 +1447,8 @@
                     <h4><i class="fas fa-calculator"></i> Mathematical Scoring Algorithm:</h4>
                     <div class="methodology-details">
                         <p><strong>Composite Score Formula:</strong></p>
-                        <div class="formula-display">
-                            <code>Score = (Semantic × 0.35) + (Competency × 0.25) + (Cognitive × 0.20) + (Contextual × 0.15) + (Progression × 0.05)</code>
+                        <div class="formula-display" style="padding: 2px 8px;">
+                            <code style="font-size: 0.95em;">Score = (Semantic × 0.35) + (Competency × 0.25) + (Cognitive × 0.20) + (Contextual × 0.15) + (Progression × 0.05)</code>
                         </div>
                         
                         <p><strong>Component Normalization:</strong></p>
@@ -1716,7 +1716,7 @@
 
         function updateHeader() {
             if (!currentProgramme) return;
-            // Always use kavakood from URL if present, else from currentProgramme
+            // Always use kavakood from URL if present, else from currentProgramme. Siyi: why currentProgramme is empty?
             const urlParams = new URLSearchParams(window.location.search);
             const kavakoodFromUrl = urlParams.get('kavakood');
             const kavakood = (kavakoodFromUrl || currentProgramme.kavakood || currentProgramme.programmeCode || '').toUpperCase();
@@ -1728,7 +1728,7 @@
                 pageTitle.textContent = `${kavakood} ${kavanimetusek}`.trim();
             }
             if (pageSubtitle) {
-                pageSubtitle.innerHTML = `${kavanimetusik ? kavanimetusik + '<br>' : ''}PLO-MLO Alignment Analysis`;
+                pageSubtitle.innerHTML = `${kavanimetusik ? kavanimetusik + ' – ' : ''}PLO-MLO Alignment Analysis`;
             }
         }
 
@@ -2271,9 +2271,7 @@
                                             ${result.justification.components.map(comp => `<li>${comp}</li>`).join('')}
                                         </ul>
                                         ${result.justification.calculation ? `
-                                            <div style=\"margin-top: 6px; font-size: 0.8em; color: #555; font-family: monospace;\">
-                                                ${result.justification.calculation}
-                                            </div>
+                                            <span style=\"font-size: 0.9em; color: #555; font-family: monospace; white-space: normal;\">${result.justification.calculation}</span>
                                         ` : ''}
                                         ${result.justification.suggestions && result.justification.suggestions.length > 0 ? `
                                             <div style=\"margin-top: 8px; padding: 6px; background-color: #f8f9fa; border-left: 3px solid #ffc107; font-size: 0.8em;\">
