@@ -1,2289 +1,228 @@
-/* PLO-MLO Style CSS for Detailed Breakdown */
-        /* Keyword highlighting from PLO-MLO style */
-        .keyword-highlight {
-            background-color: #ffeb3b;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        
-        /* Detailed breakdown table styling */
-        .detailed-breakdown-table {
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-           
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
-            color: var(--tt-dark-blue);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell, .clo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .justification-cell {
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .clo-header-section {
-            background: linear-gradient(135deg, #aa1352, #e4067e);
-            color: var(--tt-white);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .clo-header-section h3 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1.2em;
-        }
-
-        .clo-text {
-            margin-top: 8px;
-            font-style: italic;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .clo-analysis-section {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Formula display and methodology styles */
-        .formula-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-
-        .score-legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .legend-score-1 { background: #ffcdd2; color: #c62828; }
-        .legend-score-2 { background: #ffecb3; color: #f57c00; }
-        .legend-score-3 { background: #fff9c4; color: #f9a825; }
-        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
-            color: var(--tt-dark-blue);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell, .clo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .justification-cell {
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .clo-header-section {
-            background: linear-gradient(135deg, #aa1352, #e4067e);
-            color: var(--tt-white);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .clo-header-section h3 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1.2em;
-        }
-
-        .clo-text {
-            margin-top: 8px;
-            font-style: italic;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .clo-analysis-section {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Formula display and methodology styles */
-        .formula-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-
-        .score-legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .legend-score-1 { background: #ffcdd2; color: #c62828; }
-        .legend-score-2 { background: #ffecb3; color: #f57c00; }
-        .legend-score-3 { background: #fff9c4; color: #f9a825; }
-        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
-            color: var(--tt-dark-blue);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell, .clo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .justification-cell {
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .clo-header-section {
-            background: linear-gradient(135deg, #aa1352, #e4067e);
-            color: var(--tt-white);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .clo-header-section h3 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1.2em;
-        }
-
-        .clo-text {
-            margin-top: 8px;
-            font-style: italic;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .clo-analysis-section {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Formula display and methodology styles */
-        .formula-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-
-        .score-legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .legend-score-1 { background: #ffcdd2; color: #c62828; }
-        .legend-score-2 { background: #ffecb3; color: #f57c00; }
-        .legend-score-3 { background: #fff9c4; color: #f9a825; }
-        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
-            color: var(--tt-dark-blue);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell, .clo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .justification-cell {
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .clo-header-section {
-            background: linear-gradient(135deg, #aa1352, #e4067e);
-            color: var(--tt-white);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .clo-header-section h3 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1.2em;
-        }
-
-        .clo-text {
-            margin-top: 8px;
-            font-style: italic;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .clo-analysis-section {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Formula display and methodology styles */
-        .formula-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-
-        .score-legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .legend-score-1 { background: #ffcdd2; color: #c62828; }
-        .legend-score-2 { background: #ffecb3; color: #f57c00; }
-        .legend-score-3 { background: #fff9c4; color: #f9a825; }
-        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
-            color: var(--tt-dark-blue);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell, .clo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .justification-cell {
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .clo-header-section {
-            background: linear-gradient(135deg, #aa1352, #e4067e);
-            color: var(--tt-white);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .clo-header-section h3 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1.2em;
-        }
-
-        .clo-text {
-            margin-top: 8px;
-            font-style: italic;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .clo-analysis-section {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Formula display and methodology styles */
-        .formula-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-
-        .score-legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .legend-score-1 { background: #ffcdd2; color: #c62828; }
-        .legend-score-2 { background: #ffecb3; color: #f57c00; }
-        .legend-score-3 { background: #fff9c4; color: #f9a825; }
-        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
-            color: var(--tt-dark-blue);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell, .clo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .justification-cell {
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .clo-header-section {
-            background: linear-gradient(135deg, #aa1352, #e4067e);
-            color: var(--tt-white);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .clo-header-section h3 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1.2em;
-        }
-
-        .clo-text {
-            margin-top: 8px;
-            font-style: italic;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .clo-analysis-section {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Formula display and methodology styles */
-        .formula-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-
-        .score-legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .legend-score-1 { background: #ffcdd2; color: #c62828; }
-        .legend-score-2 { background: #ffecb3; color: #f57c00; }
-        .legend-score-3 { background: #fff9c4; color: #f9a825; }
-        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
-            color: var(--tt-dark-blue);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell, .clo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: white;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .justification-cell {
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .clo-header-section {
-            background: linear-gradient(135deg, #aa1352, #e4067e);
-            color: var(--tt-white);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .clo-header-section h3 {
-            margin: 0;
-            color: var(--tt-white);
-            font-size: 1.2em;
-        }
-
-        .clo-text {
-            margin-top: 8px;
-            font-style: italic;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-
-        .clo-analysis-section {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Formula display and methodology styles */
-        .formula-display {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #495057;
-        }
-
-        .score-legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .legend-score-1 { background: #ffcdd2; color: #c62828; }
-        .legend-score-2 { background: #ffecb3; color: #f57c00; }
-        .legend-score-3 { background: #fff9c4; color: #f9a825; }
-        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-        /* MLO Category Chart Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
-
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
-
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
-
-        /* Sticky Navigation Styles - Following PLO-MLO pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-            display: none; /* Hidden by default, shown when analysis starts */
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* CLO-specific navigation items */
-        .analysis-nav li[data-clo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-clo-link] a:hover,
-        .analysis-nav li[data-clo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* View toggle button styles */
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
-
-        .methodology-trigger:hover {
-            background-color: var(--tt-burgundy) !important;
-            transform: scale(1.1);
-        }
-
-        /* Detailed breakdown table styles */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }}
-
-/* PLO-MLO Style CSS for Detailed Breakdown */
-/* Keyword highlighting from PLO-MLO style */
-.keyword-highlight {
-    background-color: #ffeb3b;
-    padding: 1px 3px;
-    border-radius: 3px;
-    font-weight: bold;
+/*
+================================================================
+==          CONSOLIDATED PLO-MLO ANALYSIS STYLESHEET          ==
+================================================================
+Purpose: This stylesheet provides all the necessary styles for the PLO-MLO 
+         (Programme Learning Outcome - Module Learning Outcome) 
+         analysis tool. It has been consolidated to remove all 
+         redundant style blocks, improving maintainability and performance.
+Usage:   Link this single CSS file to your HTML pages.
+----------------------------------------------------------------
+*/
+
+/*
+================================================================
+==                  1. GLOBAL STYLES & VARIABLES              ==
+================================================================
+Purpose: Defines global settings, including CSS variables for a 
+         consistent color scheme and typography.
+Usage:   These variables are used throughout the stylesheet to 
+         maintain a consistent look and feel.
+----------------------------------------------------------------
+*/
+
+:root {
+    /* TalTech CVI Color Variables */
+    --tt-burgundy: #aa1352;
+    --tt-magenta: #e4067e;
+    --tt-light-blue: #4dbed2;
+    --tt-dark-blue: #342b60;
+    --tt-grey-1: #9396b0;
+    --tt-grey-2: #dadae4;
+    --tt-black: #000000;
+    --tt-white: #ffffff;
+    
+    /* Score Color Variables for consistent alignment visualization */
+    --score-poor: #ffcdd2;
+    --score-weak: #ffecb3;
+    --score-moderate: #fff9c4;
+    --score-good: #c8e6c9;
+    --score-excellent: #a5d6a7;
+    
+    /* Primary Font */
+    --font-primary: 'Proxima Nova', 'Verdana', sans-serif;
 }
 
-/* Detailed breakdown table styling */
+/* General Page Layout & Typography */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-primary);
+}
+
+h2 {
+    color: var(--tt-burgundy) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+}
+
+/*
+================================================================
+==                      2. HEADER STYLES                      ==
+================================================================
+Purpose: Styles the main header of the page.
+Usage:   Applied to the <header> element.
+----------------------------------------------------------------
+*/
+
+header {
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
+    padding: 2rem 0;
+    margin: -20px -20px 2rem -20px;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
+    position: relative;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.header-content h1 {
+    font-size: 2.5rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+}
+
+.header-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+}
+
+/*
+================================================================
+==                  3. COMMON COMPONENT STYLES                ==
+================================================================
+Purpose: Styles for reusable components like buttons, highlights,
+         and form elements.
+Usage:   Apply these classes to the respective elements across
+         the application.
+----------------------------------------------------------------
+*/
+
+/* Keyword highlighting */
+.keyword-highlight {
+    background-color: #ffeb3b;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 1px 3px;
+}
+
+/* View toggle and methodology trigger buttons */
+.view-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+}
+
+.methodology-trigger:hover {
+    background-color: var(--tt-burgundy) !important;
+    transform: scale(1.1);
+}
+
+/*
+================================================================
+==                  4. STICKY NAVIGATION BAR                  ==
+================================================================
+Purpose: Styles for the sticky navigation bar that appears as the
+         user scrolls.
+Usage:   Applied to the <nav> element with the class .analysis-nav.
+----------------------------------------------------------------
+*/
+
+.analysis-nav {
+    background: var(--tt-grey-2);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--tt-burgundy);
+    position: sticky;
+    top: 0;
+    z-index: 998;
+    box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+    display: none; /* Hidden by default, shown via JavaScript when analysis starts */
+}
+
+.analysis-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.analysis-nav a {
+    color: var(--tt-dark-blue);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    border: 2px solid transparent;
+}
+
+.analysis-nav a:hover, .analysis-nav a.active {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    transform: translateY(-2px);
+    border-color: var(--tt-burgundy);
+    box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+}
+
+/* CLO-specific navigation items */
+.analysis-nav li[data-clo-link] a {
+    background-color: rgba(170, 19, 82, 0.1);
+    border-color: rgba(170, 19, 82, 0.3);
+    font-size: 0.8rem;
+    padding: 8px 15px;
+    color: var(--tt-burgundy);
+}
+
+.analysis-nav li[data-clo-link] a:hover,
+.analysis-nav li[data-clo-link] a.active {
+    background: var(--tt-magenta);
+    color: var(--tt-white);
+    border-color: var(--tt-magenta);
+    box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+}
+
+/*
+================================================================
+==                 5. DETAILED BREAKDOWN TABLE                ==
+================================================================
+Purpose: Comprehensive styles for the main data table that shows
+         detailed alignment information.
+Usage:   Applied to a <table> with the class .detailed-breakdown-table.
+----------------------------------------------------------------
+*/
+
 .detailed-breakdown-table {
     width: 100%;
     border-collapse: collapse;
@@ -2339,7 +278,7 @@
     padding: 4px 8px;
     border-radius: 12px;
     font-weight: bold;
-    color: white;
+    color: black;
     min-width: 40px;
     text-align: center;
 }
@@ -2348,6 +287,136 @@
     font-size: 0.9em;
     line-height: 1.4;
 }
+
+/*
+================================================================
+==                     6. CHART & VISUALIZATION               ==
+================================================================
+Purpose: Styles for all data visualizations, including category
+         charts and score legends.
+Usage:   Apply these classes to the containers of your charts.
+----------------------------------------------------------------
+*/
+
+/* MLO Category Chart Styles */
+.mlo-category-charts {
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.mlo-stacked-chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 2px solid var(--tt-grey-2);
+}
+
+.category-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 60px;
+    padding: 10px;
+    border: 1px solid var(--tt-grey-2);
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.category-name {
+    min-width: 80px;
+    font-weight: bold;
+    color: var(--tt-burgundy);
+    text-align: center;
+    border-right: 2px solid var(--tt-grey-2);
+    padding-right: 15px;
+}
+
+.category-bars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.category-bar {
+    height: 30px;
+    min-width: 25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000000;
+    position: relative;
+}
+
+.score-breakdown-bar {
+    flex-direction: column;
+    padding: 1px 2px;
+    border: 1px solid rgba(0,0,0,0.1);
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+.score-breakdown-bar .score-count {
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 1px;
+}
+
+.score-breakdown-bar .score-label {
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+.category-info {
+    min-width: 120px;
+    font-size: 0.9em;
+    color: var(--tt-dark-blue);
+    text-align: right;
+}
+
+/* Formula display and score legend */
+.formula-display {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.score-legend {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.legend-score-1 { background: var(--score-poor); color: #c62828; }
+.legend-score-2 { background: var(--score-weak); color: #f57c00; }
+.legend-score-3 { background: var(--score-moderate); color: #f9a825; }
+.legend-score-4 { background: var(--score-good); color: #2e7d32; }
+.legend-score-5 { background: var(--score-excellent); color: #1b5e20; }
+
+/*
+================================================================
+==                  7. CLO-SPECIFIC SECTIONS                  ==
+================================================================
+Purpose: Styles for sections specifically related to Course
+         Learning Outcomes (CLOs).
+Usage:   Apply to containers that display CLO headers and analysis.
+----------------------------------------------------------------
+*/
 
 .clo-header-section {
     background: linear-gradient(135deg, #aa1352, #e4067e);
@@ -2378,3098 +447,708 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Formula display and methodology styles */
-.formula-display {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 12px;
-    margin: 10px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
-    color: #495057;
-}
 
-.score-legend {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-}
-
-.legend-score-1 { background: #ffcdd2; color: #c62828; }
-.legend-score-2 { background: #ffecb3; color: #f57c00; }
-.legend-score-3 { background: #fff9c4; color: #f9a825; }
-.legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-.legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-/* MLO Category Chart Styles */
-.mlo-category-charts {
-    overflow-x: auto;
-    padding: 10px 0;
-}
-
-.mlo-stacked-chart-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-    border-bottom: 2px solid var(--tt-grey-2);
-}
-
-.category-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    min-height: 60px;
-    padding: 10px;
-    border: 1px solid var(--tt-grey-2);
-    border-radius: 8px;
-    background: #fafafa;
-}
-
-.category-name {
-    min-width: 80px;
-    font-weight: bold;
-    color: var(--tt-burgundy);
-    text-align: center;
-    border-right: 2px solid var(--tt-grey-2);
-    padding-right: 15px;
-}
-
-.category-bars {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-}
-
-.category-bar {
-    height: 30px;
-    min-width: 25px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: bold;
-    color: #000000;
-    position: relative;
-}
-
-.score-breakdown-bar {
-    flex-direction: column;
-    padding: 1px 2px;
-    border: 1px solid rgba(0,0,0,0.1);
-    height: 32px;
-    justify-content: center;
-    align-items: center;
-}
-
-.score-breakdown-bar .score-count {
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 1;
-    margin-bottom: 1px;
-}
-
-.score-breakdown-bar .score-label {
-    font-size: 9px;
-    font-weight: 500;
-    line-height: 1;
-    opacity: 0.8;
-}
-
-.category-info {
-    min-width: 120px;
-    font-size: 0.9em;
-    color: var(--tt-dark-blue);
-    text-align: right;
-}
-
-/* Sticky Navigation Styles - Following PLO-MLO pattern */
-.analysis-nav {
-    background: var(--tt-grey-2);
-    padding: 15px 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    border-left: 5px solid var(--tt-burgundy);
-    position: sticky;
-    top: 0;
-    z-index: 998;
-    box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-    display: none; /* Hidden by default, shown when analysis starts */
-}
-
-.analysis-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-}
-
-.analysis-nav a {
-    color: var(--tt-dark-blue);
-    text-decoration: none;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    border: 2px solid transparent;
-}
-
-.analysis-nav a:hover, .analysis-nav a.active {
-    background: var(--tt-burgundy);
-    color: var(--tt-white);
-    transform: translateY(-2px);
-    border-color: var(--tt-burgundy);
-    box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-}
-
-/* CLO-specific navigation items */
-.analysis-nav li[data-clo-link] a {
-    background-color: rgba(170, 19, 82, 0.1);
-    border-color: rgba(170, 19, 82, 0.3);
-    font-size: 0.8rem;
-    padding: 8px 15px;
-    color: var(--tt-burgundy);
-}
-
-.analysis-nav li[data-clo-link] a:hover,
-.analysis-nav li[data-clo-link] a.active {
-    background: var(--tt-magenta);
-    color: var(--tt-white);
-    border-color: var(--tt-magenta);
-    box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-}
+/*
+================================================================
+==                    8. RESPONSIVE DESIGN                    ==
+================================================================
+Purpose: Contains all media queries to ensure the layout is
+         responsive and works on different screen sizes.
+Usage:   This section should be at the end of the stylesheet.
+----------------------------------------------------------------
+*/
 
 @media (max-width: 768px) {
+    /* Responsive Navigation */
     .analysis-nav ul {
         flex-direction: column;
         gap: 10px;
     }
+    
     .analysis-nav a {
         width: 100%;
         text-align: center;
         font-size: 0.8rem;
         padding: 8px 15px;
     }
-}
-/* Moved from clo-mlo.html: Detailed Breakdown Table and related styles */
-/* Keyword highlighting from PLO-MLO style */
-.keyword-highlight {
-    background-color: #ffeb3b;
-    padding: 1px 3px;
-    border-radius: 3px;
-    font-weight: bold;
+    
+    /* Other responsive adjustments can be added here */
 }
 
-/* Detailed breakdown table styling */
-.detailed-breakdown-table {
-    width: 100%;
-    border-collapse: collapse;
+/*
+================================================================
+==              SCORE DISTRIBUTION CHART STYLES               ==
+================================================================
+Purpose: Styles for the bar chart that visualizes the distribution 
+         of alignment scores across different categories.
+Usage:   Wrap your chart markup in a div with the class 
+         .score-distribution-chart.
+----------------------------------------------------------------
+*/
+
+.score-distribution-chart {
     margin: 20px 0;
+    padding: 20px;
     background: var(--tt-white);
+    border-radius: 8px;
     box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
 }
 
-.detailed-breakdown-table th,
-.detailed-breakdown-table td {
-    border: 1px solid #dee2e6;
-    padding: 10px;
-    text-align: left;
-}
-
-.detailed-breakdown-table tbody tr:nth-child(even) {
-    background: #f8f9fa;
-}
-
-.detailed-breakdown-table tbody tr:hover {
-    background: #f1f1f1;
-}
-
-.mlo-code-cell, .clo-code-cell {
-    font-weight: bold;
-    color: #aa1352;
-    background: #f8f9fa;
-    border-right: 2px solid #dee2e6;
-    padding-right: 10px;
-}
-
-.mlo-content-cell, .clo-content-cell {
-    font-size: 0.95em;
-    color: #333;
-}
-
-.alignment-score-cell {
-    text-align: center;
-    font-weight: bold;
-}
-
-.alignment-score {
-    font-size: 1.1em;
-    font-weight: bold;
-    padding: 6px 12px;
-    border-radius: 6px;
-}
-
-.justification-cell {
-    font-size: 0.95em;
-    color: #555;
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 10px;
-}
-
-.clo-header-section {
-    margin-bottom: 15px;
-}
-
-.clo-header-section h3 {
-    color: #aa1352;
-    font-size: 1.2em;
-    margin: 0;
-}
-
-.clo-text {
-    font-size: 1em;
-    color: #333;
+.score-distribution-chart h3 {
     margin-bottom: 10px;
 }
 
-.clo-analysis-section {
-    margin-top: 20px;
+.score-distribution-chart h3 i, 
+.score-distribution-chart p i {
+    margin-right: 8px;
 }
 
-/* Formula display and methodology styles */
-.formula-display {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 12px;
-    margin: 10px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
-    color: #495057;
-}
-
-.score-legend {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-}
-
-.legend-score-1 { background: #ffcdd2; color: #c62828; }
-.legend-score-2 { background: #ffecb3; color: #f57c00; }
-.legend-score-3 { background: #fff9c4; color: #f9a825; }
-.legend-score-4 { background: #c8e6c9; color: #2e7d32; }
-.legend-score-5 { background: #a5d6a7; color: #1b5e20; }
-
-/* MLO Category Chart Styles */
-.mlo-category-charts {
-    overflow-x: auto;
-    padding: 10px 0;
-}
-
-.mlo-stacked-chart-container {
+/* The main container for the bars */
+.chart-container {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+    align-items: flex-end; /* Aligns bars to the bottom */
+    height: 200px;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 10px 0;
     border-bottom: 2px solid var(--tt-grey-2);
 }
 
-.category-row {
+/* Individual bars in the chart */
+.chart-bar {
+    flex: 1; /* Each bar takes up equal space */
+    min-height: 20px; /* Ensures even empty bars are visible */
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+    color: var(--tt-black);
+    font-weight: bold;
     display: flex;
     align-items: center;
-    gap: 15px;
-    min-height: 60px;
-    padding: 10px;
-    border: 1px solid var(--tt-grey-2);
-    border-radius: 8px;
-    background: #fafafa;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.9em;
+    padding: 5px 2px;
+    border: 1px solid rgba(0,0,0,0.1);
 }
 
-.category-name {
-    min-width: 80px;
+.chart-bar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 5;
+}
+
+/* Labels below the chart */
+.chart-labels {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.chart-label {
+    flex: 1;
+    text-align: center;
     font-weight: bold;
     color: var(--tt-burgundy);
-    text-align: center;
-    border-right: 2px solid var(--tt-grey-2);
-    padding-right: 15px;
+    font-size: 0.9em;
 }
 
-.category-bars {
+.chart-label small {
+    font-weight: normal;
+    color: var(--tt-grey-1);
+    font-size: 0.85em;
+}
+
+/* Summary text below the chart labels */
+.chart-summary {
+    text-align: center;
+    margin-top: 15px;
+    color: var(--tt-burgundy);
+    font-weight: bold;
+}
+
+/*
+================================================================
+==                 ALIGNMENT MATRIX STYLES                    ==
+================================================================
+Purpose: Styles the main data matrix, including the table layout, 
+         scrollable container, and sticky headers for usability.
+Usage:   Apply to the <section> with the ID #matrix-section.
+----------------------------------------------------------------
+*/
+
+.matrix-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f0f0;
+}
+
+.matrix-section h2 i {
+    margin-right: 10px;
+}
+
+/* Container for action buttons above the matrix */
+.matrix-actions {
+    margin-bottom: 20px;
     display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.export-btn {
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    transition: all 0.3s ease;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    flex: 1;
 }
 
-.category-bar {
-    height: 30px;
-    min-width: 25px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: bold;
-    color: #000000;
-    position: relative;
-}
-
-.score-breakdown-bar {
-    flex-direction: column;
-    padding: 1px 2px;
-    border: 1px solid rgba(0,0,0,0.1);
-    height: 32px;
-    justify-content: center;
-    align-items: center;
-}
-
-.score-breakdown-bar .score-count {
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 1;
-    margin-bottom: 1px;
-}
-
-.score-breakdown-bar .score-label {
-    font-size: 9px;
-    font-weight: 500;
-    line-height: 1;
-    opacity: 0.8;
-}
-
-.category-info {
-    min-width: 120px;
-    font-size: 0.9em;
-    color: var(--tt-dark-blue);
-    text-align: right;
-}
-
-/* Sticky Navigation Styles - Following PLO-MLO pattern */
-.analysis-nav {
-    background: var(--tt-grey-2);
-    padding: 15px 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    border-left: 5px solid var(--tt-burgundy);
-    position: sticky;
-    top: 0;
-    z-index: 998;
-    box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-    display: none; /* Hidden by default, shown when analysis starts */
-}
-
-.analysis-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-}
-
-.analysis-nav a {
-    color: var(--tt-dark-blue);
-    text-decoration: none;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    border: 2px solid transparent;
-}
-
-.analysis-nav a:hover, .analysis-nav a.active {
-    background: var(--tt-burgundy);
-    color: var(--tt-white);
+.export-btn:hover {
     transform: translateY(-2px);
-    border-color: var(--tt-burgundy);
-    box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
 }
 
-/* CLO-specific navigation items */
-.analysis-nav li[data-clo-link] a {
-    background-color: rgba(170, 19, 82, 0.1);
-    border-color: rgba(170, 19, 82, 0.3);
-    font-size: 0.8rem;
-    padding: 8px 15px;
-    color: var(--tt-burgundy);
-}
-
-.analysis-nav li[data-clo-link] a:hover,
-.analysis-nav li[data-clo-link] a.active {
-    background: var(--tt-magenta);
-    color: var(--tt-white);
-    border-color: var(--tt-magenta);
-    box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-}
-
-@media (max-width: 768px) {
-    .analysis-nav ul {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .analysis-nav a {
-        width: 100%;
-        text-align: center;
-        font-size: 0.8rem;
-        padding: 8px 15px;
-    }
-}
-/* PLO-MLO Analysis Styles */
-
-/* Container & Layout */
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Header Styles */
-header {
-    background: linear-gradient(135deg, #004181, #0066cc);
-    color: white;
-    padding: 1.5rem 0;
-    margin: -20px -20px 2rem -20px;
-    border-radius: 0 0 15px 15px;
-    box-shadow: 0 4px 15px rgba(0, 65, 129, 0.3);
-}
-
-.header-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-.back-home {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-}
-
-.back-home:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateX(-3px);
-}
-
-.header-content h1 {
-    font-size: 2rem;
-    margin: 0;
-    font-weight: 300;
-}
-
-.programme-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    opacity: 0.9;
-    font-size: 1rem;
-}
-
-.separator {
-    opacity: 0.7;
-}
-
-/* Main Content */
-main {
-    flex: 1;
-    padding: 1rem 0;
-}
-
-/* Controls Section */
-.controls-section {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
-}
-
-.controls-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    align-items: end;
-}
-
-.control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.control-group label {
-    font-weight: 600;
-    color: #004181;
-    font-size: 0.9rem;
-}
-
-.form-select {
-    padding: 0.75rem;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: white;
-}
-
-.form-select:focus {
-    outline: none;
-    border-color: #004181;
-    box-shadow: 0 0 0 3px rgba(0, 65, 129, 0.1);
-}
-
-.primary-btn, .secondary-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.primary-btn {
-    background: linear-gradient(135deg, #004181, #0066cc);
-    color: white;
-}
-
-.primary-btn:hover {
-    background: linear-gradient(135deg, #003366, #0052a3);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 65, 129, 0.3);
-}
-
-.secondary-btn {
-    background: linear-gradient(135deg, #6c757d, #495057);
-    color: white;
-}
-
-.secondary-btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, #5a6268, #3d4043);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
-}
-
-.secondary-btn:disabled {
-    background: #dee2e6;
-    color: #6c757d;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* Section Management */
-.hidden {
-    display: none;
-}
-
-/* Summary Section */
-.summary-section {
-    margin-bottom: 2rem;
-}
-
-.summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.summary-card {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    transition: all 0.3s ease;
-}
-
-.summary-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0, 65, 129, 0.15);
-}
-
-.card-icon {
-    background: linear-gradient(135deg, #004181, #0066cc);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-
-.card-content h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 0.3rem 0;
-    color: #004181;
-}
-
-.card-content p {
-    margin: 0;
-    color: #666;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-/* Matrix Section */
-.matrix-section {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
-}
-
-.matrix-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.matrix-header h2 {
-    color: #004181;
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.matrix-controls {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.control-btn {
-    padding: 0.5rem 1rem;
-    border: 2px solid #e9ecef;
-    background: white;
-    color: #666;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.control-btn.active {
-    border-color: #004181;
-    background: #004181;
-    color: white;
-}
-
-.control-btn:hover {
-    border-color: #004181;
-    transform: translateY(-1px);
-}
-
-/* Matrix Container */
-.matrix-container {
+/* This container makes the table horizontally scrollable on small screens */
+#matrix-container {
     overflow-x: auto;
-    margin-bottom: 2rem;
+    width: 100%;
 }
 
-.matrix-wrapper {
-    min-width: 800px;
-}
-
-.alignment-matrix {
+.matrix-table {
     width: 100%;
     border-collapse: collapse;
-    border: 2px solid #dee2e6;
+    margin: 20px 0;
+    font-size: 12px;
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+    table-layout: auto;
+    /* Ensures minimum width for scrollability */
+    min-width: 800px; 
 }
 
-.alignment-matrix th,
-.alignment-matrix td {
-    border: 1px solid #dee2e6;
-    padding: 0.75rem;
+.matrix-table th, .matrix-table td {
+    border: 1px solid var(--tt-grey-2);
+    padding: 8px;
     text-align: center;
+    vertical-align: middle;
+    white-space: nowrap; /* Prevents text wrapping in headers and cells */
+}
+
+/* --- Sticky Headers --- */
+.matrix-table thead th {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* The top-left corner cell (PLO \ MLO) */
+.matrix-table thead th:first-child {
+    left: 0;
+    z-index: 11; /* Must be on top of other sticky elements */
+    background-color: #f0f0f0;
+}
+
+/* Category Header Group (Replaces inline styles) */
+.category-header-group {
+    background-color: var(--tt-dark-blue) !important;
+    color: var(--tt-white) !important;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* MLO Code Headers (e.g., yl_mlo1) */
+.mlo-header {
+    background-color: var(--tt-grey-1) !important;
+    color: var(--tt-white) !important;
+    font-size: 11px !important;
+    font-weight: bold;
+    /* The second row of headers needs to be offset by the height of the first row */
+    top: 41px; /* Adjust this value if your top header row height changes */
+}
+
+/* PLO Headers (e.g., plo1) - First column of the table body */
+.td.plo-header, .plo-header {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    left: 0;
+    background-color: #f8f9fa;
+    color: var(--tt-burgundy);
+    font-weight: bold;
+    text-align: left !important;
+    z-index: 5; /* Above scrolling content but below the main header */
+}
+
+/* --- Score Cells --- */
+.score-cell {
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+.score-cell:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    z-index: 20;
+    position: relative; /* Needed for z-index to work */
+}
+
+/* Score color classes - using variables for consistency */
+.score-1 { background-color: var(--score-poor); }
+.score-2 { background-color: var(--score-weak); }
+.score-3 { background-color: var(--score-moderate); }
+.score-4 { background-color: var(--score-good); }
+.score-5 { background-color: var(--score-excellent); }
+
+/*
+================================================================
+==              PLO & MLO TABLE SECTION STYLES                ==
+================================================================
+Purpose: Styles for the display tables for Programme Learning 
+         Outcomes (PLOs) and Module Learning Outcomes (MLOs).
+Usage:   Apply .plo-table or .mlo-table to your table elements.
+         The section styles apply to wrappers like #plo-section.
+----------------------------------------------------------------
+*/
+
+/* General style for sections containing these tables */
+#plo-section, #mlo-section {
+    margin-bottom: 2rem;
+}
+
+#plo-section h2 i, #mlo-section h2 i {
+    margin-right: 10px;
+}
+
+/* Base styles for both PLO and MLO tables for consistency */
+.plo-table, .mlo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+    border-radius: 8px;
+    overflow: hidden; /* Ensures border-radius is applied to corners */
+}
+
+.plo-table th, .mlo-table th {
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
+    padding: 15px;
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.plo-table td, .mlo-table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--tt-grey-2);
+    vertical-align: top;
+}
+
+/* Remove border from the last row for a cleaner look */
+.plo-table tr:last-child td, .mlo-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alternating row color for readability */
+.plo-table tbody tr:nth-child(even), .mlo-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Column specific styles */
+.code-col {
+    width: 120px; /* Fixed width for the code column */
+    font-family: 'Courier New', monospace;
+    color: var(--tt-burgundy);
+    font-weight: bold;
+    text-align: center !important;
     vertical-align: middle;
 }
 
-.corner-cell {
-    background: #f8f9fa;
-    position: sticky;
-    left: 0;
-    z-index: 3;
-    width: 150px;
+.content-col {
+    width: calc(100% - 120px); /* The rest of the space */
 }
 
-.corner-content {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #004181;
-}
-
-.corner-top {
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 0.3rem;
-    margin-bottom: 0.3rem;
-}
-
-.mlo-header {
-    background: #f8f9fa;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    min-width: 80px;
-    max-width: 80px;
-    font-weight: 600;
-    color: #004181;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-}
-
-.plo-header {
-    background: #f8f9fa;
-    font-weight: 600;
-    color: #004181;
-    text-align: left;
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    max-width: 150px;
-}
-
-.header-text {
-    font-size: 0.8rem;
-    line-height: 1.2;
-}
-
-.alignment-cell {
-    background: white;
-    font-weight: 600;
+/* Styles for the clickable header to toggle table visibility */
+.content-col[onclick] {
     cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 60px;
+    position: relative;
+    -webkit-user-select: none; /* Prevents text selection on click */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.alignment-cell:hover {
-    background: #f8f9fa;
-    transform: scale(1.1);
-    z-index: 1;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+/* Caret icon for the toggling functionality */
+#plo-table-caret, #mlo-table-caret {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
 }
 
-/* Score Color Coding */
-.score-0 { background-color: #6c757d; color: white; }
-
-.no-alignment {
-    background: #f8f9fa;
-    color: #adb5bd;
+/* Class to rotate the caret when the table is collapsed */
+.caret-collapsed {
+    transform: rotate(-90deg);
 }
 
-.no-data {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-style: italic;
+/* Specific styles for the content inside the table cells */
+.plo-code, .mlo-code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95em;
+    color: var(--tt-burgundy);
+    font-weight: bold;
 }
 
-/* Legend */
-.legend {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 1.5rem;
-}
-
-.legend h4 {
-    margin: 0 0 1rem 0;
-    color: #004181;
-    font-size: 1rem;
-}
-
-.legend-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.8rem;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    font-size: 0.9rem;
-}
-
-.legend-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    flex-shrink: 0;
-}
-
-/* Details Section */
-.details-section {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
-}
-
-.details-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.details-header h2 {
-    color: #004181;
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.details-controls select {
-    padding: 0.5rem;
-    border: 2px solid #e9ecef;
-    border-radius: 6px;
-    font-size: 0.9rem;
-}
-
-.details-container {
-    display: grid;
-    gap: 1rem;
-}
-
-.detail-card {
-    background: white;
-    border: 2px solid #f0f0f0;
-    border-radius: 10px;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.detail-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(0, 65, 129, 0.15);
-    border-color: #004181;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.score-badge {
-    background: #004181;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    text-align: center;
-    min-width: 80px;
-}
-
-.score-value {
-    display: block;
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.score-label {
-    font-size: 0.8rem;
-    opacity: 0.9;
-}
-
-.alignment-info {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-}
-
-.plo-indicator, .mlo-indicator {
-    background: #e9ecef;
-    color: #495057;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.category-tag {
-    background: #004181;
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.card-content {
-    margin-bottom: 1rem;
-}
-
-.outcome-texts {
-    margin-bottom: 1rem;
-}
-
-.plo-text, .mlo-text {
-    margin-bottom: 0.8rem;
-    line-height: 1.4;
-    font-size: 0.95rem;
-}
-
-.justification {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    color: #555;
-}
-
-/* Loading Overlay */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.loading-content {
-    background: white;
-    padding: 3rem;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-}
-
-.spinner {
-    width: 60px;
-    height: 60px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #004181;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1.5rem auto;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.loading-content h3 {
-    color: #004181;
-    margin: 0 0 0.5rem 0;
-    font-size: 1.3rem;
-}
-
-.loading-content p {
-    color: #666;
-    margin: 0 0 1.5rem 0;
-    font-size: 0.95rem;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background: #e9ecef;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(135deg, #004181, #0066cc);
-    width: 0%;
-    transition: width 0.3s ease;
-}
-
-/* Modal Styles */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    padding: 20px;
-}
-
-.modal-content {
-    background: white;
-    border-radius: 15px;
-    max-width: 800px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 2rem 1rem 2rem;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: #004181;
-    font-size: 1.4rem;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #adb5bd;
-    cursor: pointer;
-    padding: 0;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.modal-close:hover {
-    background: #f8f9fa;
-    color: #495057;
-}
-
-.modal-body {
-    padding: 2rem;
-}
-
-.alignment-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.outcome-pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-}
-
-.outcome-box {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 10px;
-    border-left: 4px solid #004181;
-}
-
-.outcome-box h4 {
-    margin: 0 0 1rem 0;
-    color: #004181;
-    font-size: 1.1rem;
-}
-
-.outcome-box p {
-    margin: 0;
+.plo-description, .mlo-description {
+    font-size: 0.95em;
     line-height: 1.5;
     color: #333;
 }
 
-.mlo-meta {
-    margin-top: 1rem;
-    display: flex;
-    gap: 0.5rem;
-}
+/*
+================================================================
+==                 VIEW TOGGLE BUTTON STYLES                  ==
+================================================================
+Purpose: Styles the button used to switch between different
+         views, such as PLO and MLO views.
+Usage:   Apply the .view-toggle class to a <button> element.
+----------------------------------------------------------------
+*/
 
-.mlo-meta span {
-    background: #004181;
-    color: white;
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-}
-
-.scoring-breakdown {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 10px;
-}
-
-.scoring-breakdown h4 {
-    margin: 0 0 1rem 0;
-    color: #004181;
-}
-
-.score-metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.metric {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.8rem;
-    background: white;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-}
-
-.metric-label {
-    font-weight: 600;
-    color: #495057;
-}
-
-.metric-value {
-    font-weight: 700;
-    color: #004181;
-}
-
-.justification, .improvements {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 10px;
-}
-
-.justification h4, .improvements h4 {
-    margin: 0 0 1rem 0;
-    color: #004181;
-}
-
-.improvements ul {
-    margin: 0;
-    padding-left: 1.2rem;
-}
-
-.improvements li {
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-}
-
-/* Footer */
-footer {
-    background: #f8f9fa;
-    border-top: 1px solid #dee2e6;
-    padding: 1.5rem 0;
-    margin: 2rem -20px -20px -20px;
-    text-align: center;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .outcome-pair {
-        grid-template-columns: 1fr;
-    }
-    
-    .score-metrics {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 0 15px;
-    }
-    
-    .header-top {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .header-content h1 {
-        font-size: 1.6rem;
-    }
-    
-    .programme-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .controls-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .summary-cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .matrix-header, .details-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .matrix-controls {
-        flex-wrap: wrap;
-    }
-    
-    .card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .alignment-info {
-        justify-content: flex-start;
-    }
-    
-    .modal-content {
-        margin: 10px;
-        width: calc(100% - 20px);
-    }
-    
-    .modal-header, .modal-body {
-        padding: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .summary-cards {
-        grid-template-columns: 1fr;
-    }
-    
-    .summary-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .legend-items {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* API Configuration Styles */
-.config-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
+.view-toggle {
+    /* Layout & Appearance */
+    background: linear-gradient(135deg, var(--tt-dark-blue), var(--tt-burgundy));
+    color: var(--tt-white);
     border: none;
-    padding: 0.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.config-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-}
-
-.api-config-content {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.config-section {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.config-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.config-section h4 {
-    color: #004181;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.input-group {
-    display: flex;
-    position: relative;
-}
-
-.input-group .form-input {
-    flex: 1;
-    padding-right: 50px;
-}
-
-.toggle-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
-    transition: color 0.3s ease;
-}
-
-.toggle-btn:hover {
-    color: #004181;
-}
-
-.help-text {
-    display: block;
-    margin-top: 0.5rem;
-    color: #666;
-    font-size: 0.85rem;
-    line-height: 1.4;
-}
-
-.status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    background: #f5f5f5;
-    border-radius: 8px;
-    margin-top: 1rem;
-}
-
-.status-indicator i {
-    color: #ccc;
-}
-
-.status-indicator.connected i {
-    color: #28a745;
-}
-
-.setup-steps {
-    margin: 1rem 0;
-    padding-left: 1.5rem;
-}
-
-.setup-steps li {
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
-}
-
-.setup-steps a {
-    color: #004181;
-    text-decoration: none;
-}
-
-.setup-steps a:hover {
-    text-decoration: underline;
-}
-
-.config-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-}
-
-.primary-btn, .secondary-btn, .danger-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
+    padding: 12px 24px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
+    margin: 10px 0; /* Provides some space around the button */
+
+    /* Typography */
+    font-weight: 600;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+
+    /* Behavior */
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-width: 120px;
-    justify-content: center;
-}
-
-.primary-btn {
-    background: #004181;
-    color: white;
-}
-
-.primary-btn:hover {
-    background: #003366;
-    transform: translateY(-2px);
-}
-
-.secondary-btn {
-    background: #6c757d;
-    color: white;
-}
-
-.secondary-btn:hover {
-    background: #5a6268;
-    transform: translateY(-2px);
-}
-
-.danger-btn {
-    background: #dc3545;
-    color: white;
-}
-
-.danger-btn:hover {
-    background: #c82333;
-    transform: translateY(-2px);
-}
-
-.primary-btn:disabled,
-.secondary-btn:disabled,
-.danger-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-@media (max-width: 768px) {
-    .config-actions {
-        flex-direction: column;
-    }
     
-    .primary-btn, .secondary-btn, .danger-btn {
-        width: 100%;
-    }
-}
-
-/* Message Toast Styles */
-.message-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 400px;
-}
-
-.message-toast {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-left: 4px solid #ccc;
-    animation: slideInRight 0.3s ease;
-    min-width: 300px;
-}
-
-.message-toast.success {
-    border-left-color: #28a745;
-}
-
-.message-toast.success .message-content i {
-    color: #28a745;
-}
-
-.message-toast.error {
-    border-left-color: #dc3545;
-}
-
-.message-toast.error .message-content i {
-    color: #dc3545;
-}
-
-.message-toast.info {
-    border-left-color: #004181;
-}
-
-.message-toast.info .message-content i {
-    color: #004181;
-}
-
-.message-content {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex: 1;
-}
-
-.message-content i {
-    font-size: 1.2rem;
-}
-
-.message-close {
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    transition: background 0.3s ease;
-}
-
-.message-close:hover {
-    background: #f0f0f0;
-}
-
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@media (max-width: 768px) {
-    .message-container {
-        left: 20px;
-        right: 20px;
-        max-width: none;
-    }
-    
-    .message-toast {
-        min-width: auto;
-    }
-}
-
-/* Analysis Prompt Styles */
-.analysis-prompt {
-    margin-top: 2rem;
-    animation: slideIn 0.5s ease-out;
-}
-
-.prompt-card {
-    background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
-    border: 2px solid #4a90e2;
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(74, 144, 226, 0.15);
-    transition: all 0.3s ease;
-}
-
-.prompt-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(74, 144, 226, 0.25);
-}
-
-.prompt-icon {
-    margin-bottom: 1rem;
-}
-
-.prompt-icon i {
-    font-size: 3rem;
-    color: #4a90e2;
-    background: linear-gradient(135deg, #4a90e2, #6fa8f5);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.prompt-content h3 {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    font-size: 1.4rem;
-    font-weight: 600;
-}
-
-.prompt-content p {
-    color: #5a6c7d;
-    margin-bottom: 1rem;
-    line-height: 1.6;
-}
-
-.clo-summary {
-    background: rgba(74, 144, 226, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    display: inline-block;
-    margin-bottom: 1.5rem;
-}
-
-.clo-count {
-    color: #4a90e2;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.analysis-btn {
-    background: linear-gradient(135deg, #4a90e2, #6fa8f5);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    /* Flexbox for icon alignment */
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 8px; /* Space between the icon and the text */
 }
 
-.analysis-btn:hover {
+/* Hover effect to provide visual feedback */
+.view-toggle:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
-    background: linear-gradient(135deg, #3a7bc8, #5a96db);
+    box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+    background: linear-gradient(135deg, #4a3c80, #c8236a); /* Slightly lighter on hover */
 }
 
-.analysis-btn:active {
-    transform: translateY(0);
+/* Styling for the icon within the button */
+.view-toggle i {
+    font-size: 1.1em; /* Makes the icon slightly larger than the text */
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/*
+================================================================
+==                 VIEW TOGGLE BUTTON STYLES                  ==
+================================================================
+Purpose: Styles the button used to switch between different
+         views, such as PLO and MLO views.
+Usage:   Apply the .view-toggle class to a <button> element.
+----------------------------------------------------------------
+*/
+
+.view-toggle {
+    /* Layout & Appearance */
+    background: linear-gradient(135deg, var(--tt-dark-blue), var(--tt-burgundy));
+    color: var(--tt-white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px 0; /* Provides some space around the button */
+
+    /* Typography */
+    font-weight: 600;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+
+    /* Behavior */
+    transition: all 0.3s ease;
+    
+    /* Flexbox for icon alignment */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between the icon and the text */
 }
 
-/* copy from plo-mlo style block
-        /* TalTech CVI Color Variables */
-        :root {
-            --tt-burgundy: #aa1352;
-            --tt-magenta: #e4067e;
-            --tt-light-blue: #4dbed2;
-            --tt-dark-blue: #342b60;
-            --tt-grey-1: #9396b0;
-            --tt-grey-2: #dadae4;
-            --tt-black: #000000;
-            --tt-white: #ffffff;
-            --font-primary: 'Proxima Nova', 'Verdana', sans-serif;
-            
-            /* Score Color Variables */
-            --score-poor: #ffcdd2;
-            --score-weak: #ffecb3;
-            --score-moderate: #fff9c4;
-            --score-good: #c8e6c9;
-            --score-excellent: #a5d6a7;
-        }
+/* Hover effect to provide visual feedback */
+.view-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+    background: linear-gradient(135deg, #4a3c80, #c8236a); /* Slightly lighter on hover */
+}
 
-        /* Matrix table styles */
-        .matrix-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 12px;
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-            table-layout: auto;
-        }
-        
-        .matrix-table th, .matrix-table td {
-            border: 1px solid #dadae4;
-            padding: 8px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        
-        .matrix-table thead th {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .matrix-table th:not(.mlo-header) {
-            background-color: var(--tt-burgundy);
-            color: var(--tt-white);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            writing-mode: horizontal-tb !important;
-            text-orientation: mixed !important;
-            transform: rotate(0deg) !important;
-            vertical-align: middle !important;
-            white-space: nowrap !important;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80px;
-            min-width: 60px;
-            padding: 8px 4px !important;
-            text-align: center !important;
-        }
-        
-        /* Matrix table header fix - ensure MLO headers display horizontally */
-        .matrix-table thead th.mlo-header {
-            background-color: var(--tt-grey-1) !important;
-            color: var(--tt-white) !important;
-            writing-mode: horizontal-tb !important;
-            text-orientation: unset !important;
-            transform: none !important;
-            white-space: nowrap !important;
-            padding: 8px 4px !important;
-            min-width: 60px !important;
-            max-width: 100px !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            vertical-align: middle !important;
-            font-size: 11px !important;
-            text-align: center !important;
-            height: auto !important;
-            line-height: normal !important;
-            display: table-cell !important;
-        }
+/* Styling for the icon within the button */
+.view-toggle i {
+    font-size: 1.1em; /* Makes the icon slightly larger than the text */
+}
 
-        .matrix-table th.mlo-header {
-            background-color: var(--tt-grey-1) !important;
-            color: var(--tt-white) !important;
-            writing-mode: horizontal-tb !important;
-            text-orientation: unset !important;
-            transform: none !important;
-            white-space: nowrap !important;
-            padding: 8px 4px !important;
-            min-width: 60px !important;
-            max-width: 100px !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            vertical-align: middle !important;
-            font-size: 11px !important;
-            text-align: center !important;
-            height: auto !important;
-            line-height: normal !important;
-        }
-        
-        .module-header {
-            background-color: var(--tt-dark-blue) !important;
-            color: var(--tt-white) !important;
-        }
-        
-        .plo-header {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            text-align: left !important;
-            color: var(--tt-burgundy);
-        }
-        
-        .score-cell {
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .score-cell:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        /* Score color classes for matrix - Updated to use CSS variables */
-        .score-1 { background-color: var(--score-poor); color: #000000; }
-        .score-2 { background-color: var(--score-weak); color: #000000; }
-        .score-3 { background-color: var(--score-moderate); color: #000000; }
-        .score-4 { background-color: var(--score-good); color: #000000; }
-        .score-5 { background-color: var(--score-excellent); color: #000000; }
-        
-        /* Score range classes for matrix (new system based on ranges) */
-        .score-poor { background-color: var(--score-poor); color: #000000; }
-        .score-weak { background-color: var(--score-weak); color: #000000; }
-        .score-moderate { background-color: var(--score-moderate); color: #000000; }
-        .score-good { background-color: var(--score-good); color: #000000; }
-        .score-excellent { background-color: var(--score-excellent); color: #000000; }
-        
-        .outcome-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            border-left: 3px solid var(--tt-burgundy);
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .outcome-item:hover {
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .module-section {
-            margin-bottom: 30px;
-            border: 2px solid var(--tt-grey-2);
-            border-radius: 8px;
-            padding: 20px;
-            background: var(--tt-white);
-        }
-        
-        .module-section h3 {
-            color: var(--tt-burgundy);
-            border-bottom: 2px solid var(--tt-burgundy);
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-        
-        .analysis-summary {
-            margin-bottom: 30px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            padding: 20px;
-            border-left: 4px solid var(--tt-burgundy);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .summary-card {
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            color: var(--tt-white);
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-        }
-        
-        .card-score {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        .plo-analysis-section {
-            margin-bottom: 40px;
-            border: 2px solid var(--tt-grey-2);
-            border-radius: 8px;
-            padding: 20px;
-            background: var(--tt-white);
-        }
-        
-        .plo-header-section h3 {
-            color: var(--tt-burgundy);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-        
-        .plo-text {
-            font-style: italic;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border-left: 3px solid var(--tt-magenta);
-        }
-        
-        .module-alignment {
-            margin-bottom: 25px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            padding: 15px;
-            background: var(--tt-white);
-        }
-        
-        .module-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .module-average-score {
-            padding: 5px 10px;
-            border-radius: 15px;
-            color: var(--tt-white);
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-        }
-        
-        .mlo-alignment {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border-left: 3px solid var(--tt-grey-1);
-        }
-        
-        .mlo-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-        
-        .mlo-header span {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .alignment-score {
-            flex-shrink: 0;
-            margin-left: 10px;
-        }
-        
-        .detailed-section {
-            width: 100%;
-            overflow-x: auto;
-        }
-        
-        .detailed-container {
-            width: 100%;
-            clear: both;
-        }
-        
-        .alignment-score {
-            padding: 3px 8px;
-            border-radius: 10px;
-            color: var(--tt-white);
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .alignment-justification {
-            font-size: 14px;
-            color: var(--tt-grey-1);
-            font-style: italic;
-        }
-        
-        .export-btn {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            transition: all 0.3s ease;
-        }
-        
-        .export-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
-        }
-        
-        .matrix-actions {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        /* Language Toggle Styles */
-        .language-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            border-radius: 10px;
-            color: var(--tt-white);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.2);
-        }
-        
-        .language-toggle label {
-            font-weight: bold;
-            color: var(--tt-white);
-        }
-        
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-        }
-        
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255,255,255,0.3);
-            transition: .4s;
-            border-radius: 30px;
-        }
-        
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--tt-white);
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .toggle-slider {
-            background-color: rgba(255,255,255,0.5);
-        }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(30px);
-        }
-        
-        .language-label {
-            font-size: 0.9em;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .language-label.active {
-            opacity: 1;
-            color: var(--tt-magenta);
-            font-weight: 900;
-            text-shadow: 0 0 5px rgba(228, 6, 126, 0.3);
-        }
-        
-        .language-label.inactive {
-            opacity: 0.6;
-            color: rgba(255,255,255,0.7);
-        }
-        
-        /* Score Legend Styles */
-        .score-legend {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .score-legend h3 {
-            margin-bottom: 15px;
-            color: var(--tt-dark-blue);
-            font-size: 1.1em;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-        
-        .legend-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 500;
-        }
-        
-        /* Legend color classes - Updated to use consistent score colors */
-        .legend-score-1 { background-color: var(--score-poor); color: #000000; }
-        .legend-score-2 { background-color: var(--score-weak); color: #000000; }
-        .legend-score-3 { background-color: var(--score-moderate); color: #000000; }
-        .legend-score-4 { background-color: var(--score-good); color: #000000; }
-        .legend-score-5 { background-color: var(--score-excellent); color: #000000; }
-        
-        /* Formula Display Styles */
-        .formula-display {
-            background: var(--tt-white);
-            border: 2px solid var(--tt-burgundy);
-            border-radius: 6px;
-            padding: 15px;
-            margin: 10px 0;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .formula-display code {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            line-height: 1.4;
-        }
-        
-        .methodology-details {
-            background: var(--tt-grey-5);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-        
-        /* Bilingual Table Styles */
-        .mlo-table, .plo-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .mlo-table th, .plo-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 15px;
-            text-align: left;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-        
-        .mlo-table td, .plo-table td {
-            padding: 15px;
-            border-bottom: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .mlo-table tr:last-child td, .plo-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .mlo-table tr:nth-child(even), .plo-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .code-col {
-            width: 80px !important;
-            max-width: 80px !important;
-            min-width: 80px !important;
-            font-family: 'Courier New', monospace;
-            color: var(--tt-burgundy);
-            font-weight: bold;
-            text-align: center !important;
-        }
-        
-        .content-col {
-            width: calc(100% - 80px);
-        }
-        
-        .mlo-code, .plo-code {
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-            color: var(--tt-burgundy);
-            font-weight: bold;
-        }
-        
-        .mlo-description, .plo-description {
-            font-size: 0.95em;
-            line-height: 1.4;
-            color: #495057;
-        }
-        
-        /* Action Buttons */
-        .action-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .floating-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            color: var(--tt-white);
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .home-btn-float {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-        }
-        
-        .home-btn-float:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
-        }
-        
-        .back-to-top {
-            background: linear-gradient(135deg, var(--tt-dark-blue), var(--tt-burgundy));
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .back-to-top:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(52, 43, 96, 0.4);
-        }
+/*
+================================================================
+==           FLOATING ACTION BUTTON (FAB) STYLES              ==
+================================================================
+Purpose: Styles for floating action buttons, providing quick access
+         to primary actions like navigating home or returning to the top.
+Usage:   Apply .floating-btn as a base class and a specific class
+         like .home-btn-float for individual button styling.
+----------------------------------------------------------------
+*/
 
-        /* Header Styles */
-        header {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
-            position: relative;
-        }
+/* Base class for all floating buttons */
+.floating-btn {
+    /* Positioning */
+    position: fixed;
+    bottom: 20px; /* Distance from the bottom of the viewport */
+    right: 20px;  /* Distance from the right of the viewport */
+    z-index: 1000; /* Ensures it stays on top of other content */
 
-        .header-content {
-            text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    /* Sizing and Shape */
+    width: 55px;
+    height: 55px;
+    border-radius: 50%; /* Makes it a circle */
 
-        .header-content h1 {
-            font-size: 2.5rem;
-            margin: 0 0 0.5rem 0;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            line-height: 0.9;
-        }
+    /* Appearance */
+    border: none;
+    color: var(--tt-white);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    
+    /* Behavior */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    
+    /* Flexbox for perfect icon centering */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .header-content p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin: 0;
-            text-transform: uppercase;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-        }
+/* Specific styles for the home button */
+.home-btn-float {
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+}
 
-        .home-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255,255,255,0.2);
-            color: var(--tt-white);
-            border: 2px solid var(--tt-white);
-            padding: 0.8rem 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            transition: all 0.3s ease;
-        }
+/* Hover effect for visual feedback */
+.home-btn-float:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
+}
 
-        .home-btn:hover {
-            background: var(--tt-white);
-            color: var(--tt-burgundy);
-            transform: translateY(-2px);
-        }
+/* Styling for the Font Awesome icon inside the button */
+.floating-btn i {
+    font-size: 1.4rem;
+    line-height: 1; /* Helps with vertical alignment */
+}
 
-        /* Page Header with TalTech colors */
-        .page-header {
-            background: linear-gradient(135deg, var(--tt-burgundy) 40%, var(--tt-magenta) 60%);
-            color: var(--tt-white);
-            padding: 2rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.2);
-            position: relative;
-        }
-        
-        .page-header h1 {
-            color: var(--tt-white);
-            margin-bottom: 0.5rem;
-        }
-        
-        .page-header p {
-            color: var(--tt-grey-2);
-            text-transform: none;
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Methodology and Home Link Buttons */
-        .methodology-link-btn, .home-link-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--tt-white);
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .methodology-link-btn:hover, .home-link-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            color: var(--tt-white);
-            text-decoration: none;
-        }
-        
-        .methodology-link-btn i, .home-link-btn i {
-            font-size: 16px;
-        }
-        
-        .header-controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-        }
-        
-        .header-btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-            color: var(--tt-white);
-            padding: 0.6rem 1.2rem;
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .header-btn i {
-            margin-right: 0.5rem;
-        }
-        
-        .config-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--tt-white);
-            padding: 0.5rem;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .config-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Floating Home Button */
-        .floating-home {
-            position: fixed;
-            bottom: 80px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--tt-dark-blue);
-            color: var(--tt-white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(52, 43, 96, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            border: none;
-            font-size: 1.2rem;
-        }
-        
-        .floating-home:hover {
-            background: var(--tt-burgundy);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(170, 19, 82, 0.4);
-        }
+/*
+================================================================
+==               BACK TO TOP BUTTON STYLES                    ==
+================================================================
+Purpose: Styles the "Back to Top" floating action button. This
+         button is typically hidden by default and appears after
+         the user scrolls down a certain distance.
+Usage:   Apply .floating-btn and .back-to-top classes to the button.
+         Use JavaScript to toggle the .visible class based on
+         scroll position.
+----------------------------------------------------------------
+*/
 
-        /* Main container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            font-family: var(--font-primary);
-        }
+/* Specific styles for the "Back to Top" button */
+.back-to-top {
+    /* Position it just above the home button if both are present */
+    bottom: 85px; 
+    
+    /* Unique color scheme */
+    background: linear-gradient(135deg, var(--tt-dark-blue), var(--tt-burgundy));
 
-        /* Section headers */
-        h2 {
-            color: var(--tt-burgundy) !important;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            line-height: 0.9;
-        }
+    /* Default state: hidden */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px); /* Start slightly lower for a subtle entrance animation */
+    
+    /* Smooth transition for appearing/disappearing */
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
 
-        /* View toggle button */
-        .view-toggle {
-            background: linear-gradient(135deg, var(--tt-dark-blue), var(--tt-burgundy));
-            color: var(--tt-white);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 10px 0;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            transition: all 0.3s ease;
-        }
+/* Class to make the button visible (toggled with JavaScript) */
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Move to its final position */
+}
 
-        .view-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
-        }
+/* Hover effect */
+.back-to-top:hover {
+    transform: scale(1.1) translateY(-2px); /* Scale and move up slightly */
+    box-shadow: 0 6px 20px rgba(52, 43, 96, 0.4);
+}
 
-        /* Methodology button */
-        .methodology-trigger {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            margin-left: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
+/* 
+   Note: This assumes you already have the .floating-btn base class 
+   in your stylesheet, which defines the common properties like 
+   position, size, border-radius, etc.
+*/
 
-        .methodology-trigger:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(228, 6, 126, 0.3);
-        }
+/*
+================================================================
+==                 LANGUAGE TOGGLE STYLES                     ==
+================================================================
+Purpose: Styles a custom toggle switch for changing languages.
+         This replaces the default checkbox with a stylized
+         slider for a better user experience.
+Usage:   Use the HTML structure provided below. JavaScript can be
+         used to toggle the .active and .inactive classes on the
+         labels when the switch state changes.
+----------------------------------------------------------------
+*/
 
-        /* Report footer */
-        .report-footer-actions {
-            text-align: center;
-            padding: 2rem 0;
-            border-top: 2px solid var(--tt-grey-2);
-            margin-top: 2rem;
-        }
+/* The main container for the toggle component */
+.language-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between labels and the switch */
+}
 
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .header-content h1 {
-                font-size: 2rem;
-            }
-            
-            .legend-items {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .summary-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            .matrix-table {
-                font-size: 10px;
-                overflow-x: auto;
-            }
-            
-            .matrix-table th, .matrix-table td {
-                padding: 4px;
-                white-space: nowrap;
-            }
-            
-            #matrix-container {
-                overflow-x: auto;
-                overflow-y: visible;
-                width: 100%;
-            }
-            
-            .matrix-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .mlo-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            
-            .alignment-score {
-                align-self: flex-end;
-                margin-left: 0;
-            }
-            
-            .detailed-section {
-                padding: 10px;
-            }
-            
-            /* Chart responsiveness */
-            .score-distribution-chart {
-                padding: 15px;
-            }
-            
-            .chart-container {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .chart-bar {
-                min-width: 60px;
-                font-size: 0.8rem;
-                padding: 5px;
-            }
-            
-            .category-row {
-                flex-direction: column;
-                gap: 10px;
-                align-items: stretch;
-            }
-            
-            .category-bars {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 5px;
-            }
-            
-            .category-bar {
-                min-width: 40px !important;
-                font-size: 0.75rem;
-            }
-        }
-        
-        /* Additional layout fixes */
-        #matrix-container {
-            overflow-x: auto;
-            overflow-y: visible;
-            width: 100%;
-            max-width: 100%;
-        }
-        
-        .plo-analysis-section, .module-alignment {
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        /* Four-column detailed breakdown table */
-        .detailed-breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--tt-white);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .detailed-breakdown-table th {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: bold;
-            border: 1px solid var(--tt-grey-2);
-        }
-        
-        .detailed-breakdown-table td {
-            padding: 10px 8px;
-            border: 1px solid var(--tt-grey-2);
-            vertical-align: top;
-        }
-        
-        .detailed-breakdown-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .detailed-breakdown-table tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        
-        .mlo-code-cell {
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            min-width: 120px;
-        }
-        
-        .mlo-content-cell {
-            max-width: 400px;
-            line-height: 1.4;
-        }
-        
-        .alignment-score-cell {
-            text-align: center;
-            min-width: 50px;
-            width: 60px;
-            max-width: 60px;
-        }
-        
-        .alignment-score-cell .alignment-score {
-            color: #000000 !important;
-            font-weight: bold;
-        }
-        
-        .justification-cell {
-            line-height: 1.4;
-            width: auto;
-            min-width: 350px;
-        }
-        
-        .improvement-suggestions {
-            background-color: #fff3cd;
-            border-left: 3px solid #ffc107;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 4px;
-            font-style: italic;
-        }
-        
-        .keyword-highlight {
-            background-color: #ffeb3b;
-            padding: 1px 3px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        
-        /* Score Distribution Chart */
-        .score-distribution-chart {
-            margin: 20px 0;
-            padding: 20px;
-            background: var(--tt-white);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
-        }
-        
-        .chart-container {
-            display: flex;
-            align-items: end;
-            height: 200px;
-            gap: 10px;
-            margin: 20px 0;
-            padding: 10px 0;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
-        
-        .chart-bar {
-            flex: 1;
-            min-height: 20px;
-            background: linear-gradient(to top, var(--tt-burgundy), var(--tt-magenta));
-            border-radius: 4px 4px 0 0;
-            position: relative;
-            transition: all 0.3s ease;
-            color: var(--tt-white);
-            display: flex;
-            align-items: end;
-            justify-content: center;
-            padding-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .chart-bar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(170, 19, 82, 0.3);
-        }
-        
-        .chart-labels {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .chart-label {
-            flex: 1;
-            text-align: center;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-        }
+/* Base style for the language labels (e.g., "EST", "ENG") */
+.language-label {
+    font-size: 0.95em;
+    font-weight: bold;
+    color: #333;
+    transition: opacity 0.3s ease;
+    -webkit-user-select: none; /* Prevents text selection */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
-        /* MLO Category Distribution Styles */
-        .mlo-category-charts {
-            overflow-x: auto;
-            padding: 10px 0;
-        }
+/* Style for the currently active language */
+.language-label.active {
+    opacity: 1;
+    color: var(--tt-burgundy, #aa1352); /* Uses theme color if available */
+}
 
-        .mlo-stacked-chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid var(--tt-grey-2);
-        }
+/* Style for the inactive language */
+.language-label.inactive {
+    opacity: 0.6;
+    color: var(--tt-grey-1, #9396b0); /* Uses theme color if available */
+}
 
-        .category-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 10px;
-            border: 1px solid var(--tt-grey-2);
-            border-radius: 8px;
-            background: #fafafa;
-        }
+/* The clickable label that acts as the switch container */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+}
 
-        .category-name {
-            min-width: 80px;
-            font-weight: bold;
-            color: var(--tt-burgundy);
-            text-align: center;
-            border-right: 2px solid var(--tt-grey-2);
-            padding-right: 15px;
-        }
+/* Hide the default checkbox input */
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-        .category-bars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
+/* The slider track */
+.toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 24px;
+    transition: background-color 0.3s;
+}
 
-        .category-bar {
-            height: 30px;
-            min-width: 25px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #000000;
-            position: relative;
-        }
-        
-        .score-breakdown-bar {
-            flex-direction: column;
-            padding: 1px 2px;
-            border: 1px solid rgba(0,0,0,0.1);
-            height: 32px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .score-breakdown-bar .score-count {
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-            margin-bottom: 1px;
-        }
-        
-        .score-breakdown-bar .score-label {
-            font-size: 9px;
-            font-weight: 500;
-            line-height: 1;
-            opacity: 0.8;
-        }
+/* The slider knob/handle */
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
 
-        .category-info {
-            min-width: 120px;
-            font-size: 0.9em;
-            color: var(--tt-dark-blue);
-            text-align: right;
-        }
+/* --- Checked State --- */
+/* Changes the background color of the track when toggled */
+.toggle-switch input:checked + .toggle-slider {
+    background-color: var(--tt-burgundy, #aa1352);
+}
 
+/* Moves the knob to the right when toggled */
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
 
+/*
+================================================================
+==            METHODOLOGY TRIGGER BUTTON STYLES               ==
+================================================================
+Purpose: Styles a small, circular button used to trigger an
+         action, such as scrolling to a methodology section or
+         showing a modal with more information.
+Usage:   Apply the .methodology-trigger class to a <button>.
+----------------------------------------------------------------
+*/
 
-        /* PDF Preview Modal Styles */
-        .pdf-preview-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
+.methodology-trigger {
+    /* Shape and Size */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Makes it a perfect circle */
 
-        .pdf-preview-content {
-            background: var(--tt-white);
-            width: 90%;
-            max-width: 800px;
-            height: 90%;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 8px 32px rgba(170, 19, 82, 0.3);
-        }
+    /* Appearance */
+    background: var(--tt-magenta, #e4067e);
+    color: var(--tt-white, #ffffff);
+    border: none;
+    
+    /* Behavior */
+    cursor: pointer;
+    transition: all 0.3s ease;
 
-        .pdf-preview-header {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-            padding: 20px;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* Icon Centering and Sizing */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1; /* Ensures icon is centered vertically */
+}
 
-        .pdf-preview-header h3 {
-            margin: 0;
-            font-size: 1.4rem;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-
-        .pdf-preview-close {
-            background: none;
-            border: none;
-            color: var(--tt-white);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .pdf-preview-close:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.1);
-        }
-
-        .pdf-preview-body {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #f8f9fa;
-        }
-
-        .pdf-preview-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 8px;
-            background: var(--tt-white);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .pdf-preview-actions {
-            padding: 15px 20px;
-            border-top: 1px solid var(--tt-grey-2);
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            background: var(--tt-white);
-            border-radius: 0 0 12px 12px;
-        }
-
-        .pdf-action-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            transition: all 0.3s ease;
-        }
-
-        .pdf-save-btn {
-            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
-            color: var(--tt-white);
-        }
-
-        .pdf-save-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.3);
-        }
-
-        .pdf-cancel-btn {
-            background: var(--tt-grey-2);
-            color: var(--tt-black);
-        }
-
-        .pdf-cancel-btn:hover {
-            background: var(--tt-grey-1);
-            color: var(--tt-white);
-        }
-
-        /* Sticky Navigation Styles - Following methodology.html pattern */
-        .analysis-nav {
-            background: var(--tt-grey-2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid var(--tt-burgundy);
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
-        }
-        
-        .analysis-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .analysis-nav a {
-            color: var(--tt-dark-blue);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border: 2px solid transparent;
-        }
-        
-        .analysis-nav a:hover, .analysis-nav a.active {
-            background: var(--tt-burgundy);
-            color: var(--tt-white);
-            transform: translateY(-2px);
-            border-color: var(--tt-burgundy);
-            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
-        }
-
-        /* PLO-specific navigation items */
-        .analysis-nav li[data-plo-link] a {
-            background-color: rgba(170, 19, 82, 0.1);
-            border-color: rgba(170, 19, 82, 0.3);
-            font-size: 0.8rem;
-            padding: 8px 15px;
-            color: var(--tt-burgundy);
-        }
-
-        .analysis-nav li[data-plo-link] a:hover,
-        .analysis-nav li[data-plo-link] a.active {
-            background: var(--tt-magenta);
-            color: var(--tt-white);
-            border-color: var(--tt-magenta);
-            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
-        }
-
-        /* Responsive adjustments for navigation */
-        @media (max-width: 768px) {
-            .analysis-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .analysis-nav a {
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                padding: 8px 15px;
-            }
-            
-            /* Show PLO links in a more compact way on mobile */
-            .analysis-nav li[data-plo-link] {
-                width: calc(50% - 5px);
-            }
-            
-            .analysis-nav li[data-plo-link] a {
-                font-size: 0.75rem;
-                padding: 6px 10px;
-                width: 100%;
-            }
-        }
-
-        /* Additional styling for many PLO links */
-        @media (min-width: 769px) {
-            .analysis-nav ul {
-                max-height: 150px;
-                overflow-y: auto;
-                flex-wrap: wrap;
-                justify-content: flex-start;
-            }
-            
-            /* Scrollbar styling for navigation */
-            .analysis-nav ul::-webkit-scrollbar {
-                height: 6px;
-                width: 6px;
-            }
-            
-            .analysis-nav ul::-webkit-scrollbar-track {
-                background: rgba(170, 19, 82, 0.1);
-                border-radius: 3px;
-            }
-            
-            .analysis-nav ul::-webkit-scrollbar-thumb {
-                background: var(--tt-burgundy);
-                border-radius: 3px;
-            }
-            
-            .analysis-nav ul::-webkit-scrollbar-thumb:hover {
-                background: var(--tt-magenta);
-            }
-        }
+/* Hover effect to provide feedback */
+.methodology-trigger:hover {
+    transform: scale(1.15); /* Slightly enlarges the button on hover */
+    box-shadow: 0 2px 10px rgba(228, 6, 126, 0.4); /* Adds a subtle glow */
+}
