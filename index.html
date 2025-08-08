@@ -38,7 +38,6 @@
                     </button>
                     <div class="programme-title">
                         <h2 id="selected-programme-name"></h2>
-                        <p id="selected-programme-description">Choose your analysis path</p>
                     </div>
                 </div>
 
@@ -46,7 +45,7 @@
                     <h2><i class="fas fa-project-diagram"></i> Programme-Module Alignment Analysis</h2>
                         <div class="analysis-action">
                         <div class="analysis-description">
-                            <p><i class="fas fa-list"></i> Analyze how well different module learning outcomes align with overall programme learning outcomes</p>
+                            <p>Analyze how well different module learning outcomes align with overall programme learning outcomes</p>
                         </div>
                         <button class="access-btn" id="access-plo-mlo">
                             <i class="fas fa-external-link-alt"></i> Access PLO-MLO Analysis
@@ -58,7 +57,7 @@
                     <h2><i class="fas fa-search"></i> Course-Module Alignment</h2>
                     <div class="analysis-action">
                         <div class="analysis-description">
-                            <p><i class="fas fa-clipboard-list"></i> Generate and analyze Course Learning Outcomes alignment score with module learning outcomes</p>
+                            <p>Choose a course and analyze how well course learning outcomes align with module learning outcomes</p>
                         </div>
                         <button class="access-btn" id="access-clo-mlo">
                             <i class="fas fa-external-link-alt"></i> Access CLO-MLO Analysis
@@ -70,7 +69,7 @@
                     <h2><i class="fas fa-robot"></i> AI Assistant</h2>
                     <div class="analysis-action">
                         <div class="analysis-description">
-                            <p><i class="fas fa-magic"></i> Get AI-powered assistance for learning outcomes analysis and alignment tasks</p>
+                            <p>Get AI-powered assistance for learning outcomes analysis</p>
                         </div>
                         <button class="access-btn" id="access-ai-assistant">
                             <i class="fas fa-external-link-alt"></i> Access AI Assistant
@@ -95,6 +94,7 @@
 
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
+    <script src="js/shared-utils.js"></script>
     <script>
         // Main application controller
         class IndexController {
@@ -234,10 +234,8 @@
 
             displayProgrammeOverview() {
                 if (!this.currentProgramme) return;
-
-                // Update programme name
-                document.getElementById('selected-programme-name').textContent = 
-                    this.currentProgramme.kavanimetusik;
+                // Use shared utility to display capitalized code and kavanimetusik
+                displayProgrammeTitle(this.currentProgramme.code, this.currentProgramme.kavanimetusik, 'selected-programme-name');
             }
 
             showSection(sectionId) {

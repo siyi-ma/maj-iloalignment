@@ -1563,6 +1563,7 @@
     <!-- Scripts -->
     <script src="js/data-manager.js"></script>
     <script src="js/enhanced-alignment-engine.js"></script>
+    <script src="js/shared-utils.js"></script>
     <script>
         // Stub for generateImprovementSuggestions to prevent ReferenceError
         function generateImprovementSuggestions(score, competencyMatches, keywordOverlap, mloText, ploText) {
@@ -1723,17 +1724,10 @@
             // Always use kavakood from URL if present, else from currentProgramme. Siyi: why currentProgramme is empty?
             const urlParams = new URLSearchParams(window.location.search);
             const kavakoodFromUrl = urlParams.get('kavakood');
-            const kavakood = (kavakoodFromUrl || currentProgramme.kavakood || currentProgramme.programmeCode || '').toUpperCase();
+            const kavakood = (kavakoodFromUrl || currentProgramme.kavakood || currentProgramme.programmeCode || '');
             const kavanimetusek = currentProgramme.kavanimetusek || '';
             const kavanimetusik = currentProgramme.kavanimetusik || '';
-            const pageTitle = document.getElementById('page-title');
-            const pageSubtitle = document.getElementById('page-subtitle');
-            if (pageTitle) {
-                pageTitle.textContent = `${kavakood} ${kavanimetusek}`.trim();
-            }
-            if (pageSubtitle) {
-                pageSubtitle.innerHTML = `${kavanimetusik ? kavanimetusik + ' – ' : ''}PLO-MLO Alignment Analysis`;
-            }
+            displayPloMloPageTitle(kavakood, kavanimetusek, kavanimetusik, 'page-title', 'page-subtitle');
         }
 
         async function performAlignment() {
@@ -2270,12 +2264,11 @@
                             <td class="justification-cell">
                                 <div style="font-size: 0.9em;">
                                     ${result.justification && typeof result.justification === 'object' ? `
-                                        <div style=\"margin-bottom: 6px;\"><strong>Components:</strong></div>
                                         <ul style=\"margin: 2px 0; padding-left: 16px; font-size: 0.85em;\">
                                             ${result.justification.components.map(comp => `<li>${comp}</li>`).join('')}
                                         </ul>
                                         ${result.justification.calculation ? `
-                                            <span style=\"font-size: 0.9em; color: #555; font-family: monospace; white-space: normal;\">${result.justification.calculation}</span>
+                                            <span style=\"font-size: 1.1em; color: #555; font-family: monospace; white-space: normal;\">${result.justification.calculation}</span>
                                         ` : ''}
                                         ${result.justification.suggestions && result.justification.suggestions.length > 0 ? `
                                             <div style=\"margin-top: 8px; padding: 6px; background-color: #f8f9fa; border-left: 3px solid #ffc107; font-size: 0.8em;\">

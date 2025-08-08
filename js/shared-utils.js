@@ -76,3 +76,46 @@ function injectFloatingNavButtons() {
 if (typeof module !== 'undefined') {
     module.exports = { getScoreClass, formatScore, injectFloatingNavButtons };
 }
+
+/**
+ * Displays the study programme code (capitalized) followed by kavanimetusik in the target element.
+ * Displays PLO-MLO page title and subtitle.
+ * Title: Capitalized programme code followed by kavanimetusek
+ * Subtitle: kavanimetusik followed by 'PLO-MLO Alignment Analysis'
+ * @param {string} code - The programme code (e.g., 'majm')
+ * @param {string} kavanimetusik - The programme name in English
+ * @param {string} kavanimetusek - The programme name in Estonian
+ * @param {string} targetId - The id of the element to update
+ * @param {string} titleId - Element id for the title
+ * @param {string} subtitleId - Element id for the subtitle
+ */
+function displayProgrammeTitle(code, kavanimetusik, targetId) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const codeStr = (code || '').toUpperCase();
+    el.textContent = codeStr + (kavanimetusik ? ' ' + kavanimetusik : '');
+}
+
+function displayProgrammeBilingualInfo(code, kavanimetusik, kavanimetusek, targetId) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const codeStr = (code || '').toUpperCase();
+    el.textContent = codeStr + (kavanimetusik ? ' ' + kavanimetusik : '') + (kavanimetusek ? ' (' + kavanimetusek + ')' : '');
+}
+
+function displayPloMloPageTitle(code, kavanimetusek, kavanimetusik, titleId, subtitleId) {
+    const titleEl = document.getElementById(titleId);
+    const subtitleEl = document.getElementById(subtitleId);
+    if (titleEl) {
+        const codeStr = (code || '').toUpperCase();
+        titleEl.textContent = codeStr + (kavanimetusek ? ' ' + kavanimetusek : '');
+    }
+    if (subtitleEl) {
+        subtitleEl.textContent = (kavanimetusik ? kavanimetusik + ' – ' : '') + 'PLO-MLO Alignment Analysis';
+    }
+}
+
+// Export for module usage (if needed)
+if (typeof module !== 'undefined') {
+    module.exports = { getScoreClass, formatScore, injectFloatingNavButtons, displayProgrammeTitle };
+}
