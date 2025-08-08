@@ -31,3 +31,48 @@ function formatScore(score) {
 if (typeof module !== 'undefined') {
     module.exports = { getScoreClass, formatScore };
 }
+
+/**
+ * Injects floating Home and Back-to-Top buttons into the page if not already present.
+ * Adds event listeners for navigation and smooth scroll.
+ */
+function injectFloatingNavButtons() {
+    // Home button
+    if (!document.getElementById('home-btn-float')) {
+        const homeBtn = document.createElement('button');
+        homeBtn.id = 'home-btn-float';
+        homeBtn.className = 'floating-btn home-btn-float';
+        homeBtn.title = 'Go to Home';
+        homeBtn.innerHTML = '<i class="fas fa-home"></i>';
+        homeBtn.style.position = 'fixed';
+        homeBtn.style.bottom = '32px';
+        homeBtn.style.right = '32px';
+        homeBtn.style.zIndex = '1000';
+        document.body.appendChild(homeBtn);
+        homeBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
+
+    // Back-to-top button
+    if (!document.getElementById('back-to-top')) {
+        const topBtn = document.createElement('button');
+        topBtn.id = 'back-to-top';
+        topBtn.className = 'floating-btn back-to-top';
+        topBtn.title = 'Back to top';
+        topBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+        topBtn.style.position = 'fixed';
+        topBtn.style.bottom = '80px';
+        topBtn.style.right = '32px';
+        topBtn.style.zIndex = '1000';
+        document.body.appendChild(topBtn);
+        topBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+}
+
+// Export for module usage (if needed)
+if (typeof module !== 'undefined') {
+    module.exports = { getScoreClass, formatScore, injectFloatingNavButtons };
+}
