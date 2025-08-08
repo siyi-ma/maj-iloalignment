@@ -41,9 +41,13 @@ This document serves as a reference and reminder for best practices in communica
 - Keeps both user and assistant aligned on goals
 - Improves quality and relevance of summaries and code changes
 
-At the end of each day or at the conclusion of a significant conversation, automatically generate a markdown summary document in the /docs directory.
+At the end of each day or at the conclusion of a significant conversation, generate a markdown summary document in the /docs directory by prompting: 
+
+"Generate an end-of-session markdown summary in /docs following the communication guidelines. Include the main theme, errors, solutions, code snippets, command line actions, and a factual process summary. Use today's date and a relevant title."
+
+This will trigger the automatic summary creation without needing to copy and paste the full instructions.
 The summary must include:
-- Title: [YYYYMMDD]-[main-theme] (e.g., 20250807-ai-assistant-UI-debugging)
+- Title: [YYYYMMDD]-[main-theme]
 - Mask all API keys and sensitive data.
 - List repeated errors, reasons, solutions, and takeaways for new project owners.
 - Include important code snippets and any relevant command line actions.
