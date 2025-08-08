@@ -62,6 +62,22 @@ class CLOMLOController {
         closContent.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+        initializeAlignmentEngine() {
+            // Ensure dataManager is available and set up any needed listeners or state
+            if (!window.dataManager) {
+                console.error('DataManager is not available.');
+                return;
+            }
+            // Example: cache MLOs or set up listeners if needed
+            this.alignmentEngineInitialized = true;
+        }
+
+        getSavedCLOs() {
+            // Returns the current CLOs for the selected course
+            if (!this.selectedCourse) return {};
+            return this.selectedCourse.cloik || this.selectedCourse.cloek || {};
+        }
+
     saveEditedCLOs() {
         const closContent = document.getElementById('info-existing-clos');
         const textareas = document.querySelectorAll('[data-clo-key]');
@@ -138,42 +154,60 @@ class CLOMLOController {
         }, 0);
     }
     // Robust AI-powered CLO-MLO alignment analysis and reporting
-    async showCloMloAlignmentReport() {
+    showCloMloAlignmentReport() {
         // Get CLOs and MLOs for this course
         const closObj = this.selectedCourse.cloik || this.selectedCourse.cloek || {};
         const allMLOs = window.dataManager.getCurrentMLOs();
         const moduleCode = this.selectedCourse.moodulikood;
-        
+
         // Limit to maximum 9 MLOs and 9 CLOs
         const relatedMLOs = allMLOs.filter(mlo => mlo.mlokood && mlo.mlokood.includes(moduleCode)).slice(0, 9);
         const cloKeys = Object.keys(closObj).slice(0, 9);
-        
+
         if (cloKeys.length === 0 || relatedMLOs.length === 0) {
             alert('No CLOs or MLOs available for alignment analysis.');
             return;
         }
-        
-        // Prepare CLOs in array format for prompt
+
+        // Prepare CLOs in array format
         const clos = cloKeys.map((key, idx) => ({ id: key, text: closObj[key], index: idx }));
-        
+
         // Show loading state
         this.showLoadingState('Analyzing CLO-MLO alignment...');
-        
+
+        // Local-only analysis
         try {
-            const prompt = this.buildOptimizedAlignmentPrompt(clos, relatedMLOs);
-            const analysisText = await this.callGeminiAPIWithFallback(prompt);
-            const results = this.parseAnalysisResponse(analysisText, clos, relatedMLOs);
-            
-            if (!results) {
+            const results = [];
+            clos.forEach(clo => {
+                relatedMLOs.forEach(mlo => {
+                    const analysis = this.performAdvancedLocalAnalysis(clo.text, mlo.mlosisuik);
+                    results.push({
+                        clo,
+                        mlo,
+                        score: analysis.score,
+                        justification: analysis.justification,
+                        explanation: analysis.explanation,
+                        improvements: analysis.improvements,
+                        keywordOverlap: analysis.keywordOverlap,
+                        competencyTags: analysis.competencyTags,
+                        commonWords: analysis.commonWords,
+                        bloomLevels: analysis.bloomLevels,
+                        highlightedCLO: analysis.highlightedCLO,
+                        highlightedMLO: analysis.highlightedMLO
+                    });
+                });
+            });
+
+            if (!results || results.length === 0) {
                 this.hideLoadingState();
-                alert('Unable to parse valid CLO-MLO alignments from the response. Please try again.');
+                alert('Unable to generate CLO-MLO alignments. Please check your data and try again.');
                 return;
             }
-            
-            // Use enhanced display instead of old method
+
+            // Use enhanced display
             this.displayEnhancedAnalysisResults(results, clos, relatedMLOs);
             this.hideLoadingState();
-            
+
         } catch (err) {
             console.error('Analysis error:', err);
             this.hideLoadingState();
@@ -200,107 +234,6 @@ class CLOMLOController {
         }
     }
 
-    // --- AI Integration and Prompt Logic (from mlo-clo-new.js, adapted) ---
-    buildOptimizedAlignmentPrompt(clos, mlos) {
-        let prompt = `Analyze CLO-MLO alignment. Rate each pair 1-5:\n1=Minimal, 2=Weak, 3=Moderate, 4=Strong, 5=Very Strong\n\nCLOs:`;
-        clos.forEach(clo => {
-            prompt += `\n${clo.id.toUpperCase()}: ${clo.text}`;
-        });
-        prompt += `\n\nMLOs:`;
-        mlos.forEach(mlo => {
-            prompt += `\n${mlo.mlokood}: ${mlo.mlosisuik}`;
-        });
-        prompt += `\n\nFormat: CLO1-MLO_CODE: score (brief reason)\nExample: CLO1-TI1.1: 4 (both focus on problem-solving skills)`;
-        return prompt;
-    }
-
-    async callGeminiAPIWithFallback(prompt) {
-        try {
-            // Try secureAPIConfig if available
-            if (window.secureAPIConfig && window.secureAPIConfig.isReady()) {
-                return await window.secureAPIConfig.callGeminiAPI(prompt, {
-                    temperature: 0.3,
-                    maxOutputTokens: 1024
-                });
-            }
-            
-            // Try direct API call
-            const apiKey = localStorage.getItem('gemini_api_key');
-            if (!apiKey) {
-                console.warn('No Gemini API key configured, falling back to local analysis');
-                return this.generateLocalAlignmentAnalysis(prompt);
-            }
-            
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: {
-                            temperature: 0.4,
-                            topK: 20,
-                            topP: 0.9,
-                            maxOutputTokens: 1024
-                        }
-                    })
-                });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.warn('Gemini API failed, falling back to local analysis:', errorText);
-                return this.generateLocalAlignmentAnalysis(prompt);
-            }
-            
-            const data = await response.json();
-            if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-                console.warn('Invalid Gemini API response, falling back to local analysis');
-                return this.generateLocalAlignmentAnalysis(prompt);
-            }
-            
-            return data.candidates[0].content.parts[0].text;
-            
-        } catch (error) {
-            console.warn('API call failed, falling back to local analysis:', error);
-            return this.generateLocalAlignmentAnalysis(prompt);
-        }
-    }
-    
-    generateLocalAlignmentAnalysis(prompt) {
-        // Extract CLOs and MLOs from the prompt
-        const cloSection = prompt.match(/CLOs:(.*?)MLOs:/s);
-        const mloSection = prompt.match(/MLOs:(.*?)(?:\n\n|$)/s);
-        
-        const clos = cloSection ? cloSection[1].trim().split('\n').filter(line => line.trim()).map(line => line.replace(/^\d+\.\s*/, '').trim()) : [];
-        const mlos = mloSection ? mloSection[1].trim().split('\n').filter(line => line.trim()).map(line => line.replace(/^\d+\.\s*/, '').trim()) : [];
-        
-        console.log('🏠 Using enhanced local alignment analysis for', clos.length, 'CLOs and', mlos.length, 'MLOs');
-        
-        let analysisResult = "Enhanced Local CLO-MLO Alignment Analysis\n\n";
-        
-        clos.forEach((clo, cloIndex) => {
-            mlos.forEach((mlo, mloIndex) => {
-                const cloText = clo.text || clo.clotext || '';
-                const mloText = mlo.mlosisuik || mlo.mlotext || mlo.description || '';
-                const analysis = this.performAdvancedLocalAnalysis(cloText, mloText);
-                analysisResult += `CLO ${cloIndex + 1} - MLO ${mloIndex + 1}: ${analysis.score}/5\n`;
-                analysisResult += `Analysis: ${analysis.explanation}\n`;
-                if (analysis.improvements && analysis.improvements.length > 0) {
-                    analysisResult += `Improvement: ${analysis.improvements[0]}\n`;
-                }
-                analysisResult += `\n`;
-            });
-        });
-        
-        analysisResult += "� Enhanced Analysis Features:\n";
-        analysisResult += "• Competency categorization (analytical, creative, technical, etc.)\n";
-        analysisResult += "• Bloom's taxonomy cognitive level assessment\n";
-        analysisResult += "• Advanced keyword and semantic analysis\n";
-        analysisResult += "• Targeted improvement suggestions\n\n";
-        analysisResult += "✅ Professional-grade local fallback system active!";
-        
-        return analysisResult;
-    }
     
     performAdvancedLocalAnalysis(cloText, mloText) {
         // Advanced competency keywords from plo-mlo.html

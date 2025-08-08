@@ -5026,6 +5026,7 @@
     <script src="js/enhanced-alignment-engine.js"></script>
     <script src="js/alignment-engine.js"></script>
     <script src="js/shared-utils.js"></script>
+    <script src="js/clo-mlo.js"></script>
     
     <script>
 // Advanced improvement suggestion logic (ported from PLO-MLO)
@@ -5069,6 +5070,8 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
         document.addEventListener('DOMContentLoaded', async function() {
             try {
                 if (!window.dataManager) window.dataManager = new DataManager();
+                // Instantiate CLOMLOController and assign to global variable
+                if (!window.controller) window.controller = new CLOMLOController();
                 let currentProgramme = window.dataManager.getCurrentProgramme();
                 const urlParams = new URLSearchParams(window.location.search);
                 const kavakood = urlParams.get('kavakood');
@@ -5091,8 +5094,8 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
                 // Initialize course workflow
                 initializeCourseWorkflow();
                 
-                // Initialize alignment engine
-                initializeAlignmentEngine();
+                // Initialize alignment engine using controller instance
+                window.controller.initializeAlignmentEngine();
             } catch (error) {
                 console.error('Page initialization error:', error);
             }
@@ -5280,8 +5283,8 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
                     }
                 }
 
-                // Generate comprehensive analysis report (optional - for debugging)
-                const analysisReport = generateCLOMLOAnalysisReport(clos, programmeMlos, alignmentResults, selectedCourse, currentProgramme);
+                // Use enhanced local analysis results for report generation
+                // The report sections below (summary, matrix, breakdown) now use the advanced justification and scoring from JS
 
                 // Show the main analysis results section
                 const analysisResultsSection = document.getElementById('analysis-results-section');
@@ -5409,22 +5412,24 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
                         <tbody>
             `;
 
-            // Add CLO rows with alignment scores
+            // Add CLO rows with alignment scores and advanced tooltips
             clos.forEach(clo => {
                 matrixHTML += `<tr>`;
-                matrixHTML += `<td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; background: #f8f9fa;">${clo.plokood}</td>`;
+                matrixHTML += `<td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; background: #f8f9fa;">${clo.id || clo.plokood}</td>`;
                 
                 mlos.forEach(mlo => {
                     const alignment = alignmentResults.find(result => 
-                        result.plo.plokood === clo.plokood && result.mlo.mlokood === mlo.mlokood
+                        (result.clo?.id === clo.id || result.plo?.plokood === clo.plokood) && result.mlo.mlokood === mlo.mlokood
                     );
                     
                     if (alignment) {
-                        const score = alignment.score.toFixed(1);
+                        const score = alignment.score;
                         const color = getScoreColor(score);
+                        // Advanced tooltip with all fields
+                        const tooltip = `Score: ${score}\nJustification: ${alignment.justification || ''}\nExplanation: ${alignment.explanation || ''}\nImprovements: ${(alignment.improvements || []).join(', ')}\nKeyword Overlap: ${alignment.keywordOverlap || ''}\nCompetency Tags: ${(alignment.competencyTags || []).join(', ')}\nCommon Words: ${(alignment.commonWords || []).join(', ')}\nBloom Levels: ${alignment.bloomLevels ? `CLO(${alignment.bloomLevels.clo}) ↔ MLO(${alignment.bloomLevels.mlo})` : ''}`;
                         matrixHTML += `
                             <td style="padding: 12px; border: 1px solid #ddd; text-align: center; background-color: ${color}; color: white; font-weight: bold; cursor: pointer;" 
-                                onclick="showAlignmentDetail('${clo.plokood}', '${mlo.mlokood}')">${score}</td>
+                                title="${tooltip}">${score}</td>
                         `;
                     } else {
                         matrixHTML += `<td style="padding: 12px; border: 1px solid #ddd; text-align: center; background: #f8f9fa;">-</td>`;
@@ -5482,44 +5487,22 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
                     const scoreClass = getScoreColor(alignment.score);
                     detailedHTML += `
                         <tr>
-                            <td class="clo-code-cell">${alignment.plo.plokood}</td>
+                            <td class="clo-code-cell">${alignment.clo?.id || alignment.plo?.plokood}</td>
                             <td class="alignment-score-cell">
                                 <span class="alignment-score score-${scoreClass}" style="padding: 4px 8px; border-radius: 12px; font-weight: bold; color: #fff; background: ${getScoreColor(scoreClass)}; min-width: 40px; display: inline-block; text-align: center;">
-                                    ${alignment.score.toFixed(1)}
+                                    ${alignment.score}
                                 </span>
                             </td>
                             <td class="justification-cell">
-                                ${(() => {
-                                    // Improved justification rendering
-                                    if (!alignment.justification) return '<em>No justification available</em>';
-                                    let justificationText = '';
-                                    if (typeof alignment.justification === 'string') {
-                                        justificationText = alignment.justification;
-                                    } else if (alignment.justification.summary) {
-                                        justificationText = alignment.justification.summary;
-                                    } else if (alignment.justification.text) {
-                                        justificationText = alignment.justification.text;
-                                    } else {
-                                        justificationText = '';
-                                    }
-                                    let components = '';
-                                    // Only show user-friendly bulleted points, not raw JSON
-                                    if (alignment.justification.components && Array.isArray(alignment.justification.components)) {
-                                        components = `<div style="margin-bottom: 6px;"><strong>Components:</strong></div><ul style="margin: 2px 0; padding-left: 16px; font-size: 0.85em;">${alignment.justification.components.map(comp => `<li>${comp}</li>`).join('')}</ul>`;
-                                    }
-                                    let calculation = alignment.justification.calculation ? `<div style="margin-top: 6px; font-size: 0.8em; color: #555; font-family: monospace;">${alignment.justification.calculation}</div>` : '';
-                                    let suggestions = '';
-                                    if (alignment.score < 3.5) {
-                                        suggestions = generateImprovementSuggestions(
-                                            alignment.score,
-                                            alignment.competencyMatches || [],
-                                            alignment.keywordOverlap || 0,
-                                            alignment.plo.plosisuik,
-                                            alignment.mlo.mlosisuik || alignment.mlo.mlosisuek
-                                        );
-                                    }
-                                    return `<div style="font-size: 0.9em; color: #555; line-height: 1.4;">${justificationText}${components}${calculation}${suggestions}</div>`;
-                                })()}
+                                <div><strong>Justification:</strong> ${alignment.justification || '<em>No justification available</em>'}</div>
+                                <div><strong>Explanation:</strong> ${alignment.explanation || '<em>No explanation available</em>'}</div>
+                                <div><strong>Improvements:</strong> ${(alignment.improvements || []).length > 0 ? alignment.improvements.join('; ') : 'None'}</div>
+                                <div><strong>Keyword Overlap:</strong> ${alignment.keywordOverlap !== undefined ? alignment.keywordOverlap + '%' : 'N/A'}</div>
+                                <div><strong>Competency Tags:</strong> ${(alignment.competencyTags || []).length > 0 ? alignment.competencyTags.join(', ') : 'None'}</div>
+                                <div><strong>Common Words:</strong> ${(alignment.commonWords || []).length > 0 ? alignment.commonWords.join(', ') : 'None'}</div>
+                                <div><strong>Bloom's Levels:</strong> ${alignment.bloomLevels ? `CLO(${alignment.bloomLevels.clo}) ↔ MLO(${alignment.bloomLevels.mlo})` : 'N/A'}</div>
+                                <div><strong>Highlighted CLO:</strong> ${alignment.highlightedCLO || alignment.clo?.text || 'N/A'}</div>
+                                <div><strong>Highlighted MLO:</strong> ${alignment.highlightedMLO || alignment.mlo?.mlosisuik || alignment.mlo?.mlosisuek || 'N/A'}</div>
                             </td>
                         </tr>
                     `;
@@ -5632,7 +5615,7 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
             }
 
             // Get saved CLOs
-            const savedCLOs = getSavedCLOs();
+            const savedCLOs = window.controller.getSavedCLOs();
             const selectedCourse = window.dataManager ? window.dataManager.getCurrentCourse() : null;
             
             console.log('Checking and displaying existing CLOs for course:', selectedCourse?.ainekood);
@@ -5849,7 +5832,7 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
         }
 
         function populateCLOEditorWithExisting() {
-            const existingCLOs = getSavedCLOs();
+            const existingCLOs = window.controller.getSavedCLOs();
             const editorContainer = document.getElementById('clo-editor-container');
 
             if (!editorContainer) return;
@@ -8568,6 +8551,3 @@ function generateImprovementSuggestions(score, competencyMatches, keywordOverlap
             background-color: #e9ecef;
             transition: background-color 0.3s ease;
         }
-        
-        .mlo-code-cell, .clo-code-cell {
-            font-weight: bold;
