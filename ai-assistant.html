@@ -567,22 +567,19 @@ Examples:
             </div>
 
             <div class="action-buttons">
-                <div id="token-estimation" class="token-estimation" style="margin-bottom: 15px; padding: 12px; background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border-radius: 8px; border-left: 4px solid #2196f3;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <span style="font-size: 18px;">🔢</span>
+                <div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 0;">
+                    <button id="analyze-btn" class="btn btn-primary" onclick="runAnalysis()" style="height: 38px; min-height: 0; padding-top: 6px; padding-bottom: 6px; font-size: 16px;">
+                        🚀 Analyze with AI
+                    </button>
+                    <div id="token-estimation" style="margin-top: 10px; text-align: center; font-size: 15px; color: #333; background: none; border: none; padding: 0; border-radius: 0; border-left: none;">
                         <strong>Estimated Token Usage</strong>
+                        <div id="token-breakdown" style="font-size: 0.95em; color: #555; margin-top: 4px;">
+                            Input tokens: <span id="input-tokens">0</span> | Expected output tokens: <span id="output-tokens">~2000</span> | <span style="font-weight: bold; color: #1976d2;">Total estimated: <span id="total-tokens">~2000</span> tokens</span>
+                        </div>
+                        <div style="color: #666; font-style: italic; font-size: 12px; margin-top: 2px;">Estimation updates automatically as you fill in the form</div>
                     </div>
-                    <div id="token-breakdown" style="font-size: 0.9em; color: #555;">
-                        <div>📝 Input tokens: <span id="input-tokens">0</span></div>
-                        <div>🤖 Expected output tokens: <span id="output-tokens">~2000</span></div>
-                        <div style="margin-top: 5px; font-weight: bold; color: #1976d2;">💰 Total estimated: <span id="total-tokens">~2000</span> tokens</div>
-                    </div>
-                    <small style="color: #666; font-style: italic;">💡 Estimation updates automatically as you fill in the form</small>
                 </div>
-                <button id="analyze-btn" class="btn btn-primary" onclick="runAnalysis()">
-                    🚀 Analyze with AI
-                </button>
-                <button class="btn btn-secondary" onclick="clearResults()">
+                <button id="clear-btn" class="btn btn-secondary" onclick="clearResults()" style="display: none;">
                     🗑️ Clear Results
                 </button>
             </div>
@@ -592,7 +589,7 @@ Examples:
             <div class="ai-disclaimer" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ccc;">
                 <span style="font-size: 1em; color: #333;">AI-Generated content is prone for mistakes, review output carefully before use.</span>
             </div>
-            <h3>💡 AI Analysis Statistics
+            <h3> AI Analysis Statistics
                 <a href="methodology.html" target="_blank" title="View detailed methodology" style="margin-left:10px; vertical-align:middle;">
                     <i class="fas fa-external-link-alt" style="font-size:0.9em;"></i>
                 </a>
@@ -694,11 +691,11 @@ Examples:
                 const resetTime = tomorrow.toLocaleString();
                 const timeUntilReset = Math.ceil((tomorrow - today) / (1000 * 60 * 60)); // hours
                 
-                let welcomeMessage = `📊 **Today's Usage Statistics** (${today.toDateString()})\n\n`;
-                welcomeMessage += `🔥 **Requests Made:** ${stats.dailyRequests || 0}/${30}\n`;
-                welcomeMessage += `🎯 **Tokens Used:** ${stats.dailyTokens || 0}/${stats.dailyLimit} (Daily Quota: 30,000 tokens)\n`;
-                welcomeMessage += `💰 **Estimated Cost:** $${(stats.estimatedCostUSD || 0).toFixed(4)}\n`;
-                welcomeMessage += `⏰ **Quota Resets:** ${resetTime} (in ${timeUntilReset}h)\n\n`;
+                let welcomeMessage = `📊 **Today's Usage Statistics** (${today.toDateString()})\n`;
+                welcomeMessage += `Requests Made:${stats.dailyRequests || 0}/${30}\n`;
+                welcomeMessage += `Tokens Used:${stats.dailyTokens || 0}/${stats.dailyLimit} (Daily Quota: 30,000 tokens)\n`;
+                welcomeMessage += `Estimated Cost:$${(stats.estimatedCostUSD || 0).toFixed(4)}\n`;
+                welcomeMessage += `Quota Resets:${resetTime} (in ${timeUntilReset}h)\n\n`;
 
                 if (stats.remainingDaily > 0) {
                     welcomeMessage += `✅ **Available Today:** ${stats.remainingDaily} tokens\n`;
@@ -713,14 +710,14 @@ Examples:
 
                 if (stats.requestHistory && stats.requestHistory.length > 0) {
                     const lastRequest = stats.requestHistory[0];
-                    welcomeMessage += `🕐 **Last Request:** ${new Date(lastRequest.timestamp).toLocaleTimeString()}\n`;
-                    welcomeMessage += `📊 **Last Usage:** ${lastRequest.totalTokens} tokens ($${lastRequest.cost.toFixed(6)})\n\n`;
+                    welcomeMessage += `Last Request:${new Date(lastRequest.timestamp).toLocaleTimeString()}\n`;
+                    welcomeMessage += `Last Usage:${lastRequest.totalTokens} tokens ($${lastRequest.cost.toFixed(6)})\n\n`;
                 }
 
-                welcomeMessage += `💡 **Tips:**\n`;
+                welcomeMessage += `Tips:\n`;
                 welcomeMessage += `• Use shorter prompts to save tokens\n`;
-                welcomeMessage += `• Each request uses ~100-500 tokens on average\n`;
-                welcomeMessage += `• Complex analyses may use 500-1000 tokens\n`;
+                welcomeMessage += `• Each request uses ~1500-2000 tokens on average\n`;
+                welcomeMessage += `• Complex analyses may use 5000 tokens\n`;
 
                 // Display in result area temporarily
                 const resultContent = document.getElementById('result-content');
