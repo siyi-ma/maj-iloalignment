@@ -592,7 +592,11 @@ Examples:
             <div class="ai-disclaimer" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ccc;">
                 <span style="font-size: 1em; color: #333;">AI-Generated content is prone for mistakes, review output carefully before use.</span>
             </div>
-            <h3>💡 AI Analysis Statistics</h3>
+            <h3>💡 AI Analysis Statistics
+                <a href="methodology.html" target="_blank" title="View detailed methodology" style="margin-left:10px; vertical-align:middle;">
+                    <i class="fas fa-external-link-alt" style="font-size:0.9em;"></i>
+                </a>
+            </h3>
             <div id="result-content" class="result-content">
                 Results will appear here after you run an analysis...
                 
@@ -814,7 +818,7 @@ Examples:
                     
                     // Create methodology-based analysis prompt
                     let methodologyPrompt = `
-You are an educational assessment expert following the TalTech Enhanced ILO Alignment Analysis Methodology v1.0. 
+You are an educational assessment expert following the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Methodology v1.0. 
 
 ANALYSIS CONTEXT:
 Programme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})
@@ -822,7 +826,7 @@ Programme Learning Outcome (PLO): "${ploText}"
 Module Learning Outcome (MLO): "${mloText}"
 
 REQUIRED ANALYSIS METHOD:
-Follow the TalTech Enhanced Alignment Methodology with precise mathematical calculations:
+Follow the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Methodology with precise mathematical calculations:
 
 1. SEMANTIC ANALYSIS (35% weight):
    - Extract meaningful words (3+ chars, no stop words) from both PLO and MLO
@@ -871,7 +875,7 @@ QUALITY ASSURANCE:
 - Base analysis on established frameworks
 - Provide actionable improvement suggestions
 
-Reference: TalTech ILO Alignment Analysis Methodology v1.0`;
+Reference: TalTech SBG (Majandusteaduskond) ILO Alignment Analysis Methodology v1.0`;
 
                     // Add custom analysis request if provided
                     if (customRequest.trim()) {
