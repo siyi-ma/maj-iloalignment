@@ -1,3 +1,2839 @@
+/* PLO-MLO Style CSS for Detailed Breakdown */
+        /* Keyword highlighting from PLO-MLO style */
+        .keyword-highlight {
+            background-color: #ffeb3b;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        /* Detailed breakdown table styling */
+        .detailed-breakdown-table {
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+           
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: var(--tt-white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: var(--tt-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: var(--tt-white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: var(--tt-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: var(--tt-white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: var(--tt-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: var(--tt-white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: var(--tt-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: var(--tt-white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: var(--tt-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: var(--tt-white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: var(--tt-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mlo-code-cell, .clo-code-cell {
+            font-weight: bold;
+            color: var(--tt-dark-blue);
+            min-width: 120px;
+        }
+        
+        .mlo-content-cell, .clo-content-cell {
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        .alignment-score-cell {
+            text-align: center;
+            min-width: 50px;
+            width: 60px;
+            max-width: 60px;
+        }
+        
+        .alignment-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .justification-cell {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .clo-header-section {
+            background: linear-gradient(135deg, #aa1352, #e4067e);
+            color: var(--tt-white);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .clo-header-section h3 {
+            margin: 0;
+            color: var(--tt-white);
+            font-size: 1.2em;
+        }
+
+        .clo-text {
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .clo-analysis-section {
+            margin-bottom: 30px;
+            background: var(--tt-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Formula display and methodology styles */
+        .formula-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .score-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .legend-score-1 { background: #ffcdd2; color: #c62828; }
+        .legend-score-2 { background: #ffecb3; color: #f57c00; }
+        .legend-score-3 { background: #fff9c4; color: #f9a825; }
+        .legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+        .legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+        /* MLO Category Chart Styles */
+        .mlo-category-charts {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .mlo-stacked-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid var(--tt-grey-2);
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid var(--tt-grey-2);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .category-name {
+            min-width: 80px;
+            font-weight: bold;
+            color: var(--tt-burgundy);
+            text-align: center;
+            border-right: 2px solid var(--tt-grey-2);
+            padding-right: 15px;
+        }
+
+        .category-bars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .category-bar {
+            height: 30px;
+            min-width: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000000;
+            position: relative;
+        }
+        
+        .score-breakdown-bar {
+            flex-direction: column;
+            padding: 1px 2px;
+            border: 1px solid rgba(0,0,0,0.1);
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .score-breakdown-bar .score-count {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        
+        .score-breakdown-bar .score-label {
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .category-info {
+            min-width: 120px;
+            font-size: 0.9em;
+            color: var(--tt-dark-blue);
+            text-align: right;
+        }
+
+        /* Sticky Navigation Styles - Following PLO-MLO pattern */
+        .analysis-nav {
+            background: var(--tt-grey-2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--tt-burgundy);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+            display: none; /* Hidden by default, shown when analysis starts */
+        }
+        
+        .analysis-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analysis-nav a {
+            color: var(--tt-dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .analysis-nav a:hover, .analysis-nav a.active {
+            background: var(--tt-burgundy);
+            color: var(--tt-white);
+            transform: translateY(-2px);
+            border-color: var(--tt-burgundy);
+            box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+        }
+
+        /* CLO-specific navigation items */
+        .analysis-nav li[data-clo-link] a {
+            background-color: rgba(170, 19, 82, 0.1);
+            border-color: rgba(170, 19, 82, 0.3);
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            color: var(--tt-burgundy);
+        }
+
+        .analysis-nav li[data-clo-link] a:hover,
+        .analysis-nav li[data-clo-link] a.active {
+            background: var(--tt-magenta);
+            color: var(--tt-white);
+            border-color: var(--tt-magenta);
+            box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+        }
+
+        /* Responsive adjustments for navigation */
+        @media (max-width: 768px) {
+            .analysis-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-nav a {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* View toggle button styles */
+        .view-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 43, 96, 0.3);
+        }
+
+        .methodology-trigger:hover {
+            background-color: var(--tt-burgundy) !important;
+            transform: scale(1.1);
+        }
+
+        /* Detailed breakdown table styles */
+        .detailed-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--tt-white);
+            box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+        }
+        
+        .detailed-breakdown-table th {
+            background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+            color: var(--tt-white);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid var(--tt-grey-2);
+        }
+        
+        .detailed-breakdown-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--tt-grey-2);
+            vertical-align: top;
+        }
+        
+        .detailed-breakdown-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .detailed-breakdown-table tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }}
+
+/* PLO-MLO Style CSS for Detailed Breakdown */
+/* Keyword highlighting from PLO-MLO style */
+.keyword-highlight {
+    background-color: #ffeb3b;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+/* Detailed breakdown table styling */
+.detailed-breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: var(--tt-white);
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+}
+
+.detailed-breakdown-table th {
+    background: linear-gradient(135deg, var(--tt-burgundy), var(--tt-magenta));
+    color: var(--tt-white);
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid var(--tt-grey-2);
+}
+
+.detailed-breakdown-table td {
+    padding: 10px 8px;
+    border: 1px solid var(--tt-grey-2);
+    vertical-align: top;
+}
+
+.detailed-breakdown-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.detailed-breakdown-table tbody tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+.mlo-code-cell, .clo-code-cell {
+    font-weight: bold;
+    color: var(--tt-dark-blue);
+    min-width: 120px;
+}
+
+.mlo-content-cell, .clo-content-cell {
+    max-width: 400px;
+    line-height: 1.4;
+}
+
+.alignment-score-cell {
+    text-align: center;
+    min-width: 50px;
+    width: 60px;
+    max-width: 60px;
+}
+
+.alignment-score {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    color: white;
+    min-width: 40px;
+    text-align: center;
+}
+
+.justification-cell {
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.clo-header-section {
+    background: linear-gradient(135deg, #aa1352, #e4067e);
+    color: var(--tt-white);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.clo-header-section h3 {
+    margin: 0;
+    color: var(--tt-white);
+    font-size: 1.2em;
+}
+
+.clo-text {
+    margin-top: 8px;
+    font-style: italic;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+.clo-analysis-section {
+    margin-bottom: 30px;
+    background: var(--tt-white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Formula display and methodology styles */
+.formula-display {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.score-legend {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.legend-score-1 { background: #ffcdd2; color: #c62828; }
+.legend-score-2 { background: #ffecb3; color: #f57c00; }
+.legend-score-3 { background: #fff9c4; color: #f9a825; }
+.legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+.legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+/* MLO Category Chart Styles */
+.mlo-category-charts {
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.mlo-stacked-chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 2px solid var(--tt-grey-2);
+}
+
+.category-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 60px;
+    padding: 10px;
+    border: 1px solid var(--tt-grey-2);
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.category-name {
+    min-width: 80px;
+    font-weight: bold;
+    color: var(--tt-burgundy);
+    text-align: center;
+    border-right: 2px solid var(--tt-grey-2);
+    padding-right: 15px;
+}
+
+.category-bars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.category-bar {
+    height: 30px;
+    min-width: 25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000000;
+    position: relative;
+}
+
+.score-breakdown-bar {
+    flex-direction: column;
+    padding: 1px 2px;
+    border: 1px solid rgba(0,0,0,0.1);
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+.score-breakdown-bar .score-count {
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 1px;
+}
+
+.score-breakdown-bar .score-label {
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+.category-info {
+    min-width: 120px;
+    font-size: 0.9em;
+    color: var(--tt-dark-blue);
+    text-align: right;
+}
+
+/* Sticky Navigation Styles - Following PLO-MLO pattern */
+.analysis-nav {
+    background: var(--tt-grey-2);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--tt-burgundy);
+    position: sticky;
+    top: 0;
+    z-index: 998;
+    box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+    display: none; /* Hidden by default, shown when analysis starts */
+}
+
+.analysis-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.analysis-nav a {
+    color: var(--tt-dark-blue);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    border: 2px solid transparent;
+}
+
+.analysis-nav a:hover, .analysis-nav a.active {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    transform: translateY(-2px);
+    border-color: var(--tt-burgundy);
+    box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+}
+
+/* CLO-specific navigation items */
+.analysis-nav li[data-clo-link] a {
+    background-color: rgba(170, 19, 82, 0.1);
+    border-color: rgba(170, 19, 82, 0.3);
+    font-size: 0.8rem;
+    padding: 8px 15px;
+    color: var(--tt-burgundy);
+}
+
+.analysis-nav li[data-clo-link] a:hover,
+.analysis-nav li[data-clo-link] a.active {
+    background: var(--tt-magenta);
+    color: var(--tt-white);
+    border-color: var(--tt-magenta);
+    box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+}
+
+@media (max-width: 768px) {
+    .analysis-nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .analysis-nav a {
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        padding: 8px 15px;
+    }
+}
+/* Moved from clo-mlo.html: Detailed Breakdown Table and related styles */
+/* Keyword highlighting from PLO-MLO style */
+.keyword-highlight {
+    background-color: #ffeb3b;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+/* Detailed breakdown table styling */
+.detailed-breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: var(--tt-white);
+    box-shadow: 0 4px 15px rgba(170, 19, 82, 0.1);
+}
+
+.detailed-breakdown-table th,
+.detailed-breakdown-table td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: left;
+}
+
+.detailed-breakdown-table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.detailed-breakdown-table tbody tr:hover {
+    background: #f1f1f1;
+}
+
+.mlo-code-cell, .clo-code-cell {
+    font-weight: bold;
+    color: #aa1352;
+    background: #f8f9fa;
+    border-right: 2px solid #dee2e6;
+    padding-right: 10px;
+}
+
+.mlo-content-cell, .clo-content-cell {
+    font-size: 0.95em;
+    color: #333;
+}
+
+.alignment-score-cell {
+    text-align: center;
+    font-weight: bold;
+}
+
+.alignment-score {
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.justification-cell {
+    font-size: 0.95em;
+    color: #555;
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.clo-header-section {
+    margin-bottom: 15px;
+}
+
+.clo-header-section h3 {
+    color: #aa1352;
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.clo-text {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.clo-analysis-section {
+    margin-top: 20px;
+}
+
+/* Formula display and methodology styles */
+.formula-display {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.score-legend {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.legend-score-1 { background: #ffcdd2; color: #c62828; }
+.legend-score-2 { background: #ffecb3; color: #f57c00; }
+.legend-score-3 { background: #fff9c4; color: #f9a825; }
+.legend-score-4 { background: #c8e6c9; color: #2e7d32; }
+.legend-score-5 { background: #a5d6a7; color: #1b5e20; }
+
+/* MLO Category Chart Styles */
+.mlo-category-charts {
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.mlo-stacked-chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 2px solid var(--tt-grey-2);
+}
+
+.category-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 60px;
+    padding: 10px;
+    border: 1px solid var(--tt-grey-2);
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.category-name {
+    min-width: 80px;
+    font-weight: bold;
+    color: var(--tt-burgundy);
+    text-align: center;
+    border-right: 2px solid var(--tt-grey-2);
+    padding-right: 15px;
+}
+
+.category-bars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.category-bar {
+    height: 30px;
+    min-width: 25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000000;
+    position: relative;
+}
+
+.score-breakdown-bar {
+    flex-direction: column;
+    padding: 1px 2px;
+    border: 1px solid rgba(0,0,0,0.1);
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+.score-breakdown-bar .score-count {
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 1px;
+}
+
+.score-breakdown-bar .score-label {
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+.category-info {
+    min-width: 120px;
+    font-size: 0.9em;
+    color: var(--tt-dark-blue);
+    text-align: right;
+}
+
+/* Sticky Navigation Styles - Following PLO-MLO pattern */
+.analysis-nav {
+    background: var(--tt-grey-2);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--tt-burgundy);
+    position: sticky;
+    top: 0;
+    z-index: 998;
+    box-shadow: 0 2px 10px rgba(170, 19, 82, 0.2);
+    display: none; /* Hidden by default, shown when analysis starts */
+}
+
+.analysis-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.analysis-nav a {
+    color: var(--tt-dark-blue);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    border: 2px solid transparent;
+}
+
+.analysis-nav a:hover, .analysis-nav a.active {
+    background: var(--tt-burgundy);
+    color: var(--tt-white);
+    transform: translateY(-2px);
+    border-color: var(--tt-burgundy);
+    box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+}
+
+/* CLO-specific navigation items */
+.analysis-nav li[data-clo-link] a {
+    background-color: rgba(170, 19, 82, 0.1);
+    border-color: rgba(170, 19, 82, 0.3);
+    font-size: 0.8rem;
+    padding: 8px 15px;
+    color: var(--tt-burgundy);
+}
+
+.analysis-nav li[data-clo-link] a:hover,
+.analysis-nav li[data-clo-link] a.active {
+    background: var(--tt-magenta);
+    color: var(--tt-white);
+    border-color: var(--tt-magenta);
+    box-shadow: 0 4px 12px rgba(228, 6, 126, 0.3);
+}
+
+@media (max-width: 768px) {
+    .analysis-nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .analysis-nav a {
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        padding: 8px 15px;
+    }
+}
 /* PLO-MLO Analysis Styles */
 
 /* Container & Layout */

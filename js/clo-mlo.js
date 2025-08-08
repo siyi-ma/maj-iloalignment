@@ -73,9 +73,38 @@ class CLOMLOController {
         }
 
         getSavedCLOs() {
-            // Returns the current CLOs for the selected course
-            if (!this.selectedCourse) return {};
-            return this.selectedCourse.cloik || this.selectedCourse.cloek || {};
+            // Enhanced: Returns CLOs from localStorage, course data, or empty array
+            if (!this.selectedCourse) return [];
+            const currentProgramme = window.dataManager ? window.dataManager.getCurrentProgramme() : null;
+            const selectedCourse = this.selectedCourse;
+            let clos = [];
+            // 1. Try localStorage
+            if (currentProgramme && selectedCourse) {
+                const storageKey = `clos_${currentProgramme.code}_${selectedCourse.ainekood || selectedCourse.code}`;
+                const saved = localStorage.getItem(storageKey);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) {
+                            clos = parsed;
+                        }
+                    } catch (e) {
+                        // Ignore parse errors
+                    }
+                }
+            }
+            // 2. If not found, try course data
+            if (clos.length === 0 && selectedCourse) {
+                const courseCLOs = selectedCourse.cloik || selectedCourse.cloek;
+                if (courseCLOs && typeof courseCLOs === 'object') {
+                    clos = Object.entries(courseCLOs).map(([key, text], idx) => ({
+                        code: key,
+                        text: text
+                    }));
+                }
+            }
+            // 3. Fallback to empty array
+            return clos;
         }
 
     saveEditedCLOs() {
