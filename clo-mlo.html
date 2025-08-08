@@ -3031,6 +3031,37 @@
     <script src="js/alignment-engine.js"></script>
     
     <script>
+// Advanced improvement suggestion logic (ported from PLO-MLO)
+function generateImprovementSuggestions(score, competencyMatches, keywordOverlap, cloText, mloText) {
+    let suggestions = [];
+    if (score < 2.0) {
+        suggestions.push("Fundamental restructuring needed. Review CLO and MLO for clarity and direct mapping.");
+        suggestions.push("Increase explicit connections between CLO and MLO using shared keywords.");
+        suggestions.push("Revisit competency categories and ensure coverage of core skills.");
+    } else if (score < 3.5) {
+        if (keywordOverlap < 0.2) {
+            suggestions.push("Increase keyword overlap by aligning terminology in CLO and MLO.");
+        }
+        if (!competencyMatches || competencyMatches.length < 3) {
+            suggestions.push("Strengthen links to competency framework. Add more relevant categories.");
+        }
+        suggestions.push("Clarify cognitive level using Bloom's taxonomy verbs in CLO and MLO.");
+        suggestions.push("Improve contextual relevance by using domain-specific vocabulary.");
+    } else {
+        suggestions.push("Minor improvements possible. Review for clarity and progression.");
+    }
+    if (suggestions.length > 0) {
+        return `
+            <div class=\"improvement-suggestions\">
+                <strong><i class=\"fas fa-lightbulb\"></i> Improvement Suggestions:</strong>
+                <ul style=\"margin: 5px 0 0 20px;\">
+                    ${suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    return '';
+}
         // Global state
         let currentBreakdownView = 'mlo'; // 'mlo' or 'clo'
         let currentAlignmentResults = null;
@@ -3537,7 +3568,7 @@
                                 <th style="width: 120px;">CLO Code</th>
                                 <th style="width: 400px;">CLO Content</th>
                                 <th style="width: 60px;">Score</th>
-                                <th>Justification & Analysis</th>
+                                <th>Justification</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -3563,23 +3594,56 @@
                         
                         // CLO alignment rows
                         mloAlignments.forEach((alignment, index) => {
-                            const scoreClass = getScoreColor(alignment.score);
-                            const needsImprovement = alignment.score < 3.5;
-                            tableHTML += `
-                                <tr>
-                                    <td class="clo-code-cell">${alignment.plo.plokood}</td>
-                                    <td class="clo-content-cell">${alignment.plo.plosisuik}</td>
-                                    <td class="alignment-score-cell">
-                                        <span class="alignment-score ${scoreClass}" style="padding: 4px 8px; border-radius: 3px; font-weight: bold;">
-                                            ${alignment.score.toFixed(1)}
-                                        </span>
-                                    </td>
-                                    <td class="justification-cell">
-                                        ${getJustificationText(alignment)}
-                                        ${needsImprovement ? getImprovementSuggestions(alignment, 'mlo') : ''}
-                                    </td>
-                                </tr>
-                            `;
+            const scoreClass = getScoreColor(alignment.score);
+            const needsImprovement = alignment.score < 3.5;
+            // Gather matching keywords for highlighting
+            const cloText = alignment.plo.plosisuik || '';
+            const mloText = alignment.mlo.mlosisuik || alignment.mlo.mlosisuek || '';
+            const matchingKeywords = alignment.matchingKeywords || [];
+            tableHTML += `
+                <tr>
+                    <td class="clo-code-cell">${alignment.plo.plokood}</td>
+                    <td class="clo-content-cell">${highlightKeywords(cloText, matchingKeywords)}</td>
+                    <td class="alignment-score-cell">
+                        <span class="alignment-score score-${scoreClass}" style="padding: 4px 8px; border-radius: 12px; font-weight: bold; color: #fff; background: ${getScoreColor(scoreClass)}; min-width: 40px; display: inline-block; text-align: center;">
+                            ${alignment.score.toFixed(1)}
+                        </span>
+                    </td>
+                    <td class="justification-cell">
+                        ${(() => {
+                            // Improved justification rendering
+                            if (!alignment.justification) return '<em>No justification available</em>';
+                            let justificationText = '';
+                            if (typeof alignment.justification === 'string') {
+                                justificationText = alignment.justification;
+                            } else if (alignment.justification.summary) {
+                                justificationText = alignment.justification.summary;
+                            } else if (alignment.justification.text) {
+                                justificationText = alignment.justification.text;
+                            } else {
+                                justificationText = '';
+                            }
+                            let components = '';
+                            // Only show user-friendly bulleted points, not raw JSON
+                            if (alignment.justification.components && Array.isArray(alignment.justification.components)) {
+                                components = `<div style="margin-bottom: 6px;"><strong>Components:</strong></div><ul style="margin: 2px 0; padding-left: 16px; font-size: 0.85em;">${alignment.justification.components.map(comp => `<li>${comp}</li>`).join('')}</ul>`;
+                            }
+                            let calculation = alignment.justification.calculation ? `<div style="margin-top: 6px; font-size: 0.8em; color: #555; font-family: monospace;">${alignment.justification.calculation}</div>` : '';
+                            let suggestions = '';
+                            if (needsImprovement) {
+                                suggestions = generateImprovementSuggestions(
+                                    alignment.score,
+                                    alignment.competencyMatches || [],
+                                    alignment.keywordOverlap || 0,
+                                    cloText,
+                                    mloText
+                                );
+                            }
+                            return `<div style="font-size: 0.9em; color: #555; line-height: 1.4;">${justificationText}${components}${calculation}${suggestions}</div>`;
+                        })()}
+                    </td>
+                </tr>
+            `;
                         });
                     }
                 });
@@ -3592,7 +3656,7 @@
                                 <th style="width: 120px;">MLO Code</th>
                                 <th style="width: 400px;">MLO Content</th>
                                 <th style="width: 60px;">Score</th>
-                                <th>Justification & Analysis</th>
+                                <th>Justification</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -4500,7 +4564,7 @@
                                     <th>MLO Code</th>
                                     <th>MLO Content</th>
                                     <th>Score</th>
-                                    <th>Justification & Analysis</th>
+                                    <th>Justification</th>
                                 </tr>
                             </thead>
                             <tbody>
