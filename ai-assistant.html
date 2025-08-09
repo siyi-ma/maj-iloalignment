@@ -616,7 +616,7 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 // Display results with feedback option
                 if (result.success) {
                     resultsSection.className = 'results-section result-success';
-                    resultContent.textContent = result.response;
+                    resultContent.innerHTML = result.response;
                     
                     // Show metadata with copy result option
                     resultMeta.innerHTML = `
@@ -632,31 +632,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
                             </button>
                         </div>
                     `;
-        // Add copyResultContent function
-        function copyResultContent() {
-            const resultContent = document.getElementById('result-content');
-            if (resultContent) {
-                // Copy as plain text and HTML
-                const text = resultContent.innerText;
-                const html = resultContent.innerHTML;
-                // Try to copy HTML first, fallback to text
-                if (navigator.clipboard && window.ClipboardItem) {
-                    const blob = new Blob([html], { type: 'text/html' });
-                    const item = new window.ClipboardItem({ 'text/html': blob });
-                    navigator.clipboard.write([item]).then(() => {
-                        alert('Result copied as HTML!');
-                    }, () => {
-                        navigator.clipboard.writeText(text).then(() => {
-                            alert('Result copied as text!');
-                        });
-                    });
-                } else {
-                    navigator.clipboard.writeText(text).then(() => {
-                        alert('Result copied as text!');
-                    });
-                }
-            }
-        }
                     resultMeta.style.display = 'block';
                     
                     // Update token usage display

@@ -1,4 +1,4 @@
-        body {
+body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
@@ -351,6 +351,25 @@
             gap: 10px;
             font-size: 18px;
             font-weight: 600;
+        }
+
+        .ai-report-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 2em;
+            overflow-x: auto;
+            display: block;
+        }
+        .ai-report-table th, .ai-report-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .ai-report-table thead {
+            background: #f9f9fa;
+        }
+        .ai-report-table tr:nth-child(even) {
+            background: #f4f8fc;
         }
 
         @media (max-width: 768px) {
