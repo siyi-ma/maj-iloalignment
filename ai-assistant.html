@@ -138,9 +138,7 @@ Examples:
                 • Are there any gaps in the learning progression?
                 • How do these outcomes compare to the higher education standards or best practices?"></textarea>
                                         <small class="form-hint"> Optional: Add specific questions or focus areas for the AI analysis</small>
-                                        <button id="inhouse-method-btn-plo-mlo" class="btn btn-secondary" style="margin-top:10px; display:none;" onclick="setInhouseMethodology('plo-mlo')">In-house Methodology</button>
-                                        <span id="methodology-indicator-plo-mlo" style="margin-left:10px;color:#1976d2;font-weight:600; display:none;"></span>
-                                    </div>
+                    </div>
             </div>
 
             <!-- Course Analysis Tab -->
@@ -186,9 +184,7 @@ Examples:
     • Are the CLOs appropriate for the course credits?
     • How does this course fit within the programme structure?"></textarea>
                         <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
-                        <button id="inhouse-method-btn-course" class="btn btn-secondary" style="margin-top:10px; display:none;" onclick="setInhouseMethodology('course')">In-house Methodology</button>
-                        <span id="methodology-indicator-course" style="margin-left:10px;color:#1976d2;font-weight:600; display:none;"></span>
-                    </div>
+                </div>
             </div>
 
             <div class="action-buttons">
@@ -234,26 +230,12 @@ Examples:
     <script src="js/personal-api-config.js"></script>
     <script src="js/secure-api-config.js"></script>
     <script src="js/enhanced-ai-features.js"></script>
-    <script>
-  document.getElementById('programme-select').addEventListener('change', function() {
-    window.fetchDomainTerms(this.value);
-  });
-</script>
     <script src="js/programme-data-loader.js"></script>
     <script src="js/shared-utils.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         let currentTab = 'custom';
-        let useInhouseMethodology = {
-            'plo-mlo': false,
-            'course': false
-        };
-
-        function setInhouseMethodology(tab) {
-            useInhouseMethodology[tab] = !useInhouseMethodology[tab];
-            document.getElementById('methodology-indicator-' + tab).textContent = useInhouseMethodology[tab] ? 'In-house Methodology ON' : '';
-        }
-
+        
         // Initialize the application
         async function initApp() {
             console.log('🚀 Initializing AI Assistant...');
