@@ -329,7 +329,6 @@
             <i class="fas fa-arrow-left"></i>
             Back to Analysis
         </a>
-        
         <!-- Up Caret Button -->
         <button class="up-caret" id="up-caret" onclick="scrollToTop()">
             <i class="fas fa-chevron-up"></i>
@@ -337,9 +336,22 @@
 
         <!-- Page Header -->
         <header class="methodology-header">
-            <h1><i class="fas fa-microscope"></i> ILO Alignment Analysis Methodology</h1>
-            <p>Comprehensive Framework for Programme and Module Learning Outcome Alignment Assessment</p>
+            <h1><i class="fas fa-microscope"></i> In-house Methodology (TalTech SBG)</h1>
+            <p>This is the official in-house methodology for outcome alignment analysis, used for opt-in analysis in the MAJ AI Assistant.<br>
+            <b>For a concise markdown version, see <a href="docs/inhouse-methodology.md" target="_blank">inhouse-methodology.md</a>.</b></p>
         </header>
+        <section class="section" style="background:#e9ecef; border-left:4px solid #1976d2;">
+            <h2 style="color:#1976d2;"><i class="fas fa-info-circle"></i> Quick Summary</h2>
+            <ul>
+                <li><b>Semantic Analysis (35%)</b>: Vocabulary overlap, normalized to 5.0 scale</li>
+                <li><b>Competency Analysis (25%)</b>: EQF categories, weighted and normalized</li>
+                <li><b>Cognitive Analysis (20%)</b>: Bloom's Taxonomy progression, normalized</li>
+                <li><b>Contextual Analysis (15%)</b>: Domain-specific terminology, normalized</li>
+                <li><b>Progression Analysis (5%)</b>: Sequential building patterns, normalized</li>
+            </ul>
+            <p><b>Final Score:</b> Weighted sum of all components, clamped to 1.0-5.0 range.<br>
+            <b>Reference:</b> TalTech SBG (Majandusteaduskond) ILO Alignment Analysis Methodology v1.0</p>
+        </section>
 
         <!-- Navigation -->
         <nav class="methodology-nav">

@@ -129,16 +129,18 @@ Examples:
                         <textarea id="mlo-text" rows="3" placeholder="MLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="custom-analysis-request">Custom Analysis Request</label>
-                        <textarea id="custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the PLO-MLO alignment...
+                                        <label for="custom-analysis-request">Custom Analysis Request</label>
+                                        <textarea id="custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the PLO-MLO alignment...
 
-Examples:
-• How can I improve the PLO-MLO alignment?
-• What assessment methods would work best for these outcomes?
-• Are there any gaps in the learning progression?
-• How do these outcomes compare to the higher education standards or best practices?"></textarea>
-                        <small class="form-hint"> Optional: Add specific questions or focus areas for the AI analysis</small>
-                    </div>
+                Examples:
+                • How can I improve the PLO-MLO alignment?
+                • What assessment methods would work best for these outcomes?
+                • Are there any gaps in the learning progression?
+                • How do these outcomes compare to the higher education standards or best practices?"></textarea>
+                                        <small class="form-hint"> Optional: Add specific questions or focus areas for the AI analysis</small>
+                                        <button id="inhouse-method-btn-plo-mlo" class="btn btn-secondary" style="margin-top:10px;" onclick="setInhouseMethodology('plo-mlo')">In-house Methodology</button>
+                                        <span id="methodology-indicator-plo-mlo" style="margin-left:10px;color:#1976d2;font-weight:600;"></span>
+                                    </div>
             </div>
 
             <!-- Course Analysis Tab -->
@@ -175,16 +177,18 @@ Examples:
                     <textarea id="course-learning-outcomes" rows="5" placeholder="Selected CLOs will appear here..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="course-custom-analysis-request"> Custom Analysis Request</label>
-                    <textarea id="course-custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the course structure...
+                        <label for="course-custom-analysis-request"> Custom Analysis Request</label>
+                        <textarea id="course-custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the course structure...
 
-Examples:
-• How can I improve the CLO-MLO alignment?
-• What assessment methods would work best for these outcomes?
-• Are the CLOs appropriate for the course credits?
-• How does this course fit within the programme structure?"></textarea>
-                    <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
-                </div>
+    Examples:
+    • How can I improve the CLO-MLO alignment?
+    • What assessment methods would work best for these outcomes?
+    • Are the CLOs appropriate for the course credits?
+    • How does this course fit within the programme structure?"></textarea>
+                        <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
+                        <button id="inhouse-method-btn-course" class="btn btn-secondary" style="margin-top:10px;" onclick="setInhouseMethodology('course')">In-house Methodology</button>
+                        <span id="methodology-indicator-course" style="margin-left:10px;color:#1976d2;font-weight:600;"></span>
+                    </div>
             </div>
 
             <div class="action-buttons">
@@ -240,6 +244,15 @@ Examples:
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         let currentTab = 'custom';
+            let useInhouseMethodology = {
+                'plo-mlo': false,
+                'course': false
+            };
+
+            function setInhouseMethodology(tab) {
+                useInhouseMethodology[tab] = !useInhouseMethodology[tab];
+                document.getElementById('methodology-indicator-' + tab).textContent = useInhouseMethodology[tab] ? 'In-house Methodology ON' : '';
+            }
 
         // Initialize the application
         async function initApp() {
@@ -412,6 +425,40 @@ Examples:
                 let result;
                 
                 if (currentTab === 'custom') {
+                    } else if (currentTab === 'plo-mlo') {
+                        // PLO-MLO analysis with selectable methodology
+                        const programmeCode = document.getElementById('programme-select').value;
+                        const ploText = document.getElementById('plo-text').value;
+                        const mloText = document.getElementById('mlo-text').value;
+                        const customRequest = document.getElementById('custom-analysis-request').value;
+
+                        if (!programmeCode || !ploText.trim() || !mloText.trim()) {
+                            throw new Error('Please complete all selections: Programme, PLO, and MLO');
+                        }
+
+                        // Get programme info for context
+                        const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
+
+                        // Split PLOs and MLOs into arrays for better formatting
+                        const ploList = ploText.split('\n').filter(Boolean);
+                        const mloList = mloText.split('\n').filter(Boolean);
+
+                        let analysisPrompt = '';
+                        if (useInhouseMethodology['plo-mlo']) {
+                            analysisPrompt = `You are an educational assessment expert following the in-house methodology. Please use the detailed steps and criteria described in the <a href='methodology.html' target='_blank'>In-house Methodology</a> document for PLO-MLO alignment analysis.`;
+                        } else {
+                            analysisPrompt = `You are an educational assessment expert using the most efficient and up-to-date methods from the past 3 years for learning outcome alignment analysis. Apply advanced semantic similarity models (e.g., transformer-based NLP), modern competency frameworks, and cognitive progression analysis. Use best practices for educational outcome mapping and provide actionable, evidence-based recommendations.`;
+                        }
+
+                        analysisPrompt += `\n\nANALYSIS CONTEXT:\nProgramme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})\nProgramme Learning Outcomes (PLOs):\n${ploList.map((plo, i) => `PLO ${i+1}: ${plo}`).join('\n')}\n\nModule Learning Outcomes (MLOs):\n${mloList.map((mlo, i) => `MLO ${i+1}: ${mlo}`).join('\n')}`;
+
+                        if (customRequest.trim()) {
+                            analysisPrompt += `\n\nADDITIONAL ANALYSIS REQUEST:\n${customRequest}`;
+                        }
+                        result = await window.enhancedAIFeatures.executeCustomPrompt(analysisPrompt, {}, {
+                            temperature: 0.7,
+                            maxTokens: 4000
+                        });
                     // Custom prompt analysis
                     const prompt = document.getElementById('custom-prompt').value;
                     if (!prompt.trim()) {
