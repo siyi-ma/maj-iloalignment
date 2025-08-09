@@ -21,7 +21,30 @@ class SecureConfig:
     def __init__(self, project_root: Optional[str] = None):
         self.project_root = Path(project_root) if project_root else Path(__file__).parent
         self.config = {}
+        self.domain_terms = None
         self.load_configuration()
+        self.load_domain_terms()
+    def load_domain_terms(self):
+        """Load domain terms from domain_terms.json"""
+        domain_terms_path = self.project_root.parent / "data" / "domain_terms.json"
+        if domain_terms_path.exists():
+            try:
+                with open(domain_terms_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self.domain_terms = data.get("domainTerms", [])
+                print("OK: Loaded domain terms from domain_terms.json")
+            except Exception as e:
+                print(f"Warning: Could not read domain_terms.json: {e}")
+                self.domain_terms = []
+        else:
+            print("Warning: domain_terms.json not found")
+            self.domain_terms = []
+
+    def get_domain_terms(self):
+        """Get loaded domain terms as a list of dicts"""
+        if self.domain_terms is None:
+            self.load_domain_terms()
+        return self.domain_terms
     
     def load_configuration(self):
         """Load configuration from all available sources"""
@@ -180,6 +203,7 @@ class SecureConfig:
 config = SecureConfig()
 
 # Convenience functions
+
 def get_api_key(service: str = 'gemini') -> Optional[str]:
     """Get API key for service"""
     return config.get_api_key(service)
@@ -207,6 +231,10 @@ def validate_setup() -> tuple[bool, str]:
             return False, f"Missing: {', '.join(missing_keys)}"
         else:
             return False, "Configuration validation failed"
+
+def get_domain_terms():
+    """Convenience function to get domain terms from config"""
+    return config.get_domain_terms()
 
 
 if __name__ == "__main__":

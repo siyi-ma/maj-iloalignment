@@ -1,0 +1,30 @@
+<!-- ai-assistant_clean.html: Clean version for testing JS migration -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Assistant (Clean Test)</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="enhanced-ai-features.js"></script>
+</head>
+<body>
+    <!-- Main UI structure copied from ai-assistant.html, but all JS logic moved to enhanced-ai-features.js -->
+    <div id="app-container">
+        <!-- ...existing HTML UI code (copy from ai-assistant.html, minus embedded JS)... -->
+        <h2>AI Assistant Clean Test</h2>
+        <div id="results-section" class="results-section">
+            <div id="result-content">Results will appear here...</div>
+            <div id="result-meta" style="display:none;"></div>
+        </div>
+        <!-- Add other UI elements as needed for testing -->
+    </div>
+    <!-- Only minimal inline JS for bootstrapping -->
+    <script>
+      window.addEventListener('load', () => {
+        if (window.enhancedAIFeatures && window.enhancedAIFeatures.initApp) {
+          window.enhancedAIFeatures.initApp();
+        }
+      });
+    </script>
+</body>
+</html>

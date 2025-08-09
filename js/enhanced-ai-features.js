@@ -439,6 +439,33 @@ function updateSelectedPLOs() {
     document.getElementById('plo-text').value = selected.join('\n');
 }
 
+// --- Domain Terms Fetch & Display ---
+async function fetchDomainTerms(programmeCode) {
+    const response = await fetch(`/.netlify/functions/domain-terms?programme=${programmeCode}`);
+    if (response.ok) {
+        const terms = await response.json();
+        displayDomainTerms(terms);
+    } else {
+        displayDomainTerms([]);
+    }
+}
+
+function displayDomainTerms(terms) {
+    const container = document.getElementById('domain-terms-list');
+    if (!container) return;
+    if (terms.length === 0) {
+        container.innerHTML = '<p style="color:#dc3545;">No domain terms found for this programme.</p>';
+        return;
+    }
+    container.innerHTML = '<ul>' + terms.map(term =>
+        `<li><b>${term.term}</b> (Multiplier: ${term.multiplier})<br>${term.description}</li>`
+    ).join('') + '</ul>';
+}
+
+// Export for usage in HTML
+window.fetchDomainTerms = fetchDomainTerms;
+window.displayDomainTerms = displayDomainTerms;
+
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = EnhancedAIFeatures;

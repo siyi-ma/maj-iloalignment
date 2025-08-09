@@ -230,6 +230,11 @@ Examples:
     <script src="js/personal-api-config.js"></script>
     <script src="js/secure-api-config.js"></script>
     <script src="js/enhanced-ai-features.js"></script>
+    <script>
+  document.getElementById('programme-select').addEventListener('change', function() {
+    window.fetchDomainTerms(this.value);
+  });
+</script>
     <script src="js/programme-data-loader.js"></script>
     <script src="js/shared-utils.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -642,6 +647,25 @@ Provide comprehensive, actionable analysis for course improvement.`;
             html = html.replace(/^\s*\*\*([A-Za-z0-9 \-]+)\*\*:?/gm, function(_, heading) {
                 return '<h3>' + heading.replace(/Actionable Improvement Suggestions/i, 'Improvement Suggestions') + '</h3>';
             });
+
+            // Patch: Ensure semantic analysis table includes full and original mlokood
+            html = html.replace(/(<table[^>]*class=["']ai-report-table["'][^>]*>\s*<thead>\s*<tr[^>]*>\s*<th[^>]*>PLO<\/th>\s*<th[^>]*>Semantic Overlap<\/th>)/i,
+                '$1<th>MLO kood</th>');
+            html = html.replace(/(<tr[^>]*>\s*<td[^>]*>PLO \d+<\/td>\s*<td[^>]*>\d+%<\/td>)/ig, function(match, p1, offset, str) {
+                // Try to extract MLO kood from the context (if available)
+                // This is a best-effort patch, actual implementation should pass mlokood in the backend
+                const mloKoodMatch = str.match(/MLO\s*(\w+)/);
+                const mloKood = mloKoodMatch ? mloKoodMatch[1] : 'N/A';
+                return match + '<td>' + mloKood + '</td>';
+            });
+
+            // Patch: Contextual Analysis error/placeholder handling
+            html = html.replace(/(A detailed analysis requires a list of domain-specific terms and their relevance multipliers\.[^<]*)/i,
+                '<div class="contextual-analysis-error" style="color:#dc3545;background:#fff3cd;padding:8px;border-radius:4px;margin:8px 0;">$1<br><b>Error:</b> No domain-specific terms or relevance multipliers found. Please provide or verify these terms for accurate contextual analysis.</div>');
+
+            // Patch: Add note for placeholders in analysis sections
+            html = html.replace(/(This response provides a framework\.[^<]*)/i,
+                '<div class="analysis-placeholder-note" style="color:#0c5460;background:#d1ecf1;padding:8px;border-radius:4px;margin:8px 0;">$1<br><b>Note:</b> Please fill in actual data for Competency, Cognitive, Contextual, and Progression Analysis. Word counts and scores are estimates and should be verified.</div>');
             // Convert numbered lists to <ol><li>
             // Find blocks of numbered lists
             html = html.replace(/(^|\n)(\d+\.\s+.*(?:\n\d+\.\s+.*)*)/gm, function(match) {
@@ -1463,10 +1487,10 @@ function exportResultToPDF() {
         if (courseSelect) {
             courseCode = courseSelect.value || '';
         }
-        pdfTitle = `${programmeCode}_${courseCode}_CLO-MLO_analysis_${dateStr}`;
+    pdfTitle = `${programmeCode.toUpperCase()}_${courseCode}_CLO-MLO_analysis_${dateStr}`;
     } else {
         // Default: PLO-MLO analysis
-        pdfTitle = `${programmeCode}_PLO-MLO_analysis_${dateStr}`;
+    pdfTitle = `${programmeCode.toUpperCase()}_PLO-MLO_analysis_${dateStr}`;
     }
     // Create a new window for printing
     const printWindow = window.open('', '', 'width=900,height=700');

@@ -1,0 +1,82 @@
+{
+  "domainTerms": [
+    {
+  "term": "sustainability",
+  "multiplier": 1.5,
+  "description": "Sustainable development, responsible business, and environmental impact.",
+  "programmes": ["tvtb", "majb", "makm"]
+    },
+    {
+  "term": "circular economy",
+  "multiplier": 1.4,
+  "description": "Principles and processes of circular economy, life cycle assessment, recycling, and resource valorisation.",
+  "programmes": ["majb", "makm"]
+    },
+    {
+  "term": "entrepreneurship",
+  "multiplier": 1.3,
+  "description": "Business model design, initiative, risk evaluation, and social entrepreneurship.",
+  "programmes": ["tvtb", "majb"]
+    },
+    {
+  "term": "green technology",
+  "multiplier": 1.3,
+  "description": "Green technologies, ecological footprint, and environmentally sustainable product development.",
+  "programmes": ["majb", "makm"]
+    },
+    {
+  "term": "ESG",
+  "multiplier": 1.3,
+  "description": "Environmental, Social, and Governance frameworks, reporting, and strategic importance.",
+  "programmes": ["majb", "makm"]
+    },
+    {
+  "term": "management",
+  "multiplier": 1.2,
+  "description": "Sustainable management, change management, team leadership, and organizational development.",
+  "programmes": ["tvtb", "majb", "makm"]
+    },
+    {
+  "term": "finance",
+  "multiplier": 1.2,
+  "description": "Financial accounting, sustainable financial management, investment projects, and financial analysis.",
+  "programmes": ["tvtb", "majb", "makm"]
+    },
+    {
+  "term": "marketing",
+  "multiplier": 1.2,
+  "description": "Marketing management, e-marketing, market research, and strategic positioning.",
+  "programmes": ["tvtb", "majb"]
+    },
+    {
+  "term": "business intelligence",
+  "multiplier": 1.1,
+  "description": "Data analysis, statistics, and decision-making processes.",
+  "programmes": ["tvtb"]
+    },
+    {
+  "term": "ICT",
+  "multiplier": 1.0,
+  "description": "Information and communication technology skills, digital technologies, and algorithmic thinking.",
+  "programmes": ["tvtb", "majb"]
+    },
+    {
+  "term": "supply chain",
+  "multiplier": 1.1,
+  "description": "Supply chain activities, sustainable supply chain management, and reducing carbon footprint.",
+  "programmes": ["majb", "makm"]
+    },
+    {
+  "term": "environmental protection",
+  "multiplier": 1.2,
+  "description": "Environmental legislation, impact assessment, and carbon footprint reduction.",
+  "programmes": ["majb", "makm"]
+    },
+    {
+  "term": "corporate governance",
+  "multiplier": 1.1,
+  "description": "Governance structures, stakeholder roles, and sustainable growth strategies.",
+  "programmes": ["makm"]
+    }
+  ]
+}
