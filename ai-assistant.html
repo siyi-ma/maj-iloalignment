@@ -468,7 +468,7 @@ Examples:
                 
                 // Display the 'htmlContent' property of the result object
                 resultsSection.className = 'results-section result-success';
-                resultContent.innerHTML = result.htmlContent; 
+                rresultContent.innerHTML = result.response.replace(/\n/g, '<br>');
 
                 // Hide the metadata section as it is not available in the result object
                 resultMeta.style.display = 'none'; 
