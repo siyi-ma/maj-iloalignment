@@ -305,7 +305,7 @@ Examples:
                 const resetTime = tomorrow.toLocaleString();
                 const timeUntilReset = Math.ceil((tomorrow - today) / (1000 * 60 * 60)); // hours
                 
-                let welcomeMessage = `📊 **Today's Usage Statistics** (${today.toDateString()})\n`;
+                let welcomeMessage = `<span style="font-weight:bold;">📊 Today's Usage Statistics (${today.toDateString()})</span><br>`;
                 welcomeMessage += `Requests Made:${stats.dailyRequests || 0}/${30}\n`;
                 welcomeMessage += `Tokens Used:${stats.dailyTokens || 0}/${stats.dailyLimit} (Daily Quota: 30,000 tokens)\n`;
                 welcomeMessage += `Estimated Cost:$${(stats.estimatedCostUSD || 0).toFixed(4)}\n`;
@@ -474,11 +474,9 @@ FINAL CALCULATION:
 Final Score = (semantic×0.35) + (competency×0.25) + (cognitive×0.20) + (contextual×0.15) + (progression×0.05)
 
 REQUIRED OUTPUT FORMAT:
-1. **Detailed Mathematical Breakdown** (show all calculations with numbers)
-2. **Component Scores** (each with justification)
-3. **Final Score** (X.X/5.0) with quality level (Poor/Weak/Moderate/Good/Excellent)
-4. **Improvement Suggestions** (if score < 3.5 or any component < 2.5)
-5. **Academic Justification** (reference to EQF, Bloom's Taxonomy, etc.)
+- Use <h2> for the main report title, e.g. <h2>MMO5680: Sustainable Human Resource Management Principles and Policies - ILO Alignment Analysis</h2>
+- Use <h3> for section titles.
+- For tables, use <table class="ai-report-table">...</table>
 
 QUALITY ASSURANCE:
 - All scores must be 1.0-5.0 range
@@ -551,39 +549,39 @@ ${cloText}${customAnalysisSection}
 ANALYSIS FRAMEWORK:
 Apply the TalTech School of Business and Governance (Majandusteaduskond) ILO alignment methodology for MLO-CLO alignment:
 
-1. **SEMANTIC COHERENCE ANALYSIS:**
+1. <H3>SEMANTIC COHERENCE ANALYSIS:</H3>
    - Analyze vocabulary alignment between MLO and CLOs
    - Calculate semantic overlap for each CLO with MLO
    - Identify gaps in terminology progression
 
-2. **COMPETENCY FRAMEWORK ALIGNMENT:**
+2. <H3>COMPETENCY FRAMEWORK ALIGNMENT:</H3>
    - Map CLOs to EQF competency categories
    - Assess if CLOs collectively support MLO competencies
    - Check for competency gaps or redundancies
 
-3. **COGNITIVE PROGRESSION ASSESSMENT:**
+3. <H3>COGNITIVE PROGRESSION ASSESSMENT:</H3>
    - Apply Bloom's Taxonomy to all outcomes
    - Verify appropriate cognitive progression from CLOs to MLO
    - Identify cognitive level gaps or inappropriate jumps
 
-4. **CONTEXTUAL RELEVANCE EVALUATION:**
+4. <H3>CONTEXTUAL RELEVANCE EVALUATION:</H3>
    - Assess domain-specific terminology consistency
    - Check industry relevance for ${programmeInfo.nameEn}
    - Evaluate practical application alignment
 
-5. **LEARNING PROGRESSION ANALYSIS:**
+5. <H3>LEARNING PROGRESSION ANALYSIS:</H3>
    - Assess if ${selectedCLOs.length} CLOs provide adequate coverage
    - Check sequential building patterns within course
    - Evaluate appropriateness for ${courseInfo.credits} EAP course
 
 REQUIRED OUTPUT:
-1. **Individual CLO-MLO Analysis** (brief assessment of each CLO's contribution)
-2. **Collective Alignment Assessment** (how well CLOs support MLO as a group)
-3. **Cognitive Progression Evaluation** (Bloom's levels appropriateness)
-4. **Gap Analysis** (missing elements or redundancies)
-5. **Improvement Recommendations** (specific, actionable suggestions)
-6. **Course Structure Assessment** (optimal number of CLOs, credit alignment)
-7. **User-Friendly Table Format**: For all tabular results, use HTML tables with clear headers and cell borders for readability. Example:
+1. Use <h3> for each section headings, eg <h3>Individual CLO-MLO Analysis</h3> (brief assessment of each CLO's contribution)
+2. <h3>Collective Alignment Assessment</h3> (how well CLOs support MLO as a group)
+3. <h3>Cognitive Progression Evaluation</h3> (Bloom's levels appropriateness)
+4. <h3>Gap Analysis</h3> (missing elements or redundancies)
+5. <h3>Improvement Recommendations</h3> (specific, actionable suggestions)
+6. <h3>Course Structure Assessment</h3> (optimal number of CLOs, credit alignment)
+7. <h3>User-Friendly Table Format</h3>: For all tabular results, use HTML tables with clear headers and cell borders for readability. Example:
 <table style="border-collapse:collapse;width:100%;">
   <thead>
     <tr style="background:#f8f9fa;">
