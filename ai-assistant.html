@@ -120,38 +120,27 @@ Examples:
                     <div class="form-group" style="margin-top: 20px;">
                         <label>🔍 Select Module Learning Outcomes (MLOs) for Analysis</label>
                         <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                            <button id="select-all-mlo" class="btn" style="margin-right: 0;">Select All</button>
+                            <button id="deselect-all-mlo" class="btn" style="margin-right: 0;">Deselect All</button>
                         </div>
                         <div id="mlo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa;">
                             <p style="color: #666; font-style: italic;">Select a PLO to see available MLOs...</p>
-                                <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                                    <label style="margin-right: 12px;">🔍 Select Module Learning Outcomes (MLOs) for Analysis</label>
-                                    <button id="select-all-mlo" class="btn" style="margin-right: 0;">Select All</button>
-                                    <button id="deselect-all-mlo" class="btn" style="margin-right: 0;">Deselect All</button>
-                                </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <textarea id="mlo-text" rows="3" placeholder="MLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
                     </div>
-                <div class="form-group">
-                    <label for="custom-analysis-request">Custom Analysis Request</label>
-                    <textarea id="custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the PLO-MLO alignment...
+                    <div class="form-group">
+                        <label for="custom-analysis-request">Custom Analysis Request</label>
+                        <textarea id="custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the PLO-MLO alignment...
 
 Examples:
 • How can I improve the PLO-MLO alignment?
 • What assessment methods would work best for these outcomes?
 • Are there any gaps in the learning progression?
 • How do these outcomes compare to the higher education standards or best practices?"></textarea>
-                    <small class="form-hint"> Optional: Add specific questions or focus areas for the AI analysis</small>
-                </div>
-
-                <!-- MLO Selection for PLO-MLO Analysis -->
-                <div class="form-group" style="margin-top: 20px;">
-                    <label>🔍 Select Module Learning Outcomes (MLOs) for Analysis</label>
-                    <div id="mlo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa;">
-                        <p style="color: #666; font-style: italic;">Select a PLO to see available MLOs...</p>
+                        <small class="form-hint"> Optional: Add specific questions or focus areas for the AI analysis</small>
                     </div>
-                </div>
             </div>
 
             <!-- Course Analysis Tab -->
@@ -442,29 +431,36 @@ Examples:
                     const ploText = document.getElementById('plo-text').value;
                     const mloText = document.getElementById('mlo-text').value;
                     const customRequest = document.getElementById('custom-analysis-request').value;
-                    
+
                     if (!programmeCode || !ploText.trim() || !mloText.trim()) {
                         throw new Error('Please complete all selections: Programme, PLO, and MLO');
                     }
-                    
+
                     // Get programme info for context
                     const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
-                    
-                    // Create methodology-based analysis prompt
+
+                    // Split PLOs and MLOs into arrays for better formatting
+                    const ploList = ploText.split('\n').filter(Boolean);
+                    const mloList = mloText.split('\n').filter(Boolean);
+
+                    // Create methodology-based analysis prompt with clear separation
                     let methodologyPrompt = `
-You are an educational assessment expert following the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Methodology v1.0. 
+You are an educational assessment expert following the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Methodology v1.0.
 
 ANALYSIS CONTEXT:
 Programme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})
-Programme Learning Outcome (PLO): "${ploText}"
-Module Learning Outcome (MLO): "${mloText}"
+Programme Learning Outcomes (PLOs):
+${ploList.map((plo, i) => `PLO ${i+1}: ${plo}`).join('\n')}
+
+Module Learning Outcomes (MLOs):
+${mloList.map((mlo, i) => `MLO ${i+1}: ${mlo}`).join('\n')}
 
 REQUIRED ANALYSIS METHOD:
 Follow the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Methodology with precise mathematical calculations:
 
 1. SEMANTIC ANALYSIS (35% weight):
-   - Extract meaningful words (3+ chars, no stop words) from both PLO and MLO
-   - Calculate exact overlap percentage: (shared words / PLO words) × 100
+   - Extract meaningful words (3+ chars, no stop words) from each PLO and MLO separately
+   - Calculate exact overlap percentage for each PLO-MLO pair: (shared words / PLO words) × 100
    - Normalize: min(5.0, overlapPercentage / 4.0)
    - Show calculation: "X shared words / Y total PLO words = Z% overlap → normalized score"
 
@@ -520,27 +516,29 @@ ${customRequest}
 
 Please address this specific request while maintaining the methodology framework above.`;
                     }
-                    
                     result = await window.enhancedAIFeatures.executeCustomPrompt(methodologyPrompt, {}, {
                         temperature: 0.7,
                         maxTokens: 4000 // Increased for detailed methodology analysis
                     });
-                    
                 } else if (currentTab === 'course') {
                     // Enhanced course analysis with methodology alignment
                     const programmeCode = document.getElementById('course-programme-select').value;
                     const courseCode = document.getElementById('course-select').value;
                     const mloText = document.getElementById('module-learning-outcomes').value;
                     const cloText = document.getElementById('course-learning-outcomes').value;
-                    
+
+                    // Collect selected CLOs from checkboxes
+                    const cloCheckboxes = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
+                    const selectedCLOs = Array.from(cloCheckboxes).map(cb => cb.value);
+
                     if (!programmeCode || !courseCode || !mloText.trim() || !cloText.trim()) {
                         throw new Error('Please complete all selections: Programme, course, MLO, and CLOs');
                     }
-                    
+
                     // Get course and programme info for context
                     const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
                     const courseInfo = window.programmeDataLoader.getCLOs(programmeCode, courseCode).courseInfo;
-                    
+
                     // Create methodology-based course analysis prompt
                     const customRequest = document.getElementById('course-custom-analysis-request').value.trim();
                     const customAnalysisSection = customRequest ? `
@@ -550,7 +548,7 @@ ${customRequest}
 
 Please address this specific request while maintaining the methodology framework.
 ` : '';
-                    
+
                     const courseAnalysisPrompt = `
 You are an educational assessment expert following the TalTech School of Business and Governance (Majandusteaduskond) ILO alignment methodology v1.0 for course-level analysis.
 
@@ -562,7 +560,7 @@ MODULE LEARNING OUTCOME:
 ${mloText}
 
 COURSE LEARNING OUTCOMES (${selectedCLOs.length} selected):
-${cloText}${customAnalysisSection}
+${selectedCLOs.map((clo, i) => `CLO ${i+1}: ${clo}`).join('\n')}${customAnalysisSection}
 
 ANALYSIS FRAMEWORK:
 Apply the TalTech School of Business and Governance (Majandusteaduskond) ILO alignment methodology for MLO-CLO alignment:
@@ -645,7 +643,7 @@ Provide comprehensive, actionable analysis for course improvement.`;
                             </div>
                             <div style="display: flex; gap: 10px;">
                                 <button onclick="copyResultContent()" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--tt-light-blue); color: black; border: none; border-radius: 4px; cursor: pointer;">
-                                    Copy result
+                                    📋 Copy result
                                 </button>
                                 <button onclick="exportResultToPDF()" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--tt-light-blue); color: black; border: none; border-radius: 4px; cursor: pointer;">
                                     🖨️ Export to PDF
@@ -1247,11 +1245,13 @@ Provide comprehensive, actionable analysis for course improvement.`;
         function updateNavigationLinks() {
             const urlParams = new URLSearchParams(window.location.search);
             const programmeCode = urlParams.get('kavakood');
-            
             if (programmeCode) {
-                document.getElementById('nav-home').href = `index.html?kavakood=${programmeCode}`;
-                document.getElementById('nav-plo-mlo').href = `plo-mlo.html?kavakood=${programmeCode}`;
-                document.getElementById('nav-clo-mlo').href = `clo-mlo.html?kavakood=${programmeCode}`;
+                const navHome = document.getElementById('nav-home');
+                if (navHome) navHome.href = `index.html?kavakood=${programmeCode}`;
+                const navPloMlo = document.getElementById('nav-plo-mlo');
+                if (navPloMlo) navPloMlo.href = `plo-mlo.html?kavakood=${programmeCode}`;
+                const navCloMlo = document.getElementById('nav-clo-mlo');
+                if (navCloMlo) navCloMlo.href = `clo-mlo.html?kavakood=${programmeCode}`;
             }
         }
 
