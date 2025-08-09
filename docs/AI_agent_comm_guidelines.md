@@ -43,7 +43,7 @@ This document serves as a reference and reminder for best practices in communica
 
 At the end of each day or at the conclusion of a significant conversation, generate a markdown summary document in the /docs directory by prompting: 
 
-"Generate an end-of-session markdown summary in /docs following the communication guidelines. Include the main theme, errors, solutions, code snippets, command line actions, and a factual process summary. Use today's date and a relevant title."
+Generate an end-of-session markdown summary in /docs following the communication guidelines. Include the main theme, errors, solutions, code snippets, command line actions, and a factual process summary. Use today's date and a relevant title.
 
 This will trigger the automatic summary creation without needing to copy and paste the full instructions.
 The summary must include:

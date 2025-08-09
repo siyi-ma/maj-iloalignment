@@ -138,8 +138,8 @@ Examples:
                 • Are there any gaps in the learning progression?
                 • How do these outcomes compare to the higher education standards or best practices?"></textarea>
                                         <small class="form-hint"> Optional: Add specific questions or focus areas for the AI analysis</small>
-                                        <button id="inhouse-method-btn-plo-mlo" class="btn btn-secondary" style="margin-top:10px;" onclick="setInhouseMethodology('plo-mlo')">In-house Methodology</button>
-                                        <span id="methodology-indicator-plo-mlo" style="margin-left:10px;color:#1976d2;font-weight:600;"></span>
+                                        <button id="inhouse-method-btn-plo-mlo" class="btn btn-secondary" style="margin-top:10px; display:none;" onclick="setInhouseMethodology('plo-mlo')">In-house Methodology</button>
+                                        <span id="methodology-indicator-plo-mlo" style="margin-left:10px;color:#1976d2;font-weight:600; display:none;"></span>
                                     </div>
             </div>
 
@@ -186,8 +186,8 @@ Examples:
     • Are the CLOs appropriate for the course credits?
     • How does this course fit within the programme structure?"></textarea>
                         <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
-                        <button id="inhouse-method-btn-course" class="btn btn-secondary" style="margin-top:10px;" onclick="setInhouseMethodology('course')">In-house Methodology</button>
-                        <span id="methodology-indicator-course" style="margin-left:10px;color:#1976d2;font-weight:600;"></span>
+                        <button id="inhouse-method-btn-course" class="btn btn-secondary" style="margin-top:10px; display:none;" onclick="setInhouseMethodology('course')">In-house Methodology</button>
+                        <span id="methodology-indicator-course" style="margin-left:10px;color:#1976d2;font-weight:600; display:none;"></span>
                     </div>
             </div>
 
@@ -244,44 +244,36 @@ Examples:
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         let currentTab = 'custom';
-            let useInhouseMethodology = {
-                'plo-mlo': false,
-                'course': false
-            };
+        let useInhouseMethodology = {
+            'plo-mlo': false,
+            'course': false
+        };
 
-            function setInhouseMethodology(tab) {
-                useInhouseMethodology[tab] = !useInhouseMethodology[tab];
-                document.getElementById('methodology-indicator-' + tab).textContent = useInhouseMethodology[tab] ? 'In-house Methodology ON' : '';
-            }
+        function setInhouseMethodology(tab) {
+            useInhouseMethodology[tab] = !useInhouseMethodology[tab];
+            document.getElementById('methodology-indicator-' + tab).textContent = useInhouseMethodology[tab] ? 'In-house Methodology ON' : '';
+        }
 
         // Initialize the application
         async function initApp() {
             console.log('🚀 Initializing AI Assistant...');
             
-            // Show detailed initial statistics
             showInitialStatistics();
-            
-            // Initialize token usage display
             updateTokenUsageDisplay();
             
-            // Load programme data and populate dropdowns
             try {
                 await populateProgrammeDropdowns();
-                // Also populate Course Analysis dropdowns
                 populateCourseAnalysisDropdowns();
                 
-                // Handle URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
                 const programmeCode = urlParams.get('kavakood');
                 if (programmeCode) {
-                    // Pre-select programme in dropdowns
                     const programmeSelects = document.querySelectorAll('select[id*="programme"]');
                     programmeSelects.forEach(select => {
                         if (select.options) {
                             for (let option of select.options) {
                                 if (option.value === programmeCode) {
                                     select.value = programmeCode;
-                                    // Trigger change event to populate dependent dropdowns
                                     select.dispatchEvent(new Event('change'));
                                     break;
                                 }
@@ -289,20 +281,17 @@ Examples:
                         }
                     });
                 }
-                
-                // Update navigation links with current programme
                 updateNavigationLinks();
             } catch (error) {
                 console.error('Failed to load programme data:', error);
             }
             
-            // Wait for AI features to initialize
             let attempts = 0;
             while (attempts < 10) {
                 if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
                     updateStatus('✅ Ready', 'AI Assistant connected and ready to help!');
-                    updateTokenUsageDisplay(); // Update again after connection
-                    updateTokenEstimation(); // Initialize token estimation
+                    updateTokenUsageDisplay();
+                    updateTokenEstimation();
                     break;
                 }
                 
@@ -311,7 +300,6 @@ Examples:
                 attempts++;
             }
             
-            // Add event listeners for token estimation updates
             document.addEventListener('change', updateTokenEstimation);
             document.addEventListener('input', updateTokenEstimation);
             
@@ -331,35 +319,34 @@ Examples:
                 const resetTime = tomorrow.toLocaleString();
                 const timeUntilReset = Math.ceil((tomorrow - today) / (1000 * 60 * 60)); // hours
 
-                let welcomeMessage = `📊 Today's Usage Statistics (${today.toDateString()})\n`;
-                welcomeMessage += `Requests Made:${stats.dailyRequests || 0}/${30}\n`;
-                welcomeMessage += `Tokens Used:${stats.dailyTokens || 0}/${stats.dailyLimit} (Daily Quota: 30,000 tokens)\n`;
-                welcomeMessage += `Estimated Cost:$${(stats.estimatedCostUSD || 0).toFixed(4)}\n`;
-                welcomeMessage += `Quota Resets:${resetTime} (in ${timeUntilReset}h)\n\n`;
+                var welcomeMessage = `📊 Today's Usage Statistics (${today.toDateString()})\n`;
+                welcomeMessage += `Requests Made: ${stats.dailyRequests || 0}/30\n`;
+                welcomeMessage += `Tokens Used: ${stats.dailyTokens || 0}/${stats.dailyLimit} (Daily Quota: 30,000 tokens)\n`;
+                welcomeMessage += `Estimated Cost: $${(stats.estimatedCostUSD || 0).toFixed(4)}\n`;
+                welcomeMessage += `Quota Resets: ${resetTime} (in ${timeUntilReset}h)\n\n`;
 
                 if (stats.remainingDaily > 0) {
                     welcomeMessage += `✅ Available Today: ${stats.remainingDaily} tokens\n`;
                     welcomeMessage += `📈 Usage Level: ${stats.usagePercentage}% used\n\n`;
                 } else {
-                    welcomeMessage += `🚫 Daily token limit reached! Please wait for reset.\n\n`;
+                    welcomeMessage += '🚫 Daily token limit reached! Please wait for reset.\n\n';
                 }
 
                 if (stats.dailyRequests >= 30) {
-                    welcomeMessage += `🚫 Daily request limit reached! Please wait for reset.\n\n`;
+                    welcomeMessage += '🚫 Daily request limit reached! Please wait for reset.\n\n';
                 }
 
                 if (stats.requestHistory && stats.requestHistory.length > 0) {
-                    const lastRequest = stats.requestHistory[0];
-                    welcomeMessage += `Last Request:${new Date(lastRequest.timestamp).toLocaleTimeString()}\n`;
-                    welcomeMessage += `Last Usage:${lastRequest.totalTokens} tokens ($${lastRequest.cost.toFixed(6)})\n\n`;
+                    var lastRequest = stats.requestHistory[0];
+                    welcomeMessage += `Last Request: ${new Date(lastRequest.timestamp).toLocaleTimeString()}\n`;
+                    welcomeMessage += `Last Usage: ${lastRequest.totalTokens} tokens ($${lastRequest.cost.toFixed(6)})\n\n`;
                 }
 
                 welcomeMessage += `Tips:\n`;
-                welcomeMessage += `• Use shorter prompts to save tokens\n`;
-                welcomeMessage += `• Each request uses ~1500-2000 tokens on average\n`;
-                welcomeMessage += `• Complex analyses may use 5000 tokens\n`;
+                welcomeMessage += '• Use shorter prompts to save tokens\n';
+                welcomeMessage += '• Each request uses ~1500-2000 tokens on average\n';
+                welcomeMessage += '• Complex analyses may use 5000 tokens\n';
 
-                // Display in result area temporarily
                 const resultContent = document.getElementById('result-content');
                 const resultsSection = document.getElementById('results-section');
 
@@ -377,17 +364,13 @@ Examples:
         }
 
         function switchTab(tabName) {
-            // Update tab buttons
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             document.getElementById(tabName + '-tab').classList.add('active');
             
             currentTab = tabName;
-            
-            // Update token estimation when switching tabs
             updateTokenEstimation();
         }
 
@@ -413,446 +396,107 @@ Examples:
             const resultsSection = document.getElementById('results-section');
             const resultContent = document.getElementById('result-content');
             const resultMeta = document.getElementById('result-meta');
-            
-            // Disable button and show loading
+
             button.disabled = true;
             button.textContent = '🔄 Analyzing...';
             resultsSection.className = 'results-section result-loading';
             resultContent.textContent = 'AI is analyzing your request... This may take a few seconds.';
             resultMeta.style.display = 'none';
-            
+
             try {
                 let result;
-                
+                let analysisPrompt = '';
+                const options = {
+                    temperature: 0.7,
+                    maxTokens: 4000
+                };
+
                 if (currentTab === 'custom') {
-                    } else if (currentTab === 'plo-mlo') {
-                        // PLO-MLO analysis with selectable methodology
-                        const programmeCode = document.getElementById('programme-select').value;
-                        const ploText = document.getElementById('plo-text').value;
-                        const mloText = document.getElementById('mlo-text').value;
-                        const customRequest = document.getElementById('custom-analysis-request').value;
-
-                        if (!programmeCode || !ploText.trim() || !mloText.trim()) {
-                            throw new Error('Please complete all selections: Programme, PLO, and MLO');
-                        }
-
-                        // Get programme info for context
-                        const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
-
-                        // Split PLOs and MLOs into arrays for better formatting
-                        const ploList = ploText.split('\n').filter(Boolean);
-                        const mloList = mloText.split('\n').filter(Boolean);
-
-                        let analysisPrompt = '';
-                        if (useInhouseMethodology['plo-mlo']) {
-                            analysisPrompt = `You are an educational assessment expert following the in-house methodology. Please use the detailed steps and criteria described in the <a href='methodology.html' target='_blank'>In-house Methodology</a> document for PLO-MLO alignment analysis.`;
-                        } else {
-                            analysisPrompt = `You are an educational assessment expert using the most efficient and up-to-date methods from the past 3 years for learning outcome alignment analysis. Apply advanced semantic similarity models (e.g., transformer-based NLP), modern competency frameworks, and cognitive progression analysis. Use best practices for educational outcome mapping and provide actionable, evidence-based recommendations.`;
-                        }
-
-                        analysisPrompt += `\n\nANALYSIS CONTEXT:\nProgramme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})\nProgramme Learning Outcomes (PLOs):\n${ploList.map((plo, i) => `PLO ${i+1}: ${plo}`).join('\n')}\n\nModule Learning Outcomes (MLOs):\n${mloList.map((mlo, i) => `MLO ${i+1}: ${mlo}`).join('\n')}`;
-
-                        if (customRequest.trim()) {
-                            analysisPrompt += `\n\nADDITIONAL ANALYSIS REQUEST:\n${customRequest}`;
-                        }
-                        result = await window.enhancedAIFeatures.executeCustomPrompt(analysisPrompt, {}, {
-                            temperature: 0.7,
-                            maxTokens: 4000
-                        });
-                    // Custom prompt analysis
                     const prompt = document.getElementById('custom-prompt').value;
                     if (!prompt.trim()) {
                         throw new Error('Please enter a prompt');
                     }
-                    
-                    const options = {
+                    const customOptions = {
                         temperature: parseFloat(document.getElementById('temperature').value),
                         maxTokens: parseInt(document.getElementById('maxTokens').value),
                         topP: parseFloat(document.getElementById('topP').value)
                     };
-                    
-                    result = await window.enhancedAIFeatures.executeCustomPrompt(prompt, {}, options);
-                    
+                    analysisPrompt = prompt;
+                    result = await window.enhancedAIFeatures.executeCustomPrompt(analysisPrompt, {}, customOptions);
+
                 } else if (currentTab === 'plo-mlo') {
-                    // PLO-MLO analysis with TalTech methodology
                     const programmeCode = document.getElementById('programme-select').value;
                     const ploText = document.getElementById('plo-text').value;
                     const mloText = document.getElementById('mlo-text').value;
                     const customRequest = document.getElementById('custom-analysis-request').value;
 
                     if (!programmeCode || !ploText.trim() || !mloText.trim()) {
-                        throw new Error('Please complete all selections: Programme, PLO, and MLO');
+                        throw new Error('Please complete all selections: Programme, PLO(s), and MLO(s)');
                     }
 
-                    // Get programme info for context
                     const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
-
-                    // Split PLOs and MLOs into arrays for better formatting
                     const ploList = ploText.split('\n').filter(Boolean);
                     const mloList = mloText.split('\n').filter(Boolean);
 
-                    // Create methodology-based analysis prompt with clear separation
-                    let methodologyPrompt = `
-You are an educational assessment expert following the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Methodology v1.0.
+                    analysisPrompt = `You are an educational assessment expert. Analyze the alignment between the following Programme Learning Outcomes (PLOs) and Module Learning Outcomes (MLOs).\n\n`;
+                    analysisPrompt += `ANALYSIS CONTEXT:\nProgramme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})\n`;
+                    analysisPrompt += `Programme Learning Outcomes (PLOs):\n${ploList.map((plo, i) => `PLO ${i+1}: ${plo}`).join('\n')}\n\n`;
+                    analysisPrompt += `Module Learning Outcomes (MLOs):\n${mloList.map((mlo, i) => `MLO ${i+1}: ${mlo}`).join('\n')}`;
 
-ANALYSIS CONTEXT:
-Programme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})
-Programme Learning Outcomes (PLOs):
-${ploList.map((plo, i) => `PLO ${i+1}: ${plo}`).join('\n')}
-
-Module Learning Outcomes (MLOs):
-${mloList.map((mlo, i) => `MLO ${i+1}: ${mlo}`).join('\n')}
-
-REQUIRED ANALYSIS METHOD:
-Follow the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Methodology with precise mathematical calculations:
-
-1. SEMANTIC ANALYSIS (35% weight):
-   - Extract meaningful words (3+ chars, no stop words) from each PLO and MLO separately
-   - Calculate exact overlap percentage for each PLO-MLO pair: (shared words / PLO words) × 100
-   - Normalize: min(5.0, overlapPercentage / 4.0)
-   - Show calculation: "X shared words / Y total PLO words = Z% overlap → normalized score"
-
-2. COMPETENCY ANALYSIS (25% weight):
-   - Map words to EQF competency categories (analytical, creative, application, etc.)
-   - Apply category weights: analytical(1.3), creative(1.4), application(1.1), etc.
-   - Calculate: (matched keywords / total keywords) × category weight
-   - Normalize: min(5.0, totalWeight × 1.5)
-   - Show results in an HTML table with columns: 'Category', 'Matched Keywords', 'Total Keywords', 'Category Weight', 'Score'.
-
-3. COGNITIVE ANALYSIS (20% weight):
-   - Identify Bloom's Taxonomy levels: Remember(1), Understand(2), Apply(3), Analyze(4), Evaluate(5), Create(6)
-   - Calculate level gap: |PLO_level - MLO_level|
-   - Check progression: MLO_level ≤ PLO_level
-   - Score: progressive ? (1.0 - gap × 0.2) : 0.3
-   - Normalize: score × 5.0
-
-4. CONTEXTUAL ANALYSIS (15% weight):
-   - Identify domain-specific terms for ${programmeInfo.nameEn}
-   - Apply domain relevance multipliers
-   - Calculate total relevance score
-   - Normalize: min(5.0, relevanceScore)
-
-5. PROGRESSION ANALYSIS (5% weight):
-   - Assess sequential building patterns
-   - Consider module prerequisites and year level
-   - Calculate building score (0-1.0)
-   - Normalize: buildingScore × 5.0
-
-FINAL CALCULATION:
-Final Score = (semantic×0.35) + (competency×0.25) + (cognitive×0.20) + (contextual×0.15) + (progression×0.05)
-
-REQUIRED OUTPUT FORMAT:
-- Use <h2> for the main report title, e.g. <h2>MMO5680: Sustainable Human Resource Management Principles and Policies - ILO Alignment Analysis</h2>
-- Use <h3> for section titles (do not use markdown headings).
-- For tables, use <table class="ai-report-table">...</table>
-- For Competency Analysis, present results in an HTML table as described above.
-
-QUALITY ASSURANCE:
-- All scores must be 1.0-5.0 range
-- Show mathematical work for transparency
-- Base analysis on established frameworks
-- Provide actionable improvement suggestions
-
-Reference: TalTech SBG (Majandusteaduskond) ILO Alignment Analysis Methodology v1.0`;
-
-                    // Add custom analysis request if provided
                     if (customRequest.trim()) {
-                        methodologyPrompt += `
-
-ADDITIONAL ANALYSIS REQUEST:
-${customRequest}
-
-Please address this specific request while maintaining the methodology framework above.`;
+                        analysisPrompt += `\n\nADDITIONAL ANALYSIS REQUEST:\n${customRequest}`;
                     }
-                    result = await window.enhancedAIFeatures.executeCustomPrompt(methodologyPrompt, {}, {
-                        temperature: 0.7,
-                        maxTokens: 4000 // Increased for detailed methodology analysis
-                    });
+                    
+                    result = await window.enhancedAIFeatures.executeCustomPrompt(analysisPrompt, {}, options);
+
                 } else if (currentTab === 'course') {
-                    // Enhanced course analysis with methodology alignment
                     const programmeCode = document.getElementById('course-programme-select').value;
                     const courseCode = document.getElementById('course-select').value;
                     const mloText = document.getElementById('module-learning-outcomes').value;
-                    const cloText = document.getElementById('course-learning-outcomes').value;
-
-                    // Collect selected CLOs from checkboxes
+                    const customRequest = document.getElementById('course-custom-analysis-request').value.trim();
+                    
                     const cloCheckboxes = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
                     const selectedCLOs = Array.from(cloCheckboxes).map(cb => cb.value);
 
-                    if (!programmeCode || !courseCode || !mloText.trim() || !cloText.trim()) {
-                        throw new Error('Please complete all selections: Programme, course, MLO, and CLOs');
+                    if (!programmeCode || !courseCode || !mloText.trim() || selectedCLOs.length === 0) {
+                        throw new Error('Please complete all selections: Programme, Course, MLO, and at least one CLO');
                     }
 
-                    // Get course and programme info for context
                     const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
-                    const courseInfo = window.programmeDataLoader.getCLOs(programmeCode, courseCode).courseInfo;
+                    const courseData = window.programmeDataLoader.getCLOs(programmeCode, courseCode);
+                    const courseInfo = courseData.courseInfo;
 
-                    // Create methodology-based course analysis prompt
-                    const customRequest = document.getElementById('course-custom-analysis-request').value.trim();
-                    const customAnalysisSection = customRequest ? `
-
-ADDITIONAL ANALYSIS REQUEST:
-${customRequest}
-
-Please address this specific request while maintaining the methodology framework.
-` : '';
-
-                    const courseAnalysisPrompt = `
-You are an educational assessment expert following the TalTech School of Business and Governance (Majandusteaduskond) ILO alignment methodology v1.0 for course-level analysis.
-
-COURSE ANALYSIS CONTEXT:
-Programme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})
-Course: ${courseInfo.nameEn} (${courseInfo.code}) - ${courseInfo.credits} EAP
-
-MODULE LEARNING OUTCOME:
-${mloText}
-
-COURSE LEARNING OUTCOMES (${selectedCLOs.length} selected):
-${selectedCLOs.map((clo, i) => `CLO ${i+1}: ${clo}`).join('\n')}${customAnalysisSection}
-
-ANALYSIS FRAMEWORK:
-Apply the TalTech School of Business and Governance (Majandusteaduskond) ILO alignment methodology for MLO-CLO alignment:
-
-1. <H3>SEMANTIC COHERENCE ANALYSIS:</H3>
-   - Analyze vocabulary alignment between MLO and CLOs
-   - Calculate semantic overlap for each CLO with MLO
-   - Identify gaps in terminology progression
-
-2. <H3>COMPETENCY FRAMEWORK ALIGNMENT:</H3>
-   - Map CLOs to EQF competency categories
-   - Assess if CLOs collectively support MLO competencies
-   - Check for competency gaps or redundancies
-
-3. <H3>COGNITIVE PROGRESSION ASSESSMENT:</H3>
-   - Apply Bloom's Taxonomy to all outcomes
-   - Verify appropriate cognitive progression from CLOs to MLO
-   - Identify cognitive level gaps or inappropriate jumps
-
-4. <H3>CONTEXTUAL RELEVANCE EVALUATION:</H3>
-   - Assess domain-specific terminology consistency
-   - Check industry relevance for ${programmeInfo.nameEn}
-   - Evaluate practical application alignment
-
-5. <H3>LEARNING PROGRESSION ANALYSIS:</H3>
-   - Assess if ${selectedCLOs.length} CLOs provide adequate coverage
-   - Check sequential building patterns within course
-   - Evaluate appropriateness for ${courseInfo.credits} EAP course
-
-REQUIRED OUTPUT:
-1. Use <h3> for each section headings, eg <h3>Individual CLO-MLO Analysis</h3> (brief assessment of each CLO's contribution)
-2. <h3>Collective Alignment Assessment</h3> (how well CLOs support MLO as a group)
-3. <h3>Cognitive Progression Evaluation</h3> (Bloom's levels appropriateness)
-4. <h3>Gap Analysis</h3> (missing elements or redundancies)
-5. <h3>Improvement Recommendations</h3> (specific, actionable suggestions)
-6. <h3>Course Structure Assessment</h3> (optimal number of CLOs, credit alignment)
-7. <h3>User-Friendly Table Format</h3>: For all tabular results, use HTML tables with clear headers and cell borders for readability. Example:
-<table style="border-collapse:collapse;width:100%;">
-  <thead>
-    <tr style="background:#f8f9fa;">
-      <th style="border:1px solid #ccc;padding:6px;">CLO</th>
-      <th style="border:1px solid #ccc;padding:6px;">Semantic Overlap</th>
-      <th style="border:1px solid #ccc;padding:6px;">Competency Alignment (EQF)</th>
-      <th style="border:1px solid #ccc;padding:6px;">Bloom's Level</th>
-      <th style="border:1px solid #ccc;padding:6px;">Contextual Relevance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Fill rows with analysis results -->
-  </tbody>
-</table>
-
-QUALITY STANDARDS:
-- Reference established educational frameworks (EQF, Bloom's Taxonomy)
-- Provide evidence-based recommendations
-- Consider programme-level coherence
-- Ensure industry relevance for ${programmeInfo.nameEn} graduates
-
-Provide comprehensive, actionable analysis for course improvement.`;
+                    analysisPrompt = `You are an educational assessment expert. Analyze the alignment between the Module Learning Outcome (MLO) and the selected Course Learning Outcomes (CLOs) for the following course.\n\n`;
+                    analysisPrompt += `COURSE ANALYSIS CONTEXT:\nProgramme: ${programmeInfo.nameEn} (${programmeCode.toUpperCase()})\n`;
+                    analysisPrompt += `Course: ${courseInfo.nameEn} (${courseInfo.code}) - ${courseInfo.credits} EAP\n\n`;
+                    analysisPrompt += `MODULE LEARNING OUTCOME:\n${mloText}\n\n`;
+                    analysisPrompt += `COURSE LEARNING OUTCOMES (${selectedCLOs.length} selected):\n${selectedCLOs.map((clo, i) => `CLO ${i+1}: ${clo}`).join('\n')}`;
                     
-                    result = await window.enhancedAIFeatures.executeCustomPrompt(courseAnalysisPrompt, {}, {
-                        temperature: 0.7,
-                        maxTokens: 4000 // Increased for comprehensive analysis
-                    });
+                    if (customRequest) {
+                        analysisPrompt += `\n\nADDITIONAL ANALYSIS REQUEST:\n${customRequest}`;
+                    }
+
+                    result = await window.enhancedAIFeatures.executeCustomPrompt(analysisPrompt, {}, options);
                 }
-                
-                // Display results with feedback option
-                if (result.success) {
-                    resultsSection.className = 'results-section result-success';
-                        // Convert markdown headings and numbered lists to HTML, remove code block markers
-                        resultContent.innerHTML = formatAISuggestionsHTML(result.response);
 
-        // Utility: Convert markdown headings and numbered lists to HTML, remove code block markers
-        function formatAISuggestionsHTML(md) {
-            if (!md) return '';
-            let html = md;
-            // Remove code block markers
-            html = html.replace(/```[a-zA-Z]*\n?/g, '');
-            // Convert markdown headings (##, ###) to <h3>
-            html = html.replace(/^\s*##+\s*(.*)$/gm, function(_, heading) {
-                return '<h3>' + heading.replace(/Actionable Improvement Suggestions/i, 'Improvement Suggestions') + '</h3>';
-            });
-            html = html.replace(/^\s*\*\*([A-Za-z0-9 \-]+)\*\*:?/gm, function(_, heading) {
-                return '<h3>' + heading.replace(/Actionable Improvement Suggestions/i, 'Improvement Suggestions') + '</h3>';
-            });
+                resultsSection.className = 'results-section result-success';
+                resultContent.innerHTML = result.htmlContent; 
+                resultMeta.innerHTML = `<span>Tokens: ${result.tokens.total}</span> | <span>Cost: $${result.cost.toFixed(5)}</span> | <span>Time: ${result.duration}s</span>`;
+                resultMeta.style.display = 'block';
+                document.getElementById('clear-btn').style.display = 'inline-block';
+                updateTokenUsageDisplay();
 
-            // Patch: Ensure semantic analysis table includes full and original mlokood
-            html = html.replace(/(<table[^>]*class=["']ai-report-table["'][^>]*>\s*<thead>\s*<tr[^>]*>\s*<th[^>]*>PLO<\/th>\s*<th[^>]*>Semantic Overlap<\/th>)/i,
-                '$1<th>MLO kood</th>');
-            html = html.replace(/(<tr[^>]*>\s*<td[^>]*>PLO \d+<\/td>\s*<td[^>]*>\d+%<\/td>)/ig, function(match, p1, offset, str) {
-                // Try to extract MLO kood from the context (if available)
-                // This is a best-effort patch, actual implementation should pass mlokood in the backend
-                const mloKoodMatch = str.match(/MLO\s*(\w+)/);
-                const mloKood = mloKoodMatch ? mloKoodMatch[1] : 'N/A';
-                return match + '<td>' + mloKood + '</td>';
-            });
-
-            // Patch: Contextual Analysis error/placeholder handling
-            html = html.replace(/(A detailed analysis requires a list of domain-specific terms and their relevance multipliers\.[^<]*)/i,
-                '<div class="contextual-analysis-error" style="color:#dc3545;background:#fff3cd;padding:8px;border-radius:4px;margin:8px 0;">$1<br><b>Error:</b> No domain-specific terms or relevance multipliers found. Please provide or verify these terms for accurate contextual analysis.</div>');
-
-            // Patch: Add note for placeholders in analysis sections
-            html = html.replace(/(This response provides a framework\.[^<]*)/i,
-                '<div class="analysis-placeholder-note" style="color:#0c5460;background:#d1ecf1;padding:8px;border-radius:4px;margin:8px 0;">$1<br><b>Note:</b> Please fill in actual data for Competency, Cognitive, Contextual, and Progression Analysis. Word counts and scores are estimates and should be verified.</div>');
-            // Convert numbered lists to <ol><li>
-            // Find blocks of numbered lists
-            html = html.replace(/(^|\n)(\d+\.\s+.*(?:\n\d+\.\s+.*)*)/gm, function(match) {
-                const items = match.replace(/(^|\n)(\d+\.\s+)/g, '\n').split('\n').filter(Boolean);
-                return '<ol>' + items.map(i => '<li>' + i.trim() + '</li>').join('') + '</ol>';
-            });
-            // Convert markdown bullets to <ul><li>
-            html = html.replace(/(^|\n)([-*•]\s+.*(?:\n[-*•]\s+.*)*)/gm, function(match) {
-                const items = match.replace(/(^|\n)[-*•]\s+/g, '\n').split('\n').filter(Boolean);
-                return '<ul>' + items.map(i => '<li>' + i.trim() + '</li>').join('') + '</ul>';
-            });
-            // Remove stray triple backticks
-            html = html.replace(/```/g, '');
-            return html;
-        }
-                    
-                    // Show metadata with copy result option
-                    resultMeta.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <div>
-                                <strong>Analysis Complete:</strong> 
-                                Tokens used: ~${result.tokensUsed || 'Unknown'} • 
-                                Model: Gemini 1.5 Flash • 
-                                Time: ${new Date().toLocaleTimeString()}
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button onclick="copyResultContent()" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--tt-light-blue); color: black; border: none; border-radius: 4px; cursor: pointer;">
-                                    📋 Copy result
-                                </button>
-                                <button onclick="exportResultToPDF()" class="btn" style="padding: 6px 12px; font-size: 12px; background: var(--tt-light-blue); color: black; border: none; border-radius: 4px; cursor: pointer;">
-                                    🖨️ Export to PDF
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    resultMeta.style.display = 'block';
-                    
-                    // Update token usage display
-                    updateTokenUsageDisplay();
-                } else {
-                    throw new Error(result.error || 'Analysis failed');
-                }
-                
             } catch (error) {
                 resultsSection.className = 'results-section result-error';
-                resultContent.textContent = `❌ Error: ${error.message}\n\nPlease check your input and try again. If the problem persists, verify your API configuration.`;
+                resultContent.textContent = "❌ Error: " + error.message + "\n\nPlease check your input and try again. If the problem persists, verify your API configuration.";
                 resultMeta.style.display = 'none';
             } finally {
-                // Re-enable button
                 button.disabled = false;
                 button.textContent = '🚀 Analyze with AI';
             }
         }
 
-        function clearResults() {
-            const resultsSection = document.getElementById('results-section');
-            const resultContent = document.getElementById('result-content');
-            const resultMeta = document.getElementById('result-meta');
-            
-            resultsSection.className = 'results-section';
-            resultContent.textContent = 'Results cleared. Ready for new analysis...';
-            resultMeta.style.display = 'none';
-        }
-
-        // Feedback system functions
-        function showFeedbackModal() {
-            const modal = document.getElementById('feedback-modal');
-            if (modal) {
-                modal.style.display = 'block';
-            }
-        }
-
-        function closeFeedbackModal() {
-            const modal = document.getElementById('feedback-modal');
-            if (modal) {
-                modal.style.display = 'none';
-                // Clear form
-                document.querySelectorAll('input[name="feedback-rating"]').forEach(radio => radio.checked = false);
-                document.getElementById('feedback-comments').value = '';
-            }
-        }
-
-        async function submitFeedback() {
-            const selectedRating = document.querySelector('input[name="feedback-rating"]:checked');
-            const comments = document.getElementById('feedback-comments').value;
-            
-            if (!selectedRating) {
-                alert('Please select a rating before submitting.');
-                return;
-            }
-            
-            const feedbackData = {
-                timestamp: new Date().toISOString(),
-                rating: parseInt(selectedRating.value),
-                comments: comments.trim(),
-                analysisType: currentTab,
-                programmeCode: getCurrentProgrammeCode(),
-                sessionId: generateSessionId(),
-                userAgent: navigator.userAgent,
-                url: window.location.href
-            };
-            
-            try {
-                // Store feedback in localStorage for collection
-                const existingFeedback = JSON.parse(localStorage.getItem('aiAssistantFeedback') || '[]');
-                existingFeedback.push(feedbackData);
-                
-                // Keep only last 100 feedback entries to prevent storage bloat
-                if (existingFeedback.length > 100) {
-                    existingFeedback.splice(0, existingFeedback.length - 100);
-                }
-                
-                localStorage.setItem('aiAssistantFeedback', JSON.stringify(existingFeedback));
-                
-                // Show success message
-                alert('Thank you for your feedback! Your input helps us improve the AI Assistant.');
-                
-                // Close modal
-                closeFeedbackModal();
-                
-                console.log('📝 Feedback submitted:', feedbackData);
-                
-            } catch (error) {
-                console.error('Error submitting feedback:', error);
-                alert('Error submitting feedback. Please try again.');
-            }
-        }
-
-        function getCurrentProgrammeCode() {
-            // Get programme code from current tab
-            if (currentTab === 'plo-mlo') {
-                return document.getElementById('programme-select').value;
-            } else if (currentTab === 'course') {
-                return document.getElementById('course-programme-select').value;
-            }
-            return null;
-        }
-
         function generateSessionId() {
-            // Generate or retrieve session ID
             let sessionId = sessionStorage.getItem('aiAssistantSessionId');
             if (!sessionId) {
                 sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -861,12 +505,10 @@ Provide comprehensive, actionable analysis for course improvement.`;
             return sessionId;
         }
 
-        // Function to retrieve feedback data (for admin/analysis purposes)
         function getFeedbackData() {
             return JSON.parse(localStorage.getItem('aiAssistantFeedback') || '[]');
         }
 
-        // Function to export feedback data
         function exportFeedbackData() {
             const feedback = getFeedbackData();
             const dataStr = JSON.stringify(feedback, null, 2);
@@ -874,29 +516,22 @@ Provide comprehensive, actionable analysis for course improvement.`;
             
             const link = document.createElement('a');
             link.href = URL.createObjectURL(dataBlob);
-            link.download = `ai_assistant_feedback_${new Date().toISOString().split('T')[0]}.json`;
+            link.download = "ai_assistant_feedback_" + new Date().toISOString().split('T')[0] + ".json";
             link.click();
         }
 
-        // Enhanced token usage display with daily request tracking
         function updateTokenUsageDisplay() {
             if (window.secureAPIConfig) {
                 const stats = window.secureAPIConfig.getUsageStats();
                 
-                // Update usage statistics with daily requests
-                document.getElementById('daily-usage').textContent = 
-                    `Daily: ${stats.dailyTokens || 0}/${stats.dailyLimit} tokens`;
-                document.getElementById('session-requests').textContent = 
-                    `Requests: ${stats.dailyRequests || 0}/30`;
-                document.getElementById('estimated-cost').textContent = 
-                    `Cost: $${(stats.estimatedCostUSD || 0).toFixed(4)}`;
+                document.getElementById('daily-usage').textContent = `Daily: ${stats.dailyTokens || 0}/${stats.dailyLimit} tokens`;
+                document.getElementById('session-requests').textContent = `Requests: ${stats.dailyRequests || 0}/30`;
+                document.getElementById('estimated-cost').textContent = `Cost: $${(stats.estimatedCostUSD || 0).toFixed(4)}`;
                 
-                // Update progress bar
                 const progressBar = document.getElementById('usage-progress');
                 const percentage = parseFloat(stats.usagePercentage || 0);
-                progressBar.style.width = `${Math.min(100, percentage)}%`;
+                progressBar.style.width = Math.min(100, percentage) + '%';
                 
-                // Update progress bar color based on usage
                 progressBar.className = 'usage-progress';
                 if (percentage >= 90) {
                     progressBar.classList.add('danger');
@@ -904,26 +539,22 @@ Provide comprehensive, actionable analysis for course improvement.`;
                     progressBar.classList.add('warning');
                 }
                 
-                // Check quota limits and update status
                 const requestsUsed = stats.totalRequests || 0;
                 const requestLimit = 30;
                 const tokenLimitReached = percentage >= 100 || (stats.dailyTokens >= stats.dailyLimit);
                 const requestLimitReached = requestsUsed >= requestLimit;
-                
+                const analyzeBtn = document.getElementById('analyze-btn');
+
                 if (tokenLimitReached || requestLimitReached) {
                     const limitType = tokenLimitReached ? 'token' : 'request';
                     updateStatus('🚫 Not Available', `Daily ${limitType} quota reached. Service unavailable until tomorrow.`);
-                    // Disable analyze button
-                    const analyzeBtn = document.getElementById('analyze-btn');
                     if (analyzeBtn) {
                         analyzeBtn.disabled = true;
                         analyzeBtn.style.opacity = '0.5';
                         analyzeBtn.style.cursor = 'not-allowed';
                     }
                 } else if (window.enhancedAIFeatures && window.enhancedAIFeatures.isReady()) {
-                    // Re-enable if quota is available and AI is ready
                     updateStatus('✅ Ready', 'AI Assistant connected and ready to help!');
-                    const analyzeBtn = document.getElementById('analyze-btn');
                     if (analyzeBtn) {
                         analyzeBtn.disabled = false;
                         analyzeBtn.style.opacity = '1';
@@ -931,7 +562,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
                     }
                 }
                 
-                // Update tooltip with detailed info
                 const usageDisplay = document.querySelector('.token-usage-display');
                 usageDisplay.title = 
                     `Token usage: ${stats.remainingDaily} tokens remaining today\n` +
@@ -942,13 +572,11 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         }
 
-        // Initialize when page loads
         window.addEventListener('load', () => {
             initApp();
             fetchApiUsage();
-            });
+        });
 
-        // Global functions for admin/debugging
         window.aiAssistantAdmin = {
             getFeedbackData,
             exportFeedbackData,
@@ -974,7 +602,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         };
 
-        // Programme data management functions
         async function populateProgrammeDropdowns() {
             try {
                 if (!window.programmeDataLoader.isDataLoaded()) {
@@ -982,8 +609,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 }
                 
                 const programmes = window.programmeDataLoader.getProgrammes();
-                
-                // Populate PLO-MLO tab programme dropdown
                 const ploMloSelect = document.getElementById('programme-select');
                 const courseProgrammeSelect = document.getElementById('course-programme-select');
                 
@@ -998,14 +623,12 @@ Provide comprehensive, actionable analysis for course improvement.`;
                         });
                     }
                 });
-                
-                console.log('✅ Programme dropdowns populated with', programmes.length, 'programmes');
+                console.log(`✅ Programme dropdowns populated with ${programmes.length} programmes`);
             } catch (error) {
                 console.error('❌ Error populating programme dropdowns:', error);
             }
         }
 
-        // Add missing function to populate Course Analysis programme dropdown
         function populateCourseAnalysisDropdowns() {
             const dropdown = document.getElementById('course-programme-select');
             if (!dropdown) return;
@@ -1023,20 +646,15 @@ Provide comprehensive, actionable analysis for course improvement.`;
 
         function loadProgrammeData() {
             const programmeCode = document.getElementById('programme-select').value;
-            
             if (!programmeCode) {
                 resetPloMloDropdowns();
                 return;
             }
-            
             try {
-                // Load PLOs
                 const plos = window.programmeDataLoader.getPLOs(programmeCode);
                 const ploSelect = document.getElementById('plo-select');
-                
                 if (ploSelect) {
                     ploSelect.innerHTML = '<option value="">Select a PLO...</option>';
-                    
                     plos.forEach((plo, index) => {
                         const option = document.createElement('option');
                         option.value = index;
@@ -1044,14 +662,10 @@ Provide comprehensive, actionable analysis for course improvement.`;
                         ploSelect.appendChild(option);
                     });
                 }
-                
-                // Load MLOs
                 const mlos = window.programmeDataLoader.getMLOs(programmeCode);
                 const mloSelect = document.getElementById('mlo-select');
-                
                 if (mloSelect) {
                     mloSelect.innerHTML = '<option value="">Select an MLO...</option>';
-                    
                     mlos.forEach((mlo, index) => {
                         const option = document.createElement('option');
                         option.value = index;
@@ -1059,28 +673,23 @@ Provide comprehensive, actionable analysis for course improvement.`;
                         mloSelect.appendChild(option);
                     });
                 }
-                
-                // Clear text areas
                 const ploText = document.getElementById('plo-text');
                 const mloText = document.getElementById('mlo-text');
                 if (ploText) ploText.value = '';
                 if (mloText) mloText.value = '';
-                
             } catch (error) {
                 console.error('Error loading programme data:', error);
-                alert('Error loading programme data: ' + error.message);
+                alert(`Error loading programme data: ${error.message}`);
             }
         }
 
-        // Add missing function to handle programme change in Course Analysis tab
         function onCourseAnalysisProgrammeChange() {
             const dropdown = document.getElementById('course-programme-select');
             const selectedCode = dropdown ? dropdown.value : '';
-            // Reset course dropdown
             const courseDropdown = document.getElementById('course-select');
             if (courseDropdown) {
                 courseDropdown.innerHTML = '<option value="">Select a course...</option>';
-                if (selectedCode && selectedCode !== '') {
+                if (selectedCode) {
                     try {
                         const courses = window.programmeDataLoader.getCourses(selectedCode);
                         courses.forEach(course => {
@@ -1095,21 +704,17 @@ Provide comprehensive, actionable analysis for course improvement.`;
                     }
                 }
             }
-            // Reset MLO dropdown
             const mloDropdown = document.getElementById('course-mlo-select');
             if (mloDropdown) {
                 mloDropdown.innerHTML = '<option value="">Select a course first...</option>';
             }
-            // Reset CLO checkboxes
             resetCLOCheckboxes();
         }
 
         function loadSelectedPLO() {
             const programmeCode = document.getElementById('programme-select').value;
             const ploIndex = document.getElementById('plo-select').value;
-            
             if (!programmeCode || !ploIndex) return;
-            
             try {
                 const plos = window.programmeDataLoader.getPLOs(programmeCode);
                 const selectedPlo = plos[parseInt(ploIndex)];
@@ -1125,9 +730,7 @@ Provide comprehensive, actionable analysis for course improvement.`;
         function loadSelectedMLO() {
             const programmeCode = document.getElementById('programme-select').value;
             const mloIndex = document.getElementById('mlo-select').value;
-            
             if (!programmeCode || !mloIndex) return;
-            
             try {
                 const mlos = window.programmeDataLoader.getMLOs(programmeCode);
                 const selectedMlo = mlos[parseInt(mloIndex)];
@@ -1142,30 +745,24 @@ Provide comprehensive, actionable analysis for course improvement.`;
 
         function loadCourseProgrammeData() {
             const programmeCode = document.getElementById('course-programme-select').value;
-            
             if (!programmeCode) {
                 resetCourseDropdowns();
                 return;
             }
-            
             try {
-                // Load courses
                 const courses = window.programmeDataLoader.getCourses(programmeCode);
                 const courseSelect = document.getElementById('course-select');
                 courseSelect.innerHTML = '<option value="">Select a course...</option>';
-                
-                courses.forEach((course, index) => {
+                courses.forEach((course) => {
                     const option = document.createElement('option');
                     option.value = course.ainekood;
                     option.textContent = `${course.ainekood}: ${course.ainenimetusik}`;
                     courseSelect.appendChild(option);
                 });
                 
-                // Load MLOs for course analysis
                 const mlos = window.programmeDataLoader.getMLOs(programmeCode);
                 const courseMloSelect = document.getElementById('course-mlo-select');
                 courseMloSelect.innerHTML = '<option value="">Select an MLO...</option>';
-                
                 mlos.forEach((mlo, index) => {
                     const option = document.createElement('option');
                     option.value = index;
@@ -1173,15 +770,13 @@ Provide comprehensive, actionable analysis for course improvement.`;
                     courseMloSelect.appendChild(option);
                 });
                 
-                // Clear displays
                 document.getElementById('course-info-display').value = '';
                 document.getElementById('module-learning-outcomes').value = '';
                 document.getElementById('course-learning-outcomes').value = '';
                 document.getElementById('clo-checkboxes').innerHTML = '<p style="color: #666; font-style: italic;">Select a course to see available CLOs...</p>';
-                
             } catch (error) {
                 console.error('Error loading course programme data:', error);
-                alert('Error loading course programme data: ' + error.message);
+                alert(`Error loading course programme data: ${error.message}`);
             }
         }
 
@@ -1193,15 +788,11 @@ Provide comprehensive, actionable analysis for course improvement.`;
             
             try {
                 const cloData = window.programmeDataLoader.getCLOs(programmeCode, courseCode);
+                const courseInfoText = `${cloData.courseInfo.nameEn} (${cloData.courseInfo.code}) - ${cloData.courseInfo.credits} EAP`;
+                document.getElementById('course-info-display').value = courseInfoText;
                 
-                // Display course info
-                const courseInfo = `${cloData.courseInfo.nameEn} (${cloData.courseInfo.code}) - ${cloData.courseInfo.credits} EAP`;
-                document.getElementById('course-info-display').value = courseInfo;
-                
-                // Create CLO checkboxes
                 const cloContainer = document.getElementById('clo-checkboxes');
                 cloContainer.innerHTML = '';
-
 
                 const closEn = cloData.closEn;
                 Object.keys(closEn).forEach(cloKey => {
@@ -1212,13 +803,13 @@ Provide comprehensive, actionable analysis for course improvement.`;
                     
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
-                    checkbox.id = `clo-${cloKey}`;
+                    checkbox.id = 'clo-' + cloKey;
                     checkbox.value = closEn[cloKey];
                     checkbox.onchange = updateSelectedCLOs;
                     checkbox.style.marginRight = '8px';
                     
                     const label = document.createElement('label');
-                    label.htmlFor = `clo-${cloKey}`;
+                    label.htmlFor = 'clo-' + cloKey;
                     label.style.cursor = 'pointer';
                     label.textContent = `${cloKey}: ${closEn[cloKey]}`;
                     
@@ -1226,10 +817,9 @@ Provide comprehensive, actionable analysis for course improvement.`;
                     checkboxDiv.appendChild(label);
                     cloContainer.appendChild(checkboxDiv);
                 });
-                
             } catch (error) {
                 console.error('Error loading course CLOs:', error);
-                alert('Error loading course CLOs: ' + error.message);
+                alert(`Error loading course CLOs: ${error.message}`);
             }
         }
 
@@ -1239,10 +829,11 @@ Provide comprehensive, actionable analysis for course improvement.`;
             const programmeDropdown = document.getElementById('course-programme-select');
             const courseDropdown = document.getElementById('course-select');
             if (!dropdown || !textarea || !programmeDropdown || !courseDropdown) return;
+            
             const selectedProgramme = programmeDropdown.value;
             const selectedCourse = courseDropdown.value;
             const selectedIndex = dropdown.value;
-            if (!selectedProgramme || !selectedCourse || selectedIndex === '' || selectedIndex === undefined) {
+            if (!selectedProgramme || !selectedCourse || selectedIndex === '') {
                 textarea.value = '';
                 return;
             }
@@ -1262,56 +853,38 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         }
 
-        // Token estimation functions
         function estimateTokens(text) {
-            // Rough token estimation: ~1 token per 4 characters for English text
-            // This is an approximation as actual tokenization depends on the model
             return Math.ceil(text.length / 4);
         }
 
         function updateTokenEstimation() {
             try {
                 let totalInputTokens = 0;
-                const outputTokens = 2000; // Expected output tokens for analysis
+                const outputTokens = 2000;
                 
                 if (currentTab === 'plo-mlo') {
-                    // PLO-MLO tab estimation
                     const programmeText = document.getElementById('programme-select')?.options[document.getElementById('programme-select')?.selectedIndex]?.text || '';
                     const ploText = document.getElementById('plo-text')?.value || '';
                     const mloText = document.getElementById('mlo-text')?.value || '';
                     const customRequest = document.getElementById('custom-analysis-request')?.value || '';
-                    
-                    totalInputTokens = estimateTokens(programmeText + ploText + mloText + customRequest + 
-                        'PLO-MLO alignment analysis request with structured output format'); // Base prompt
-                    
+                    totalInputTokens = estimateTokens(programmeText + ploText + mloText + customRequest + 'PLO-MLO alignment analysis request');
                 } else if (currentTab === 'course') {
-                    // Course Analysis tab estimation
                     const programmeText = document.getElementById('course-programme-select')?.options[document.getElementById('course-programme-select')?.selectedIndex]?.text || '';
                     const courseText = document.getElementById('course-select')?.options[document.getElementById('course-select')?.selectedIndex]?.text || '';
                     const mloText = document.getElementById('module-learning-outcomes')?.value || '';
                     const cloText = document.getElementById('course-learning-outcomes')?.value || '';
                     const customRequest = document.getElementById('course-custom-analysis-request')?.value || '';
-                    
-                    totalInputTokens = estimateTokens(programmeText + courseText + mloText + cloText + customRequest + 
-                        'Course analysis request with comprehensive evaluation format'); // Base prompt
-                        
+                    totalInputTokens = estimateTokens(programmeText + courseText + mloText + cloText + customRequest + 'Course analysis request');
                 } else {
-                    // Custom tab estimation
                     const customPrompt = document.getElementById('custom-prompt')?.value || '';
                     totalInputTokens = estimateTokens(customPrompt);
                 }
                 
                 const totalTokens = totalInputTokens + outputTokens;
                 
-                // Update display
-                const inputTokensElement = document.getElementById('input-tokens');
-                const outputTokensElement = document.getElementById('output-tokens');
-                const totalTokensElement = document.getElementById('total-tokens');
-                
-                if (inputTokensElement) inputTokensElement.textContent = totalInputTokens.toLocaleString();
-                if (outputTokensElement) outputTokensElement.textContent = `~${outputTokens.toLocaleString()}`;
-                if (totalTokensElement) totalTokensElement.textContent = `~${totalTokens.toLocaleString()}`;
-                
+                document.getElementById('input-tokens').textContent = totalInputTokens.toLocaleString();
+                document.getElementById('output-tokens').textContent = `~${outputTokens.toLocaleString()}`;
+                document.getElementById('total-tokens').textContent = `~${totalTokens.toLocaleString()}`;
             } catch (error) {
                 console.error('Error updating token estimation:', error);
             }
@@ -1326,7 +899,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
             document.getElementById('clo-checkboxes').innerHTML = '<p style="color: #666; font-style: italic;">Select a programme first...</p>';
         }
 
-        // Update navigation links to include programme parameter
         function updateNavigationLinks() {
             const urlParams = new URLSearchParams(window.location.search);
             const programmeCode = urlParams.get('kavakood');
@@ -1340,7 +912,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         }
 
-        // Add missing function to reset CLO checkboxes
         function resetCLOCheckboxes() {
             const container = document.getElementById('clo-checkboxes');
             if (container) {
@@ -1352,59 +923,44 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         }
 
-        // Add missing function to handle course selection change
         function onCourseSelectionChange() {
             const programmeDropdown = document.getElementById('course-programme-select');
             const courseDropdown = document.getElementById('course-select');
             const selectedProgramme = programmeDropdown ? programmeDropdown.value : '';
             const selectedCourse = courseDropdown ? courseDropdown.value : '';
-            // Update MLO dropdown using module code filtering (like clo-mlo.html)
+            
             const mloDropdown = document.getElementById('course-mlo-select');
             if (mloDropdown) {
                 mloDropdown.innerHTML = '<option value="">Select an MLO...</option>';
                 let debugInfo = '';
-                let mlos = [];
-                if (selectedProgramme && selectedProgramme !== '' && selectedCourse && selectedCourse !== '') {
+                if (selectedProgramme && selectedCourse) {
                     try {
                         const programme = window.programmeDataLoader.data[selectedProgramme];
                         const course = (programme.courses || []).find(c => c.ainekood === selectedCourse);
                         if (!course || !programme) throw new Error('Course or programme not found');
                         const moduleCode = course.moodulikood;
-                        mlos = (programme.mlos || []).filter(mlo => mlo.mlokood.startsWith(moduleCode));
-                mlos.forEach(function(mlo, index) {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = mlo.mlokood + ': ' + mlo.mlonimetusik + ' - ' + mlo.mlosisuik;
-                    mloDropdown.appendChild(option);
-                });
-                debugInfo = '<div id="related-mlo-debug" style="margin-top:8px; font-size:13px; color:#aa1352; background:#f8f9fa; border-radius:4px; padding:8px;">Related MLOs for <b>' + selectedCourse + '</b> (module: <b>' + moduleCode + '</b>): <br>' + (mlos.length === 0 ? '<span style="color:#dc3545">No related MLOs found.</span>' : mlos.map(function(mlo) { return '<span style="display:inline-block;margin-right:8px;">' + mlo.mlokood + '</span>'; }).join('')) + '</div>';
-                // Update course info textarea
-                const courseInfoTextarea = document.getElementById('course-info-display');
-                if (courseInfoTextarea) {
-                    courseInfoTextarea.value = course.ainenimetusik + ' (' + course.ainekood + ') - ' + course.eap + ' EAP\nAssessment: ' + course.kontrollivorm;
-                }
-                // Clear MLO textarea when course changes
-                const mloTextArea = document.getElementById('module-learning-outcomes');
-                if (mloTextArea) mloTextArea.value = '';
-            } catch (error) {
-                console.error('Error filtering MLOs by module code:', error);
-                mloDropdown.innerHTML = '<option value="">Error loading MLOs</option>';
-                debugInfo = '<div id="related-mlo-debug" style="margin-top:8px; font-size:13px; color:#dc3545;">Error filtering MLOs by module code.</div>';
-            }
-                }
-                // Insert debug info after dropdown
-                let debugBox = document.getElementById('related-mlo-debug');
-                if (debugBox) {
-                    debugBox.outerHTML = debugInfo;
-                } else if (mloDropdown.parentNode) {
-                    mloDropdown.insertAdjacentHTML('afterend', debugInfo);
+                        const mlos = (programme.mlos || []).filter(mlo => mlo.mlokood.startsWith(moduleCode));
+                        mlos.forEach((mlo, index) => {
+                            const option = document.createElement('option');
+                            option.value = index;
+                            option.textContent = `${mlo.mlokood}: ${mlo.mlonimetusik} - ${mlo.mlosisuik}`;
+                            mloDropdown.appendChild(option);
+                        });
+                        const courseInfoTextarea = document.getElementById('course-info-display');
+                        if (courseInfoTextarea) {
+                            courseInfoTextarea.value = `${course.ainenimetusik} (${course.ainekood}) - ${course.eap} EAP\nAssessment: ${course.kontrollivorm}`;
+                        }
+                        const mloTextArea = document.getElementById('module-learning-outcomes');
+                        if (mloTextArea) mloTextArea.value = '';
+                    } catch (error) {
+                        console.error('Error filtering MLOs by module code:', error);
+                        mloDropdown.innerHTML = '<option value="">Error loading MLOs</option>';
+                    }
                 }
             }
-            // Update CLO checkboxes
             updateCLOCheckboxes(selectedProgramme, selectedCourse);
         }
 
-        // Add missing function to update CLO checkboxes
         function updateCLOCheckboxes(selectedProgramme, selectedCourse) {
             const cloContainer = document.getElementById('clo-checkboxes');
             if (!cloContainer) return;
@@ -1416,7 +972,7 @@ Provide comprehensive, actionable analysis for course improvement.`;
             try {
                 const cloData = window.programmeDataLoader.getCLOs(selectedProgramme, selectedCourse);
                 const closEn = cloData.closEn;
-                Object.keys(closEn).forEach(function(cloKey) {
+                Object.keys(closEn).forEach(cloKey => {
                     const checkboxDiv = document.createElement('div');
                     checkboxDiv.style.marginBottom = '8px';
                     
@@ -1430,7 +986,7 @@ Provide comprehensive, actionable analysis for course improvement.`;
                     label.htmlFor = 'clo-' + cloKey;
                     label.style.marginLeft = '8px';
                     label.style.cursor = 'pointer';
-                    label.textContent = cloKey + ': ' + closEn[cloKey];
+                    label.textContent = `${cloKey}: ${closEn[cloKey]}`;
                     
                     checkboxDiv.appendChild(checkbox);
                     checkboxDiv.appendChild(label);
@@ -1442,127 +998,75 @@ Provide comprehensive, actionable analysis for course improvement.`;
             }
         }
 
-        // Add missing function to update selected CLOs textarea
         function updateSelectedCLOs() {
             const cloContainer = document.getElementById('clo-checkboxes');
             const textarea = document.getElementById('course-learning-outcomes');
             if (!cloContainer || !textarea) return;
             const checked = cloContainer.querySelectorAll('input[type="checkbox"]:checked');
-            const selected = Array.from(checked).map(function(cb) {
-                return cb.value;
-            });
+            const selected = Array.from(checked).map(cb => cb.value);
             textarea.value = selected.join('\n');
         }
 
-        // In PLO-MLO Analysis tab, update MLO selection UI
-        const mloLabelRow = document.createElement('div');
-        mloLabelRow.style.display = 'flex';
-        mloLabelRow.style.alignItems = 'center';
-        mloLabelRow.style.marginBottom = '8px';
-
-        const mloLabel = document.createElement('label');
-        mloLabel.htmlFor = 'mlo-select';
-        mloLabel.textContent = '📖 Module Learning Outcome (MLO)';
-        mloLabel.style.marginRight = '12px';
-        mloLabelRow.appendChild(mloLabel);
-
-
-        const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
-        mloCheckboxesContainer.innerHTML = '';
-        mloCheckboxesContainer.parentNode.insertBefore(mloLabelRow, mloCheckboxesContainer);
-
-        const mlos = window.programmeDataLoader.getMLOs(programmeCode);
-        mlos.forEach((mlo, index) => {
-            const checkboxDiv = document.createElement('div');
-            checkboxDiv.style.display = 'flex';
-            checkboxDiv.style.alignItems = 'center';
-            checkboxDiv.style.marginBottom = '6px';
-            
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = `mlo-${index}`;
-            checkbox.value = mlo.mlosisuik;
-            checkbox.onchange = updateSelectedMLOs;
-            checkbox.style.marginRight = '8px';
-            
-            const label = document.createElement('label');
-            label.htmlFor = `mlo-${index}`;
-            label.style.cursor = 'pointer';
-            label.textContent = `${mlo.mlokood}: ${mlo.mlosisuik.substring(0, 80)}...`;
-            
-            checkboxDiv.appendChild(checkbox);
-            checkboxDiv.appendChild(label);
-            mloCheckboxesContainer.appendChild(checkboxDiv);
-        });
-
         function updateSelectedMLOs() {
+            const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
             const checked = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked');
-            const selected = Array.from(checked).map(function(cb) {
-                return cb.value;
-            });
+            const selected = Array.from(checked).map(cb => cb.value);
             document.getElementById('mlo-text').value = selected.join('\n');
         }
 
         async function fetchApiUsage() {
-  const response = await fetch('/.netlify/functions/getApiUsage');
-  const usage = await response.json();
-  // Update your quota display with usage.dailyTokens, usage.dailyLimit, etc.
-  document.getElementById('daily-usage').textContent = 
-    `Daily: ${usage.dailyTokens}/${usage.dailyLimit} tokens`;
-  document.getElementById('session-requests').textContent = 
-    `Requests: ${usage.dailyRequests}/${usage.requestLimit}`;
-}
-
-function exportResultToPDF() {
-    const resultContent = document.getElementById('result-content');
-    if (!resultContent) return;
-    // Get study programme code
-    let programmeCode = '';
-    const programmeSelect = document.getElementById('programme-select') || document.getElementById('course-programme-select');
-    if (programmeSelect) {
-        programmeCode = programmeSelect.value || '';
-    }
-    // Get date in YYYY-MM-DD format
-    const today = new Date();
-    const dateStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
-    // Determine which tab is active and set PDF title accordingly
-    let pdfTitle = '';
-    if (window.currentTab === 'course') {
-        // Course Analysis tab: use programme code + course code + CLO-MLO analysis + date
-        let courseCode = '';
-        const courseSelect = document.getElementById('course-select');
-        if (courseSelect) {
-            courseCode = courseSelect.value || '';
+            try {
+                const response = await fetch('/.netlify/functions/getApiUsage');
+                if (!response.ok) throw new Error('API usage fetch failed');
+                const usage = await response.json();
+                document.getElementById('daily-usage').textContent = `Daily: ${usage.dailyTokens}/${usage.dailyLimit} tokens`;
+                document.getElementById('session-requests').textContent = `Requests: ${usage.dailyRequests}/${usage.requestLimit}`;
+            } catch(error) {
+                console.error("Could not fetch API usage:", error);
+            }
         }
-    pdfTitle = `${programmeCode.toUpperCase()}_${courseCode}_CLO-MLO_analysis_${dateStr}`;
-    } else {
-        // Default: PLO-MLO analysis
-    pdfTitle = `${programmeCode.toUpperCase()}_PLO-MLO_analysis_${dateStr}`;
-    }
-    // Create a new window for printing
-    const printWindow = window.open('', '', 'width=900,height=700');
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>${pdfTitle}</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 24px; }
-                h2, h3 { color: #1a237e; }
-                table { border-collapse: collapse; width: 100%; margin-top: 16px; }
-                th, td { border: 1px solid #888; padding: 8px; }
-                th { background: #f0f8ff; }
-            </style>
-        </head>
-        <body>
-            <h2 style="margin-bottom:16px;">${pdfTitle}</h2>
-            ${resultContent.innerHTML}
-        </body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-}
+
+        function exportResultToPDF() {
+            const resultContent = document.getElementById('result-content');
+            if (!resultContent) return;
+            
+            const programmeSelect = document.getElementById('programme-select') || document.getElementById('course-programme-select');
+            const programmeCode = programmeSelect ? programmeSelect.value || '' : '';
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+            
+            let pdfTitle = '';
+            if (currentTab === 'course') {
+                const courseSelect = document.getElementById('course-select');
+                const courseCode = courseSelect ? courseSelect.value || '' : '';
+                pdfTitle = `${programmeCode.toUpperCase()}_${courseCode}_CLO-MLO_analysis_${dateStr}`;
+            } else {
+                pdfTitle = `${programmeCode.toUpperCase()}_PLO-MLO_analysis_${dateStr}`;
+            }
+
+            const printWindow = window.open('', '', 'width=900,height=700');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${pdfTitle}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 24px; }
+                            h2, h3 { color: #1a237e; }
+                            table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+                            th, td { border: 1px solid #888; padding: 8px; }
+                            th { background: #f0f8ff; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2 style="margin-bottom:16px;">${pdfTitle}</h2>
+                        ${resultContent.innerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
     </script>
 </body>
 </html>
