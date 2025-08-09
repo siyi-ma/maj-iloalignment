@@ -460,20 +460,21 @@ Examples:
 
                     result = await window.enhancedAIFeatures.executeCustomPrompt(analysisPrompt, {}, options);
                 }
-
+                
                 // --- START OF FIX ---
-                // Display results assuming 'result' is the direct HTML/text response
+                
+                // Log the entire result object to the console to see its structure
+                console.log('AI Response Object:', result); 
+                
+                // Display the 'htmlContent' property of the result object
                 resultsSection.className = 'results-section result-success';
-                resultContent.innerHTML = result; // Use result directly
+                resultContent.innerHTML = result.htmlContent; 
 
-                // The 'result' object does not contain the metadata, so we cannot display it.
-                // We will hide the metadata section for now to prevent the crash.
+                // Hide the metadata section as it is not available in the result object
                 resultMeta.style.display = 'none'; 
                 // --- END OF FIX ---
 
                 document.getElementById('clear-btn').style.display = 'inline-block';
-                // This function call below might also rely on the old API structure. 
-                // If you get another error, we may need to look at it.
                 updateTokenUsageDisplay();
 
             } catch (error) {
@@ -484,7 +485,7 @@ Examples:
                 button.disabled = false;
                 button.textContent = '🚀 Analyze with AI';
             }
-        } 
+        }
 
         function generateSessionId() {
             let sessionId = sessionStorage.getItem('aiAssistantSessionId');
