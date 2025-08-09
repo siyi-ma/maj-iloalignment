@@ -225,6 +225,7 @@ Examples:
     <script src="js/enhanced-ai-features.js"></script>
     <script src="js/programme-data-loader.js"></script>
     <script src="js/shared-utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         let currentTab = 'custom';
 
@@ -304,22 +305,22 @@ Examples:
                 
                 const resetTime = tomorrow.toLocaleString();
                 const timeUntilReset = Math.ceil((tomorrow - today) / (1000 * 60 * 60)); // hours
-                
-                let welcomeMessage = `<span style="font-weight:bold;">📊 Today's Usage Statistics (${today.toDateString()})</span><br>`;
+
+                let welcomeMessage = `📊 Today's Usage Statistics (${today.toDateString()})\n`;
                 welcomeMessage += `Requests Made:${stats.dailyRequests || 0}/${30}\n`;
                 welcomeMessage += `Tokens Used:${stats.dailyTokens || 0}/${stats.dailyLimit} (Daily Quota: 30,000 tokens)\n`;
                 welcomeMessage += `Estimated Cost:$${(stats.estimatedCostUSD || 0).toFixed(4)}\n`;
                 welcomeMessage += `Quota Resets:${resetTime} (in ${timeUntilReset}h)\n\n`;
 
                 if (stats.remainingDaily > 0) {
-                    welcomeMessage += `✅ **Available Today:** ${stats.remainingDaily} tokens\n`;
-                    welcomeMessage += `📈 **Usage Level:** ${stats.usagePercentage}% used\n\n`;
+                    welcomeMessage += `✅ Available Today: ${stats.remainingDaily} tokens\n`;
+                    welcomeMessage += `📈 Usage Level: ${stats.usagePercentage}% used\n\n`;
                 } else {
-                    welcomeMessage += `🚫 **Daily token limit reached!** Please wait for reset.\n\n`;
+                    welcomeMessage += `🚫 Daily token limit reached! Please wait for reset.\n\n`;
                 }
 
                 if (stats.dailyRequests >= 30) {
-                    welcomeMessage += `🚫 **Daily request limit reached!** Please wait for reset.\n\n`;
+                    welcomeMessage += `🚫 Daily request limit reached! Please wait for reset.\n\n`;
                 }
 
                 if (stats.requestHistory && stats.requestHistory.length > 0) {
@@ -825,7 +826,10 @@ Provide comprehensive, actionable analysis for course improvement.`;
         }
 
         // Initialize when page loads
-        window.addEventListener('load', initApp);
+        window.addEventListener('load', () => {
+            initApp();
+            fetchApiUsage();
+            });
 
         // Global functions for admin/debugging
         window.aiAssistantAdmin = {
@@ -1327,6 +1331,16 @@ Provide comprehensive, actionable analysis for course improvement.`;
             });
             textarea.value = selected.join('\n');
         }
+
+        async function fetchApiUsage() {
+  const response = await fetch('/.netlify/functions/getApiUsage');
+  const usage = await response.json();
+  // Update your quota display with usage.dailyTokens, usage.dailyLimit, etc.
+  document.getElementById('daily-usage').textContent = 
+    `Daily: ${usage.dailyTokens}/${usage.dailyLimit} tokens`;
+  document.getElementById('session-requests').textContent = 
+    `Requests: ${usage.dailyRequests}/${usage.requestLimit}`;
+}
     </script>
 </body>
 </html>
