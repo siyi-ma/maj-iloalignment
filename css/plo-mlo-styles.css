@@ -156,7 +156,6 @@ Usage:   Applied to the <nav> element with the class .analysis-nav.
     padding: 15px 20px;
     border-radius: 10px;
     margin-bottom: 30px;
-    border-left: 5px solid var(--tt-burgundy);
     position: sticky;
     top: 0;
     z-index: 998;
@@ -170,7 +169,7 @@ Usage:   Applied to the <nav> element with the class .analysis-nav.
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 1px;
     justify-content: center;
     align-items: center;
 }
@@ -178,8 +177,9 @@ Usage:   Applied to the <nav> element with the class .analysis-nav.
 .analysis-nav a {
     color: var(--tt-dark-blue);
     text-decoration: none;
-    font-weight: 600;
-    padding: 10px 20px;
+    font-weight: 300;
+    padding: 15px 20px;
+    border-radius: 10px;
     border-radius: 25px;
     transition: all 0.3s ease;
     text-transform: uppercase;
@@ -189,11 +189,11 @@ Usage:   Applied to the <nav> element with the class .analysis-nav.
 }
 
 .analysis-nav a:hover, .analysis-nav a.active {
-    background: var(--tt-burgundy);
-    color: var(--tt-white);
+    background: var(--tt-light-blue);
+    color: var(--tt-dark-blue);
     transform: translateY(-2px);
-    border-color: var(--tt-burgundy);
-    box-shadow: 0 4px 12px rgba(170, 19, 82, 0.3);
+    border-color: var(--tt-light-blue);
+    box-shadow: 0 4px 12px rgba(170, 19, 82, 0.15);
 }
 
 /* CLO-specific navigation items */

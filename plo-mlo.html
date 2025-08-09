@@ -697,7 +697,7 @@
             let html = '';
             Object.entries(mlosByModule).forEach(([moduleCode, mlos]) => {
                 html += `
-                    <div class="module-section">
+                    <div class="module-section" id="module-${moduleCode}">
                         <h3>Module: ${moduleCode.toUpperCase()}</h3>
                         <table class="mlo-table">
                             <thead>
@@ -847,7 +847,7 @@
                 const highlightedPLOText = highlightKeywords(ploText, allMatchingKeywords);
 
                 html += `
-                    <div class="plo-analysis-section" id="plo-${ploCode}">
+                    <section class="plo-analysis-section" id="plo-${ploCode}">
                         <div class="plo-header-section">
                             <h3>${ploCode}: Average Alignment Score: ${averageScore}</h3>
                             <div class="plo-text">
@@ -939,7 +939,7 @@
             
             Object.entries(mlosByModule).forEach(([moduleCode, mlos]) => {
                 html += `
-                    <div class="module-section">
+                    <section class="module-section" id="module-${moduleCode}">
                         <h3>Module: ${moduleCode.toUpperCase()}</h3>
                         
                         <table class="detailed-breakdown-table">
@@ -1220,9 +1220,10 @@
                             const ploNavItem = document.createElement('li');
                             ploNavItem.setAttribute('data-plo-link', 'true');
 
-                            const ploLink = document.createElement('a');
-                            ploLink.href = `#plo-${ploCode}`;
-                            ploLink.innerHTML = `<i class="fas fa-graduation-cap"></i> ${ploCode}`;
+                                const ploLink = document.createElement('a');
+                                ploLink.href = `#plo-${ploCode}`;
+                                ploLink.textContent = ploCode;
+                                ploLink.style.fontWeight = 'normal';
 
                             // Add click event listener for smooth scrolling
                             ploLink.addEventListener('click', function(e) {
@@ -1272,9 +1273,10 @@
                             const moduleNavItem = document.createElement('li');
                             moduleNavItem.setAttribute('data-module-link', 'true');
 
-                            const moduleLink = document.createElement('a');
-                            moduleLink.href = `#module-${moduleCode}`;
-                            moduleLink.innerHTML = `<i class=\"fas fa-layer-group\"></i> ${moduleCode}`;
+                                const moduleLink = document.createElement('a');
+                                moduleLink.href = `#module-${moduleCode}`;
+                                moduleLink.textContent = moduleCode;
+                                moduleLink.style.fontWeight = 'normal';
 
                             // Add click event listener for smooth scrolling
                             moduleLink.addEventListener('click', function(e) {
