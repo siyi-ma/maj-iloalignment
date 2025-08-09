@@ -66,6 +66,29 @@ window.enhancedAIFeatures.formatAISuggestionsHTML = function(md) {
 ## Command Line Actions
 - `git add .` (user action, not agent)
 
+conversation excerpt: 
+Yes, you can move most of the JavaScript functions from your HTML file to a separate JS file (like `enhanced-ai-features.js`) for better maintainability. Here are the types of functions you should move:
+
+**Recommended to move:**
+- Utility functions (e.g., `formatAISuggestionsHTML`, `estimateTokens`, `updateTokenEstimation`)
+- Data management functions (e.g., `populateProgrammeDropdowns`, `populateCourseAnalysisDropdowns`, `loadProgrammeData`, `loadSelectedPLO`, `loadSelectedMLO`, `loadCourseProgrammeData`, `loadSelectedCourse`, `loadSelectedCourseMLO`)
+- UI update functions (e.g., `updateTokenUsageDisplay`, `updateNavigationLinks`, `resetCourseDropdowns`, `resetCLOCheckboxes`, `updateCLOCheckboxes`, `updateSelectedCLOs`, `updateSelectedMLOs`)
+- Feedback system functions (e.g., `showFeedbackModal`, `closeFeedbackModal`, `submitFeedback`, `getFeedbackData`, `exportFeedbackData`)
+- Any event handler functions (e.g., `onCourseSelectionChange`, `onCourseAnalysisProgrammeChange`)
+- API usage functions (e.g., `fetchApiUsage`)
+- Any global admin/debugging functions
+
+**How to do it:**
+1. Move the function definitions to your JS file.
+2. Export functions to `window` if you need to call them from inline HTML or other scripts.
+3. In your HTML, include the JS file with `<script src="js/enhanced-ai-features.js"></script>`.
+
+**Benefits:**
+- Your HTML will be much cleaner and easier to maintain.
+- All logic will be centralized in your JS file, making updates and debugging easier.
+
+If you want, I can generate a patch to move all these functions for you. Just let me know!
+
 ## Factual Process Summary
 - **Session Start:** Migration and modularization of AI assistant JS functions.
 - **Main Issue:** Agent repeatedly claimed successful migration and code presence without verifying actual file contents.

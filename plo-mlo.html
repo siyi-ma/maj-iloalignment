@@ -301,14 +301,18 @@
                 renderMatrix();
                 renderDetailedAnalysis();
 
-                // Update navigation with individual PLO links (only in PLO view)
-                if (currentView === 'plo') {
-                    updateNavigationWithPLOs();
+                // Show sticky navigation bar
+                const analysisNav = document.querySelector('.analysis-nav');
+                if (analysisNav) {
+                    analysisNav.style.display = 'flex';
                 }
+
+                // Update navigation with individual PLO/module links
+                updateNavigationWithPLOs();
 
                 // Setup event listeners
                 setupEventListeners();
-                
+
                 // Setup floating home button
                 setupFloatingHomeButton();
 
@@ -1073,18 +1077,8 @@
                     '<i class="fas fa-exchange-alt"></i> Switch to MLO View' : 
                     '<i class="fas fa-exchange-alt"></i> Switch to PLO View';
                 renderDetailedAnalysis();
-                
-                // Update navigation based on current view
-                if (currentView === 'plo') {
-                    updateNavigationWithPLOs();
-                } else {
-                    // Remove PLO navigation links in MLO view
-                    const analysisNav = document.querySelector('.analysis-nav ul');
-                    if (analysisNav) {
-                        const existingPLOLinks = analysisNav.querySelectorAll('li[data-plo-link]');
-                        existingPLOLinks.forEach(link => link.remove());
-                    }
-                }
+                // Always update navigation links for current view
+                updateNavigationWithPLOs();
             });
 
             // Back to top
@@ -1147,20 +1141,31 @@
                         const navElement = document.querySelector('.analysis-nav');
                         const navHeight = navElement ? navElement.offsetHeight : 60;
                         const scrollPosition = window.scrollY + navHeight + 50;
-                        
+
                         let currentActiveLink = null;
-                        
+
                         sections.forEach(section => {
                             const sectionTop = section.offsetTop;
                             const sectionBottom = sectionTop + section.offsetHeight;
-                            
+
                             if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
                                 currentActiveLink = section.id;
                             }
                         });
-                        
-                        // Update active states
+
+                        // Update active states for both PLO and module links
                         navLinks.forEach(link => {
+                            const linkTarget = link.getAttribute('href').substring(1);
+                            // For module links, section id is like 'module-XX'
+                            if (linkTarget === currentActiveLink) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
+                        // Also update dynamically added module links in MLO view
+                        const moduleLinks = document.querySelectorAll('.analysis-nav a[href^="#module-"]');
+                        moduleLinks.forEach(link => {
                             const linkTarget = link.getAttribute('href').substring(1);
                             if (linkTarget === currentActiveLink) {
                                 link.classList.add('active');
@@ -1190,51 +1195,114 @@
                     return;
                 }
 
-                // Remove existing PLO navigation items (if any)
-                const existingPLOLinks = analysisNav.querySelectorAll('li[data-plo-link]');
-                existingPLOLinks.forEach(link => link.remove());
+                // Remove existing dynamic navigation items (PLO or module) if any
+                const existingDynamicLinks = analysisNav.querySelectorAll('li[data-plo-link], li[data-module-link]');
+                existingDynamicLinks.forEach(link => link.remove());
 
-                // Find the position to insert PLO links (after detailed-analysis)
+                // Find the position to insert links (after detailed-analysis)
                 const detailedAnalysisLink = analysisNav.querySelector('a[href="#detailed-analysis"]');
                 const insertPosition = detailedAnalysisLink ? detailedAnalysisLink.parentElement : null;
 
                 if (insertPosition) {
-                    // Create PLO navigation items
-                    currentPLOs.forEach((plo, index) => {
-                        const ploCode = plo.plokood || `PLO${index + 1}`;
-                        const ploNavItem = document.createElement('li');
-                        ploNavItem.setAttribute('data-plo-link', 'true');
-                        
-                        const ploLink = document.createElement('a');
-                        ploLink.href = `#plo-${ploCode}`;
-                        ploLink.innerHTML = `<i class="fas fa-graduation-cap"></i> ${ploCode}`;
-                        
-                        // Add click event listener for smooth scrolling
-                        ploLink.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            const targetId = this.getAttribute('href').substring(1);
-                            const targetElement = document.getElementById(targetId);
-                            
-                            if (targetElement) {
-                                // Account for sticky nav height
-                                const navElement = document.querySelector('.analysis-nav');
-                                const navHeight = navElement ? navElement.offsetHeight : 60;
-                                const elementPosition = targetElement.offsetTop - navHeight - 10;
-                                
-                                window.scrollTo({
-                                    top: elementPosition,
-                                    behavior: 'smooth'
-                                });
-                            }
+                    if (currentView === 'plo') {
+                        // Sort PLOs by code (assuming format PLO1, PLO2, ... or numeric plokood)
+                        const sortedPLOs = [...currentPLOs].sort((a, b) => {
+                            const codeA = a.plokood || '';
+                            const codeB = b.plokood || '';
+                            // Extract number from code (e.g., PLO1 -> 1)
+                            const numA = parseInt(codeA.replace(/[^\d]/g, '')) || 0;
+                            const numB = parseInt(codeB.replace(/[^\d]/g, '')) || 0;
+                            return numA - numB;
                         });
-                        
-                        ploNavItem.appendChild(ploLink);
-                        
-                        // Insert after the detailed analysis link
-                        insertPosition.parentNode.insertBefore(ploNavItem, insertPosition.nextSibling);
-                    });
 
-                    console.log(`Added ${currentPLOs.length} PLO navigation links with event listeners`);
+                        sortedPLOs.forEach((plo, index) => {
+                            const ploCode = plo.plokood || `PLO${index + 1}`;
+                            const ploNavItem = document.createElement('li');
+                            ploNavItem.setAttribute('data-plo-link', 'true');
+
+                            const ploLink = document.createElement('a');
+                            ploLink.href = `#plo-${ploCode}`;
+                            ploLink.innerHTML = `<i class="fas fa-graduation-cap"></i> ${ploCode}`;
+
+                            // Add click event listener for smooth scrolling
+                            ploLink.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const targetId = this.getAttribute('href').substring(1);
+                                const targetElement = document.getElementById(targetId);
+
+                                if (targetElement) {
+                                    // Account for sticky nav height
+                                    const navElement = document.querySelector('.analysis-nav');
+                                    const navHeight = navElement ? navElement.offsetHeight : 60;
+                                    const elementPosition = targetElement.offsetTop - navHeight - 10;
+
+                                    window.scrollTo({
+                                        top: elementPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            });
+
+                            ploNavItem.appendChild(ploLink);
+                            // Insert after the detailed analysis link
+                            insertPosition.parentNode.insertBefore(ploNavItem, insertPosition.nextSibling);
+                        });
+
+                        console.log(`Added ${sortedPLOs.length} PLO navigation links with event listeners`);
+                    } else if (currentView === 'mlo') {
+                        // Add module/category navigation links in MLO view
+                        // Get module codes in actual display order from renderMLOView
+                        const moduleOrder = [];
+                        const mlosByModule = {};
+                        currentMLOs.forEach(mlo => {
+                            const mlokood = mlo.mlokood || '';
+                            const moduleCode = mlokood.includes('_') ? mlokood.split('_')[0].toUpperCase() : mlokood.substring(0, 2).toUpperCase() || 'OTHER';
+                            if (!mlosByModule[moduleCode]) {
+                                mlosByModule[moduleCode] = [];
+                                moduleOrder.push(moduleCode);
+                            }
+                            mlosByModule[moduleCode].push(mlo);
+                        });
+
+                        // Insert module links in correct order (not reversed)
+                        // Insert module links in correct order (top to bottom)
+                        let lastInserted = insertPosition;
+                        for (let i = 0; i < moduleOrder.length; i++) {
+                            const moduleCode = moduleOrder[i];
+                            const moduleNavItem = document.createElement('li');
+                            moduleNavItem.setAttribute('data-module-link', 'true');
+
+                            const moduleLink = document.createElement('a');
+                            moduleLink.href = `#module-${moduleCode}`;
+                            moduleLink.innerHTML = `<i class=\"fas fa-layer-group\"></i> ${moduleCode}`;
+
+                            // Add click event listener for smooth scrolling
+                            moduleLink.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const targetId = this.getAttribute('href').substring(1);
+                                const targetElement = document.getElementById(targetId);
+
+                                if (targetElement) {
+                                    // Account for sticky nav height
+                                    const navElement = document.querySelector('.analysis-nav');
+                                    const navHeight = navElement ? navElement.offsetHeight : 60;
+                                    const elementPosition = targetElement.offsetTop - navHeight - 10;
+
+                                    window.scrollTo({
+                                        top: elementPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            });
+
+                            moduleNavItem.appendChild(moduleLink);
+                            // Insert after the last inserted node
+                            lastInserted.parentNode.insertBefore(moduleNavItem, lastInserted.nextSibling);
+                            lastInserted = moduleNavItem;
+                        }
+
+                        console.log(`Added ${moduleOrder.length} module navigation links for MLO view`);
+                    }
                 }
             } catch (error) {
                 console.error('Error updating navigation with PLOs:', error);
