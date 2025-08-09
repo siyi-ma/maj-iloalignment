@@ -117,21 +117,23 @@ class EnhancedAIFeatures {
      * Generate improvement suggestions for PLO-MLO alignment
      */
     async generateImprovementSuggestions(ploText, mloText, currentScore) {
-        const context = {
-            ploData: { text: ploText, type: 'Programme Learning Outcome' },
-            mloData: { text: mloText, type: 'Module Learning Outcome' },
-            alignmentScore: currentScore
-        };
+    const context = {
+        ploData: { text: ploText, type: 'Programme Learning Outcome' },
+        mloData: { text: mloText, type: 'Module Learning Outcome' },
+        alignmentScore: currentScore
+    };
 
-        const prompt = `Analyze the alignment between these learning outcomes and provide 3-5 specific improvement suggestions:
+    const prompt = `For the following Programme Learning Outcome (PLO) and Module Learning Outcome (MLO), provide:
+1. A brief alignment summary for this PLO-MLO pair (highlight strengths and weaknesses)
+2. 3-5 improvement suggestions specific to this PLO and MLO (address vocabulary, cognitive level, competency, and progression)
 
 PLO: "${ploText}"
 MLO: "${mloText}"
-Current Score: ${currentScore}/5
+Current Alignment Score: ${currentScore}/5
 
-Focus on vocabulary alignment, cognitive levels, and competency development.`;
+Format your response with clear section headings for summary and suggestions. Do NOT use the word 'Actionable' in any heading.`;
 
-        return await this.executeCustomPrompt(prompt, context);
+    return await this.executeCustomPrompt(prompt, context);
     }
 
     /**

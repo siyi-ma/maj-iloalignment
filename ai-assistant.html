@@ -120,8 +120,6 @@ Examples:
                     <div class="form-group" style="margin-top: 20px;">
                         <label>🔍 Select Module Learning Outcomes (MLOs) for Analysis</label>
                         <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-                            <button id="select-all-mlo" class="btn" style="margin-right: 0;">Select All</button>
-                            <button id="deselect-all-mlo" class="btn" style="margin-right: 0;">Deselect All</button>
                         </div>
                         <div id="mlo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa;">
                             <p style="color: #666; font-style: italic;">Select a PLO to see available MLOs...</p>
@@ -172,8 +170,6 @@ Examples:
                     <div id="clo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa;">
                         <div style="display: flex; align-items: center; margin-bottom: 8px;">
                             <label style="margin-right: 12px;">📖 Select Course Learning Outcomes (CLOs)</label>
-                            <button id="select-all-clo" class="btn" style="margin-right: 0;">Select All</button>
-                            <button id="deselect-all-clo" class="btn" style="margin-right: 0;">Deselect All</button>
                         </div>
                     </div>
                     <textarea id="course-learning-outcomes" rows="5" placeholder="Selected CLOs will appear here..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
@@ -630,7 +626,37 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 // Display results with feedback option
                 if (result.success) {
                     resultsSection.className = 'results-section result-success';
-                    resultContent.innerHTML = result.response;
+                        // Convert markdown headings and numbered lists to HTML, remove code block markers
+                        resultContent.innerHTML = formatAISuggestionsHTML(result.response);
+
+        // Utility: Convert markdown headings and numbered lists to HTML, remove code block markers
+        function formatAISuggestionsHTML(md) {
+            if (!md) return '';
+            let html = md;
+            // Remove code block markers
+            html = html.replace(/```[a-zA-Z]*\n?/g, '');
+            // Convert markdown headings (##, ###) to <h3>
+            html = html.replace(/^\s*##+\s*(.*)$/gm, function(_, heading) {
+                return '<h3>' + heading.replace(/Actionable Improvement Suggestions/i, 'Improvement Suggestions') + '</h3>';
+            });
+            html = html.replace(/^\s*\*\*([A-Za-z0-9 \-]+)\*\*:?/gm, function(_, heading) {
+                return '<h3>' + heading.replace(/Actionable Improvement Suggestions/i, 'Improvement Suggestions') + '</h3>';
+            });
+            // Convert numbered lists to <ol><li>
+            // Find blocks of numbered lists
+            html = html.replace(/(^|\n)(\d+\.\s+.*(?:\n\d+\.\s+.*)*)/gm, function(match) {
+                const items = match.replace(/(^|\n)(\d+\.\s+)/g, '\n').split('\n').filter(Boolean);
+                return '<ol>' + items.map(i => '<li>' + i.trim() + '</li>').join('') + '</ol>';
+            });
+            // Convert markdown bullets to <ul><li>
+            html = html.replace(/(^|\n)([-*•]\s+.*(?:\n[-*•]\s+.*)*)/gm, function(match) {
+                const items = match.replace(/(^|\n)[-*•]\s+/g, '\n').split('\n').filter(Boolean);
+                return '<ul>' + items.map(i => '<li>' + i.trim() + '</li>').join('') + '</ul>';
+            });
+            // Remove stray triple backticks
+            html = html.replace(/```/g, '');
+            return html;
+        }
                     
                     // Show metadata with copy result option
                     resultMeta.innerHTML = `
@@ -1101,22 +1127,10 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 const courseInfo = `${cloData.courseInfo.nameEn} (${cloData.courseInfo.code}) - ${cloData.courseInfo.credits} EAP`;
                 document.getElementById('course-info-display').value = courseInfo;
                 
-                // Create CLO checkboxes and Select All button
+                // Create CLO checkboxes
                 const cloContainer = document.getElementById('clo-checkboxes');
                 cloContainer.innerHTML = '';
 
-                // Add Select All button
-                const selectAllBtn = document.createElement('button');
-                selectAllBtn.textContent = 'Select All';
-                selectAllBtn.className = 'btn';
-                selectAllBtn.style.marginBottom = '10px';
-                selectAllBtn.style.display = 'block';
-                selectAllBtn.onclick = function() {
-                    const checkboxes = cloContainer.querySelectorAll('input[type="checkbox"]');
-                    checkboxes.forEach(cb => { cb.checked = true; });
-                    updateSelectedCLOs();
-                };
-                cloContainer.appendChild(selectAllBtn);
 
                 const closEn = cloData.closEn;
                 Object.keys(closEn).forEach(cloKey => {
@@ -1381,16 +1395,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
         mloLabel.style.marginRight = '12px';
         mloLabelRow.appendChild(mloLabel);
 
-        const selectAllMloBtn = document.createElement('button');
-        selectAllMloBtn.textContent = 'Select All';
-        selectAllMloBtn.className = 'btn';
-        selectAllMloBtn.style.marginRight = '0';
-        selectAllMloBtn.onclick = function() {
-            const checkboxes = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => { cb.checked = true; });
-            updateSelectedMLOs();
-        };
-        mloLabelRow.appendChild(selectAllMloBtn);
 
         const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
         mloCheckboxesContainer.innerHTML = '';
@@ -1441,12 +1445,35 @@ Provide comprehensive, actionable analysis for course improvement.`;
 function exportResultToPDF() {
     const resultContent = document.getElementById('result-content');
     if (!resultContent) return;
+    // Get study programme code
+    let programmeCode = '';
+    const programmeSelect = document.getElementById('programme-select') || document.getElementById('course-programme-select');
+    if (programmeSelect) {
+        programmeCode = programmeSelect.value || '';
+    }
+    // Get date in YYYY-MM-DD format
+    const today = new Date();
+    const dateStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    // Determine which tab is active and set PDF title accordingly
+    let pdfTitle = '';
+    if (window.currentTab === 'course') {
+        // Course Analysis tab: use programme code + course code + CLO-MLO analysis + date
+        let courseCode = '';
+        const courseSelect = document.getElementById('course-select');
+        if (courseSelect) {
+            courseCode = courseSelect.value || '';
+        }
+        pdfTitle = `${programmeCode}_${courseCode}_CLO-MLO_analysis_${dateStr}`;
+    } else {
+        // Default: PLO-MLO analysis
+        pdfTitle = `${programmeCode}_PLO-MLO_analysis_${dateStr}`;
+    }
     // Create a new window for printing
     const printWindow = window.open('', '', 'width=900,height=700');
     printWindow.document.write(`
         <html>
         <head>
-            <title>AI Analysis Result PDF Export</title>
+            <title>${pdfTitle}</title>
             <style>
                 body { font-family: Arial, sans-serif; margin: 24px; }
                 h2, h3 { color: #1a237e; }
@@ -1456,6 +1483,7 @@ function exportResultToPDF() {
             </style>
         </head>
         <body>
+            <h2 style="margin-bottom:16px;">${pdfTitle}</h2>
             ${resultContent.innerHTML}
         </body>
         </html>
