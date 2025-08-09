@@ -104,35 +104,40 @@ Examples:
             <div id="plo-mlo-tab" class="tab-content">
                 <div class="form-group">
                     <label for="programme-select">🏛️ Select Study Programme</label>
-                    <select id="programme-select" onchange="loadProgrammeData()" required>
+                    <select id="programme-select" onchange="onProgrammeChange()" required>
                         <option value="">Loading programmes...</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="plo-select">🎯 Programme Learning Outcome (PLO)</label>
-                    <select id="plo-select" onchange="loadSelectedPLO()" required>
-                        <option value="">Select a programme first...</option>
-                    </select>
-                    <textarea id="plo-text" rows="3" placeholder="PLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
+                        <label for="plo-text">🎯 Programme Learning Outcomes (PLOs)</label>
+                        <div id="plo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa; margin-bottom: 10px;">
+                            <p style="color: #666; font-style: italic;">Select a programme to see available PLOs...</p>
+                        </div>
+                        <textarea id="plo-text" rows="3" placeholder="Selected PLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
                 </div>
+                    <!-- MLO Selection for PLO-MLO Analysis -->
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>🔍 Select Module Learning Outcomes (MLOs) for Analysis</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                        </div>
+                        <div id="mlo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa;">
+                            <p style="color: #666; font-style: italic;">Select a PLO to see available MLOs...</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="mlo-text" rows="3" placeholder="MLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
+                    </div>
                 <div class="form-group">
-                    <label for="mlo-select">📖 Module Learning Outcome (MLO)</label>
-                    <select id="mlo-select" onchange="loadSelectedMLO()" required>
-                        <option value="">Select a programme first...</option>
-                    </select>
-                    <textarea id="mlo-text" rows="3" placeholder="MLO content will appear here automatically..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="custom-analysis-request">� Custom Analysis Request</label>
+                    <label for="custom-analysis-request">Custom Analysis Request</label>
                     <textarea id="custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the PLO-MLO alignment...
 
 Examples:
-• How can I improve the alignment between these outcomes?
+• How can I improve the PLO-MLO alignment?
 • What assessment methods would work best for these outcomes?
 • Are there any gaps in the learning progression?
-• How do these outcomes compare to industry standards?"></textarea>
-                    <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
+• How do these outcomes compare to the higher education standards or best practices?"></textarea>
+                    <small class="form-hint"> Optional: Add specific questions or focus areas for the AI analysis</small>
                 </div>
 
                 <!-- MLO Selection for PLO-MLO Analysis -->
@@ -176,11 +181,11 @@ Examples:
                     <textarea id="course-learning-outcomes" rows="5" placeholder="Selected CLOs will appear here..." readonly style="margin-top: 10px; background: #f8f9fa;"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="course-custom-analysis-request">💭 Custom Analysis Request</label>
+                    <label for="course-custom-analysis-request"> Custom Analysis Request</label>
                     <textarea id="course-custom-analysis-request" rows="4" placeholder="Enter your specific analysis request or question about the course structure...
 
 Examples:
-• How can I improve the MLO-CLO alignment?
+• How can I improve the CLO-MLO alignment?
 • What assessment methods would work best for these outcomes?
 • Are the CLOs appropriate for the course credits?
 • How does this course fit within the programme structure?"></textarea>
@@ -1093,6 +1098,7 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 selectAllBtn.textContent = 'Select All';
                 selectAllBtn.className = 'btn';
                 selectAllBtn.style.marginBottom = '10px';
+                selectAllBtn.style.display = 'block';
                 selectAllBtn.onclick = function() {
                     const checkboxes = cloContainer.querySelectorAll('input[type="checkbox"]');
                     checkboxes.forEach(cb => { cb.checked = true; });
@@ -1104,16 +1110,18 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 Object.keys(closEn).forEach(cloKey => {
                     const checkboxDiv = document.createElement('div');
                     checkboxDiv.style.marginBottom = '8px';
+                    checkboxDiv.style.display = 'flex';
+                    checkboxDiv.style.alignItems = 'center';
                     
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.id = `clo-${cloKey}`;
                     checkbox.value = closEn[cloKey];
                     checkbox.onchange = updateSelectedCLOs;
+                    checkbox.style.marginRight = '8px';
                     
                     const label = document.createElement('label');
                     label.htmlFor = `clo-${cloKey}`;
-                    label.style.marginLeft = '8px';
                     label.style.cursor = 'pointer';
                     label.textContent = `${cloKey}: ${closEn[cloKey]}`;
                     
@@ -1347,38 +1355,49 @@ Provide comprehensive, actionable analysis for course improvement.`;
             textarea.value = selected.join('\n');
         }
 
-        // Create MLO checkboxes and Select All button for PLO-MLO analysis
-        const mloSelect = document.getElementById('mlo-select');
-        const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
-        mloCheckboxesContainer.innerHTML = '';
+        // In PLO-MLO Analysis tab, update MLO selection UI
+        const mloLabelRow = document.createElement('div');
+        mloLabelRow.style.display = 'flex';
+        mloLabelRow.style.alignItems = 'center';
+        mloLabelRow.style.marginBottom = '8px';
 
-        // Add Select All button
+        const mloLabel = document.createElement('label');
+        mloLabel.htmlFor = 'mlo-select';
+        mloLabel.textContent = '📖 Module Learning Outcome (MLO)';
+        mloLabel.style.marginRight = '12px';
+        mloLabelRow.appendChild(mloLabel);
+
         const selectAllMloBtn = document.createElement('button');
         selectAllMloBtn.textContent = 'Select All';
         selectAllMloBtn.className = 'btn';
-        selectAllMloBtn.style.marginBottom = '10px';
+        selectAllMloBtn.style.marginRight = '0';
         selectAllMloBtn.onclick = function() {
             const checkboxes = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(cb => { cb.checked = true; });
             updateSelectedMLOs();
         };
-        mloCheckboxesContainer.appendChild(selectAllMloBtn);
+        mloLabelRow.appendChild(selectAllMloBtn);
 
-        // Add MLO checkboxes
+        const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
+        mloCheckboxesContainer.innerHTML = '';
+        mloCheckboxesContainer.parentNode.insertBefore(mloLabelRow, mloCheckboxesContainer);
+
         const mlos = window.programmeDataLoader.getMLOs(programmeCode);
         mlos.forEach((mlo, index) => {
             const checkboxDiv = document.createElement('div');
-            checkboxDiv.style.marginBottom = '8px';
+            checkboxDiv.style.display = 'flex';
+            checkboxDiv.style.alignItems = 'center';
+            checkboxDiv.style.marginBottom = '6px';
             
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.id = `mlo-${index}`;
             checkbox.value = mlo.mlosisuik;
             checkbox.onchange = updateSelectedMLOs;
+            checkbox.style.marginRight = '8px';
             
             const label = document.createElement('label');
             label.htmlFor = `mlo-${index}`;
-            label.style.marginLeft = '8px';
             label.style.cursor = 'pointer';
             label.textContent = `${mlo.mlokood}: ${mlo.mlosisuik.substring(0, 80)}...`;
             
@@ -1387,7 +1406,6 @@ Provide comprehensive, actionable analysis for course improvement.`;
             mloCheckboxesContainer.appendChild(checkboxDiv);
         });
 
-        // Function to update selected MLOs textarea
         function updateSelectedMLOs() {
             const checked = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked');
             const selected = Array.from(checked).map(function(cb) {

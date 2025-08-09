@@ -249,7 +249,267 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Add this function to render MLOs as checkboxes with a Select All button next to the label
+function renderMLOCheckboxes(programmeCode) {
+    const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
+    if (!mloCheckboxesContainer) return;
+    mloCheckboxesContainer.innerHTML = '';
+
+    // Create label row with Select All button
+    const mloLabelRow = document.createElement('div');
+    mloLabelRow.style.display = 'flex';
+    mloLabelRow.style.alignItems = 'center';
+    mloLabelRow.style.marginBottom = '8px';
+
+    const mloLabel = document.createElement('label');
+    mloLabel.textContent = '🔍 Select Module Learning Outcomes (MLOs) for Analysis';
+    mloLabel.style.marginRight = '12px';
+    mloLabelRow.appendChild(mloLabel);
+
+    const selectAllMloBtn = document.createElement('button');
+    selectAllMloBtn.textContent = 'Select All';
+    selectAllMloBtn.className = 'btn';
+    selectAllMloBtn.style.marginRight = '0';
+    selectAllMloBtn.onclick = function() {
+        const checkboxes = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => { cb.checked = true; });
+        updateSelectedMLOs();
+    };
+    mloLabelRow.appendChild(selectAllMloBtn);
+
+    const deselectAllMloBtn = document.createElement('button');
+    deselectAllMloBtn.textContent = 'Deselect All';
+    deselectAllMloBtn.className = 'btn';
+    deselectAllMloBtn.style.marginRight = '0';
+    deselectAllMloBtn.onclick = function() {
+        const checkboxes = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => { cb.checked = false; });
+        updateSelectedMLOs();
+    };
+    mloLabelRow.appendChild(deselectAllMloBtn);
+
+    mloCheckboxesContainer.appendChild(mloLabelRow);
+
+    // Get MLOs for the selected programme
+    const mlos = window.programmeDataLoader.getMLOs(programmeCode);
+    if (!mlos || mlos.length === 0) {
+        const noMloMsg = document.createElement('p');
+        noMloMsg.style.color = '#666';
+        noMloMsg.style.fontStyle = 'italic';
+        noMloMsg.textContent = 'No MLOs found for this programme.';
+        mloCheckboxesContainer.appendChild(noMloMsg);
+        return;
+    }
+    mlos.forEach((mlo, index) => {
+        const checkboxDiv = document.createElement('div');
+        checkboxDiv.style.display = 'flex';
+        checkboxDiv.style.alignItems = 'center';
+        checkboxDiv.style.marginBottom = '6px';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `mlo-${index}`;
+        checkbox.value = mlo.mlosisuik;
+        checkbox.onchange = updateSelectedMLOs;
+        checkbox.style.marginRight = '8px';
+        
+        const label = document.createElement('label');
+        label.htmlFor = `mlo-${index}`;
+        label.style.cursor = 'pointer';
+        label.textContent = `${mlo.mlokood}: ${mlo.mlosisuik.substring(0, 80)}...`;
+        
+        checkboxDiv.appendChild(checkbox);
+        checkboxDiv.appendChild(label);
+        mloCheckboxesContainer.appendChild(checkboxDiv);
+    });
+}
+
+// Update selected MLOs textarea
+function updateSelectedMLOs() {
+    const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
+    const checked = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked');
+    const selected = Array.from(checked).map(function(cb) {
+        // Find label text for this checkbox
+        const label = mloCheckboxesContainer.querySelector('label[for="' + cb.id + '"]');
+        return label ? label.textContent : cb.value;
+    });
+    document.getElementById('mlo-text').value = selected.join('\n');
+}
+
+// Call renderMLOCheckboxes when a PLO is selected
+window.loadSelectedPLO = function() {
+    const programmeCode = document.getElementById('programme-select').value;
+    const ploIndex = document.getElementById('plo-select').value;
+    if (!programmeCode || !ploIndex) return;
+    try {
+        const plos = window.programmeDataLoader.getPLOs(programmeCode);
+        const selectedPlo = plos[parseInt(ploIndex)];
+        const ploText = document.getElementById('plo-text');
+        if (ploText && selectedPlo) {
+            ploText.value = selectedPlo.plosisuik;
+        }
+        // Render MLO checkboxes for the selected programme
+        renderMLOCheckboxes(programmeCode);
+    } catch (error) {
+        console.error('Error loading PLO:', error);
+    }
+}
+
+// Ensure MLOs are updated when programme changes
+function onProgrammeChange() {
+    const programmeCode = document.getElementById('programme-select').value;
+    if (programmeCode) {
+        renderPLOCheckboxes(programmeCode);
+        renderMLOCheckboxes(programmeCode);
+        document.getElementById('plo-text').value = '';
+        document.getElementById('mlo-text').value = '';
+    } else {
+        // Clear PLOs and MLOs if no programme selected
+        const ploCheckboxesContainer = document.getElementById('plo-checkboxes');
+        if (ploCheckboxesContainer) ploCheckboxesContainer.innerHTML = '<p style="color: #666; font-style: italic;">Select a programme to see available PLOs...</p>';
+        const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
+        if (mloCheckboxesContainer) mloCheckboxesContainer.innerHTML = '<p style="color: #666; font-style: italic;">Select a programme to see available MLOs...</p>';
+        document.getElementById('plo-text').value = '';
+        document.getElementById('mlo-text').value = '';
+    }
+}
+window.onProgrammeChange = onProgrammeChange;
+
+// Render PLOs as checkboxes
+function renderPLOCheckboxes(programmeCode) {
+    const ploCheckboxesContainer = document.getElementById('plo-checkboxes');
+    if (!ploCheckboxesContainer) return;
+    ploCheckboxesContainer.innerHTML = '';
+    // Get PLOs for the selected programme
+    const plos = window.programmeDataLoader.getPLOs(programmeCode);
+    if (!plos || plos.length === 0) {
+        const noPloMsg = document.createElement('p');
+        noPloMsg.style.color = '#666';
+        noPloMsg.style.fontStyle = 'italic';
+        noPloMsg.textContent = 'No PLOs found for this programme.';
+        ploCheckboxesContainer.appendChild(noPloMsg);
+        return;
+    }
+    plos.forEach((plo, index) => {
+        const checkboxDiv = document.createElement('div');
+        checkboxDiv.style.display = 'flex';
+        checkboxDiv.style.alignItems = 'center';
+        checkboxDiv.style.marginBottom = '6px';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `plo-${index}`;
+        checkbox.value = plo.plosisuik;
+        checkbox.onchange = updateSelectedPLOs;
+        checkbox.style.marginRight = '8px';
+        const label = document.createElement('label');
+        label.htmlFor = `plo-${index}`;
+        label.style.cursor = 'pointer';
+        label.textContent = `${plo.plokood}: ${plo.plosisuik.substring(0, 80)}...`;
+        checkboxDiv.appendChild(checkbox);
+        checkboxDiv.appendChild(label);
+        ploCheckboxesContainer.appendChild(checkboxDiv);
+    });
+}
+
+// Update selected PLOs textarea
+function updateSelectedPLOs() {
+    const ploCheckboxesContainer = document.getElementById('plo-checkboxes');
+    const checked = ploCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked');
+    const selected = Array.from(checked).map(function(cb) {
+        // Find label text for this checkbox
+        const label = ploCheckboxesContainer.querySelector('label[for="' + cb.id + '"]');
+        return label ? label.textContent : cb.value;
+    });
+    document.getElementById('plo-text').value = selected.join('\n');
+}
+
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = EnhancedAIFeatures;
 }
+
+// Generate PLO-MLO alignment matrix and display in results
+window.generatePloMloAlignmentMatrix = async function() {
+    const programmeCode = document.getElementById('programme-select').value;
+    // Get selected PLOs
+    const ploCheckboxes = document.getElementById('plo-checkboxes').querySelectorAll('input[type="checkbox"]:checked');
+    const selectedPLOs = Array.from(ploCheckboxes).map(cb => cb.value);
+    // Get selected MLOs
+    const mloCheckboxes = document.getElementById('mlo-checkboxes').querySelectorAll('input[type="checkbox"]:checked');
+    const selectedMLOs = Array.from(mloCheckboxes).map(cb => cb.value);
+    if (selectedPLOs.length === 0 || selectedMLOs.length === 0) {
+        alert('Please select at least one PLO and one MLO for analysis.');
+        return;
+    }
+    // Build matrix table HTML
+    let tableHtml = '<h3>PLO-MLO Alignment Matrix</h3>';
+    tableHtml += '<table border="1" style="border-collapse:collapse;width:100%;"><thead><tr><th>PLO \ MLO</th>';
+    selectedMLOs.forEach((mlo, j) => {
+        tableHtml += `<th>MLO ${j+1}</th>`;
+    });
+    tableHtml += '<th>Subtotal (Avg)</th></tr></thead><tbody>';
+    let rowAverages = [];
+    for (let i = 0; i < selectedPLOs.length; i++) {
+        tableHtml += `<tr><td>PLO ${i+1}</td>`;
+        let rowScores = [];
+        for (let j = 0; j < selectedMLOs.length; j++) {
+            // Call quickAlignmentCheck for each PLO-MLO pair
+            let result = await window.enhancedAIFeatures.quickAlignmentCheck(selectedPLOs[i], selectedMLOs[j], 'PLO', 'MLO');
+            let score = 0;
+            if (result && result.success && result.response) {
+                // Try to extract score from response (assume response contains 'Alignment score (1-5): X')
+                const match = result.response.match(/Alignment score.*?(\d+(\.\d+)?)/);
+                score = match ? parseFloat(match[1]) : 0;
+            }
+            rowScores.push(score);
+            tableHtml += `<td>${score ? score.toFixed(2) : '-'}</td>`;
+        }
+        // Row average
+        const avg = rowScores.length ? (rowScores.reduce((a,b)=>a+b,0)/rowScores.length) : 0;
+        rowAverages.push(avg);
+        tableHtml += `<td style="font-weight:bold;background:#f0f8ff;">${avg ? avg.toFixed(2) : '-'}</td></tr>`;
+    }
+    // Add column averages
+    tableHtml += '<tr style="background:#f8f9fa;font-weight:bold;"><td>Subtotal (Avg)</td>';
+    for (let j = 0; j < selectedMLOs.length; j++) {
+        let colScores = [];
+        for (let i = 0; i < selectedPLOs.length; i++) {
+            let result = await window.enhancedAIFeatures.quickAlignmentCheck(selectedPLOs[i], selectedMLOs[j], 'PLO', 'MLO');
+            let score = 0;
+            if (result && result.success && result.response) {
+                const match = result.response.match(/Alignment score.*?(\d+(\.\d+)?)/);
+                score = match ? parseFloat(match[1]) : 0;
+            }
+            colScores.push(score);
+        }
+        const avg = colScores.length ? (colScores.reduce((a,b)=>a+b,0)/colScores.length) : 0;
+        tableHtml += `<td>${avg ? avg.toFixed(2) : '-'}</td>`;
+    }
+    // Grand average
+    const grandAvg = rowAverages.length ? (rowAverages.reduce((a,b)=>a+b,0)/rowAverages.length) : 0;
+    tableHtml += `<td style="background:#e0ffe0;">${grandAvg ? grandAvg.toFixed(2) : '-'}</td></tr>`;
+    tableHtml += '</tbody></table>';
+    // Display in result-content
+    document.getElementById('result-content').innerHTML = tableHtml;
+};
+
+// Add event listeners for Select All and Deselect All buttons for MLO checkboxes
+window.addEventListener('DOMContentLoaded', function() {
+    const selectAllBtn = document.getElementById('select-all-mlo');
+    const deselectAllBtn = document.getElementById('deselect-all-mlo');
+    const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
+    if (selectAllBtn && mloCheckboxesContainer) {
+        selectAllBtn.onclick = function() {
+            const checkboxes = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => { cb.checked = true; });
+            updateSelectedMLOs();
+        };
+    }
+    if (deselectAllBtn && mloCheckboxesContainer) {
+        deselectAllBtn.onclick = function() {
+            const checkboxes = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => { cb.checked = false; });
+            updateSelectedMLOs();
+        };
+    }
+});
