@@ -208,7 +208,7 @@ Examples:
 
         <div id="results-section" class="results-section">
             <div class="ai-disclaimer" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ccc;">
-                <span style="font-size: 1em; color: #333;">AI-Generated content is prone for mistakes, review output carefully before use.</span>
+                <span style="font-size: 1em; color: #333;">AI-Generated content may make mistakes, review output carefully before use.</span>
             </div>
             <h3> AI-Powered Alignment Analysis
                 <a href="methodology.html" target="_blank" title="View detailed methodology" style="margin-left:10px; vertical-align:middle;">
@@ -461,11 +461,19 @@ Examples:
                     result = await window.enhancedAIFeatures.executeCustomPrompt(analysisPrompt, {}, options);
                 }
 
+                // --- START OF FIX ---
+                // Display results assuming 'result' is the direct HTML/text response
                 resultsSection.className = 'results-section result-success';
-                resultContent.innerHTML = result.htmlContent; 
-                resultMeta.innerHTML = `<span>Tokens: ${result.tokens.total}</span> | <span>Cost: $${result.cost.toFixed(5)}</span> | <span>Time: ${result.duration}s</span>`;
-                resultMeta.style.display = 'block';
+                resultContent.innerHTML = result; // Use result directly
+
+                // The 'result' object does not contain the metadata, so we cannot display it.
+                // We will hide the metadata section for now to prevent the crash.
+                resultMeta.style.display = 'none'; 
+                // --- END OF FIX ---
+
                 document.getElementById('clear-btn').style.display = 'inline-block';
+                // This function call below might also rely on the old API structure. 
+                // If you get another error, we may need to look at it.
                 updateTokenUsageDisplay();
 
             } catch (error) {
@@ -476,7 +484,7 @@ Examples:
                 button.disabled = false;
                 button.textContent = '🚀 Analyze with AI';
             }
-        }
+        } 
 
         function generateSessionId() {
             let sessionId = sessionStorage.getItem('aiAssistantSessionId');
