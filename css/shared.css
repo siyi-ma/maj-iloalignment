@@ -114,6 +114,7 @@ header {
 }
 
 /* Button Base Styles */
+
 .btn {
     display: inline-flex;
     align-items: center;
@@ -126,12 +127,14 @@ header {
     font-weight: 500;
     text-decoration: none;
     transition: var(--transition);
-    background: transparent;
+    background: var(--tt-light-blue);
+    color: black;
 }
 
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: var(--box-shadow);
+    background: #399eb1;
 }
 
 .btn-primary {

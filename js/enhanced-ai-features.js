@@ -328,8 +328,15 @@ function renderMLOCheckboxes(programmeCode) {
 function updateSelectedMLOs() {
     const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
     const checked = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked');
+    const programmeCode = document.getElementById('programme-select').value;
+    const mlos = window.programmeDataLoader.getMLOs(programmeCode);
     const selected = Array.from(checked).map(function(cb) {
-        // Find label text for this checkbox
+        // Get index from id
+        const idx = cb.id.split('-')[1];
+        if (mlos && mlos[idx]) {
+            return `${mlos[idx].mlokood}: ${mlos[idx].mlosisuik}`;
+        }
+        // Fallback to label or value
         const label = mloCheckboxesContainer.querySelector('label[for="' + cb.id + '"]');
         return label ? label.textContent : cb.value;
     });
@@ -415,8 +422,15 @@ function renderPLOCheckboxes(programmeCode) {
 function updateSelectedPLOs() {
     const ploCheckboxesContainer = document.getElementById('plo-checkboxes');
     const checked = ploCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked');
+    const programmeCode = document.getElementById('programme-select').value;
+    const plos = window.programmeDataLoader.getPLOs(programmeCode);
     const selected = Array.from(checked).map(function(cb) {
-        // Find label text for this checkbox
+        // Get index from id
+        const idx = cb.id.split('-')[1];
+        if (plos && plos[idx]) {
+            return `${plos[idx].plokood}: ${plos[idx].plosisuik}`;
+        }
+        // Fallback to label or value
         const label = ploCheckboxesContainer.querySelector('label[for="' + cb.id + '"]');
         return label ? label.textContent : cb.value;
     });
