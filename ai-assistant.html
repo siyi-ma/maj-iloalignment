@@ -134,6 +134,14 @@ Examples:
 • How do these outcomes compare to industry standards?"></textarea>
                     <small class="form-hint">💡 Optional: Add specific questions or focus areas for the AI analysis</small>
                 </div>
+
+                <!-- MLO Selection for PLO-MLO Analysis -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>🔍 Select Module Learning Outcomes (MLOs) for Analysis</label>
+                    <div id="mlo-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f8f9fa;">
+                        <p style="color: #666; font-style: italic;">Select a PLO to see available MLOs...</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Course Analysis Tab -->
@@ -451,6 +459,7 @@ Follow the TalTech SBG (Majandusteaduskond) Enhanced ILO Alignment Analysis Meth
    - Apply category weights: analytical(1.3), creative(1.4), application(1.1), etc.
    - Calculate: (matched keywords / total keywords) × category weight
    - Normalize: min(5.0, totalWeight × 1.5)
+   - Show results in an HTML table with columns: 'Category', 'Matched Keywords', 'Total Keywords', 'Category Weight', 'Score'.
 
 3. COGNITIVE ANALYSIS (20% weight):
    - Identify Bloom's Taxonomy levels: Remember(1), Understand(2), Apply(3), Analyze(4), Evaluate(5), Create(6)
@@ -476,8 +485,9 @@ Final Score = (semantic×0.35) + (competency×0.25) + (cognitive×0.20) + (conte
 
 REQUIRED OUTPUT FORMAT:
 - Use <h2> for the main report title, e.g. <h2>MMO5680: Sustainable Human Resource Management Principles and Policies - ILO Alignment Analysis</h2>
-- Use <h3> for section titles.
+- Use <h3> for section titles (do not use markdown headings).
 - For tables, use <table class="ai-report-table">...</table>
+- For Competency Analysis, present results in an HTML table as described above.
 
 QUALITY ASSURANCE:
 - All scores must be 1.0-5.0 range
@@ -516,13 +526,6 @@ Please address this specific request while maintaining the methodology framework
                     // Get course and programme info for context
                     const programmeInfo = window.programmeDataLoader.getProgrammeInfo(programmeCode);
                     const courseInfo = window.programmeDataLoader.getCLOs(programmeCode, courseCode).courseInfo;
-                    
-                    // Validate CLO count (recommended limit: 5)
-                    const selectedCLOs = document.querySelectorAll('#clo-checkboxes input[type="checkbox"]:checked');
-                    if (selectedCLOs.length > 5) {
-                        const proceed = confirm(`You have ${selectedCLOs.length} Course Learning Outcomes selected. The recommended limit is 5 for optimal analysis. Continue?`);
-                        if (!proceed) return;
-                    }
                     
                     // Create methodology-based course analysis prompt
                     const customRequest = document.getElementById('course-custom-analysis-request').value.trim();
@@ -1081,10 +1084,22 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 const courseInfo = `${cloData.courseInfo.nameEn} (${cloData.courseInfo.code}) - ${cloData.courseInfo.credits} EAP`;
                 document.getElementById('course-info-display').value = courseInfo;
                 
-                // Create CLO checkboxes
+                // Create CLO checkboxes and Select All button
                 const cloContainer = document.getElementById('clo-checkboxes');
                 cloContainer.innerHTML = '';
-                
+
+                // Add Select All button
+                const selectAllBtn = document.createElement('button');
+                selectAllBtn.textContent = 'Select All';
+                selectAllBtn.className = 'btn';
+                selectAllBtn.style.marginBottom = '10px';
+                selectAllBtn.onclick = function() {
+                    const checkboxes = cloContainer.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach(cb => { cb.checked = true; });
+                    updateSelectedCLOs();
+                };
+                cloContainer.appendChild(selectAllBtn);
+
                 const closEn = cloData.closEn;
                 Object.keys(closEn).forEach(cloKey => {
                     const checkboxDiv = document.createElement('div');
@@ -1330,6 +1345,55 @@ Provide comprehensive, actionable analysis for course improvement.`;
                 return cb.value;
             });
             textarea.value = selected.join('\n');
+        }
+
+        // Create MLO checkboxes and Select All button for PLO-MLO analysis
+        const mloSelect = document.getElementById('mlo-select');
+        const mloCheckboxesContainer = document.getElementById('mlo-checkboxes');
+        mloCheckboxesContainer.innerHTML = '';
+
+        // Add Select All button
+        const selectAllMloBtn = document.createElement('button');
+        selectAllMloBtn.textContent = 'Select All';
+        selectAllMloBtn.className = 'btn';
+        selectAllMloBtn.style.marginBottom = '10px';
+        selectAllMloBtn.onclick = function() {
+            const checkboxes = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => { cb.checked = true; });
+            updateSelectedMLOs();
+        };
+        mloCheckboxesContainer.appendChild(selectAllMloBtn);
+
+        // Add MLO checkboxes
+        const mlos = window.programmeDataLoader.getMLOs(programmeCode);
+        mlos.forEach((mlo, index) => {
+            const checkboxDiv = document.createElement('div');
+            checkboxDiv.style.marginBottom = '8px';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `mlo-${index}`;
+            checkbox.value = mlo.mlosisuik;
+            checkbox.onchange = updateSelectedMLOs;
+            
+            const label = document.createElement('label');
+            label.htmlFor = `mlo-${index}`;
+            label.style.marginLeft = '8px';
+            label.style.cursor = 'pointer';
+            label.textContent = `${mlo.mlokood}: ${mlo.mlosisuik.substring(0, 80)}...`;
+            
+            checkboxDiv.appendChild(checkbox);
+            checkboxDiv.appendChild(label);
+            mloCheckboxesContainer.appendChild(checkboxDiv);
+        });
+
+        // Function to update selected MLOs textarea
+        function updateSelectedMLOs() {
+            const checked = mloCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked');
+            const selected = Array.from(checked).map(function(cb) {
+                return cb.value;
+            });
+            document.getElementById('mlo-text').value = selected.join('\n');
         }
 
         async function fetchApiUsage() {
