@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programme-Module Learning Outcomes Alignment Analysis</title>
+    <link rel="stylesheet" href="suy8s9ndl6.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .matrix-table {
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            overflow-x: auto;
+            display: block;
+        }
+        
+        .matrix-table thead tr {
+            background-color: #342b60;
+            color: white;
+            text-align: center;
+        }
+        
+        .matrix-table th,
+        .matrix-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            min-width: 50px;
+        }
+        
+        .matrix-table th:first-child {
+            min-width: 150px;
+            text-align: left;
+        }
+        
+        .matrix-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+        
+        .matrix-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        
+        .matrix-corner {
+            background-color: #342b60;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .score-0 { background-color: #f5f5f5; color: #999; }
+        .score-1 { background-color: #ffcdd2; }
+        .score-2 { background-color: #ffecb3; }
+        .score-3 { background-color: #fff9c4; }
+        .score-4 { background-color: #c8e6c9; }
+        .score-5 { background-color: #a5d6a7; }
+        
+        .alignment-item {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .alignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .alignment-title {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .alignment-details {
+            padding: 15px;
+            background-color: #fff;
+        }
+        
+        .alignment-plo, .alignment-mlo {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .alignment-reason {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .alignment-suggestion {
+            padding: 10px;
+            background-color: #fff9c4;
+            border-radius: 5px;
+            border-left: 3px solid #ffd600;
+        }
+        
+        .module-header {
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #342b60;
+            color: #342b60;
+        }
+        
+        .matrix-tooltip {
+            position: absolute;
+            background-color: #342b60;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 300px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #342b60;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            font-size: 1.2em;
+        }
+        
+        .back-to-top.active {
+            transform: scale(1.1);
+        }
+        
+        .back-to-top:hover {
+            transform: scale(1.15);
+            background-color: #e4067e;
+        }
+        
+        .report-footer-actions {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .export-btn {
+            background-color: #AA1352;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .export-btn:hover {
+            background-color: #950f47;
+            transform: translateY(-2px);
+        }
+        
+        .alignment-summary {
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #342b60;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .alignment-summary h3 {
+            color: #342b60;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .alignment-summary ul {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-left: 25px;
+        }
+        
+        .alignment-summary li {
+            margin-bottom: 8px;
+        }
+        
+        .legend {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        
+        .legend h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .module-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .module-header {
+            padding: 10px 15px;
+            background-color: #342b60;
+            color: white;
+            margin: 0;
+        }
+        
+        .module-content {
+            padding: 15px;
+        }
+        
+        .module-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .module-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .outcome-item {
+            border-left: 3px solid #342b60;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> Learning Outcomes Alignment</h1>
+                <p>Programme and Module Learning Outcomes Alignment Tool</p>
+            </div>
+            <div class="header-buttons">
+                <a href="index.html" class="home-btn"><i class="fas fa-home"></i> Home</a>
+            </div>
+        </header>
+
+        <main>
+            <section id="overview" class="active-section">
+                <h2><i class="fas fa-info-circle"></i> Overview</h2>
+                <p>This analysis examines how well the Module Learning Outcomes (MLOs) align with the Programme Learning Outcomes (PLOs) for the business school programme. The alignment is scored on a scale from 0 to 5:</p>
+                
+                <div class="legend">
+                    <h4>Alignment Score Legend:</h4>
+                    <div class="legend-items">
+                        <div class="legend-item"><div class="legend-color score-0"></div><span>0: No alignment</span></div>
+                        <div class="legend-item"><div class="legend-color score-1"></div><span>1: Minimal alignment</span></div>
+                        <div class="legend-item"><div class="legend-color score-2"></div><span>2: Partial alignment</span></div>
+                        <div class="legend-item"><div class="legend-color score-3"></div><span>3: Moderate alignment</span></div>
+                        <div class="legend-item"><div class="legend-color score-4"></div><span>4: Strong alignment</span></div>
+                        <div class="legend-item"><div class="legend-color score-5"></div><span>5: Excellent alignment</span></div>
+                    </div>
+                </div>
+                
+                <div id="alignment-summary" class="alignment-summary">
+                    <div class="ai-badge"><i class="fas fa-robot"></i> AI Analysis</div>
+                    <h3>Alignment Summary</h3>
+                    <p>The analysis examines the relationships between the 6 Programme Learning Outcomes (PLOs) that define the overall goals of the business school programme and the Module Learning Outcomes (MLOs) across different course modules. The alignment assessment shows how each module contributes to the programme's educational objectives.</p>
+                    <p>Key findings from the alignment analysis:</p>
+                    <ul>
+                        <li>Core modules (P1 and P2) demonstrate the strongest overall alignment with programme goals</li>
+                        <li>Special studies modules (E1 and E2) provide focused support for specific PLOs</li>
+                        <li>The Graduation Thesis Module shows excellent alignment with research and critical thinking PLOs</li>
+                        <li>General Studies provides foundational competencies with moderate programme alignment</li>
+                    </ul>
+                    <p>The detailed analysis below provides specific alignment scores, justifications, and improvement suggestions where applicable.</p>
+                </div>
+            </section>
+
+            <section id="plo-section">
+                <h2><i class="fas fa-list-check"></i> Programme Learning Outcomes (PLOs)</h2>
+                <div id="plo-container">
+                    <!-- PLOs will be displayed here by the JavaScript -->
+                </div>
+            </section>
+
+            <section id="mlo-section">
+                <h2><i class="fas fa-list-check"></i> Module Learning Outcomes (MLOs) by Category</h2>
+                <div id="mlo-container">
+                    <!-- MLOs will be displayed here by the JavaScript -->
+                </div>
+            </section>
+            
+            <section id="matrix-section">
+                <h2><i class="fas fa-table"></i> Alignment Matrix</h2>
+                <p>This matrix shows the alignment scores between all PLOs and MLO categories. Hover over a cell to see the alignment justification.</p>
+                <div id="matrix-container">
+                    <!-- Alignment matrix will be generated here by JavaScript -->
+                </div>
+            </section>
+            
+            <section id="detailed-analysis">
+                <h2><i class="fas fa-chart-bar"></i> Detailed Analysis</h2>
+                <div id="analysis-header" class="ai-analysis-header">
+                    <div class="ai-badge"><i class="fas fa-robot"></i> AI Analysis</div>
+                    <p>Our AI has analyzed the alignment between Programme Learning Outcomes and Module Learning Outcomes.</p>
+                </div>
+                <div id="detailed-container">
+                    <!-- Detailed analysis will be generated here by JavaScript -->
+                </div>
+            </section>
+            
+            <section id="report-section" class="hidden-section">
+                <h2><i class="fas fa-file-alt"></i> Alignment Report</h2>
+                <div id="report-container">
+                    <!-- Comprehensive alignment report will be generated here -->
+                </div>
+            </section>
+        </main>
+        
+        <div class="report-footer-actions">
+            <button id="export-plo-mlo-btn" class="export-btn"><i class="fas fa-file-export"></i> Export Report</button>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 TVTB ILO Alignment | TalTech Majandusteaduskonna Siyi Ma</p>
+        </footer>
+    </div>
+
+    <div class="back-to-top active">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <style>
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .export-btn {
+            background-color: #AA1352;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .export-btn:hover {
+            background-color: #950f47;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Extract PLOs and MLOs from data stored in the main application
+            let plos = [];
+            let mlos = [];
+            
+            // Function to parse a CSV string directly (fallback if loading fails)
+            function parseMLOCSV(csvText) {
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(';');
+                
+                return lines.slice(1).filter(line => line.trim() !== '').map(line => {
+                    const values = line.split(';');
+                    const obj = {};
+                    
+                    headers.forEach((header, index) => {
+                        obj[header] = values[index] || '';
+                    });
+                    
+                    return obj;
+                });
+            }
+            
+            // Function to fetch MLO data from the main JS file
+            async function fetchData() {
+                try {
+                    // Try to directly use the CSV data from the main script
+                    const mloText = `moodlikood;kategooria;ilosisu;oisnimetus
+kava;kava;"synthesizes wide-ranging knowledge and skills to overcome challenges in international organizations in various sectors as an employee, to run one's own business, and/or to continue studies on graduate level;";Learning outcomes of the study programme
+kava;kava;"critically evaluates main concepts of business administration and relevant social and legal aspects, generally accepted foundational theories and models, and appraises operating environments, development trends in economy and society, and best practices in industries;";Learning outcomes of the study programme
+kava;kava;"designs and evaluates business models and plans and evaluates strategic, tactical and functional decisions considering sustainability of the organization, people and environment, and adheres to the principles of corporate social responsibility and ethics;";Learning outcomes of the study programme
+kava;kava;"purposefully synthesizes the acquired knowledge and skills to identify, solve or alleviate problems in the fields of management, marketing, supply chain, accounting and finance based on evidence and considering cross-functional dependencies; identifies and appraises alternative scenarios and plans work-related activities systematically and efficiently;";Learning outcomes of the study programme
+kava;kava;expresses ideas fluently and efficiently in professional communication and applies modern information and communication technologies;Learning outcomes of the study programme
+kava;kava;demonstrates proactive attitude towards change and continuous development at personal and organizational levels, formulates relevant individual and organizational goals, and assembles and leads a team.;Learning outcomes of the study programme
+ylmlo;moodul;"knows the basic principles of ICT, is able to find and evaluate information efficiently, is able to use spreadsheets and word processing applications proficiently and is able to use programming tools for processing data;";Learning outcomes of the General studies module - Foundational Competences
+ylmlo;moodul;"can scientifically interpret the effect of work environment on human body, knows the risk factors involved in work environment and is able to develop a healthy and ergonomic work environment;";Learning outcomes of the General studies module - Foundational Competences
+ylmlo;moodul;has selectively strengthened and broadened knowledge and skills in communication skills in Estonian or in a foreign language, or regarding the principles of natural science.;Learning outcomes of the General studies module - Foundational Competences
+p1mlo;moodul;"is able to think in economic terms and explain the economic behaviour of economic actors; comprehend the relationship between individual economic phenomena and economy as a whole;";Learning outcomes of the first Core studies module - P1 Methods, Markets and Economy
+p1mlo;moodul;"knows the fundamental concepts of economics theory and principles of economics both on micro and macro level; is able to interpret microeconomic indicators and analyse relationships between and reasons for elementary macroeconomic processes;";Learning outcomes of the first Core studies module - P1 Methods, Markets and Economy
+p1mlo;moodul;"demonstrates systematic knowledge about environmental economics and the economics of sustainable development, main environmental problems, their causes, consequences and the possibilities of influencing and preventing them, environment-based restrictions on the economy and about related regulations;";Learning outcomes of the first Core studies module - P1 Methods, Markets and Economy
+p1mlo;moodul;"has an overview of statistics concepts and research methods used in economic and business studies;";Learning outcomes of the first Core studies module - P1 Methods, Markets and Economy
+p1mlo;moodul;is able to interpret economic problems mathematically, formulate less sophisticated mathematical economics tasks and solve them.;Learning outcomes of the first Core studies module - P1 Methods, Markets and Economy
+p2mlo;moodul;"demonstrates broad fundamental knowledge and skills across four pillars of the programme marketing, entrepreneurship and management, accounting and business intelligence, and finance from operative level to broadly outlined strategic level;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;"knows the basic terminology, theories and concepts of the above named areas and general conventional methods of analysis, and is able to set area-related aims and develop the processes in focus;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;"is able to perceive relationships and interdependence between business functions, their impact on total costs of enterprise, its efficiency and competitive position, and defines, analyses and improves practical problems and challenges of not overly sophisticated nature;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;"is able to evaluate positive and negative aspects and risks of being an entrepreneur; knows which personality traits are essential for an entrepreneur and is able to evaluate his/her own fitness for becoming an entrepreneur;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;"knows the principles of creative thinking, can demonstrate initiative, evaluate entrepreneurial opportunities, analyse impact of a business environment on the idea realisation potential and develop a business model; take the main decisions related to the establishment of an enterprise and plan business growth and development;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;"knows the characteristics of business research, stages of the research process, methods for gathering and analysing quantitative and qualitative data; is skilled in applying widely used data collection methods; is able to conduct data analysis, interpret results of analysis and present them in a generalised, informative way in agreement with academic requirements;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;"is able to analyse different situations and issues of dispute in the area of business law, and is able to envisage legal interpretations and potential consequences of related business decisions;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;"has knowledge about the essence of international business and basic principles of internationalisation;";Learning outcomes of the second Core studies module - P2 Core Business Competences
+p2mlo;moodul;knows the theoretical bases of business ethics and is able to analyse business ethics dilemmas based on the principle of corporate social responsibility.;Learning outcomes of the second Core studies module - P2 Core Business Competences
+e1mlo;moodul;"analyses the international business environment, constructs business ideas, and plans their realization; Show less...";Learning outcomes of the first Special studies module - E1 Entrepreneurship and Marketing
+e1mlo;moodul;"analyses the role of human resource management in organisations and plans key sub-activities;";Learning outcomes of the first Special studies module - E1 Entrepreneurship and Marketing
+e1mlo;moodul;"explains the nature of production and service management processes and their strategic importance, and places these into the wider development trends context of the world economy;";Learning outcomes of the first Special studies module - E1 Entrepreneurship and Marketing
+e1mlo;moodul;"understands marketing concepts, the essence of marketing management, e-marketing, and context and influencing factors of marketing decisions;";Learning outcomes of the first Special studies module - E1 Entrepreneurship and Marketing
+e1mlo;moodul;designs and conducts market research and interprets the results in the context of strategic positioning, competitive advantage, and development opportunities of the organisation.;Learning outcomes of the first Special studies module - E1 Entrepreneurship and Marketing
+gdmlo;moodul;"formulates a research problem corresponding to the main speciality, sets the aim of the thesis and defines research questions/tasks/hypotheses; Show less...";Learning outcomes of the Graduation thesis module
+gdmlo;moodul;"chooses appropriate scientific and field-specific literature, analyses and synthesizes their content;";Learning outcomes of the Graduation thesis module
+gdmlo;moodul;"chooses appropriate methodology to fulfill the aim of the thesis;";Learning outcomes of the Graduation thesis module
+gdmlo;moodul;"collects, processes and analyses relevant information;";Learning outcomes of the Graduation thesis module
+gdmlo;moodul;"uses professional knowledge to solve the research problem, interpret the results and provide conclusions;";Learning outcomes of the Graduation thesis module
+gdmlo;moodul;"formats the thesis according to pre-set requirements using scientific language and professional terminology and following proper citing principles;";Learning outcomes of the Graduation thesis module
+gdmlo;moodul;presents and explains one's viewpoints in both written and oral form.;Learning outcomes of the Graduation thesis module
+e2mlo;moodul;"can organize financial accounting within a company, comprehends, interprets, and analyzes financial statements;";Learning outcomes of the second Special studies module - E2 Finance and Accounting
+e2mlo;moodul;"comprehends and interprets the content of financial statements and can generally manage financial accounting within a company;";Learning outcomes of the second Special studies module - E2 Finance and Accounting
+e2mlo;moodul;"navigates the basic concepts of management and cost accounting, can prepare different decisions based on quantitative data, create various budgets, plans, and reports, perform ratio-based analysis, and evaluate the success of an international company using different financial performance criteria;";Learning outcomes of the second Special studies module - E2 Finance and Accounting
+e2mlo;moodul;"analyzes practical financial issues, demonstrating a basic knowledge of the international financial system, services, and instruments;";Learning outcomes of the second Special studies module - E2 Finance and Accounting
+e2mlo;moodul;"understands the impact and challenges of the digital age on traditional accounting, can collect financial information from various company information systems, process, analyze, interpret it, and present it to company management;";Learning outcomes of the second Special studies module - E2 Finance and Accounting
+e2mlo;moodul;is familiar with the main research methods in econometrics and applies them in a practical context, handling quantitative analysis of economic problems.;Learning outcomes of the second Special studies module - E2 Finance and Accounting`;
+                    
+                    // Parse the embedded data directly
+                    const parsedMLOData = parseMLOCSV(mloText);
+                    processData(parsedMLOData);
+                    
+                    // Also try the imported script method as backup
+                    const scriptElement = document.createElement('script');
+                    scriptElement.src = '6scyxiy6c1.js';
+                    document.head.appendChild(scriptElement);
+                    
+                    // Wait for script to load
+                    scriptElement.onload = function() {
+                        if (typeof mloData !== 'undefined') {
+                            console.log('Script loaded successfully, using imported mloData');
+                            processData(mloData);
+                        }
+                    };
+                    
+                    scriptElement.onerror = function(error) {
+                        console.error('Error loading script, but already used embedded data:', error);
+                    };
+                } catch (error) {
+                    console.error('Error processing data:', error);
+                }
+            }
+            
+            // Process the loaded data
+            function processData(data) {
+                console.log("Processing data...", data && data.length);
+                
+                // Separate PLOs and MLOs
+                plos = data.filter(item => item.kategooria === 'kava');
+                mlos = data.filter(item => item.kategooria === 'moodul');
+                
+                console.log("Found PLOs:", plos.length);
+                console.log("Found MLOs:", mlos.length);
+                
+                // Ensure we have data
+                if (plos.length === 0 || mlos.length === 0) {
+                    // If we don't have data from parsing, use hardcoded examples
+                    plos = [
+                        {kategooria: 'kava', ilosisu: "Synthesizes wide-ranging knowledge and skills to overcome challenges in international organizations in various sectors as an employee, to run one's own business, and/or to continue studies on graduate level."},
+                        {kategooria: 'kava', ilosisu: "Critically evaluates main concepts of business administration and relevant social and legal aspects, generally accepted foundational theories and models, and appraises operating environments, development trends in economy and society, and best practices in industries."},
+                        {kategooria: 'kava', ilosisu: "Designs and evaluates business models and plans and evaluates strategic, tactical and functional decisions considering sustainability of the organization, people and environment, and adheres to the principles of corporate social responsibility and ethics."},
+                        {kategooria: 'kava', ilosisu: "Purposefully synthesizes the acquired knowledge and skills to identify, solve or alleviate problems in the fields of management, marketing, supply chain, accounting and finance based on evidence and considering cross-functional dependencies."},
+                        {kategooria: 'kava', ilosisu: "Expresses ideas fluently and efficiently in professional communication and applies modern information and communication technologies."},
+                        {kategooria: 'kava', ilosisu: "Demonstrates proactive attitude towards change and continuous development at personal and organizational levels, formulates relevant individual and organizational goals, and assembles and leads a team."}
+                    ];
+                    
+                    // Create module groups manually
+                    const moduleGroups = {
+                        'ylmlo': [
+                            {moodlikood: 'ylmlo', kategooria: 'moodul', ilosisu: "Knows the basic principles of ICT, is able to find and evaluate information efficiently, is able to use spreadsheets and word processing applications proficiently and is able to use programming tools for processing data."},
+                            {moodlikood: 'ylmlo', kategooria: 'moodul', ilosisu: "Can scientifically interpret the effect of work environment on human body, knows the risk factors involved in work environment and is able to develop a healthy and ergonomic work environment."},
+                            {moodlikood: 'ylmlo', kategooria: 'moodul', ilosisu: "Has selectively strengthened and broadened knowledge and skills in communication skills in Estonian or in a foreign language, or regarding the principles of natural science."}
+                        ],
+                        'p1mlo': [
+                            {moodlikood: 'p1mlo', kategooria: 'moodul', ilosisu: "Is able to think in economic terms and explain the economic behaviour of economic actors; comprehend the relationship between individual economic phenomena and economy as a whole."},
+                            {moodlikood: 'p1mlo', kategooria: 'moodul', ilosisu: "Knows the fundamental concepts of economics theory and principles of economics both on micro and macro level; is able to interpret microeconomic indicators and analyse relationships between and reasons for elementary macroeconomic processes."},
+                            {moodlikood: 'p1mlo', kategooria: 'moodul', ilosisu: "Demonstrates systematic knowledge about environmental economics and the economics of sustainable development."}
+                        ],
+                        'p2mlo': [
+                            {moodlikood: 'p2mlo', kategooria: 'moodul', ilosisu: "Demonstrates broad fundamental knowledge and skills across four pillars of the programme marketing, entrepreneurship and management, accounting and business intelligence, and finance from operative level to broadly outlined strategic level."},
+                            {moodlikood: 'p2mlo', kategooria: 'moodul', ilosisu: "Knows the basic terminology, theories and concepts of business areas and general conventional methods of analysis, and is able to set area-related aims and develop the processes in focus."}
+                        ],
+                        'e1mlo': [
+                            {moodlikood: 'e1mlo', kategooria: 'moodul', ilosisu: "Analyses the international business environment, constructs business ideas, and plans their realization."},
+                            {moodlikood: 'e1mlo', kategooria: 'moodul', ilosisu: "Designs and conducts market research and interprets the results in the context of strategic positioning, competitive advantage, and development opportunities of the organisation."}
+                        ],
+                        'e2mlo': [
+                            {moodlikood: 'e2mlo', kategooria: 'moodul', ilosisu: "Can organize financial accounting within a company, comprehends, interprets, and analyzes financial statements."},
+                            {moodlikood: 'e2mlo', kategooria: 'moodul', ilosisu: "Analyzes practical financial issues, demonstrating a basic knowledge of the international financial system, services, and instruments."}
+                        ],
+                        'gdmlo': [
+                            {moodlikood: 'gdmlo', kategooria: 'moodul', ilosisu: "Formulates a research problem corresponding to the main speciality, sets the aim of the thesis and defines research questions/tasks/hypotheses."},
+                            {moodlikood: 'gdmlo', kategooria: 'moodul', ilosisu: "Collects, processes and analyses relevant information."}
+                        ]
+                    };
+                    
+                    // Flatten the module groups to get all MLOs
+                    mlos = Object.values(moduleGroups).flat();
+                    
+                    // Display PLOs
+                    displayPLOs(plos);
+                    
+                    // Display MLOs by category
+                    displayMLOsByCategory(moduleGroups);
+                    
+                    // Generate alignment analysis
+                    const alignmentResults = analyzeAlignment(plos, moduleGroups);
+                    
+                    // Display alignment matrix
+                    displayAlignmentMatrix(plos, moduleGroups, alignmentResults);
+                    
+                    // Display detailed analysis
+                    displayDetailedAnalysis(plos, moduleGroups, alignmentResults);
+                    return;
+                }
+                
+                // Group MLOs by module code
+                const moduleGroups = {};
+                mlos.forEach(mlo => {
+                    if (!moduleGroups[mlo.moodlikood]) {
+                        moduleGroups[mlo.moodlikood] = [];
+                    }
+                    moduleGroups[mlo.moodlikood].push(mlo);
+                });
+                
+                // Display PLOs
+                displayPLOs(plos);
+                
+                // Display MLOs by category
+                displayMLOsByCategory(moduleGroups);
+                
+                // Generate alignment analysis
+                const alignmentResults = analyzeAlignment(plos, moduleGroups);
+                
+                // Display alignment matrix
+                displayAlignmentMatrix(plos, moduleGroups, alignmentResults);
+                
+                // Display detailed analysis
+                displayDetailedAnalysis(plos, moduleGroups, alignmentResults);
+            }
+            
+            // Display Programme Learning Outcomes
+            function displayPLOs(plos) {
+                const ploContainer = document.getElementById('plo-container');
+                ploContainer.innerHTML = '';
+                
+                plos.forEach((plo, index) => {
+                    // Clean up PLO text
+                    let ploText = plo.ilosisu;
+                    ploText = ploText.replace(/^["']|["']$/g, '').trim(); // Remove leading/trailing quotes
+                    
+                    const ploItem = document.createElement('div');
+                    ploItem.className = 'outcome-item';
+                    ploItem.innerHTML = `
+                        <h3>PLO ${index + 1}</h3>
+                        <p>${ploText}</p>
+                    `;
+                    ploContainer.appendChild(ploItem);
+                });
+            }
+            
+            // Display Module Learning Outcomes by category
+            function displayMLOsByCategory(moduleGroups) {
+                const mloContainer = document.getElementById('mlo-container');
+                mloContainer.innerHTML = '';
+                
+                // Define module order and names for display
+                const moduleOrder = ['ylmlo', 'p1mlo', 'p2mlo', 'e1mlo', 'e2mlo', 'gdmlo'];
+                const moduleNames = {
+                    'ylmlo': 'General Studies Module - Foundational Competences',
+                    'p1mlo': 'Core Studies Module - P1 Methods, Markets and Economy',
+                    'p2mlo': 'Core Studies Module - P2 Core Business Competences',
+                    'e1mlo': 'Special Studies Module - E1 Entrepreneurship and Marketing',
+                    'e2mlo': 'Special Studies Module - E2 Finance and Accounting',
+                    'gdmlo': 'Graduation Thesis Module'
+                };
+                
+                // Create a section for each module in the specified order
+                moduleOrder.forEach(moduleCode => {
+                    if (!moduleGroups[moduleCode]) return; // Skip if module doesn't exist
+                    
+                    const moduleMLOs = moduleGroups[moduleCode];
+                    
+                    // Create module section
+                    const moduleSection = document.createElement('div');
+                    moduleSection.className = 'module-section';
+                    
+                    // Add module header with the full name
+                    const moduleHeader = document.createElement('h3');
+                    moduleHeader.className = 'module-header';
+                    moduleHeader.textContent = moduleNames[moduleCode] || moduleCode.toUpperCase();
+                    moduleSection.appendChild(moduleHeader);
+                    
+                    // Create content container
+                    const moduleContent = document.createElement('div');
+                    moduleContent.className = 'module-content';
+                    
+                    // Add MLOs for this module
+                    moduleMLOs.forEach((mlo, index) => {
+                        // Clean up MLO text
+                        let mloText = mlo.ilosisu;
+                        mloText = mloText.replace(/^["']|["']$/g, '').trim();
+                        
+                        const mloItem = document.createElement('div');
+                        mloItem.className = 'outcome-item';
+                        mloItem.innerHTML = `
+                            <h4>${moduleCode.toUpperCase()} ${index + 1}</h4>
+                            <p>${mloText}</p>
+                        `;
+                        moduleContent.appendChild(mloItem);
+                    });
+                    
+                    moduleSection.appendChild(moduleContent);
+                    mloContainer.appendChild(moduleSection);
+                });
+            }
+            
+            // Analyze alignment between PLOs and MLOs
+            function analyzeAlignment(plos, moduleGroups) {
+                const alignmentResults = {};
+                
+                // For each PLO, analyze alignment with each MLO module
+                plos.forEach((plo, ploIndex) => {
+                    const ploKey = `plo-${ploIndex}`;
+                    alignmentResults[ploKey] = {};
+                    
+                    // For each module
+                    Object.keys(moduleGroups).forEach(moduleCode => {
+                        const moduleMLOs = moduleGroups[moduleCode];
+                        let moduleScore = 0;
+                        let moduleScores = [];
+                        let moduleJustifications = [];
+                        
+                        // Compare PLO with each MLO in the module
+                        moduleMLOs.forEach((mlo, mloIndex) => {
+                            const score = calculateAlignmentScore(plo.ilosisu, mlo.ilosisu);
+                            const justification = generateAlignmentReason(plo.ilosisu, mlo.ilosisu, score);
+                            
+                            moduleScores.push(score);
+                            moduleJustifications.push({
+                                mloIndex: mloIndex,
+                                score: score,
+                                justification: justification
+                            });
+                        });
+                        
+                        // Calculate average score for the module (if there are any MLOs)
+                        if (moduleScores.length > 0) {
+                            moduleScore = Math.round(moduleScores.reduce((acc, val) => acc + val, 0) / moduleScores.length);
+                        }
+                        
+                        // Store results
+                        alignmentResults[ploKey][moduleCode] = {
+                            score: moduleScore,
+                            individualScores: moduleScores,
+                            justifications: moduleJustifications
+                        };
+                    });
+                });
+                
+                return alignmentResults;
+            }
+            
+            // Display alignment matrix
+            function displayAlignmentMatrix(plos, moduleGroups, alignmentResults) {
+                const matrixContainer = document.getElementById('matrix-container');
+                matrixContainer.innerHTML = '';
+                
+                // Create matrix table
+                const table = document.createElement('table');
+                table.className = 'matrix-table';
+                
+                // Create header row with module codes
+                const headerRow = document.createElement('tr');
+                const cornerCell = document.createElement('th');
+                cornerCell.className = 'matrix-corner';
+                cornerCell.textContent = 'PLO / Module';
+                headerRow.appendChild(cornerCell);
+                
+                // Define module order for display
+                const moduleOrder = ['ylmlo', 'p1mlo', 'p2mlo', 'e1mlo', 'e2mlo', 'gdmlo'];
+                
+                // Add module headers
+                moduleOrder.forEach(moduleCode => {
+                    if (!moduleGroups[moduleCode]) return; // Skip if module doesn't exist
+                    
+                    const th = document.createElement('th');
+                    th.textContent = moduleCode.toUpperCase();
+                    headerRow.appendChild(th);
+                });
+                
+                table.appendChild(headerRow);
+                
+                // Create rows for each PLO
+                plos.forEach((plo, ploIndex) => {
+                    const row = document.createElement('tr');
+                    
+                    // Add PLO label
+                    const ploLabel = document.createElement('th');
+                    ploLabel.textContent = `PLO ${ploIndex + 1}`;
+                    ploLabel.title = plo.ilosisu.replace(/^["']|["']$/g, '').trim();
+                    row.appendChild(ploLabel);
+                    
+                    // Add score cells for each module
+                    moduleOrder.forEach(moduleCode => {
+                        if (!moduleGroups[moduleCode]) return; // Skip if module doesn't exist
+                        
+                        const ploKey = `plo-${ploIndex}`;
+                        const moduleResult = alignmentResults[ploKey][moduleCode];
+                        
+                        const cell = document.createElement('td');
+                        cell.className = `score-${moduleResult.score}`;
+                        cell.textContent = moduleResult.score;
+                        
+                        // Add tooltip with aggregated justification
+                        const tooltips = moduleResult.justifications.map(j => 
+                            `${moduleCode.toUpperCase()} ${j.mloIndex + 1}: Score ${j.score}/5`
+                        ).join('\n');
+                        
+                        cell.title = tooltips;
+                        
+                        row.appendChild(cell);
+                    });
+                    
+                    table.appendChild(row);
+                });
+                
+                matrixContainer.appendChild(table);
+            }
+            
+            // Display detailed analysis
+            function displayDetailedAnalysis(plos, moduleGroups, alignmentResults) {
+                const detailedContainer = document.getElementById('detailed-container');
+                detailedContainer.innerHTML = '';
+                
+                // Define module order and names
+                const moduleOrder = ['ylmlo', 'p1mlo', 'p2mlo', 'e1mlo', 'e2mlo', 'gdmlo'];
+                const moduleNames = {
+                    'ylmlo': 'General Studies Module - Foundational Competences',
+                    'p1mlo': 'Core Studies Module - P1 Methods, Markets and Economy',
+                    'p2mlo': 'Core Studies Module - P2 Core Business Competences',
+                    'e1mlo': 'Special Studies Module - E1 Entrepreneurship and Marketing',
+                    'e2mlo': 'Special Studies Module - E2 Finance and Accounting',
+                    'gdmlo': 'Graduation Thesis Module'
+                };
+                
+                // For each PLO
+                plos.forEach((plo, ploIndex) => {
+                    const ploKey = `plo-${ploIndex}`;
+                    const ploText = plo.ilosisu.replace(/^["']|["']$/g, '').trim();
+                    
+                    // Create PLO section
+                    const ploSection = document.createElement('div');
+                    ploSection.className = 'plo-section';
+                    ploSection.innerHTML = `
+                        <h3>PLO ${ploIndex + 1}</h3>
+                        <div class="outcome-item">
+                            <p>${ploText}</p>
+                        </div>
+                    `;
+                    
+                    // Add module sections for this PLO
+                    moduleOrder.forEach(moduleCode => {
+                        if (!moduleGroups[moduleCode] || !alignmentResults[ploKey][moduleCode]) return;
+                        
+                        const moduleResult = alignmentResults[ploKey][moduleCode];
+                        const moduleMLOs = moduleGroups[moduleCode];
+                        
+                        // Create module section
+                        const moduleSection = document.createElement('div');
+                        moduleSection.className = 'alignment-item';
+                        
+                        // Add module header with score
+                        const moduleHeader = document.createElement('div');
+                        moduleHeader.className = 'alignment-header';
+                        moduleHeader.innerHTML = `
+                            <div class="alignment-title">${moduleNames[moduleCode] || moduleCode.toUpperCase()}</div>
+                            <div class="alignment-score score-${moduleResult.score}">Score: ${moduleResult.score}/5</div>
+                        `;
+                        moduleSection.appendChild(moduleHeader);
+                        
+                        // Add module details
+                        const moduleDetails = document.createElement('div');
+                        moduleDetails.className = 'alignment-details';
+                        
+                        // Add individual MLO alignments
+                        moduleResult.justifications.forEach((justification, idx) => {
+                            if (idx >= moduleMLOs.length) return;
+                            
+                            const mlo = moduleMLOs[idx];
+                            const mloText = mlo.ilosisu.replace(/^["']|["']$/g, '').trim();
+                            
+                            const alignmentDetail = document.createElement('div');
+                            alignmentDetail.className = 'module-detail';
+                            alignmentDetail.innerHTML = `
+                                <div class="alignment-mlo">
+                                    <strong>${moduleCode.toUpperCase()} ${justification.mloIndex + 1}</strong>
+                                    <p>${mloText}</p>
+                                </div>
+                                <div class="alignment-reason">
+                                    <strong>Score: ${justification.score}/5</strong>
+                                    <p>${justification.justification}</p>
+                                </div>
+                            `;
+                            
+                            // Add improvement suggestion if score is low
+                            if (justification.score < 3) {
+                                const suggestion = generateImprovementSuggestion(ploText, mloText);
+                                alignmentDetail.innerHTML += `
+                                    <div class="alignment-suggestion">
+                                        <strong><i class="fas fa-lightbulb"></i> Improvement Suggestion:</strong>
+                                        <p>${suggestion}</p>
+                                    </div>
+                                `;
+                            }
+                            
+                            moduleDetails.appendChild(alignmentDetail);
+                        });
+                        
+                        moduleSection.appendChild(moduleDetails);
+                        ploSection.appendChild(moduleSection);
+                    });
+                    
+                    detailedContainer.appendChild(ploSection);
+                });
+            }
+            
+            // Calculate alignment score between PLO and MLO text
+            function calculateAlignmentScore(ploText, mloText) {
+                // Extract keywords from both texts
+                const ploKeywords = extractKeywords(ploText);
+                const mloKeywords = extractKeywords(mloText);
+                
+                // Extract verbs from both texts
+                const ploVerbs = extractVerbs(ploText);
+                const mloVerbs = extractVerbs(mloText);
+                
+                // Calculate keyword match score
+                let keywordScore = 0;
+                ploKeywords.forEach(keyword => {
+                    if (mloText.toLowerCase().includes(keyword)) {
+                        keywordScore += 0.5;
+                    }
+                    
+                    // Check for partial matches
+                    const partialMatches = mloKeywords.filter(mk => 
+                        mk.includes(keyword) || keyword.includes(mk));
+                    if (partialMatches.length > 0) {
+                        keywordScore += 0.2;
+                    }
+                });
+                
+                // Calculate verb alignment score
+                const verbScore = calculateVerbScore(ploVerbs, mloVerbs);
+                
+                // Calculate semantic similarity
+                const semanticScore = calculateSemanticScore(ploText, mloText);
+                
+                // Calculate final score
+                let score = 1; // Base score
+                score += Math.min(keywordScore, 2); // Max 2 points from keywords
+                score += Math.min(verbScore, 1); // Max 1 point from verbs
+                score += Math.min(semanticScore, 1); // Max 1 point from semantic similarity
+                
+                return Math.min(Math.round(score), 5); // Cap at 5
+            }
+            
+            // Extract keywords from text
+            function extractKeywords(text) {
+                const commonWords = ['the', 'and', 'is', 'in', 'to', 'of', 'a', 'for', 'with', 'on', 'at'];
+                
+                return text.toLowerCase()
+                    .replace(/[.,;:'"!?()]/g, '')
+                    .split(' ')
+                    .filter(word => word.length > 3 && !commonWords.includes(word))
+                    .slice(0, 5); // Take up to 5 keywords
+            }
+            
+            // Extract action verbs from text
+            function extractVerbs(text) {
+                const commonVerbs = [
+                    'analyze', 'apply', 'assess', 'create', 'define', 'demonstrate', 'design', 
+                    'develop', 'evaluate', 'explain', 'identify', 'implement', 'interpret', 
+                    'plan', 'solve', 'understand', 'use', 'synthesize', 'formulate', 'construct'
+                ];
+                
+                const textLower = text.toLowerCase();
+                const foundVerbs = commonVerbs.filter(verb => textLower.includes(verb));
+                
+                return foundVerbs.length > 0 ? foundVerbs : ['demonstrate', 'analyze', 'develop'];
+            }
+            
+            // Calculate verb alignment score
+            function calculateVerbScore(ploVerbs, mloVerbs) {
+                // Bloom's taxonomy levels
+                const bloomLevels = {
+                    'remember': 1, 'recognize': 1, 'recall': 1, 'identify': 1, 'define': 1, 'list': 1,
+                    'understand': 2, 'explain': 2, 'interpret': 2, 'classify': 2, 'summarize': 2,
+                    'apply': 3, 'implement': 3, 'use': 3, 'execute': 3, 'demonstrate': 3,
+                    'analyze': 4, 'differentiate': 4, 'compare': 4, 'examine': 4, 'categorize': 4,
+                    'evaluate': 5, 'assess': 5, 'judge': 5, 'critique': 5, 'justify': 5,
+                    'create': 6, 'design': 6, 'develop': 6, 'formulate': 6, 'synthesize': 6
+                };
+                
+                // Get highest levels
+                let ploHighest = 0;
+                let mloHighest = 0;
+                
+                ploVerbs.forEach(verb => {
+                    const level = bloomLevels[verb] || 0;
+                    ploHighest = Math.max(ploHighest, level);
+                });
+                
+                mloVerbs.forEach(verb => {
+                    const level = bloomLevels[verb] || 0;
+                    mloHighest = Math.max(mloHighest, level);
+                });
+                
+                // Score based on level alignment
+                if (ploHighest === mloHighest && ploHighest > 0) {
+                    return 1.0; // Exact match
+                } else if (Math.abs(ploHighest - mloHighest) <= 1 && ploHighest > 0 && mloHighest > 0) {
+                    return 0.8; // Close match
+                } else if (ploVerbs.filter(v => mloVerbs.includes(v)).length > 0) {
+                    return 0.6; // Some common verbs
+                } else if (ploHighest > 0 && mloHighest > 0) {
+                    return 0.3; // Both have verbs but no alignment
+                }
+                
+                return 0;
+            }
+            
+            // Calculate semantic similarity score
+            function calculateSemanticScore(ploText, mloText) {
+                const commonPhrases = [
+                    'knowledge', 'skills', 'analyze', 'evaluate', 'create', 
+                    'problem', 'solution', 'research', 'communicate', 'demonstrate',
+                    'professional', 'ethical', 'team', 'individual', 'practice'
+                ];
+                
+                let commonCount = 0;
+                commonPhrases.forEach(phrase => {
+                    if (ploText.includes(phrase) && mloText.includes(phrase)) {
+                        commonCount++;
+                    }
+                });
+                
+                const lengthRatio = Math.min(ploText.length, mloText.length) / Math.max(ploText.length, mloText.length);
+                
+                return (commonCount / 10) * 0.7 + lengthRatio * 0.3;
+            }
+            
+            // Generate alignment reason
+            function generateAlignmentReason(ploText, mloText, score) {
+                // Extract key elements
+                const ploKeywords = extractKeywords(ploText);
+                const mloKeywords = extractKeywords(mloText);
+                const ploVerbs = extractVerbs(ploText);
+                const mloVerbs = extractVerbs(mloText);
+                
+                // Find common and different elements
+                const commonKeywords = ploKeywords.filter(k => mloKeywords.includes(k));
+                const uncommomMloKeywords = mloKeywords.filter(k => !ploKeywords.includes(k));
+                const commonVerbs = ploVerbs.filter(v => mloVerbs.includes(v));
+                const uncommonMloVerbs = mloVerbs.filter(v => !ploVerbs.includes(v));
+                
+                // Create justification based on score
+                switch (score) {
+                    case 0:
+                        return `No alignment detected. The PLO focuses on "${ploKeywords.join(', ')}" while the MLO addresses "${mloKeywords.join(', ')}" with different approaches.`;
+                    case 1:
+                        if (commonKeywords.length === 0 && commonVerbs.length === 0) {
+                            return `Minimal alignment with no shared terminology or learning approaches. Different domain focus.`;
+                        } else {
+                            return `Limited alignment with few conceptual connections. PLO and MLO address different learning domains.`;
+                        }
+                    case 2:
+                        if (commonKeywords.length > 0) {
+                            return `Partial content alignment through shared terminology "${commonKeywords.join(', ')}", but different cognitive approaches.`;
+                        } else if (commonVerbs.length > 0) {
+                            return `Partial methodological alignment through similar approaches (${commonVerbs.join(', ')}), but different content focus.`;
+                        } else {
+                            return `Limited alignment with some indirect connections but different focal areas.`;
+                        }
+                    case 3:
+                        if (commonKeywords.length >= 2 && commonVerbs.length >= 1) {
+                            return `Meaningful alignment through shared vocabulary (${commonKeywords.join(', ')}) and learning approaches (${commonVerbs.join(', ')}), though scope differs.`;
+                        } else {
+                            return `Moderate alignment with complementary learning goals despite some differences in terminology and approach.`;
+                        }
+                    case 4:
+                        if (commonKeywords.length >= 2 && commonVerbs.length >= 1) {
+                            return `Strong alignment through shared key concepts (${commonKeywords.join(', ')}) and learning approaches (${commonVerbs.join(', ')}). The MLO effectively supports the PLO.`;
+                        } else {
+                            return `Strong alignment in purpose and application. The MLO and PLO work synergistically toward similar learning goals.`;
+                        }
+                    case 5:
+                        return `Exceptional alignment across multiple dimensions. The MLO directly reinforces and extends the PLO's learning expectations with strong conceptual and methodological connections.`;
+                    default:
+                        return `Alignment score ${score} - unable to generate specific justification.`;
+                }
+            }
+            
+            // Generate improvement suggestion
+            function generateImprovementSuggestion(ploText, mloText) {
+                const ploKeywords = extractKeywords(ploText);
+                const mloKeywords = extractKeywords(mloText);
+                const missingKeywords = ploKeywords.filter(k => !mloKeywords.includes(k));
+                
+                if (missingKeywords.length > 0) {
+                    return `Consider incorporating key PLO concepts such as "${missingKeywords.slice(0, 3).join(', ')}" into this MLO to strengthen alignment with programme goals.`;
+                } else {
+                    return `Consider refining this MLO to more explicitly support the PLO's focus on higher-level learning outcomes and programme-wide competencies.`;
+                }
+            }
+            
+            // Handle back to top button - make it more visible
+            const backToTopButton = document.querySelector('.back-to-top');
+            
+            // Make sure it's always visible
+            backToTopButton.style.opacity = '1';
+            
+            window.addEventListener('scroll', function() {
+                // Show after scrolling a bit but keep it more visible overall
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('active');
+                    backToTopButton.style.opacity = '1';
+                } else {
+                    backToTopButton.classList.remove('active');
+                    // Still keep it somewhat visible even at the top
+                    backToTopButton.style.opacity = '0.7';
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Initialize
+            fetchData();
+            
+            // Add export functionality
+            document.getElementById('export-plo-mlo-btn').addEventListener('click', function() {
+                exportPLOMLOReport();
+            });
+            
+            // Function to export the PLO-MLO report
+            function exportPLOMLOReport() {
+                const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+                const previewWindow = window.open('', '_blank');
+                
+                // Generate the export content
+                let exportContent = `
+                    <html>
+                    <head>
+                        <title>PLO-MLO Alignment Report - ${currentDate}</title>
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif;
+                                padding: 40px;
+                                max-width: 1000px;
+                                margin: 0 auto;
+                                line-height: 1.6;
+                            }
+                            h1, h2, h3 { 
+                                color: #342b60;
+                            }
+                            h3 { margin-top: 30px; }
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 20px 0;
+                                page-break-inside: avoid;
+                            }
+                            th, td {
+                                padding: 12px;
+                                border: 1px solid #ddd;
+                                text-align: left;
+                            }
+                            .mlo-section, .plo-section {
+                                margin-bottom: 30px;
+                                page-break-inside: avoid;
+                            }
+                            .outcome-item {
+                                margin-bottom: 15px;
+                                padding: 10px;
+                                border-left: 3px solid #342b60;
+                                background-color: #f8f9fa;
+                            }
+                            .module-section {
+                                margin-bottom: 30px;
+                                page-break-inside: avoid;
+                            }
+                            .score-0 { background-color: #f5f5f5; color: #999; }
+                            .score-1 { background-color: #ffcdd2; }
+                            .score-2 { background-color: #ffecb3; }
+                            .score-3 { background-color: #fff9c4; }
+                            .score-4 { background-color: #c8e6c9; }
+                            .score-5 { background-color: #a5d6a7; }
+                            .print-controls {
+                                position: fixed;
+                                bottom: 20px;
+                                right: 20px;
+                                background: white;
+                                padding: 10px;
+                                border: 1px solid #ddd;
+                                border-radius: 4px;
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                            }
+                            @media print {
+                                .print-controls { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Programme-Module Learning Outcomes Alignment Report</h1>
+                        <p><strong>Generated:</strong> ${currentDate}</p>
+                        
+                        <div class="legend">
+                            <h3>Alignment Score Legend</h3>
+                            <table>
+                                <tr>
+                                    <td class="score-0" width="50">0</td>
+                                    <td>No alignment</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-1" width="50">1</td>
+                                    <td>Minimal alignment</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-2" width="50">2</td>
+                                    <td>Partial alignment</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-3" width="50">3</td>
+                                    <td>Moderate alignment</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-4" width="50">4</td>
+                                    <td>Strong alignment</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-5" width="50">5</td>
+                                    <td>Excellent alignment</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <h2>Programme Learning Outcomes (PLOs)</h2>
+                        ${document.getElementById('plo-container').innerHTML}
+                        
+                        <h2>Module Learning Outcomes (MLOs) by Category</h2>
+                        ${document.getElementById('mlo-container').innerHTML}
+                        
+                        <h2>Alignment Matrix</h2>
+                        <p>This matrix shows the alignment scores between all PLOs and MLO categories.</p>
+                        ${document.getElementById('matrix-container').innerHTML}
+                        
+                        <h2>Detailed Analysis</h2>
+                        ${document.getElementById('detailed-container').innerHTML}
+                        
+                        <div class="print-controls">
+                            <button onclick="window.print()" style="margin-right: 10px;">Save as PDF/Print</button>
+                            <button onclick="window.close()">Close Preview</button>
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                previewWindow.document.write(exportContent);
+                previewWindow.document.close();
+            }
+        });
+    </script>
+</body>
+</html>
