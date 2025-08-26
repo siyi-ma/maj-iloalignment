@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DataManager.js Test</title>
+</head>
+<body>
+    <h1>Course Dropdown Test (DataManager.js)</h1>
+    <div>
+        <label for="programme-selector">Select Programme:</label>
+        <select id="programme-selector">
+            <option value="">Choose a programme...</option>
+        </select>
+    </div>
+    <div style="margin-top:1em;">
+        <label for="course-selector">Select Course:</label>
+        <select id="course-selector">
+            <option value="">Choose a course...</option>
+        </select>
+    </div>
+    <div id="course-details" style="margin-top:2em;"></div>
+    <div id="clo-list" style="margin-top:1em;"></div>
+    <script src="../newjs/dataManager.js"></script>
+    <script>
+    (async function() {
+        const programmeSelector = document.getElementById('programme-selector');
+        const courseSelector = document.getElementById('course-selector');
+        const courseDetails = document.getElementById('course-details');
+        const cloList = document.getElementById('clo-list');
+        const dataManager = new DataManager();
+        await dataManager.loadProgrammes();
+        // Populate programme dropdown
+        const programmes = dataManager.getProgrammes();
+        programmes.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.code;
+            opt.textContent = `${p.code} - ${p.name_en || p.name}`;
+            programmeSelector.appendChild(opt);
+        });
+
+        programmeSelector.addEventListener('change', function() {
+            courseSelector.innerHTML = '<option value="">Choose a course...</option>';
+            courseDetails.innerHTML = '';
+            cloList.innerHTML = '';
+            if (!this.value) return;
+            dataManager.setCurrentProgramme(this.value);
+            const currentProgramme = dataManager.getCurrentProgramme();
+            const courses = currentProgramme && currentProgramme.courses ? currentProgramme.courses : {};
+            Object.values(courses).forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.code;
+                opt.textContent = `${c.code || ''} - ${c.nameEn || c.nameEt || ''}`;
+                courseSelector.appendChild(opt);
+            });
+        });
+
+        courseSelector.addEventListener('change', function() {
+            courseDetails.innerHTML = '';
+            cloList.innerHTML = '';
+            if (!this.value) return;
+            dataManager.setCurrentCourse(this.value);
+            dataManager.currentCourse = courses[this.value];
+            const course = dataManager.getCurrentCourse();
+            if (course) {
+                courseDetails.innerHTML = `<h2>Course Details</h2>
+                    <b>Code:</b> ${course.code}<br>
+                    <b>Name (EN):</b> ${course.name_en || course.name}<br>
+                    <b>Name (ET):</b> ${course.name_et || ''}<br>
+                    <b>EAP:</b> ${course.eap || ''}<br>
+                    <b>Assessment:</b> ${course.assessment || ''}<br>
+                    <b>Type:</b> ${course.type || ''}<br>
+                    <b>URL:</b> <a href="${course.url || '#'}" target="_blank">${course.url || 'N/A'}</a>`;
+            }
+            // Show CLOs
+            const currentProgramme = dataManager.getCurrentProgramme();
+            const courses = currentProgramme && currentProgramme.courses ? currentProgramme.courses : {};
+            const clos = dataManager.getCLOs(currentProgramme.code, course.code);
+            if (clos && clos.length) {
+                cloList.innerHTML = `<h3>CLOs</h3><ul>${clos.map(clo => `<li>${clo.text || clo.description || clo}</li>`).join('')}</ul>`;
+            } else {
+                cloList.innerHTML = '<h3>CLOs</h3><p>No CLOs found for this course.</p>';
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
